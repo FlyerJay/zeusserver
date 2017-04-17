@@ -17,7 +17,6 @@ module.exports = app => {
             yield sendToWormhole(stream);
             throw err;
         }
-      
         this.ctx.body = result;
     }
   }
