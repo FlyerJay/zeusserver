@@ -1,19 +1,17 @@
 'use strict';
 
 module.exports = appInfo => {
-  const config = {};
-
-  config.keys = appInfo.name + '_1492401589170_1020';
-  config.security = {
-    csrf:{
-      ignore:'/upload',
+  return {
+    keys: appInfo.name + '_1492401589170_1020',
+    security:{
+      csrf:{
+        ignore:'/upload',
+      }
+    },
+    multipart:{
+      fileExtensions:[
+        '.xlsx'
+      ]
     }
   }
-  config.multipart = {
-    fileExtensions:[
-      '.xlsx'
-    ]
-  }
-
-  return config;
-};
+}
