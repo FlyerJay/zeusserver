@@ -18,11 +18,7 @@ module.exports = app => {
             throw err;
         }
       
-        this.body = {
-            url: result.url,
-            // 所有表单字段都能通过 `stream.fields` 获取到 
-            fields: stream.fields,
-        };
+        this.ctx.body = result;
     }
   }
   return UploadController;
