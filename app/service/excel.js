@@ -3,8 +3,12 @@ const fs = require('fs');
 
 module.exports = app => {
     class Excel extends app.Service {
-        * read() {
-            const workSheetsFromBuffer = xlsx.parse(fs.readFileSync(`D://excel.xlsx`));
+        * read(stream) {
+            //console.log(stream);
+            var fileStream = fs.readFileSync('D://excel.xlsx',{},function(err,data){
+                console.log(data);
+            });
+            const workSheetsFromBuffer = xlsx.parse(stream);
             return {
                 xlsx:workSheetsFromBuffer
             }
