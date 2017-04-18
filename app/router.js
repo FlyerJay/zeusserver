@@ -5,4 +5,6 @@ module.exports = app => {
   app.post('/api/upload/excel', 'upload.excel');
   app.post('/api/user/register', 'user.register');
   app.post('/api/user/login', 'user.login');
+  app.get('/api/user/register', 'user.register');
+  app.get('/api/user/login', 'user.login');
 };
