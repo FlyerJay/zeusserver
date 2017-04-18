@@ -3,7 +3,8 @@
 module.exports = app => {
   class HomeController extends app.Controller {
     * index() {
-      this.ctx.body = 'hello, egg';
+      const { ctx } = this;
+      ctx.body = ctx;
     }
   }
   return HomeController;

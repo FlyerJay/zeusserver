@@ -5,12 +5,12 @@ module.exports = appInfo => {
     keys: appInfo.name + '_1492401589170_1020',
     security:{
       csrf:{
-        ignore:'/upload',
+        enable: false,
       }
     },
     multipart:{
       fileExtensions:[
-        '.xlsx'
+        '.xlsx','.xls'
       ]
     },
     sequelize:{
