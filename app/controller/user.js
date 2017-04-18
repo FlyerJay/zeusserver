@@ -14,7 +14,7 @@ module.exports = app => {
         const ctx = this.ctx;
 		ctx.body = yield ctx.model.User.getUserInfo(ctx.query);
     };
-	* validate() {
+    * validate() {
 		const ctx = this.ctx;
 		ctx.body = yield ctx.model.User.validateUserId(ctx.query);
 	}
