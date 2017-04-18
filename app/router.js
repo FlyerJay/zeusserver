@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = app => {
-  app.get('/api/', 'home.index');
-  app.post('/api/upload/excel', 'upload.excel');
-  app.post('/api/user/register', 'user.register');
-  app.post('/api/user/login', 'user.login');
-  app.get('/api/user/register', 'user.register');
-  app.get('/api/user/login', 'user.login');
+  app.get('zues/api/', 'home.index');
+  app.post('zues/api/upload/excel', 'upload.excel');
+  app.post('zues/api/user/register', 'user.register');
+  app.post('zues/api/user/login', 'user.login');
+  app.get('zues/api/user/register', 'user.register');
+  app.get('zues/api/user/login', 'user.login');
 };
