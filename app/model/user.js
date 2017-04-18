@@ -38,12 +38,14 @@ module.exports = app => {
     },{
         freezeTabName:true,
 		tableName:"user_info",
-		timestamps:false,
+		timestamps:true,
         classMethods:{
             * registeUser(options){
+                this.sync();
                 return yield this.create(options);
             },
             * userLogin(options){
+                this.sync();
                 return yield this.findOne(options);
             }
         }

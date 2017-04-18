@@ -3,8 +3,8 @@
 module.exports = app => {
   class HomeController extends app.Controller {
     * index() {
-      const { ctx } = this;
-      ctx.body = ctx;
+      const ctx = this.ctx;
+      ctx.body = 'zues API';
     }
   }
   return HomeController;

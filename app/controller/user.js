@@ -3,15 +3,16 @@
 module.exports = app => {
   class UserController extends app.Controller {
     * login() {
-        console.log(this);
-        this.ctx.body = {
-            state:200,
-        }
+        let result = {};
+        const ctx = this.ctx;
+        result = yield ctx.model.User.userLogin();
+        ctx.body = result;
     };
     * register() {
         let result = {};
-        result = this.ctx.model.User.registeUser(this.ctx.request);
-        this.ctx.body = this.ctx;
+        const ctx = this.ctx;
+        result = yield ctx.model.User.registeUser(ctx.request.body);
+        ctx.body = result;
     }
   }
   return UserController;

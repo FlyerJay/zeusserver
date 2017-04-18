@@ -5,7 +5,7 @@ const sendToWormhole = require('stream-wormhole');
 
 module.exports = app => {
   class UploadController extends app.Controller {
-    * index(uid) {
+    * excel(uid) {
         const stream = yield this.ctx.multipart();
         const name = 'egg-multipart-test/' + path.basename(stream.filename);
         // 文件处理，上传到云存储等等 
