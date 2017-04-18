@@ -5,7 +5,7 @@ module.exports = app => {
     * login() {
         let result = {};
         const ctx = this.ctx;
-        result = yield ctx.model.User.userLogin();
+        result = yield ctx.model.User.userLogin(ctx.request.body);
         ctx.body = result;
     };
     * register() {

@@ -7,8 +7,10 @@
     "egg": "^1.0.0",
     "egg-sequelize": "^2.0.1",
     "mysql": "^2.13.0",
+    "node-uuid": "^1.4.8",
     "node-xlsx": "^0.7.4",
     "stream-wormhole": "^1.0.3",
+    "uuid": "^3.0.1",
     "xlsx": "^0.9.11"
   },
   "devDependencies": {
