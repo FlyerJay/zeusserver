@@ -3,17 +3,21 @@
 module.exports = app => {
   class UserController extends app.Controller {
     * login() {
-        let result = {};
         const ctx = this.ctx;
-        result = yield ctx.model.User.userLogin(ctx.request.body);
-        ctx.body = result;
+        ctx.body = yield ctx.model.User.userLogin(ctx.request.body);
     };
     * register() {
-        let result = {};
+		const ctx = this.ctx;
+        ctx.body = yield ctx.model.User.registeUser(ctx.request.body);
+    };
+    * info() {
         const ctx = this.ctx;
-        result = yield ctx.model.User.registeUser(ctx.request.body);
-        ctx.body = result;
-    }
+		ctx.body = yield ctx.model.User.getUserInfo(ctx.query);
+    };
+	* validate() {
+		const ctx = this.ctx;
+		ctx.body = yield ctx.model.User.validateUserId(ctx.query);
+	}
   }
   return UserController;
 };

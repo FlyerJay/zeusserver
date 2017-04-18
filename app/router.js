@@ -5,4 +5,6 @@ module.exports = app => {
   app.post('/zues/api/upload/excel', 'upload.excel');
   app.post('/zues/api/user/register', 'user.register');
   app.post('/zues/api/user/login', 'user.login');
+  app.get('/zues/api/user','user.info');
+  app.get('/zues/api/user/validate','user.validate');
 };

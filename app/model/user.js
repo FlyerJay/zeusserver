@@ -43,6 +43,10 @@ module.exports = app => {
         classMethods:{
             * registeUser(options){
                 yield this.sync();
+                if(!options || !options.userId) return {
+                    code:-1,
+                    msg:'缺少必要字段'
+                }
                 var isExist = yield this.findOne({
                     where:{
                         userId:{
@@ -52,7 +56,7 @@ module.exports = app => {
                 });
                 if(isExist) return {
                     code:-1,
-                    message:"用户名已存在"
+                    message:"账号已存在"
                 }
                 var extendFiled = {
                     registerTime: +new Date(),
@@ -61,13 +65,17 @@ module.exports = app => {
                 };
                 var result = yield this.create(Object.assign(options,extendFiled));
                 return {
-                    result,
+                    data:result,
                     code:200,
                     meg:'注册成功',
                 }
             },
             * userLogin(options){
                 yield this.sync();
+                if(!options || !options.userId || !options.password) return {
+                    code:-1,
+                    msg:'缺少必要字段'
+                }
                 const isExist = yield this.findOne({
                     where:{
                         userId:{
@@ -83,11 +91,57 @@ module.exports = app => {
                     msg:'用户名或密码错误'
                 }
                 isExist.userToken = uuid.v4();
+                isExist.lastLoginTime = new Date().getTime();
                 isExist.save();
                 return {
-                    result:isExist,
+                    data:isExist,
                     code:200,
                     msg:'登录成功',
+                }
+            },
+            * getUserInfo(options){
+                yield this.sync();
+                if(!options || !options.userToken) return {
+                    code:-1,
+                    msg:'缺少必要字段'
+                }
+                const isExist = yield this.findOne({
+                    where:{
+                        userToken:{
+                            $eq:options.userToken,
+                        }
+                    }
+                })
+                if(isExist) return {
+                    data:isExist,
+                    code:200,
+                    msg:'获取用户信息成功',
+                }
+                return {
+                    code:-1,
+                    msg:'登录失效'
+                }
+            },
+            * validateUserId(options){
+                yield this.sync();
+                if(!options || !options.userId) return {
+                    code:-1,
+                    msg:'缺少必要字段'
+                }
+                const isExist = yield this.findOne({
+                    where:{
+                        userId:{
+                            $eq:options.userId
+                        }
+                    }
+                })
+                if(isExist) return {
+                    code:-1,
+                    msg:'账号已存在'
+                }
+                return {
+                    code:200,
+                    msg:'账号可用'
                 }
             }
         }
