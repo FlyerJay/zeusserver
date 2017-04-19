@@ -58,3 +58,87 @@ userName | 用户昵称 | 否
     "meg": "注册成功"
 }
 ```
+### 获取用户信息
+------
+##### 请求地址
+```javascript
+/zues/api/user    GET
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+userToken | 用户登录后返回的uuid | 是
+### 验证账号是否可用
+------
+##### 请求地址
+```javascript
+/zues/api/user/validate    GET
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+userId | 用户ID | 是
+
+--------
+### 获取公司列表
+------
+##### 请求地址
+```javascript
+/zues/api/company    GET
+```
+### 解析excel文件
+------
+##### 请求地址
+```javascript
+/zues/api/upload/excel    POST
+```
+### 获取供应商列表
+------
+##### 请求地址
+```javascript
+/zues/api/supplier/list   GET
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierName | 供应商名字 支持模糊匹配 | 否
+address | 供应商地址 | 否
+pageSize | 分页大小 默认为30 | 否
+page | 当前分页 默认为0 | 否
+### 新增供应商
+------
+##### 请求地址
+```javascript
+/zues/api/supplier/add   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierName | 供应商名字 支持模糊匹配 | 是
+address | 供应商地址 | 是
+freight | 运费 | 否
+benifit | 供应商优惠 | 否
+### 供应商信息修改
+------
+##### 请求地址
+```javascript
+/zues/api/supplier/update   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierId | 供应商ID | 是
+supplierName | 供应商名字 支持模糊匹配 | 否
+address | 供应商地址 | 否
+freight | 运费 | 否
+benifit | 供应商优惠 | 否
+### 供应商信息修改
+------
+##### 删除供应商
+```javascript
+/zues/api/supplier/remove   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierId | 供应商ID 支持批量删除以','分隔，如：1,2,3 | 是
