@@ -4,7 +4,6 @@
  * 公司实体类
  */
 'use strict';
-var uuid = require('uuid');
 
 module.exports = app => {
     const { STRING } = app.Sequelize;

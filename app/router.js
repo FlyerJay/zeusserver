@@ -11,4 +11,8 @@ module.exports = app => {
   app.get('/zues/api/user/validate','user.validate');
   //公司
   app.get('/zues/api/company','company.list');
+  //供应商
+  app.get('/zues/api/supplier/list','supplier.list');
+  app.post('/zues/api/supplier/update','supplier.update');
+  app.post('/zues/api/supplier/add','supplier.add');
 };
