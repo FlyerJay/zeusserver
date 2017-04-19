@@ -14,6 +14,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Supplier.add(ctx.request.body);
     }
+    * remove() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Supplier.remove(ctx.request.body);
+    }
   }
   return SupplierController;
 };

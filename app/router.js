@@ -15,4 +15,5 @@ module.exports = app => {
   app.get('/zues/api/supplier/list','supplier.list');
   app.post('/zues/api/supplier/update','supplier.update');
   app.post('/zues/api/supplier/add','supplier.add');
+  app.post('/zues/api/supplier/remove','supplier.remove');
 };
