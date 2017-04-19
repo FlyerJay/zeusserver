@@ -25,5 +25,10 @@ module.exports = app => {
         freezeTabName:true,
 		tableName:"company",
 		timestamps:false,
+        classMethods:{
+            * getList(){
+                return yield this.findAll();
+            }
+        }
     })
 }
