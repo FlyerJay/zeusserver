@@ -112,7 +112,7 @@ page | 当前分页 默认为0 | 否
 ##### 参数
 字段 | 描述 | 是否必填
 ------|------------|-----
-supplierName | 供应商名字 支持模糊匹配 | 是
+supplierName | 供应商名字 | 是
 address | 供应商地址 | 是
 freight | 运费 | 否
 benifit | 供应商优惠 | 否
@@ -126,7 +126,7 @@ benifit | 供应商优惠 | 否
 字段 | 描述 | 是否必填
 ------|------------|-----
 supplierId | 供应商ID | 是
-supplierName | 供应商名字 支持模糊匹配 | 否
+supplierName | 供应商名字 | 否
 address | 供应商地址 | 否
 freight | 运费 | 否
 benifit | 供应商优惠 | 否
