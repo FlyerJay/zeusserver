@@ -29,6 +29,11 @@ module.exports = app => {
             allowNull:false,
             comment:"密码"
         },
+        valid: {
+            type:INTEGER,
+            allowNull:false,
+            comment:"账号是否有效",
+        },
         userName: {
             type: STRING,
             comment:"用户名(昵称)"
@@ -51,7 +56,7 @@ module.exports = app => {
             },
             * registeUser(options){
                 yield this.sync();
-                if(!options || !options.userId) return {
+                if(!options || !options.userId || !options.comId) return {
                     code:-1,
                     msg:'缺少必要字段'
                 }
@@ -70,6 +75,7 @@ module.exports = app => {
                     registerTime: +new Date(),
                     lastLoginTime: +new Date(),
                     userToken: uuid.v4(),
+                    valid:0,
                 };
                 var result = yield this.create(Object.assign(options,extendFiled));
                 return {
@@ -80,7 +86,7 @@ module.exports = app => {
             },
             * userLogin(options){
                 yield this.sync();
-                if(!options || !options.userId || !options.password) return {
+                if(!options || !options.userId || !options.password || !options.comId) return {
                     code:-1,
                     msg:'缺少必要字段'
                 }
@@ -101,6 +107,14 @@ module.exports = app => {
                 isExist.userToken = uuid.v4();
                 isExist.lastLoginTime = new Date().getTime();
                 isExist.save();
+                if(isExist.valid !== 1) return {
+                    code:-1,
+                    msg:'账号审核中'
+                }
+                if(isExist.comId !== options.comId) return {
+                    code:-1,
+                    msg:'公司信息有误'
+                }
                 return {
                     data:isExist,
                     code:200,
@@ -119,7 +133,7 @@ module.exports = app => {
                     where:{
                         userToken:{
                             $eq:options.userToken,
-                        }
+                        },
                     }
                 })
                 if(isExist) return {
