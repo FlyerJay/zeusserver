@@ -20,6 +20,6 @@ module.exports = appInfo => {
       port: '3306',
       username: 'pro',
       password: '080728',
-    }
+    },
   }
 }

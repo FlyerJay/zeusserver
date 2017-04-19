@@ -1,3 +1,8 @@
+/**
+ * author:flyerjay
+ * 2017-04-19
+ * 用户实体类
+ */
 'use strict';
 var uuid = require('uuid');
 
@@ -41,6 +46,9 @@ module.exports = app => {
 		tableName:"user_info",
 		timestamps:false,
         classMethods:{
+            associate(){
+                app.model.User.belongsTo(app.model.Company,{foreignKey:'comId',targetKey:'comId'});
+            },
             * registeUser(options){
                 yield this.sync();
                 if(!options || !options.userId) return {
@@ -105,7 +113,9 @@ module.exports = app => {
                     code:-1,
                     msg:'缺少必要字段'
                 }
+                yield app.model.Company.sync();
                 const isExist = yield this.findOne({
+                    include:app.model.Company,
                     where:{
                         userToken:{
                             $eq:options.userToken,
