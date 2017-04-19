@@ -130,9 +130,9 @@ supplierName | 供应商名字 | 否
 address | 供应商地址 | 否
 freight | 运费 | 否
 benifit | 供应商优惠 | 否
-### 供应商信息修改
+### 删除供应商
 ------
-##### 删除供应商
+##### 请求地址
 ```javascript
 /zues/api/supplier/remove   POST
 ```
