@@ -6,6 +6,7 @@
   "dependencies": {
     "egg": "^1.0.0",
     "egg-sequelize": "^2.0.1",
+    "formidable": "^1.1.1",
     "mysql": "^2.13.0",
     "node-uuid": "^1.4.8",
     "node-xlsx": "^0.7.4",

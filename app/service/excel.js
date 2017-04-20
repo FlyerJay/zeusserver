@@ -5,11 +5,9 @@ module.exports = app => {
     class Excel extends app.Service {
         * read(stream) {
             const head = stream._readableState.buffer.tail.data;
-            //fs.writeFile(`D://temp.xlsx`,stream)
-            //const content = xlsx.read(head,{type:'buffer'});
-            //const content = xlsx.read(stream);
+            const content = xlsx.read(head,{type:'buffer'});
             return {
-                xlsx:'11',
+                xlsx:content,
             }
         }
     }
