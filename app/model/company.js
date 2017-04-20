@@ -22,6 +22,7 @@ module.exports = app => {
         }
     },{
         freezeTabName:true,
+        underscored:true,
 		tableName:"company",
 		timestamps:false,
         classMethods:{

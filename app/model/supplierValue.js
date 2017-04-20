@@ -1,46 +1,56 @@
 /**
  * author:flyerjay
- * 2017-04-19
- * 供应商实体类
+ * 2017-04-20
+ * 供应商价格实体类
  */
 'use strict';
 
 module.exports = app => {
     const { STRING, INTEGER } = app.Sequelize;
 
-    return app.model.define('Supplier',{
-        supplierId: {
+    return app.model.define('SupplierValue',{
+        supplierValuerId: {
             type: INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull:false,
+            comment:"价格表主键",
+        },
+        supplierId: {
+            type: INTEGER,
+            allowNull:false,
             comment:"供应商编号",
         },
-        supplierName: {
+        spec: {
             type: STRING,
             allowNull:false,
-            comment:"供应商名称"
+            comment:"规格"
         },
-        address: {
+        lastUpdateTime: {
             type:STRING,
             allowNull:false,
-            comment:"供应商地址"
+            comment:"最近更新时间"
         },
-        freight: {
+        type: {
             type:STRING,
-            comment:"运费"
+            comment:"类别"
         },
-        benifit: {
+        value: {
             type:STRING,
-            comment:"优惠"
+            comment:"出厂价"
+        },
+        material: {
+            type:STRING,
+            comment:"材质"
         }
     },{
         freezeTabName:true,
-		tableName:"supplier",
         underscored:true,
+		tableName:"supplier_value",
 		timestamps:false,
         classMethods:{
             * getList(options){
+                yield this.sync();
                 const result = yield this.findAndCountAll({
                     limit:options.pageSize - 0 || 30,
                     offset:(options.page - 0) * (options.pageSize - 0) || 0,
@@ -87,6 +97,7 @@ module.exports = app => {
                 }
             },
             * add(options){
+                yield this.sync();
                 return yield this.create(options);
             },
             * remove(options){

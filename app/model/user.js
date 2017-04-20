@@ -48,6 +48,7 @@ module.exports = app => {
         }
     },{
         freezeTabName:true,
+        underscored:true,
 		tableName:"user_info",
 		timestamps:false,
         classMethods:{
@@ -55,7 +56,6 @@ module.exports = app => {
                 app.model.User.belongsTo(app.model.Company,{foreignKey:'comId',targetKey:'comId'});
             },
             * registeUser(options){
-                yield this.sync();
                 if(!options || !options.userId || !options.comId) return {
                     code:-1,
                     msg:'缺少必要字段'
@@ -85,7 +85,6 @@ module.exports = app => {
                 }
             },
             * userLogin(options){
-                yield this.sync();
                 if(!options || !options.userId || !options.password || !options.comId) return {
                     code:-1,
                     msg:'缺少必要字段'
@@ -122,7 +121,6 @@ module.exports = app => {
                 }
             },
             * getUserInfo(options){
-                yield this.sync();
                 if(!options || !options.userToken) return {
                     code:-1,
                     msg:'缺少必要字段'
@@ -147,7 +145,6 @@ module.exports = app => {
                 }
             },
             * validateUserId(options){
-                yield this.sync();
                 if(!options || !options.userId) return {
                     code:-1,
                     msg:'缺少必要字段'
