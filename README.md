@@ -90,6 +90,10 @@ userId | 用户ID | 是
 ```javascript
 /zues/api/upload/excel    POST
 ```
+##### 参数
+`javascript
+如果要带参数放在连接的?后面
+`
 ### 获取供应商列表
 ------
 ##### 请求地址
