@@ -6,7 +6,13 @@ const uuid = require('uuid');
 module.exports = app => {
     class Excel extends app.Service {
         * read(stream) {
-            const uniqueName = uuid.v4() + `.${stream.filename.split('.')[1]}`;
+            const extendsNameArr = stream.filename.split('.');
+            const extendsName = extendsNameArr[extendsNameArr.length - 1];
+            if(extendsName.indexOf('xls') < 0) return {
+                code:-1,
+                msg:'文件后缀必须是xls或xlsx'
+            }
+            const uniqueName = uuid.v4() + `.${extendsName}`;
             const filepath = path.resolve(__dirname,`../../upload/${uniqueName}`);
             const uploadRes = yield new Promise((resolve, reject) => {
                 const ws = fs.createWriteStream(filepath);
