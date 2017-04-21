@@ -2,7 +2,7 @@
 
 module.exports = app => {
   app.beforeStart(async function(){
-      app.model.sync();
+      await app.model.sync();
   });
   app.get('/zues/api/', 'home.index');
   //文件上传

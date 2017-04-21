@@ -8,6 +8,9 @@ module.exports = appInfo => {
         enable: false,
       }
     },
+    multipart:{
+      fileExtensions: ['.xlsx','.xls'],
+    },
     sequelize:{
       dialect: 'mysql',
       database: 'zues',
