@@ -144,3 +144,60 @@ benifit | 供应商优惠 | 否
 字段 | 描述 | 是否必填
 ------|------------|-----
 supplierId | 供应商ID 支持批量删除以','分隔，如：1,2,3 | 是
+### 供应商库存查询
+------
+##### 请求地址
+```javascript
+/zues/api/inventory/list   GET
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierName | 供应商名字，支持模糊匹配 | 否
+address | 供应商地址 | 否
+pageSize | 分页大小，默认30 | 否
+page | 当前页码，默认0 | 否
+### 增加供应商库存记录
+------
+##### 请求地址
+```javascript
+/zues/api/inventory/add   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierId | 供应商ID,和供应商表关联 | 是
+spec | 产品规格，如：2.5 * 2.5 * 0.8 | 是
+type | 产品类型，如：镀锌带，方矩管 | 是
+material | 产品材质，如：QC2311 | 否
+inventoryAmount | 产品库存 | 否
+perAmount | 单件支付 | 否
+inventory | 库存重量 | 否
+### 更新供应商库存记录
+------
+##### 请求地址
+```javascript
+/zues/api/inventory/update   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierInventoryId | 供应商库存ID,主键 | 是
+supplierId | 供应商ID,和供应商表关联 | 否
+spec | 产品规格，如：2.5 * 2.5 * 0.8 | 否
+type | 产品类型，如：镀锌带，方矩管 | 否
+material | 产品材质，如：QC2311 | 否
+inventoryAmount | 产品库存 | 否
+perAmount | 单件支付 | 否
+inventory | 库存重量 | 否
+### 删除供应商库存记录
+------
+##### 请求地址
+```javascript
+/zues/api/inventory/remove   POST
+```
+##### 参数
+字段 | 描述 | 是否必填
+------|------------|-----
+supplierInventoryId | 供应商库存ID,主键 | 是
+

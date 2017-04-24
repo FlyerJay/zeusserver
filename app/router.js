@@ -19,4 +19,9 @@ module.exports = app => {
   app.post('/zues/api/supplier/update','supplier.update');
   app.post('/zues/api/supplier/add','supplier.add');
   app.post('/zues/api/supplier/remove','supplier.remove');
+  //供应商库存
+  app.get('/zues/api/inventory/list','inventory.list');
+  app.post('/zues/api/inventory/add','inventory.add');
+  app.post('/zues/api/inventory/update','inventory.update');
+  app.post('/zues/api/inventory/remove','inventory.remove');
 };

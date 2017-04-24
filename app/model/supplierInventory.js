@@ -33,6 +33,7 @@ module.exports = app => {
         },
         type: {
             type:STRING,
+            allowNull:false,
             comment:"类别"
         },
         material: {
@@ -57,8 +58,102 @@ module.exports = app => {
 		tableName:"supplier_inventory",
 		timestamps:false,
         classMethods:{
-            * list(options) {
-                return this.findAll();
+            associate(){
+                app.model.SupplierInventory.belongsTo(app.model.Supplier,{foreignKey:'supplierId',targetKey:'supplierId'});
+            },
+            * getList(options) {
+                const result = yield this.findAndCountAll({
+                    limit:options.pageSize - 0 || 30,
+                    offset:(options.page - 0) * (options.pageSize - 0) || 0,
+                    include:[
+                        {
+                            model:app.model.Supplier,
+                            where:(function(){
+                                var condition = {};
+                                options.supplierName?condition.supplierName={
+                                    like:`%${options.supplierName}%`
+                                }:'';
+                                options.address?condition.address={
+                                    $eq:options.address
+                                }:'';
+                                return condition;
+                            }())
+                        }
+                    ]
+                });
+                if(result.length === 0) return {
+                    code:-1,
+                    msg:"数据为空"
+                }
+                return {
+                    result
+                };
+            },
+            * addInventory(options) {
+                if (!options.supplierId) return {
+                    code: -1,
+                    msg: '请选择供应商',
+                }
+                if(!options.spec) return {
+                    code: -1,
+                    msg: '规格不能为空'
+                }
+                if(!options.type) return {
+                    code: -1,
+                    msg: '货物类别不能为空'
+                }
+                return yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
+            },
+            * updateInventory(options) {
+                if(!options.supplierId) return {
+                    code: -1,
+                    msg: '缺少必要参数'
+                }
+                const result = yield this.update(options,{
+                    where :{
+                        supplierInventoryId:{
+                            $eq:options.supplierInventoryId,
+                        }
+                    }
+                })
+                if(!result) return{
+                    code: -1,
+                    msg: '更新出错'
+                }
+                if(result == 0) return {
+                    code: -1,
+                    msg: '没有任何更新'
+                }
+                return {
+                    code: 200,
+                    msg: '更新数据成功'
+                }
+            },
+            * deleteInventory(options) {
+                if(!options.supplierId) return {
+                    code: -1,
+                    msg: '缺少必要参数'
+                }
+                const result = yield this.destroy({
+                    where :{
+                        supplierInventoryId:{
+                            $eq:options.supplierInventoryId,
+                        }
+                    }
+                })
+
+                if(!result) return {
+                    code: -1,
+                    msg: '更新出错'
+                }
+                if(result == 0) return {
+                    code: -1,
+                    msg: '没有任何更新'
+                }
+                return {
+                    code: 200,
+                    msg: '更新数据成功'
+                }
             }
         }
     })
