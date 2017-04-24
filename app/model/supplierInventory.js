@@ -79,7 +79,17 @@ module.exports = app => {
                                 return condition;
                             }())
                         }
-                    ]
+                    ],
+                    where:(function(){
+                        var condition = {};
+                        options.spec?condition.spec={
+                            like:`%${options.spec}%`
+                        }:'';
+                        options.type?condition.type={
+                            $eq:options.type
+                        }:'';
+                        return condition;
+                    }())
                 });
                 if(result.length === 0) return {
                     code:-1,
@@ -144,15 +154,15 @@ module.exports = app => {
 
                 if(!result) return {
                     code: -1,
-                    msg: '更新出错'
+                    msg: '删除错误'
                 }
                 if(result == 0) return {
                     code: -1,
-                    msg: '没有任何更新'
+                    msg: '受影响数据为0'
                 }
                 return {
                     code: 200,
-                    msg: '更新数据成功'
+                    msg: '删除数据成功'
                 }
             }
         }

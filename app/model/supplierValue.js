@@ -9,7 +9,7 @@ module.exports = app => {
     const { STRING, INTEGER } = app.Sequelize;
 
     return app.model.define('SupplierValue',{
-        supplierValuerId: {
+        supplierValueId: {
             type: INTEGER,
             primaryKey: true,
             autoIncrement: true,
@@ -49,18 +49,35 @@ module.exports = app => {
 		tableName:"supplier_value",
 		timestamps:false,
         classMethods:{
-            * getList(options){
-                yield this.sync();
+            associate(){
+                app.model.SupplierValue.belongsTo(app.model.Supplier,{foreignKey:'supplierId',targetKey:'supplierId'});
+            },
+            * getList(options) {
                 const result = yield this.findAndCountAll({
                     limit:options.pageSize - 0 || 30,
                     offset:(options.page - 0) * (options.pageSize - 0) || 0,
+                    include:[
+                        {
+                            model:app.model.Supplier,
+                            where:(function(){
+                                var condition = {};
+                                options.supplierName?condition.supplierName={
+                                    like:`%${options.supplierName}%`
+                                }:'';
+                                options.address?condition.address={
+                                    $eq:options.address
+                                }:'';
+                                return condition;
+                            }())
+                        }
+                    ],
                     where:(function(){
                         var condition = {};
-                        options.supplierName?condition.supplierName={
-                            like:`%${options.supplierName}%`
+                        options.spec?condition.spec={
+                            like:`%${options.spec}%`
                         }:'';
-                        options.address?condition.address={
-                            $eq:options.address
+                        options.type?condition.type={
+                            $eq:options.type
                         }:'';
                         return condition;
                     }())
@@ -70,52 +87,74 @@ module.exports = app => {
                     msg:"数据为空"
                 }
                 return {
-                    code:200,
-                    msg:"查询成功",
-                    data:result,
-                }
+                    result
+                };
             },
-            * update(options){
-                var result = yield this.findOne({
-                    where:{
-                        supplierId:{
-                            $eq:options.supplierId,
+            * addValue(options) {
+                if (!options.supplierId) return {
+                    code: -1,
+                    msg: '请选择供应商',
+                }
+                if(!options.spec) return {
+                    code: -1,
+                    msg: '规格不能为空'
+                }
+                if(!options.type) return {
+                    code: -1,
+                    msg: '货物类别不能为空'
+                }
+                return yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
+            },
+            * updateValue(options) {
+                if(!options.supplierId) return {
+                    code: -1,
+                    msg: '缺少必要参数'
+                }
+                const result = yield this.update(options,{
+                    where :{
+                        supplierInventoryId:{
+                            $eq:options.supplierValueId,
                         }
                     }
                 })
                 if(!result) return{
-                    code:-1,
-                    msg:'修改的记录不存在'
+                    code: -1,
+                    msg: '更新出错'
                 }
-                for(var props in options){
-                    result[props]?result[props] = options[props]:'';
+                if(result == 0) return {
+                    code: -1,
+                    msg: '没有任何更新'
                 }
-                result.save();
                 return {
-                    code:200,
-                    msg:"修改成功"
+                    code: 200,
+                    msg: '更新数据成功'
                 }
             },
-            * add(options){
-                yield this.sync();
-                return yield this.create(options);
-            },
-            * remove(options){
+            * deleteValue(options) {
+                if(!options.supplierId) return {
+                    code: -1,
+                    msg: '缺少必要参数'
+                }
                 const result = yield this.destroy({
-                    where:{
-                        supplierId:{
-                            $in:options.supplierId.split(','),
+                    where :{
+                        supplierInventoryId:{
+                            $eq:options.supplierValueId,
                         }
                     }
                 })
-                if(result) return {
-                    code:200,
-                    msg:'删除成功'
+
+                if(!result) return {
+                    code: -1,
+                    msg: '删除错误'
+                }
+                if(result == 0) return {
+                    code: -1,
+                    msg: '受影响数据为0'
                 }
                 return {
-                    code:-1,
-                    msg:'删除失败'
-                };
+                    code: 200,
+                    msg: '删除数据成功'
+                }
             }
         }
     })
