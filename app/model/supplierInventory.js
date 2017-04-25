@@ -100,7 +100,7 @@ module.exports = app => {
                 };
             },
             * addInventory(options) {
-                if (!options.supplierId) return {
+                if (!options.supplierInventoryId) return {
                     code: -1,
                     msg: '请选择供应商',
                 }
@@ -115,7 +115,7 @@ module.exports = app => {
                 return yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
             },
             * updateInventory(options) {
-                if(!options.supplierId) return {
+                if(!options.supplierInventoryId) return {
                     code: -1,
                     msg: '缺少必要参数'
                 }
@@ -164,6 +164,9 @@ module.exports = app => {
                     code: 200,
                     msg: '删除数据成功'
                 }
+            },
+            * queryProduct(){
+                
             }
         }
     })

@@ -1,3 +1,5 @@
+'use strict';
+
 const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');

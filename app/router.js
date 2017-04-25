@@ -29,4 +29,6 @@ module.exports = app => {
   app.post('/zues/api/price/add','price.add');
   app.post('/zues/api/price/update','price.update');
   app.post('/zues/api/price/remove','price.remove');
+  //供应商现货查询
+  app.get('/zues/api/product/list','product.list')
 };
