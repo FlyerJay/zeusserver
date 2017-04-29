@@ -165,8 +165,27 @@ module.exports = app => {
                     msg: '删除数据成功'
                 }
             },
-            * queryProduct(){
-                
+            * queryProduct(options){
+                const results = yield app.model.query(`SELECT si.supplierInventoryId,si.spec,
+                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,s.freight,s.benifit,sv.value
+                    FROM supplier_inventory si
+                    LEFT JOIN supplier s
+                    ON s.supplierId = si.supplierId
+                    LEFT JOIN supplier_value sv
+                    ON si.spec = sv.spec
+                    AND si.type = sv.type
+                    AND s.supplierId = sv.supplierId
+                    WHERE (si.spec = :spec OR :spec = '')
+                    AND (si.type = :type OR :type = '')`,{
+                        replacements:{
+                            spec:options.spec?options.spec:'',
+                            type:options.type?options.type:'',
+                        }
+                    });
+                return {
+                    code: 200,
+                    data:results[0]
+                }
             }
         }
     })
