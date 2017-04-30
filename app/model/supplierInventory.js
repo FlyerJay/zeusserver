@@ -166,7 +166,8 @@ module.exports = app => {
                 }
             },
             * queryProduct(options){
-                const results = yield app.model.query(`SELECT si.supplierInventoryId,si.spec,
+                var result = {};
+                const [[data],[[{rowCount}]]] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,s.freight,s.benifit,sv.value
                     FROM supplier_inventory si
                     LEFT JOIN supplier s
@@ -176,15 +177,46 @@ module.exports = app => {
                     AND si.type = sv.type
                     AND s.supplierId = sv.supplierId
                     WHERE (si.spec = :spec OR :spec = '')
-                    AND (si.type = :type OR :type = '')`,{
+                    AND (si.type = :type OR :type = '')
+                    ORDER BY si.lastUpdateTime DESC
+                    LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?options.spec:'',
                             type:options.type?options.type:'',
+                            start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                            offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                         }
-                    });
+                    }),
+                    app.model.query(`SELECT count(1) as rowCount
+                    FROM supplier_inventory si
+                    LEFT JOIN supplier s
+                    ON s.supplierId = si.supplierId
+                    LEFT JOIN supplier_value sv
+                    ON si.spec = sv.spec
+                    AND si.type = sv.type
+                    AND s.supplierId = sv.supplierId
+                    WHERE (si.spec = :spec OR :spec = '')
+                    AND (si.type = :type OR :type = '')
+                    ORDER BY si.lastUpdateTime DESC
+                    LIMIT :start,:offset`,{
+                        replacements:{
+                            spec:options.spec?options.spec:'',
+                            type:options.type?options.type:'',
+                            start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                            offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        }
+                    })
+                    ]
+                result.row = data;
+                result.totalCount = rowCount;
+                if(result.row.length <= 0) return {
+                    code:-1,
+                    msg:'查询数据为空'
+                }
                 return {
                     code: 200,
-                    data:results[0]
+                    data: result,
+                    msg:'查询数据成功'
                 }
             }
         }
