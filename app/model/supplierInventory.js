@@ -167,7 +167,7 @@ module.exports = app => {
             },
             * queryProduct(options){
                 var result = {};
-                const [[data],[[{rowCount}]]] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
+                const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,s.freight,s.benifit,sv.value
                     FROM supplier_inventory si
                     LEFT JOIN supplier s
@@ -207,12 +207,14 @@ module.exports = app => {
                         }
                     })
                     ]
-                result.row = data;
-                result.totalCount = rowCount;
-                if(result.row.length <= 0) return {
+                if(!$1[0] || $1[0].length <= 0) return {
                     code:-1,
                     msg:'查询数据为空'
                 }
+                result.row = $1[0];
+                result.totalCount = $2[0][0].rowCount;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
                 return {
                     code: 200,
                     data: result,

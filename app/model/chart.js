@@ -50,7 +50,7 @@ module.exports = app => {
 		tableName:"chart",
 		timestamps:false,
         classMethods:{
-            *getList(options) {
+            * getList(options) {
                 const result = {};
                 const [[data]] = yield app.model.query('SELECT ',
                 {
@@ -58,6 +58,13 @@ module.exports = app => {
 
                     }
                 })
+            },
+            * add(options) {
+                const result = yield this.create(options);
+                return {
+                    code:200,
+                    msg:"添加购物车成功"
+                }
             }
         }
     })
