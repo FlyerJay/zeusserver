@@ -60,11 +60,50 @@ module.exports = app => {
                 })
             },
             * add(options) {
-                const result = yield this.create(options);
+                if(!options.userId) return {
+                    code:-1,
+                    msg:"需要用户信息"
+                }
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"需要公司信息"
+                }
+                if(!options.supplierInventoryId) return {
+                    code:-1,
+                    msg:"缺少库存信息"
+                }
+                if(!options.chartAmount) {
+                    options.chartAmount = 1;
+                }
+                if(!options.chartAdjust) {
+                    options.chartAdjust = 0;
+                }
+                const result = yield this.create(Object.assign(options,{createTime:new Date().getTime()}));
                 return {
                     code:200,
                     msg:"添加购物车成功"
                 }
+            },
+            * remove(options) {
+                if(!options.chartId) return {
+                    code:-1,
+                    msg:"请选择要删除的记录"
+                }
+                const result = yield this.destroy({
+                    where:{
+                        chartId:{
+                            $in:options.chartId.split(','),
+                        }
+                    }
+                })
+                if(result) return {
+                    code:200,
+                    msg:'删除成功'
+                }
+                return {
+                    code:-1,
+                    msg:'删除失败'
+                };
             }
         }
     })
