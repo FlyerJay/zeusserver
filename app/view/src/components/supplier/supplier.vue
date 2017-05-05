@@ -1,0 +1,44 @@
+<template lang="html">
+  <bottom-wrap></bottom-wrap>
+</template>
+
+<script>
+  import bottomWrap from '../common/bottomwrap'
+  import { updateForm } from '../../vuex/action'
+
+  export default {
+    components: {
+      bottomWrap
+    },
+    vuex: {
+      actions: {
+        updateForm
+      }
+    },
+    data() {
+      return {
+        topMenuData: [
+          {
+            url: '/info',
+            name: '供应商信息'
+          },
+          {
+            url: '/price',
+            name: '供应商价格表'
+          },
+          {
+            url: '/stock',
+            name: '供应商库存'
+          }
+        ]
+      }
+    },
+    mounted: function() {
+      this.updateForm('topMenuData', this.topMenuData)
+    }
+  }
+</script>
+
+<style lang="less">
+
+</style>

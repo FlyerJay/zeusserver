@@ -1,24 +1,24 @@
 <template lang="html">
-  <div class="">
+  <div class="main-wrap">
     <div class="main-left">
-      <left-nav></left-nav>
+      <bottom-nav></bottom-nav>
     </div>
     <div class="main-right">
       <router-view></router-view>
     </div>
   </div>
-
 </template>
 
 <script>
-import leftNav from '../common/leftnav'
+import bottomNav from './bottomnav'
 
 export default {
   components: {
-    leftNav
+    bottomNav
   }
 }
 </script>
 
-<style lang="css">
+<style lang="less">
+
 </style>
