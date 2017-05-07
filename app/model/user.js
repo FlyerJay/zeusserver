@@ -97,7 +97,8 @@ module.exports = app => {
                         password:{
                             $eq:options.password,
                         }
-                    }
+                    },
+                    attributes:['userToken','userId','comId','valid','userName','registerTime','lastLoginTime']
                 });
                 if(!isExist) return {
                     code:-1,
