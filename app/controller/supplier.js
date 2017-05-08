@@ -18,6 +18,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Supplier.remove(ctx.request.body);
     }
+    * address() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Supplier.address();
+    }
   }
   return SupplierController;
 };
