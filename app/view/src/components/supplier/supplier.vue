@@ -19,15 +19,15 @@
       return {
         topMenuData: [
           {
-            url: '/info',
+            url: '/supplier/info',
             name: '供应商信息'
           },
           {
-            url: '/price',
+            url: '/supplier/price',
             name: '供应商价格表'
           },
           {
-            url: '/stock',
+            url: '/supplier/stock',
             name: '供应商库存'
           }
         ]

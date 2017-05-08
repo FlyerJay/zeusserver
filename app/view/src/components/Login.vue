@@ -36,17 +36,17 @@
   </el-row>
 </template>
 <script>
-    export default {
-    data () {
-      return {
-        name: '',
-        password: '',
-        password_r:'',
-        inOut: true,
-        tips:"输入密码啊"
-      }
-    },
-    watch: {
+export default {
+  data () {
+    return {
+      name: '',
+      password: '',
+      password_r:'',
+      inOut: true,
+      tips:"输入密码啊"
+    }
+  },
+  watch: {
     // 如果 question 发生改变，这个函数就会运行
     password_r: function () {
       if(this.password_r ==''){
@@ -62,11 +62,11 @@
   },
   methods:{
     login() {
-           this.$message({
-          message:  `欢迎${this.name}同学`,
-          type: 'success'
-        })
-        },
+      this.$message({
+        message:  `欢迎${this.name}同学`,
+        type: 'success'
+      })
+    },
     register() {
         this.$message({
           message:  `新同学${this.name}注册成功`,

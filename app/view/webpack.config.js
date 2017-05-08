@@ -63,6 +63,7 @@ var common = {
     extensions: ['', '.js', '.vue', '.less', '.css'],
     alias: {
       'jquery': 'jquery',
+      'axios': 'axios',
       'vue': 'vue/dist/vue.js'
     }
   },
@@ -87,14 +88,13 @@ var common = {
       query: {
         name: '[name].[ext]'
       }
-    }, {
-      test: require.resolve('jquery'),
-      loader: 'expose?jQuery!expose?$'
     }]
   },
   plugins: [
     new webpack.ProvidePlugin({
-      Vue: 'vue'
+      Vue: 'vue',
+      $: 'jquery',
+      axios: 'axios'
     })
   ],
   babel: {

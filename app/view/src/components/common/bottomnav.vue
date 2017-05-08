@@ -1,6 +1,6 @@
 <template lang="html">
-    <el-menu default-active="" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index">{{menu.name}}</el-menu-item>
+    <el-menu default-active="" class="el-menu-vertical-demo" :router="true" @open="handleOpen" @close="handleClose">
+      <el-menu-item :index="menu.url" v-for="menu in topMenuData" :key="index">{{menu.name}}</el-menu-item>
     </el-menu>
 </template>
 <script>

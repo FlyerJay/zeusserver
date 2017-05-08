@@ -32,11 +32,13 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
+      redirect: '/order',
       children: [
         {
           path: '/order',
           name: 'order',
           component: Order,
+          redirect: '/order/search',
           children: [
             {
               path: 'search',
@@ -56,6 +58,7 @@ export default new Router({
           path: '/supplier',
           name: 'supplier',
           component: Supplier,
+          redirect: '/supplier/info',
           children: [
             {
               path: 'info',
@@ -75,6 +78,7 @@ export default new Router({
           path: '/manager',
           name: 'Manager',
           component: Manager,
+          redirect: '/manager/review',
           children: [
             {
               path: 'member',

@@ -19,15 +19,15 @@
       return {
         topMenuData: [
           {
-            url: '/review',
+            url: '/manager/review',
             name: '下单审核'
           },
           {
-            url: '/member',
+            url: '/manager/member',
             name: '成员列表'
           },
           {
-            url: '/operate',
+            url: '/manager/operate',
             name: '操作记录'
           }
         ]

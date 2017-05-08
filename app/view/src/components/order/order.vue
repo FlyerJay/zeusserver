@@ -16,15 +16,15 @@
       return {
         topMenuData: [
           {
-            url: '/search',
+            url: '/order/search',
             name: '厂家现货查询'
           },
           {
-            url: '/shop',
+            url: '/order/shop',
             name: '购物车'
           },
           {
-            url: '/detail',
+            url: '/order/detail',
             name: '订单详情'
           }
         ]
