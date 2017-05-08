@@ -105,6 +105,13 @@ module.exports = app => {
                     code:-1,
                     msg:'删除失败'
                 };
+            },
+            * address(){
+                const result = yield app.model.query(`SELECT DISTINCT address from supplier`);
+                return {
+                    code:200,
+                    data:result[0]
+                }
             }
         }
     })
