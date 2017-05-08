@@ -40,7 +40,7 @@ module.exports = app => {
             comment:"是否审核通过"
         },
         createTime:{
-            type:INTEGER,
+            type:STRING,
             allowNull:false,
             comment:"创建时间"
         }
@@ -51,16 +51,57 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * orderList(options){
-                return yield this.findAll();
+                const $1 = yield app.model.query(``)
             },
             * addOrder(options){
-
+                if(!options.userId) return {
+                    code:-1,
+                    msg:"缺少用户信息"
+                }
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                if(!options.supplierInventoryIds) return {
+                    code:-1,
+                    msg:"缺少货物信息"
+                }
+                const now = new Date();
+                const year = now.getFullYear();
+                const mouth = now.getMonth() + 1;
+                const date = now.getDate();
+                const hour = now.getHours();
+                const min = now.getMinutes();
+                const sec = now.getSeconds();
+                let random = Math.floor(Math.random() * 10000)+'';
+                if(random.length<4){
+                    for(var i=0;i<=4-random.length;i++){
+                        random = '0'+random;
+                    }
+                }
+                let orderNo = `${year}${mouth}${date}${hour}${min}${sec}${options.comId}${random}`
+                const result = yield this.create(Object.assign(options,{validate:0,createTime:new Date().getTime(),orderNo}));
+                return {
+                    code:200,
+                    msg:"下单成功",
+                    data:result
+                }
             },
             * orderDetail(options){
 
             },
             * removeOrder(options){
-                
+                if(!options.orderNo) return {
+                    code:-1,
+                    msg:"请填写要删除的订单编号"
+                }
+                const result = yield this.destroy({
+                    where:{
+                        orderNo:{
+                            $in:options.supplierId.split(','),
+                        }
+                    }
+                })
             }
         }
     })

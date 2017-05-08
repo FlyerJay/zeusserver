@@ -36,4 +36,8 @@ module.exports = app => {
   app.post('/zues/api/chart/addToChart','chart.addToChart');
   app.post('/zues/api/chart/remove','chart.remove');
   //下单
+  app.get('/zues/api/order/list','order.list');
+  app.get('/zues/api/order/detail','order.detail');
+  app.post('/zues/api/order/add','order.add');
+  app.post('/zues/api/order/remove','order.remove');
 };

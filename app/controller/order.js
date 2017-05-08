@@ -6,7 +6,7 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Order.orderList(ctx.query);
     }
-    * addOrder() {//添加到购物车
+    * add() {//添加到购物车
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Order.addOrder(ctx.request.body);
     }
@@ -14,7 +14,7 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Order.removeOrder(ctx.request.body);
     }
-    * orderDetail() {
+    * detail() {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Order.orderDetail(ctx.query);
     }
