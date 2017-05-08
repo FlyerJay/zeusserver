@@ -1,19 +1,23 @@
 'use strict';
 
 module.exports = app => {
-  class ChartController extends app.Controller {
+  class OrderController extends app.Controller {
     * list() {//查询购物车列表
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.getList(ctx.query);
+      ctx.body = yield ctx.model.Order.orderList(ctx.query);
     }
-    * addToChart() {//添加到购物车
+    * addOrder() {//添加到购物车
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.add(ctx.request.body);
+      ctx.body = yield ctx.model.Order.addOrder(ctx.request.body);
     }
     * remove() {//从购物车中删除
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.remove(ctx.request.body);
+      ctx.body = yield ctx.model.Order.removeOrder(ctx.request.body);
+    }
+    * orderDetail() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Order.orderDetail(ctx.query);
     }
   }
-  return ChartController;
+  return OrderController;
 };
