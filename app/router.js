@@ -14,6 +14,11 @@ module.exports = app => {
   app.get('/zues/api/user/validate','user.validate');
   //公司
   app.get('/zues/api/company','company.list');
+  //运费信息
+  app.get('/zues/api/freight/list','freight.list');
+  app.post('/zues/api/freight/add','freight.add');
+  app.post('/zues/api/freight/update','freight.update');
+  app.post('/zues/api/freight/remove','freight.remove');
   //供应商
   app.get('/zues/api/supplier/list','supplier.list');
   app.post('/zues/api/supplier/update','supplier.update');

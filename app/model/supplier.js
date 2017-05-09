@@ -21,14 +21,15 @@ module.exports = app => {
             allowNull:false,
             comment:"供应商名称"
         },
+        comId: {
+            type:STRING,
+            allowNull:false,
+            comment:"公司编号"
+        },
         address: {
             type:STRING,
             allowNull:false,
             comment:"供应商地址"
-        },
-        freight: {
-            type:STRING,
-            comment:"运费"
         },
         benifit: {
             type:STRING,
@@ -41,28 +42,40 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * getList(options){
-                const result = yield this.findAndCountAll({
-                    limit:options.pageSize - 0 || 30,
-                    offset:(options.page - 0) * (options.pageSize - 0) || 0,
-                    where:(function(){
-                        var condition = {};
-                        options.supplierName?condition.supplierName={
-                            like:`%${options.supplierName}%`
-                        }:'';
-                        options.address?condition.address={
-                            $eq:options.address
-                        }:'';
-                        return condition;
-                    }())
-                });
-                if(result.length === 0) return {
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                let condition = '';
+                if(options.address) {
+                    condition = `AND s.address = :address`
+                }
+                const result = app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight 
+                FROM supplier s
+                LEFT JOIN freight f ON
+                f.comId = s.comId AND
+                f.address = s.address
+                WHERE s.comId = :comId AND
+                s.supplierName LIKE :supplierName
+                ${condition}
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'',
+                        comId:options.comId,
+                        address:options.address?options.address:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })
+                console.log(result)
+                if(!result[0] || result[0].length === 0) return {
                     code:-1,
                     msg:"数据为空"
                 }
                 return {
                     code:200,
                     msg:"查询成功",
-                    data:result,
+                    data:result[0],
                 }
             },
             * update(options){
@@ -87,6 +100,10 @@ module.exports = app => {
                 }
             },
             * add(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
                 return yield this.create(options);
             },
             * remove(options){

@@ -21,6 +21,11 @@ module.exports = app => {
             allowNull:false,
             comment:"供应商编号",
         },
+        comId: {
+            type:STRING,
+            allowNull:false,
+            comment:"公司编号"
+        },
         spec: {
             type: STRING,
             allowNull:false,
@@ -62,6 +67,10 @@ module.exports = app => {
                 app.model.SupplierInventory.belongsTo(app.model.Supplier,{foreignKey:'supplierId',targetKey:'supplierId'});
             },
             * getList(options) {
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
                 const result = yield this.findAndCountAll({
                     limit:options.pageSize - 0 || 30,
                     offset:(options.page - 0) * (options.pageSize - 0) || 0,
@@ -76,6 +85,7 @@ module.exports = app => {
                                 options.address?condition.address={
                                     $eq:options.address
                                 }:'';
+                                condition.comId = options.comId;
                                 return condition;
                             }())
                         }
@@ -111,6 +121,10 @@ module.exports = app => {
                 if(!options.type) return {
                     code: -1,
                     msg: '货物类别不能为空'
+                }
+                if(!options.comId) return {
+                    code: -1,
+                    msg: '缺少公司信息'
                 }
                 return yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
             },
