@@ -63,54 +63,83 @@ module.exports = app => {
 		tableName:"supplier_inventory",
 		timestamps:false,
         classMethods:{
-            associate(){
-                app.model.SupplierInventory.belongsTo(app.model.Supplier,{foreignKey:'supplierId',targetKey:'supplierId'});
-            },
             * getList(options) {
                 if(!options.comId) return {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                const result = yield this.findAndCountAll({
-                    limit:options.pageSize - 0 || 30,
-                    offset:(options.page - 0) * (options.pageSize - 0) || 0,
-                    include:[
-                        {
-                            model:app.model.Supplier,
-                            where:(function(){
-                                var condition = {};
-                                options.supplierName?condition.supplierName={
-                                    like:`%${options.supplierName}%`
-                                }:'';
-                                options.address?condition.address={
-                                    $eq:options.address
-                                }:'';
-                                condition.comId = options.comId;
-                                return condition;
-                            }())
-                        }
-                    ],
-                    where:(function(){
-                        var condition = {};
-                        options.spec?condition.spec={
-                            like:`%${options.spec}%`
-                        }:'';
-                        options.type?condition.type={
-                            $eq:options.type
-                        }:'';
-                        return condition;
-                    }())
-                });
-                if(result.length === 0) return {
+                var addressCondition = '';
+                if(options.address){
+                    addressCondition = `AND s.address = :address`
+                }
+                var typeCondition = '';
+                if(options.type){
+                    typeCondition = `AND si.type = :type`
+                }
+                const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.supplierId,si.comId,si.spec,si.lastUpdateTime,
+                si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierName,s.address,s.benifit,f.freight FROM supplier_inventory si
+                INNER JOIN supplier s ON
+                s.comId = si.comId
+                AND s.supplierName LIKE :supplierName
+                AND s.supplierId = si.supplierId
+                ${addressCondition}
+                INNER JOIN freight f ON
+                f.address = s.address
+                WHERE si.spec LIKE :spec
+                AND si.comId = :comId
+                ${typeCondition}
+                ORDER BY si.lastUpdateTime DESC
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        address:options.address?options.address:'',
+                        comId:options.comId,
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
+                        spec:options.spec?`%${options.spec}%`:'%%',
+                        type:options.type?options.type:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                }),
+                app.model.query(`SELECT count(1) as count FROM supplier_inventory si
+                INNER JOIN supplier s ON
+                s.comId = si.comId
+                AND s.supplierName LIKE :supplierName
+                AND s.supplierId = si.supplierId
+                ${addressCondition}
+                INNER JOIN freight f ON
+                f.address = s.address
+                WHERE si.spec LIKE :spec
+                AND si.comId = :comId
+                ${typeCondition}
+                ORDER BY si.lastUpdateTime DESC
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        address:options.address?options.address:'',
+                        comId:options.comId,
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
+                        spec:options.spec?`%${options.spec}%`:'%%',
+                        type:options.type?options.type:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
                     msg:"数据为空"
                 }
+                let result= {};
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
                 return {
-                    result
-                };
+                    code:200,
+                    msg:"查询成功",
+                    data:result,
+                }
             },
             * addInventory(options) {
-                if (!options.supplierInventoryId) return {
+                if (!options.supplierId) return {
                     code: -1,
                     msg: '请选择供应商',
                 }
@@ -182,17 +211,19 @@ module.exports = app => {
             * queryProduct(options){
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
-                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,s.freight,s.benifit,sv.value
+                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
                     FROM supplier_inventory si
-                    LEFT JOIN supplier s
+                    INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     LEFT JOIN supplier_value sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
                     AND s.supplierId = sv.supplierId
+                    INNER JOIN freight f ON
+                    f.address = s.address
                     WHERE (si.spec = :spec OR :spec = '')
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC
+                    ORDER BY si.lastUpdateTime DESC , sv.lastUpdateTime DESC
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?options.spec:'',
@@ -201,14 +232,16 @@ module.exports = app => {
                             offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                         }
                     }),
-                    app.model.query(`SELECT count(1) as rowCount
+                    app.model.query(`SELECT count(1) as count
                     FROM supplier_inventory si
-                    LEFT JOIN supplier s
+                    INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     LEFT JOIN supplier_value sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
                     AND s.supplierId = sv.supplierId
+                    INNER JOIN freight f ON
+                    f.address = s.address
                     WHERE (si.spec = :spec OR :spec = '')
                     AND (si.type = :type OR :type = '')
                     ORDER BY si.lastUpdateTime DESC
@@ -226,7 +259,7 @@ module.exports = app => {
                     msg:'查询数据为空'
                 }
                 result.row = $1[0];
-                result.totalCount = $2[0][0].rowCount;
+                result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
                 result.pageSize = options.pageSize?options.pageSize:30;
                 return {

@@ -62,43 +62,71 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                const result = yield this.findAndCountAll({
-                    limit:options.pageSize - 0 || 30,
-                    offset:(options.page - 0) * (options.pageSize - 0) || 0,
-                    include:[
-                        {
-                            model:app.model.Supplier,
-                            where:(function(){
-                                var condition = {};
-                                options.supplierName?condition.supplierName={
-                                    like:`%${options.supplierName}%`
-                                }:'';
-                                options.address?condition.address={
-                                    $eq:options.address
-                                }:'';
-                                condition.comId = options.comId;
-                                return condition;
-                            }())
-                        }
-                    ],
-                    where:(function(){
-                        var condition = {};
-                        options.spec?condition.spec={
-                            like:`%${options.spec}%`
-                        }:'';
-                        options.type?condition.type={
-                            $eq:options.type
-                        }:'';
-                        return condition;
-                    }())
-                });
-                if(result.length === 0) return {
+                var addressCondition = '';
+                if(options.address){
+                    addressCondition = `AND s.address = :address`
+                }
+                var typeCondition = '';
+                if(options.type){
+                    typeCondition = `AND si.type = :type`
+                }
+                const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
+                s.supplierName,s.address,s.benifit
+                FROM supplier_value sv
+                LEFT JOIN supplier s ON
+                s.supplierName LIKE :supplierName
+                AND s.comId LIKE sv.comId
+                ${addressCondition}
+                WHERE sv.spec LIKE :spec
+                AND sv.comId = :comId
+                ${typeCondition}
+                ORDER BY sv.lastUpdateTime DESC
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        address:options.address?options.address:'',
+                        comId:options.comId,
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
+                        spec:options.spec?`%${options.spec}%`:'%%',
+                        type:options.type?options.type:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                }),
+                app.model.query(`SELECT count(1) as count
+                FROM supplier_value sv
+                LEFT JOIN supplier s ON
+                s.supplierName LIKE :supplierName
+                AND s.comId LIKE sv.comId
+                ${addressCondition}
+                WHERE sv.spec LIKE :spec
+                AND sv.comId = :comId
+                ${typeCondition}
+                ORDER BY sv.lastUpdateTime DESC
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        address:options.address?options.address:'',
+                        comId:options.comId,
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
+                        spec:options.spec?`%${options.spec}%`:'%%',
+                        type:options.type?options.type:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
                     msg:"数据为空"
                 }
+                let result= {};
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
                 return {
-                    result
-                };
+                    code:200,
+                    msg:"查询成功",
+                    data:result,
+                }
             },
             * addValue(options) {
                 if (!options.supplierId) return {
@@ -117,7 +145,12 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少公司信息'
                 }
-                return yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
+                const result = yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
+                return {
+                    code:200,
+                    msg:"添加数据成功",
+                    data:result
+                }
             },
             * updateValue(options) {
                 if(!options.supplierId) return {
