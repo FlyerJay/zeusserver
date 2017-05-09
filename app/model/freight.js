@@ -100,7 +100,7 @@ module.exports = app => {
                     code: -1,
                     msg:"缺少公司信息"
                 }
-                const result = yield app.model.query(`SELECT * FROM freight 
+                const [$1,$2] = yield [app.model.query(`SELECT * FROM freight 
                 WHERE comId = :comId
                 ORDER BY lastUpdateTime DESC LIMIT :start,:offset`,{
                     replacements:{
@@ -108,14 +108,28 @@ module.exports = app => {
                         start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
                         offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                     }
-                })
-                if(!result[0] || result[0].length ===0) return {
+                }),
+                app.model.query(`SELECT count(1) as count FROM freight 
+                WHERE comId = :comId
+                ORDER BY lastUpdateTime DESC LIMIT :start,:offset`,{
+                    replacements:{
+                        comId:options.comId,
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                if(!$1[0] || $1[0].length ===0) return {
                     code:-1,
                     msg:"数据为空"
                 }
+                let result= {};
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
                 return {
                     code:200,
-                    data:result[0],
+                    data:result,
                     msg:"查询成功"
                 }
             },
