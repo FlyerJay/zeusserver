@@ -2,22 +2,22 @@
   <div class="search-wrap">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="规格">
-        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+        <el-input v-model="stockParams.spec" placeholder="审批人"></el-input>
       </el-form-item>
       <el-form-item label="目的地">
-        <el-select v-model="formInline.region" placeholder="活动区域">
+        <el-select v-model="stockParams.region" placeholder="活动区域">
           <el-option label="南京" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="材质">
-        <el-select v-model="formInline.region" placeholder="活动区域">
+        <el-select v-model="stockParams.material" placeholder="活动区域">
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="类别">
-        <el-select v-model="formInline.region" placeholder="活动区域">
+        <el-select v-model="stockParams.type" placeholder="活动区域">
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
@@ -40,12 +40,29 @@
 </template>
 
 <script>
+import {
+  loadStock
+} from '../../vuex/action'
+
 export default {
+  vuex: {
+    actions: {
+      loadStock
+    },
+    getters: {
+      userInfo: ({
+        common
+      }) => common.userInfo
+    }
+  },
   data() {
     return {
-      formInline: {
-        user: '',
-        region: ''
+      stockParams: {
+        spec: '',
+        material: '',
+        type: '',
+        region: '',
+        comId: this.userInfo.comId
       },
       tableData: [{
         date: '2016-05-02',
@@ -67,9 +84,12 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!');
+    searchStock() {
+      this.loadStock(this.stockParams)
     }
+  },
+  mounted: function() {
+      this.loadStock(this.stockParams)
   }
 }
 </script>
