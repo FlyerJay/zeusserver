@@ -20,7 +20,7 @@ module.exports = app => {
     }
     * address() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Supplier.address();
+      ctx.body = yield ctx.model.Supplier.address(ctx.query);
     }
   }
   return SupplierController;

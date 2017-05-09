@@ -50,7 +50,7 @@ module.exports = app => {
                 if(options.address) {
                     condition = `AND s.address = :address`
                 }
-                const result = app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight 
+                const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight 
                 FROM supplier s
                 LEFT JOIN freight f ON
                 f.comId = s.comId AND
@@ -60,22 +60,43 @@ module.exports = app => {
                 ${condition}
                 LIMIT :start,:offset`,{
                     replacements:{
-                        supplierName:options.supplierName?`%${options.supplierName}%`:'',
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         comId:options.comId,
                         address:options.address?options.address:'',
                         start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
                         offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                     }
-                })
-                console.log(result)
-                if(!result[0] || result[0].length === 0) return {
+                }),
+                app.model.query(`SELECT count(1) as count 
+                FROM supplier s
+                LEFT JOIN freight f ON
+                f.comId = s.comId AND
+                f.address = s.address
+                WHERE s.comId = :comId AND
+                s.supplierName LIKE :supplierName
+                ${condition}
+                LIMIT :start,:offset`,{
+                    replacements:{
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
+                        comId:options.comId,
+                        address:options.address?options.address:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
                     msg:"数据为空"
                 }
+                let result= {};
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
                 return {
                     code:200,
                     msg:"查询成功",
-                    data:result[0],
+                    data:result,
                 }
             },
             * update(options){
@@ -90,10 +111,17 @@ module.exports = app => {
                     code:-1,
                     msg:'修改的记录不存在'
                 }
+                var keys = '';
+                var values = '';
+                var value = '';
                 for(var props in options){
-                    result[props]?result[props] = options[props]:'';
+                    yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
+                        replacements:{
+                            supplierId:options.supplierId,
+                            value:options[props]
+                        }
+                    })
                 }
-                result.save();
                 return {
                     code:200,
                     msg:"修改成功"
@@ -104,7 +132,34 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                return yield this.create(options);
+                if(!options.supplierName) return {
+                    code:-1,
+                    msg:"请输入供应商名称"
+                }
+                if(!options.address) return {
+                    code:-1,
+                    msg:"请选择供应商地址"
+                }
+                const isExsit = yield this.findOne({
+                    where:{
+                        supplierName:{
+                            $eq:options.supplierName
+                        },
+                        comId:{
+                            $eq:options.comId
+                        }
+                    }
+                })
+                if(isExsit) return {
+                    code:-1,
+                    msg:"已经存在相同的记录"
+                }
+                const result = yield this.create(options);
+                return {
+                    code:200,
+                    msg:"添加成功",
+                    data:result
+                }
             },
             * remove(options){
                 const result = yield this.destroy({
@@ -123,8 +178,16 @@ module.exports = app => {
                     msg:'删除失败'
                 };
             },
-            * address(){
-                const result = yield app.model.query(`SELECT DISTINCT address from supplier`);
+            * address(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息:comId"
+                }
+                const result = yield app.model.query(`SELECT DISTINCT address from freight WHERE comId = :comId`,{
+                    replacements:{
+                        comId:options.comId,
+                    }
+                });
                 return {
                     code:200,
                     data:result[0]
