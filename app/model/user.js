@@ -75,7 +75,7 @@ module.exports = app => {
                     registerTime: +new Date(),
                     lastLoginTime: +new Date(),
                     userToken: uuid.v4(),
-                    valid:0,
+                    valid:1,
                 };
                 var result = yield this.create(Object.assign(options,extendFiled));
                 return {
