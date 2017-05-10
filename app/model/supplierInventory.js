@@ -125,7 +125,8 @@ module.exports = app => {
                 })]
                 if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
-                    msg:"数据为空"
+                    msg:"数据为空",
+                    data:[]
                 }
                 let result= {};
                 result.row = $1[0];
@@ -256,7 +257,8 @@ module.exports = app => {
                     ]
                 if(!$1[0] || $1[0].length <= 0) return {
                     code:-1,
-                    msg:'查询数据为空'
+                    msg:'查询数据为空',
+                    data:[]
                 }
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;

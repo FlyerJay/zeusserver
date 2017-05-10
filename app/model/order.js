@@ -47,11 +47,63 @@ module.exports = app => {
     },{
         freezeTabName:true,
         underscored:true,
-		tableName:"order",
+		tableName:"tb_order",
 		timestamps:false,
         classMethods:{
             * orderList(options){
-                const $1 = yield app.model.query(``)
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"请输入公司编号"
+                }
+                var userCondition = ''
+                if(options.userId) {
+                    userCondition = 'AND o.userId = :userId'
+                }
+                const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,ui.userName,o.createTime,o.validate FROM tb_order o
+                LEFT JOIN user_info ui
+                ON ui.userId = o.userId
+                WHERE o.comId = :comId
+                ${userCondition}
+                ORDER BY o.createTime ASC
+                LIMIT :start,:offset
+                `,{
+                    replacements:{
+                        comId:options.comId,
+                        userId:options.userId?options.userId:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                }),
+                app.model.query(`SELECT count(1) AS count FROM tb_order o
+                LEFT JOIN user_info ui
+                ON ui.userId = o.userId
+                WHERE o.comId = :comId
+                ${userCondition}
+                ORDER BY o.createTime ASC
+                LIMIT :start,:offset
+                `,{
+                    replacements:{
+                        comId:options.comId,
+                        userId:options.userId?options.userId:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                var result = {}
+                if(!$1[0] || $1[0].length <= 0) return {
+                    code:-1,
+                    msg:'查询数据为空',
+                    data:[]
+                }
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
+                return {
+                    code: 200,
+                    data: result,
+                    msg:'查询数据成功'
+                }
             },
             * addOrder(options){
                 if(!options.userId) return {
@@ -68,7 +120,8 @@ module.exports = app => {
                 }
                 const now = new Date();
                 const year = now.getFullYear();
-                const mouth = now.getMonth() + 1;
+                var  mouth = now.getMonth() + 1;
+                mouth = mouth < 10 ? '0'+mouth:mouth;
                 const date = now.getDate();
                 const hour = now.getHours();
                 const min = now.getMinutes();
@@ -88,7 +141,24 @@ module.exports = app => {
                 }
             },
             * orderDetail(options){
-
+                if(!options.orderNo) return {
+                    code:-1,
+                    msg:"缺少订单编号,orderNo"
+                }
+                const $1 = yield app.model.query(`SELECT o.orderNo,o.comId,o.userId,o.supplierInventoryIds FROM tb_order o
+                WHERE o.orderNo = :orderNo`,{
+                    replacements:{
+                        orderNo:options.orderNo
+                    }
+                })
+                if(!$1[0] || $1[0].length === 0) return {
+                    code:-1,
+                    msg:"系统中不存在的订单号",
+                    data:{}
+                }
+                if($1[0].supplierInventoryIds){
+                    console.log(this);
+                }
             },
             * removeOrder(options){
                 if(!options.orderNo) return {
