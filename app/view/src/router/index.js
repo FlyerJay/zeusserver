@@ -1,9 +1,4 @@
-import Vue from 'vue'
 import Router from 'vue-router'
-//登录页面
-import Login from '../components/Login'
-//主页面
-import Home from '../components/Home'
 //供应商
 import Supplier from '../components/supplier/supplier'
 import Info from '../components/supplier/info'
@@ -18,81 +13,70 @@ import Review from '../components/manager/review'
 import Order from '../components/order/order'
 import Detail from '../components/order/detail'
 import Search from '../components/order/search'
-import Shop from '../components/order/shop'
+import Cart from '../components/order/Cart'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
-      path: '/login',
-      name: 'Login',
-      component: Login
+      path: '/',
+      redirect: '/order',
+      component: Order
     },
     {
-      path: '/',
-      name: 'home',
-      component: Home,
-      redirect: '/order',
-      children: [
-        {
-          path: '/order',
-          name: 'order',
-          component: Order,
-          redirect: '/order/search',
-          children: [
-            {
-              path: 'search',
-              component: Search
-            },
-            {
-              path: 'shop',
-              component: Shop
-            },
-            {
-              path: 'detail',
-              component: Detail
-            }
-          ]
+      path: '/order',
+      name: 'order',
+      component: Order,
+      redirect: '/order/search',
+      children: [{
+          path: 'search',
+          component: Search
         },
         {
-          path: '/supplier',
-          name: 'supplier',
-          component: Supplier,
-          redirect: '/supplier/info',
-          children: [
-            {
-              path: 'info',
-              component: Info
-            },
-            {
-              path: 'price',
-              component: Price
-            },
-            {
-              path: 'stock',
-              component: Stock
-            }
-          ]
+          path: 'cart',
+          component: Cart
         },
         {
-          path: '/manager',
-          name: 'Manager',
-          component: Manager,
-          redirect: '/manager/review',
-          children: [
-            {
-              path: 'member',
-              component: Member
-            },
-            {
-              path: 'operate',
-              component: Operate
-            },
-            {
-              path: 'review',
-              component: Review
-            }
-          ]
+          path: 'detail',
+          component: Detail
+        }
+      ]
+    },
+    {
+      path: '/supplier',
+      name: 'supplier',
+      component: Supplier,
+      redirect: '/supplier/info',
+      children: [{
+          path: 'info',
+          component: Info
+        },
+        {
+          path: 'price',
+          component: Price
+        },
+        {
+          path: 'stock',
+          component: Stock
+        }
+      ]
+    },
+    {
+      path: '/manager',
+      name: 'Manager',
+      component: Manager,
+      redirect: '/manager/review',
+      children: [{
+          path: 'member',
+          component: Member
+        },
+        {
+          path: 'operate',
+          component: Operate
+        },
+        {
+          path: 'review',
+          component: Review
         }
       ]
     }

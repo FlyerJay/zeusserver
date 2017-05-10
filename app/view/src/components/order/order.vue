@@ -20,7 +20,7 @@
             name: '厂家现货查询'
           },
           {
-            url: '/order/shop',
+            url: '/order/cart',
             name: '购物车'
           },
           {

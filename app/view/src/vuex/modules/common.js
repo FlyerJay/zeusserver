@@ -1,7 +1,8 @@
 const state = {
   topMenuData: [],
   userInfo: {
-    comId: '01'
+    comId: '01',
+    userId: 'flyer'
   }
 }
 

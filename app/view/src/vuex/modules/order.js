@@ -1,13 +1,11 @@
 const state = {
-  topMenuData: [],
-  userInfo: {
-    comId: '01'
-  }
+  stockList: [],
+  cartList: []
 }
 
 
 const mutations = {
-  UPDATE_FORM(state, key, val) {
+  UPDATE_ORDERFORM(state, key, val) {
     state[key] = val
   }
 }

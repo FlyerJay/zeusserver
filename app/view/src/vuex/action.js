@@ -51,6 +51,39 @@ export const loadStock = ({ dispatch }, params) => {
   .then(function (response) {
     if (response.data.code === 200) {
       console.log(response)
+      dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//添加到购物车
+export const addTocart = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/chart/addToChart', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      console.log(response)
+      dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//加载购物车列表
+export const loadCartList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/chart/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      console.log(response)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();

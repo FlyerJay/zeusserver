@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>奎鑫Zeus采销系统</title>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <div class="top-nav">
+      <div class="tit-contain clearfix">
+        <i></i>
+        <span class="maintit">奎星</span>
+        <i class="line"></i>
+        <span class="subtit">采销系统</span>
+      </div>
+    </div>
+    <div class="main-wrap">
+      <div class="login-form">
+        <ul>
+          <li class="form-tit">
+              <p>用户登录</p>
+          </li>
+          <li>
+            <input type="text" placeholder="用户名" class="input">
+          </li>
+          <li>
+            <input type="text" placeholder="密码"  class="input">
+          </li>
+          <li>
+            <select name=""  class="input company">
+                <option value="">请选择公司</option>
+                <option value="">南京奎鑫</option>
+                <option value=""></option>
+            </select>
+          </li>
+          <li>
+              <a href="" class="login-btn">登录</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="contact-wrap">
+
+    </div>
+  </div>
+</body>
+
+</html>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }  
+  body,
+  html {
+    height: 100%;
+  }
+
+  li,
+  ul {
+    list-style: none;
+  }
+
+  .top-nav {
+    height: 40px;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #9a9ba0;
+  }
+
+  .top-nav .tit-contain {
+    color: #696969;
+    width: 600px;
+    margin: 0 auto;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .top-nav .tit-contain .line {
+    float: left;
+    margin: 13px 6px;
+    width: 1px;
+    height: 14px;
+    background-color: #ebecf0;
+  }
+
+  .top-nav .tit-contain .maintit {
+    float: left;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .top-nav .tit-contain .subtit {
+    float: left;
+    font-size: 13px;
+    line-height: 41px;
+    height: 40px;
+    color: #75787d;
+  }
+
+  .top-nav .tit-contain::after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+
+  .main-wrap {
+    height: 520px;
+    width: 100%;
+    background-image: url('./static/img/bg3.jpg');
+    background-size: 100% 100%;
+    position: relative
+  }
+
+  .main-wrap .login-form {
+    height: 250px;
+    background-color: #fff;
+    position: absolute;
+    right: 150px;
+    top: 80px;
+    padding: 20px 30px;
+    border-radius: 5px;
+  }
+
+  .main-wrap .login-form .form-tit {
+    font-size: 17px;
+    color: #fccc00;
+    margin-bottom: 15px;
+  }
+
+  .main-wrap .login-form .input {
+    margin: 0 0 20px;  
+    width: 195px;
+    height: 30px;
+    border: 1px solid #cacaca;
+    border-radius: 5px;
+    padding-left: 8px;
+  }
+  .main-wrap .login-form .company {
+    width: 205px;
+    margin-bottom: 0px;
+  }
+  .login-btn {
+    display: block;
+    width: 207px;
+    height: 30px;
+    line-height: 30px;
+    margin: 20px auto;
+    background-color:  #fccc00;
+    color: #3e4533;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+</style>
