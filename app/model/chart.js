@@ -60,7 +60,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const $1 = yield app.model.query(`SELECT count(1) as count,c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,s.freight,s.benifit,sv.value FROM chart c
+                const $1 = yield app.model.query(`SELECT count(1) as count,c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
                 LEFT JOIN supplier_value sv ON
@@ -69,6 +69,8 @@ module.exports = app => {
                 si.material = sv.material
                 LEFT JOIN supplier s ON
                 s.supplierId = si.supplierId
+                LEFT JOIN freight f ON
+                f.address = s.address
                 WHERE c.userId = :userId AND
                 c.comId = :comId
                 ORDER BY c.createTime DESC
