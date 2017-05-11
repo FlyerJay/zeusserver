@@ -60,7 +60,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const $1 = yield app.model.query(`SELECT count(1) as count,c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
                 LEFT JOIN supplier_value sv ON
@@ -82,19 +82,43 @@ module.exports = app => {
                         start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
                         offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                     }
-                })
-                if(!$1[0] || $1[0].length <= 0 || $1[0][0].count == 0) return {
+                }),
+                app.model.query(`SELECT count(1) AS count FROM chart c
+                LEFT JOIN supplier_inventory si ON
+                si.supplierInventoryId = c.supplierInventoryId
+                LEFT JOIN supplier_value sv ON
+                si.spec = sv.spec AND
+                si.type = sv.type AND
+                si.material = sv.material
+                LEFT JOIN supplier s ON
+                s.supplierId = si.supplierId
+                LEFT JOIN freight f ON
+                f.address = s.address
+                WHERE c.userId = :userId AND
+                c.comId = :comId
+                ORDER BY c.createTime DESC
+                LIMIT :start,:offset`,
+                {
+                    replacements:{
+                        userId:options.userId?options.userId:'',
+                        comId:options.comId?options.comId:'',
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    }
+                })]
+                if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
-                    msg:'查询数据为空'
+                    msg:"数据为空",
+                    data:[]
                 }
                 result.row = $1[0];
-                result.totalCount = $1[0][0].count;
+                result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
                 result.pageSize = options.pageSize?options.pageSize:30;
                 return {
-                    code: 200,
-                    data: result,
-                    msg:'查询数据成功'
+                    code:200,
+                    msg:"查询成功",
+                    data:result,
                 }
             },
             * add(options) {
