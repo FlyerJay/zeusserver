@@ -1,11 +1,8 @@
 <template lang="html">
   <div class="h-contain clearfix">
-    <a href="" class="nav-logo-wrap">
-      <img src="../../../static/img/logo.png" alt="奎鑫" class="nav-logo">
-    </a>
     <ul class="nav">
       <li class="nav-item">
-        <a href="#/order" class="">宙斯报价系统</a>
+        <a href="#/order" class="active">宙斯报价系统</a>
       </li>
       <li class="nav-item">
         <a href="#/supplier" class="">供应商录入</a>
@@ -18,44 +15,35 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      activeIndex: '1',
-    };
-  },
-  methods: {
+  export default {
+    data() {
+      return {
+        activeIndex: '1',
+      };
+    },
+    methods: {}
   }
-}
 </script>
 
 <style lang="less" scoped>
   .h-contain {
-      width: 945px;
-      padding: 0 20px;
-      margin: 0 auto;
-      .nav-logo-wrap {
+    .nav {
+      .nav-item {
         float: left;
-        .nav-logo {
-          display: inline-block;
-          vertical-align: middle;
-          width: 60px;
-          height: 60px;
+        text-align: center;
+        height: 43px;
+        line-height: 43px;
+        cursor: pointer;
+      }
+      a {
+        color: #f3f5f1;
+        font-size: 14px;
+        padding: 9px 55px;
+        &.active {
+          background-color: #253340;
+          border-bottom: 2px solid #fccc08;
         }
       }
-      .nav {
-        float: left;
-        .nav-item {
-          display: inline-block;
-          vertical-align: middle;
-        }
-        a {
-          color: rgba(255,255,255,0.8);
-          font-size: 16px;
-          padding: 10px 7px;
-          line-height: 26px;
-          margin: 0 0 0 20px;
-        }
-      }
+    }
   }
 </style>
