@@ -122,10 +122,14 @@ module.exports = app => {
                 const year = now.getFullYear();
                 var  mouth = now.getMonth() + 1;
                 mouth = mouth < 10 ? '0'+mouth:mouth;
-                const date = now.getDate();
-                const hour = now.getHours();
-                const min = now.getMinutes();
-                const sec = now.getSeconds();
+                var date = now.getDate();
+                date = date < 10 ? '0' + date:date;
+                var hour = now.getHours();
+                hour = hour < 10 ? '0' + hour:hour;
+                var min = now.getMinutes();
+                min = min < 10 ? '0' + min:min;
+                var sec = now.getSeconds();
+                sec = sec < 10 ? '0' + sec:sec;
                 let random = Math.floor(Math.random() * 10000)+'';
                 if(random.length<4){
                     for(var i=0;i<=4-random.length;i++){
@@ -154,10 +158,29 @@ module.exports = app => {
                 if(!$1[0] || $1[0].length === 0) return {
                     code:-1,
                     msg:"系统中不存在的订单号",
-                    data:{}
                 }
-                if($1[0].supplierInventoryIds){
-                    console.log(this);
+                var list = [];
+                console.log($1[0][0].supplierInventoryIds);
+                var goods = $1[0][0].supplierInventoryIds.split(',')
+                console.log(goods);
+                for(var i = 0;i<goods.length;i++){
+                    var key = goods[i].split(':')[0];
+                    var amount = goods[i].split(':')[1];
+                    list[i] = yield app.model.query(`SELECT si.spec,si.type,si.material,:amount as amount,si.inventoryAmount,si.perAmount,s.supplierName FROM supplier_inventory si
+                    LEFT JOIN supplier s
+                    ON s.supplierId = si.supplierId
+                    WHERE si.supplierInventoryId = :key`,{
+                        replacements:{
+                            amount:amount?amount:1,
+                            key:key
+                        }
+                    })
+                }
+                return {
+                    code:200,
+                    msg:"查询订单成功",
+                    data:$1[0],
+                    list:list
                 }
             },
             * removeOrder(options){
