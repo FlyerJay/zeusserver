@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="7">
           <el-select v-model="searchSupParam.address" placeholder="全部">
-            <el-option :label="item.address" :value="item.address" v-for="item in supAddress"></el-option>
+            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
           </el-select>
         </el-col>
         <el-col :span="7">
@@ -28,7 +28,7 @@
         </el-col>
       </el-row>
   
-      <el-table :data="supList" style="width: 100%">
+      <el-table :data="supList" style="width: 100%" :loading="loading">
         <el-table-column property="supplierName" label="供应商名称"></el-table-column>
         <el-table-column property="address" label="供应商所在地"></el-table-column>
         <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
@@ -50,7 +50,7 @@
         </el-form-item>
         <el-form-item label="所在地：">
           <el-select v-model="newSupParam.address" placeholder="请选择活动区域">
-            <el-option :label="item.address" :value="item.address" v-for="item in supAddress"></el-option>
+            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="运费：">
@@ -72,7 +72,7 @@
         </el-form-item>
         <el-form-item label="所在地：">
           <el-select v-model="newSupParam.address" placeholder="请选择活动区域">
-            <el-option :label="item.address" :value="item.address" v-for="item in supAddress"></el-option>
+            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="运费：">
@@ -141,7 +141,8 @@
           desc: ''
         },
         dlgSupVisible: false,
-        dlgFreightVisible: false
+        dlgFreightVisible: false,
+        loading: true
       }
     },
     methods: {
@@ -156,7 +157,6 @@
               type: 'success'
             });
             this.dialogFormVisible = false;
-  
           })
       }
     },

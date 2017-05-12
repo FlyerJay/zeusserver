@@ -50,7 +50,6 @@ export const loadStock = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/product/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      console.log(response)
       dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
@@ -66,7 +65,6 @@ export const addTocart = ({ dispatch }, params) => {
   return axios.post('http://127.0.0.1:7001/zues/api/chart/addToChart', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      console.log(response)
       dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
@@ -82,7 +80,6 @@ export const loadCartList = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      console.log(response)
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {

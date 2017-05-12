@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="main-wrap">
     <div class="main-left">
-      <bottom-nav></bottom-nav>
+      <left-nav></left-nav>
     </div>
     <div class="main-right">
       <router-view></router-view>
@@ -10,11 +10,11 @@
 </template>
 
 <script>
-import bottomNav from './bottomnav'
+import leftNav from './leftNav'
 
 export default {
   components: {
-    bottomNav
+    leftNav
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="order-wrap">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form :inline="true" :model="stockParams" class="demo-form-inline">
       <el-form-item label="规格">
         <el-input v-model="stockParams.spec" placeholder="审批人"></el-input>
       </el-form-item>

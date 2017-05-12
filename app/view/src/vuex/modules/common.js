@@ -3,7 +3,8 @@ const state = {
   userInfo: {
     comId: '01',
     userId: 'flyer'
-  }
+  },
+  mainRoute: ''
 }
 
 
