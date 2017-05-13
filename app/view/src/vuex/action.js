@@ -4,12 +4,14 @@ export const updateForm = ({ dispatch }, key, val) => {
 
 //加载供应商列表
 export const loadSupList = ({ dispatch }, params) => {
-  axios.get('http://127.0.0.1:7001/zues/api/supplier/list', { params })
+  return axios.get('http://127.0.0.1:7001/zues/api/supplier/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-     dispatch('UPDATE_SUPFORM', 'supList', response.data.data.row)
+      dispatch('UPDATE_SUPFORM', 'supList', response.data.data.row);
+      return Promise.resolve();
     } else if (response.data.code === -1){
-     dispatch('UPDATE_SUPFORM', 'supList', [])
+      dispatch('UPDATE_SUPFORM', 'supList', [])
+      return Promise.reject();
     }
   })
   .catch(function (response) {

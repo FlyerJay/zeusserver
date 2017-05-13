@@ -1,6 +1,5 @@
 <template lang="html">
-  <bottom-wrap>
-  </bottom-wrap>
+  <bottom-wrap></bottom-wrap>
 </template>
 
 <script>
