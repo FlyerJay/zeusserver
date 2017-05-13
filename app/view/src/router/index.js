@@ -11,7 +11,7 @@ import Operate from '../components/manager/operate'
 import Review from '../components/manager/review'
 //订单
 import Order from '../components/order/order'
-import Detail from '../components/order/detail'
+import List from '../components/order/list'
 import Search from '../components/order/search'
 import Cart from '../components/order/Cart'
 
@@ -37,8 +37,8 @@ export default new Router({
           component: Cart
         },
         {
-          path: 'detail',
-          component: Detail
+          path: 'list',
+          component: List
         }
       ]
     },

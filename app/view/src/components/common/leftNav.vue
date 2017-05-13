@@ -3,11 +3,11 @@
     <div>
       <a href="#/order" class="nav-logo-wrap clearfix">
         <i class="nav-logo"></i>
-        <span class="leftnav-tit">奎鑫</span>
+        <span class="tit">奎鑫</span>
       </a>
     </div>
-    <el-menu default-active="" class="el-menu-vertical-demo" :router="true" @open="handleOpen" @close="handleClose">
-      <el-menu-item :index="menu.url" v-for="menu in topMenuData" :key="index">{{menu.name}}</el-menu-item>
+    <el-menu default-active="" class="el-menu-vertical-demo" :router="true">
+      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index"  :class="[ $route.path === menu.url ? 'active' : '' ]">{{menu.name}}</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -26,14 +26,6 @@
       actions: {
         updateForm
       }
-    },
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
     }
   }
 </script>
@@ -42,31 +34,34 @@
   .leftnav-wrap {
     .nav-logo-wrap {
       display: block;
-      padding: 0 4px;
+      padding: 0px 19px;
+      margin: 20px 0 30px 0;
       .nav-logo {
         float: left;
-        width: 93px;
-        height: 94px;
+        width: 60px;
+        height: 42px;
         background-image: url('../../../static/img/logo.png');
         background-size: 100% 100%;
       }
-      .leftnav-tit {
+      .tit {
         float: left;
         color: #f3f5f1;
-        margin: 35px 0 0 5px;
+        margin: -4px 0 0 19px;
+        font-size: 17px;
       }
     }
     .el-menu {
       .el-menu-item {
         color: #f3f5f1;
         cursor: pointer;
+        border-bottom: 1px solid #374c5f;
         &:hover {
           background-color: #253340;
           color: #f3f5f1;
         }
-        &.is-active {
+        &.active {
           background-color: #253340;
-          border-left: 2px solid #fccc08;
+          border-left: 3px solid #fccc08;
         }
       }
     }

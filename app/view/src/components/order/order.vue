@@ -1,11 +1,14 @@
 <template lang="html">
-  <bottom-wrap></bottom-wrap>
+  <bottom-wrap>
+  </bottom-wrap>
 </template>
 
 <script>
   import bottomWrap from '../common/bottomwrap'
-  import { updateForm } from '../../vuex/action'
-
+  import {
+    updateForm
+  } from '../../vuex/action'
+  
   export default {
     vuex: {
       actions: {
@@ -14,8 +17,7 @@
     },
     data() {
       return {
-        topMenuData: [
-          {
+        topMenuData: [{
             url: '/order/search',
             name: '厂家现货查询'
           },
@@ -24,7 +26,7 @@
             name: '购物车'
           },
           {
-            url: '/order/detail',
+            url: '/order/list',
             name: '订单详情'
           }
         ]
@@ -35,10 +37,15 @@
     },
     components: {
       bottomWrap
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.updateForm('mainRoute', to.path.split('/')[1])
+      })
     }
   }
 </script>
 
 <style lang="less">
-
+  
 </style>

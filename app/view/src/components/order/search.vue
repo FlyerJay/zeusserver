@@ -1,6 +1,6 @@
 <template>
   <div class="order-wrap">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form :inline="true" :model="stockParams" class="demo-form-inline">
       <el-form-item label="规格">
         <el-input v-model="stockParams.spec" placeholder="审批人"></el-input>
       </el-form-item>
@@ -23,7 +23,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="searchStock">查询</el-button>
+        <el-button type="warning" @click="searchStock">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="tb-wrap">
@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" property="id">
           <template scope="scope">
-              <el-button size="small" @click="enterNum(scope.index, scope.row)" type="primary">下单</el-button>
+              <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">下单</el-button>
 </template>
         </el-table-column>
       </el-table>
@@ -61,7 +61,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dlgSupVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmTocart">确 定</el-button>
+        <el-button type="warning" @click="confirmTocart">确 定</el-button>
       </div>
   </el-dialog>
   </div>
@@ -130,14 +130,3 @@
     }
   }
 </script>
-
-<style media="less">
-  .tb-wrap {
-    padding: 20px;
-    border: 1px solid #d3dce6;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
-    overflow: hidden;
-  }
-</style>

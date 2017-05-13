@@ -28,7 +28,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" property="id">
                 <template scope="scope">
-                    <el-button size="small" @click="" type="primary">修改</el-button>
+                    <el-button size="small" @click="" type="warning">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>

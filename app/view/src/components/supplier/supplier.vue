@@ -4,8 +4,10 @@
 
 <script>
   import bottomWrap from '../common/bottomwrap'
-  import { updateForm } from '../../vuex/action'
-
+  import {
+    updateForm
+  } from '../../vuex/action'
+  
   export default {
     components: {
       bottomWrap
@@ -17,8 +19,7 @@
     },
     data() {
       return {
-        topMenuData: [
-          {
+        topMenuData: [{
             url: '/supplier/info',
             name: '供应商信息'
           },
@@ -35,10 +36,15 @@
     },
     mounted: function() {
       this.updateForm('topMenuData', this.topMenuData)
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.updateForm('mainRoute', to.path.split('/')[1])
+      })
     }
   }
 </script>
 
 <style lang="less">
-
+  
 </style>

@@ -37,6 +37,7 @@
     body,
     html {
         height: 100%;
+        width: 100%;
     }
     
     #app {
@@ -72,7 +73,7 @@
         top: 0;
         left: 0;
         margin-left: 190px;
-        width: 100%;
+        width: 86.4%;
         z-index: 100;
         background: #2b3b4b;
     }
@@ -80,28 +81,38 @@
     main {
         background-color: #e9ecf1;
         width: 100%;
+        height: 100%;
         .main-wrap {
-            margin: 60px auto;
-            display: flex;
+            height: 100%;
             .main-left {
-                position: absolute;
-                left: 0;
-                top: 0;
+                float: left;
                 width: 190px;
                 height: 100%;
                 z-index: 101;
                 background-color: #33485b;
-                flex: 0 0 200px;
                 .el-menu {
                     background-color: transparent;
                 }
             }
             .main-right {
-                flex: 1;
                 background-color: #fff;
-                padding: 50px 70px;
-                margin-left: 190px;
+                padding: 30px 30px;
+                margin: 75px 0 0 30px;
+                float: left;
+                border: 1px solid #e7e7e9;
+                border-radius: 5px;
+                width: 78%;
             }
         }
+    }
+    
+    .home-wrap {
+        height: 100%;
+    }
+    
+    .el-input__inner {
+        border-radius: 0;
+        height: 31px;
+        width: 120px;
     }
 </style>
