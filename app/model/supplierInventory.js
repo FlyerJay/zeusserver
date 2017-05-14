@@ -212,7 +212,7 @@ module.exports = app => {
             * queryProduct(options){
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
-                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
+                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
                     FROM supplier_inventory si
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId

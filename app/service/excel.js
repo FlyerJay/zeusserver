@@ -56,9 +56,34 @@ module.exports = app => {
             var $1 = this.removeEmptyLine(options);
             var $2 = this.findRealHead($1);
             var $3 = this.resetLine($2);
+            var $4 = this.parseLine($3);
 
             var result = $3;
             return result
+        }
+        parseLine(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let line = options[i].line;
+                let head = options[i].head;
+                let index = [];
+                let spec = false;
+                for(var j=0;j<head.length;j++){
+                    if(head[j].indexOf('价') >= 0) index[j] = 'price';
+                    if(head[j].indexOf('厚') >= 0) index[j] = 'land';
+                    if(head[j].indexOf('方管') >= 0) index[j] = 'typeOne';
+                    if(head[j].indexOf('矩管') >= 0) index[j] = 'typeTwo';
+                    if(head[j].indexOf('规格') >= 0 && spec) {
+                        index[j] = 'typeTwo'; 
+                        //spec = false;
+                    }
+                    if(head[j].indexOf('规格') >= 0 && !spec) {
+                        index[j] = 'typeOne'; 
+                        spec = true;
+                    }
+                }
+                options[i].lines = index;
+            }
         }
         findRealHead(options){
             var i = 0;
@@ -137,7 +162,7 @@ module.exports = app => {
                     //console.log(options[i].name,options[i].lines[1]);
                     for(var k=0;k<$1BeatEnd+1;k++){
                         let subLine = options[i].lines[1].split(',');
-                        elements[k] = subLine[k]?subLine[k]:elements[k];
+                        elements[k] = subLine[k] ? subLine[k] : elements[k];
                         //console.log(elements[k]);
                     }
                     options[i].lines.splice(1,1);
@@ -150,20 +175,21 @@ module.exports = app => {
                 let title = head.slice(0,options[i].beat);
                 let elements = options[i].lines;
                 let line = [];
-                for(var j=0;j<elements.length;j++){
+                for(var j=1;j<elements.length;j++){
                     line.push(elements[j].split(',').slice(0,options[i].beat));
                 }
                 if(options[i].$2BeatStart){
-                    for(var j=0;j<elements.length;j++){
+                    for(var j=1;j<elements.length;j++){
                         line.push(elements[j].split(',').slice(options[i].$2BeatStart,options[i].beat+options[i].$2BeatStart));
                     }
                 }
                 if(options[i].$3BeatStart){
-                    for(var j=0;j<elements.length;j++){
+                    for(var j=1;j<elements.length;j++){
                         line.push(elements[j].split(',').slice(options[i].$3BeatStart,options[i].beat+options[i].$3BeatStart));
                     }
                 }
                 options[i].line = line;
+                options[i].head = title;
             }
             return options;
 
