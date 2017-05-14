@@ -224,7 +224,7 @@ module.exports = app => {
                     f.address = s.address
                     WHERE (si.spec = :spec OR :spec = '')
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC , sv.lastUpdateTime DESC
+                    ORDER BY si.lastUpdateTime DESC , sv.lastUpdateTime ASC
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?options.spec:'',
