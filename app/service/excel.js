@@ -68,8 +68,12 @@ module.exports = app => {
                 let head = options[i].head;
                 let index = [];
                 let spec = false;
+                let priceIndex = 0;
                 for(var j=0;j<head.length;j++){
-                    if(head[j].indexOf('价') >= 0) index[j] = 'price';
+                    if(head[j].indexOf('价') >= 0) {
+                        index[j] = 'price';
+                        priceIndex = j;
+                    }
                     if(head[j].indexOf('厚') >= 0) index[j] = 'land';
                     if(head[j].indexOf('方管') >= 0) index[j] = 'typeOne';
                     if(head[j].indexOf('矩管') >= 0) index[j] = 'typeTwo';
@@ -83,6 +87,11 @@ module.exports = app => {
                     }
                 }
                 options[i].lines = index;
+                for(var j=line.length - 1;j >= 0;j--){//去除没有价格或者价格不是数字的无意义项
+                    if(!line[j][priceIndex] || isNaN(line[j][priceIndex] - 0)){
+                        options[i].line.splice(j,1);
+                    }
+                }
             }
         }
         findRealHead(options){
