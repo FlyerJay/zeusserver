@@ -55,6 +55,7 @@ export const loadStock = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
+      dispatch('UPDATE_ORDERFORM', 'stockList', [])
       return Promise.reject();
     }
   })

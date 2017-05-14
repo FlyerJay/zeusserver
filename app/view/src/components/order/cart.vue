@@ -7,24 +7,23 @@
                 tooltip-effect="dark"
                 style="width: 100%"
                 @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="spec" label="规格" width="">
+            <el-table-column type="selection" width="">
             </el-table-column>
-            <el-table-column prop="date" label="最新更新时间" width="">
+            <el-table-column prop="spec" label="规格" width="">
             </el-table-column>
             <el-table-column prop="type" label="类别" width="">
             </el-table-column>
             <el-table-column prop="supplierName" label="供应商">
             </el-table-column>
-            <el-table-column prop="inventoryAmount" label="出厂价(元/吨)">
+            <el-table-column prop="value" label="出厂单价(含运费)">
             </el-table-column>
-            <el-table-column prop="inventoryWeight" label="库存（支）">
+            <el-table-column prop="freight" label="采购数量(支)">
             </el-table-column>
-            <el-table-column prop="freight" label="运费（元）">
+            <el-table-column prop="benifit" label="采购吨位(吨)">
             </el-table-column>
-            <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
+            <el-table-column prop="charAdjust" label="采购下浮(元/吨)">
             </el-table-column>
-            <el-table-column prop="perAmount" label="出厂单价（元）">
+            <el-table-column prop="benifit" label="金额">
             </el-table-column>
             <el-table-column label="操作" align="center" property="id">
                 <template scope="scope">

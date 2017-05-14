@@ -17,9 +17,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="类别">
-        <el-select v-model="stockParams.type" placeholder="活动区域">
-          <el-option label="矩管" value="矩管"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="stockParams.type">
+          <el-option value="全部">全部</el-option>
+          <el-option value="镀带方矩管">镀带方矩管</el-option>
+          <el-option value="方矩管">方矩管</el-option>
+          <el-option value="镀锌方矩管">镀锌方矩管</el-option>
+          <el-option value="镀锌角槽">镀锌角槽</el-option>
+          <el-option value="其它">其它</el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -30,7 +34,7 @@
       <el-table :data="stockList" stripe style="width: 100%">
         <el-table-column prop="spec" label="规格" width="">
         </el-table-column>
-        <el-table-column prop="date" label="最新更新时间" width="">
+        <el-table-column prop="lastUpdateTime" label="最新更新时间" width="" :formatter="dateFormat">
         </el-table-column>
         <el-table-column prop="type" label="类别" width="">
         </el-table-column>
@@ -123,6 +127,9 @@
       enterNum(index, row) {
         this.dlgShopVisible = true;
         this.cartParams.supplierInventoryId = row.supplierInventoryId;
+      },
+      dateFormat(row, column) {
+        return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
       }
     },
     mounted: function() {
