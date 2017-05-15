@@ -9,6 +9,7 @@ module.exports = app => {
         * excel() {
             const parts = this.ctx.multipart();
             let part;
+            const ctx = this.ctx;
             while ((part = yield parts) != null) {
                 if (Array.isArray(part)) {
                     continue;
@@ -23,7 +24,7 @@ module.exports = app => {
                 };
                 return;
             }
-            this.ctx.body = yield this.ctx.service.excel.read(part);
+            this.ctx.body = yield this.ctx.service.excel.read(part,ctx.query);
         };
     }
     return UploadController;
