@@ -153,6 +153,8 @@ module.exports = app => {
             for(;i < options.length;i++){
                 var res = {};
                 res.name = options[i].name;
+                options[i].content = options[i].content.replace(/\r\n/g,' ');
+                options[i].content = options[i].content.replace(/\"/g,' ');
                 res.lines = options[i].content.split('\n');
                 res.lineLength = (res.lines[0]+'').split(',').length;
                 res.lineAmount = res.lines.length
@@ -164,6 +166,86 @@ module.exports = app => {
                 result.push(res)
             }
             return result;
+        }
+        findFixedLine(options){
+            var i = options.length - 1;
+            for(;i >= 0;i--){
+                let head = options[i].lines[0];
+                let headArr = head.split(',');
+                for(var j=0;j<headArr.length;j++){
+                    headArr[j] = headArr[j].replace(/\s/g,'');
+                }
+                let typeIndex = headArr.indexOf('方管');
+                let specIndex = headArr.indexOf('规格');
+                if(typeIndex >-1 && specIndex > -1){
+                    options[i].typeIndex = typeIndex;
+                    options[i].specIndex = specIndex;
+                }else{
+                    options.splice(i,1);
+                }
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                for(var j=lines.length-1;j>=0;j--){
+                    lines[j] = lines[j].replace(/\\/,' ');
+                    lines[j] = lines[j].replace(/\r/g,' ');
+                    lines[j] = lines[j].replace(/\n/g,' ');
+                    lines[j] = lines[j].replace(/\"/g,' ');
+                    lines[j] = lines[j].replace(/"/,' ');
+                    let elements = lines[j].split(',');
+                    elements = elements.splice(options[i].typeIndex,3);
+                    options[i].lines[j] = elements;
+                    lines[j] = elements;
+                    if(lines[j].length < 3 || !lines[j][2]){
+                        lines.splice(j,1);
+                    }
+                }
+                options[i].lines = lines;
+            }
+            return options;
+        }
+        removeUnuseTable(options){
+            var i = options.length - 1;
+            for(;i>=0;i--){
+                if(options[i].name.indexOf('到位价') > -1){
+                    options.splice(i,1);
+                }
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                for(var j=0;j<lines.length;j++){
+                    let elements = lines[j].split(',');
+                    if(elements.indexOf('方管') > -1 && elements.indexOf('矩管') > -1){
+                        lines.splice(0,j);
+                        break;
+                    }
+                }
+                for(var j=lines.length-1;j>=0;j--){
+                    if(lines[j].indexOf('较昨日涨跌幅') > -1 || lines[j].indexOf('价格政策') > -1){
+                        lines.splice(j,1);
+                    }
+                }
+                options[i].lines = lines;
+                options[i].head = options[i].lines[0];
+                options[i].lines.splice(0,1);
+                options[i].lineAmount = options[i].lines.length;
+                let headArr = options[i].head.split(',');
+                j = headArr.length - 1;
+                for(;j>=0;j--){
+                    if(!headArr[j])
+                        headArr.splice(j,1);
+                }
+                options[i].lineLength = headArr.length;
+                j=0;
+                for(;j<options[i].lineAmount;j++){
+                    options[i].lines[j] = options[i].lines[j].split(',');
+                    options[i].lines[j].length = options[i].lineLength;
+                }
+                options[i].head = headArr;
+            }
+            return options;
         }
     }
     return ParseValue;
