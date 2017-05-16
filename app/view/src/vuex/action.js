@@ -92,3 +92,31 @@ export const loadCartList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+//供应商价格表
+export const loadSupPriceList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/price/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_SUPFORM', 'priceList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+//供应商库存数量
+export const loadSupInventoryList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/inventory/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_SUPFORM', 'inventoryList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}

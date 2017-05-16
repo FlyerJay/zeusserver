@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = app => {
-  app.beforeStart(async function(){
-      await app.model.sync();
-  });
+ // app.beforeStart(async function(){
+  //    await app.model.sync();
+  //});
   app.get('/zues/api/', 'home.index');
   //文件上传
   app.post('/zues/api/upload/excel', 'upload.excel');

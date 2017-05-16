@@ -1,6 +1,8 @@
 const state = {
   supList: [],
-  supAddress: []
+  supAddress: [],
+  priceList:[],
+  inventoryList:[]
 }
 
 const mutations = {
