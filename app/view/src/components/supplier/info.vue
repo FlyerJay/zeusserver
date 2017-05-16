@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
   
-    <el-table :data="supList" style="width: 100%" height="500" v-loading="loading">
+    <el-table :data="supList" style="width: 100%" height="" v-loading="loading">
       <el-table-column property="supplierName" label="供应商名称"></el-table-column>
       <el-table-column property="address" label="供应商所在地"></el-table-column>
       <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
