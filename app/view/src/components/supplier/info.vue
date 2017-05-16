@@ -33,10 +33,11 @@
       </el-table-column>
     </el-table>
   
-    <el-row type="flex" justify="end" style="padding:20px 0; ">
-      <el-pagination :current-page="5" layout="prev, pager, next">
-      </el-pagination>
-    </el-row>
+     <el-row type="flex" justify="end" style="padding:20px 0; ">
+         <el-pagination :current-page="5" layout="prev, pager, next">
+         </el-pagination>
+     </el-row>
+     
     <el-dialog title="" v-model="dlgSupVisible">
       <el-form :model="newSupParam">
         <el-form-item label="供应商名称：">
