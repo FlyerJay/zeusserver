@@ -5,7 +5,7 @@
                 <el-input v-model='searchParam.spec' placeholder="支持关键词/模糊查询"></el-input>
             </el-form-item>
 
-            <el-form-item label="类别"  >
+            <el-form-item label="类别">
                 <el-select v-model="searchParam.type">
                      <el-option :value='0'>全部</el-option>
                      <el-option :label="item.type" :value="item.type" v-for="(item,index) in priceList" :key="index"></el-option>
@@ -25,7 +25,7 @@
 
              <el-form-item label="所在地">
                 <el-select v-model="searchParam.address" placeholder="全部">
-                      <el-option :value=''>全部</el-option>
+                      <el-option :value='0'>全部</el-option>
                       <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
@@ -53,7 +53,7 @@
         loadSupAddress
     } from '../../vuex/action'
 
-    export default{
+    export default {
         vuex:{
             actions:{
                 loadSupPriceList,
@@ -73,7 +73,7 @@
         },
         data(){
             return {
-                searchParam :{
+                searchParam:{
                     spec:'',
                     type:'',
                     material:'',
@@ -81,7 +81,7 @@
                     address:'',
                     comId: this.userInfo.comId
                 },
-                loading : true
+                loading: true
             }
         },
         methods: {
@@ -93,13 +93,13 @@
                 })
             }
         },
-        mounted:function(){
+        mounted: function() {
             this.loadSupPriceList({
                 comId :this.userInfo.comId
-            })
+            });
             this.loadSupAddress({
                 comId: this.userInfo.comId
-            })
+            });
         }
     }
 </script>
