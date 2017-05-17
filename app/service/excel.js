@@ -61,12 +61,13 @@ module.exports = app => {
             const parseValue = this.ctx.service.parseValue;
             var $1 = parseValue.removeEmptyLine(options);
             var $2 = parseValue.removeUnuseTable($1);
+            var $3 = parseValue.mixinSpec($2)
             //var $2 = parseValue.findFixedLine($1);
             // var $2 = parseValue.findRealHead($1);
             // var $3 = parseValue.resetLine($2);
             // var $4 = parseValue.parseLine($3);
 
-            var result = $2;
+            var result = $3;
 
             return result
         }

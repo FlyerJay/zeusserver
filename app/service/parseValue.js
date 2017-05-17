@@ -247,6 +247,30 @@ module.exports = app => {
             }
             return options;
         }
+        mixinSpec(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let spec1 = '';
+                let spec2 = '';
+                for(var j=0;j<lines.length;j++){
+                    if(lines[j][0] || lines[j][1]){
+                        spec1 = lines[j][0];
+                        spec2 = lines[j][1]
+                    }else{
+                        lines[j][0] = spec1;
+                        lines[j][1] = spec2;
+                    }
+                    lines[j][2] = lines[j][2].replace(/~/g,'-');
+                    lines[j][2] = lines[j][2].replace(/--/g,'-');
+                    if(utils.land[`${lines[j][2]}`]){
+                        lines[j][2] = utils.land[`${lines[j][2]}`];
+                    }
+                }
+                options[i].lines = lines;
+            }
+            return options;
+        }
     }
     return ParseValue;
 }
