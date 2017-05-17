@@ -63,8 +63,9 @@ module.exports = app => {
             var $2 = parseValue.removeUnuseTable($1);
             var $3 = parseValue.mixinLand($2);
             var $4 = parseValue.separateData($3);
+            var $5 = parseValue.mergeData($4);
 
-            var result = $4;
+            var result = $5;
 
             return result
         }
