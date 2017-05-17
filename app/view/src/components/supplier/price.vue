@@ -35,11 +35,12 @@
               </el-form-item>
        </el-form>
 
-       <el-table :data="priceList" style="width: 100%" height="500" v-loading="loading">
+       <el-table :data="priceList" style="width: 100%" height="500" :loading="loading">
               <el-table-column property="spec" label="规格"></el-table-column>
               <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
               <el-table-column property="type" label="类别"></el-table-column>
               <el-table-column property="supplierName" label="供应商"></el-table-column>
+              <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
               <el-table-column inline-template label="操作" align="center" property="id">
                   <el-button type="text" size="mini" @click.native="">修改</el-button>
               </el-table-column>
