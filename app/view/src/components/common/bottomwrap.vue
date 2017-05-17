@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import leftNav from './leftNav'
-
-export default {
-  components: {
-    leftNav
+  import leftNav from './leftNav'
+  
+  export default {
+    components: {
+      leftNav
+    }
   }
-}
 </script>
 
 <style lang="less">
-
+  
 </style>

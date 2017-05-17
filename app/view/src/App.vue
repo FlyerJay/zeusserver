@@ -69,7 +69,7 @@
     }
     
     header {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         margin-left: 190px;
@@ -79,30 +79,23 @@
     }
     
     main {
-        background-color: #e9ecf1;
-        width: 100%;
-        height: 100%;
-        .main-wrap {
+        .main-left {
+            width: 190px;
             height: 100%;
-            .main-left {
-                float: left;
-                width: 190px;
-                height: 100%;
-                z-index: 101;
-                background-color: #33485b;
-                .el-menu {
-                    background-color: transparent;
-                }
+            z-index: 101;
+            background-color: #33485b;
+            position: fixed;
+            top: 0px;
+            .el-menu {
+                background-color: transparent;
             }
-            .main-right {
-                background-color: #fff;
-                padding: 30px 30px;
-                margin: 75px 0 0 30px;
-                float: left;
-                border: 1px solid #e7e7e9;
-                border-radius: 5px;
-                width: 78%;
-            }
+        }
+        .main-right {
+            background-color: #fff;
+            padding: 30px 30px;
+            margin: 69px 0 0 214px;
+            border: 1px solid #e7e7e9;
+            border-radius: 5px
         }
     }
     

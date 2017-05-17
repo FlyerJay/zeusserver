@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
   
-    <el-table :data="supList" style="width: 100%" height="500" v-loading="loading">
+    <el-table :data="supList" style="width: 100%" height="" v-loading="loading">
       <el-table-column property="supplierName" label="供应商名称"></el-table-column>
       <el-table-column property="address" label="供应商所在地"></el-table-column>
       <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
@@ -33,10 +33,11 @@
       </el-table-column>
     </el-table>
   
-    <el-row type="flex" justify="end" style="padding:20px 0; ">
-      <el-pagination :current-page="5" layout="prev, pager, next">
-      </el-pagination>
-    </el-row>
+     <el-row type="flex" justify="end" style="padding:20px 0; ">
+         <el-pagination :current-page="5" layout="prev, pager, next">
+         </el-pagination>
+     </el-row>
+     
     <el-dialog title="" v-model="dlgSupVisible">
       <el-form :model="newSupParam">
         <el-form-item label="供应商名称：">
