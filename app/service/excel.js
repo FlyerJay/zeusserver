@@ -59,15 +59,12 @@ module.exports = app => {
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
-            var $1 = parseValue.removeEmptyLine(options);
+            var $1 = parseValue.parseToLine(options);
             var $2 = parseValue.removeUnuseTable($1);
-            var $3 = parseValue.mixinSpec($2)
-            //var $2 = parseValue.findFixedLine($1);
-            // var $2 = parseValue.findRealHead($1);
-            // var $3 = parseValue.resetLine($2);
-            // var $4 = parseValue.parseLine($3);
+            var $3 = parseValue.mixinLand($2);
+            var $4 = parseValue.separateData($3);
 
-            var result = $3;
+            var result = $4;
 
             return result
         }
