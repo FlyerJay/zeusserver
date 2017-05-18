@@ -145,7 +145,7 @@ module.exports = app => {
             return options;
 
         }
-        removeEmptyLine(options){
+        parseToLine(options){//把csv转换成行数据，并且去掉全部为空的行
             var i = 0;
             var result = [];
             var lines = [];
@@ -153,7 +153,14 @@ module.exports = app => {
             for(;i < options.length;i++){
                 var res = {};
                 res.name = options[i].name;
-                options[i].content = options[i].content.replace(/\r\n/g,' ');
+                options[i].content = options[i].content.replace(/[0-9]\n/g,function(w){
+                    return w.substring(0,1) + ' ';
+                });//匹配数字后的换行
+                options[i].content = options[i].content.replace(/( \n)|(\s\n)|(\n )|(\n\s)|(\n{2,}|(\r\n))/g,' ');//匹配所有换行的其他情况
+                // options[i].content = options[i].content.replace(/\s\n/g,' ');//匹配空格后的换行
+                // options[i].content = options[i].content.replace(/\n /g,' ');//匹配换行后空格
+                // options[i].content = options[i].content.replace(/\n\s/g,' ');//匹配换行后空格
+                // options[i].content = options[i].content.replace(/\n{2,}/g,' ');//匹配连续换行多次
                 options[i].content = options[i].content.replace(/\"/g,' ');
                 res.lines = options[i].content.split('\n');
                 res.lineLength = (res.lines[0]+'').split(',').length;
@@ -247,7 +254,7 @@ module.exports = app => {
             }
             return options;
         }
-        mixinSpec(options){
+        mixinLand(options){
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
@@ -261,8 +268,10 @@ module.exports = app => {
                         lines[j][0] = spec1;
                         lines[j][1] = spec2;
                     }
-                    lines[j][2] = lines[j][2].replace(/~/g,'-');
-                    lines[j][2] = lines[j][2].replace(/--/g,'-');
+                    if(lines[j][2]){
+                        lines[j][2] = lines[j][2].replace(/~/g,'-');
+                        lines[j][2] = lines[j][2].replace(/--/g,'-');
+                    }
                     if(utils.land[`${lines[j][2]}`]){
                         lines[j][2] = utils.land[`${lines[j][2]}`];
                     }
@@ -270,6 +279,165 @@ module.exports = app => {
                 options[i].lines = lines;
             }
             return options;
+        }
+        separateData(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let squa = [];
+                let rect = [];
+                let newSqua = [];
+                let newRect = [];
+                lines.map((v)=>{
+                    let [squaHead,reactHead] = v.splice(0,2);;
+                    if(squaHead){
+                        squa.push([squaHead].concat(v));
+                    }
+                    if(reactHead){
+                        rect.push([reactHead].concat(v));
+                    }
+                })
+                squa.map((v)=>{//处理多规格的数据
+                    let copy = v;
+                    let specArr = v[0].split(' ');
+                    if(specArr.length > 0){
+                        specArr.map((vi)=>{
+                            if(vi != ' ' && vi){
+                                newSqua.push([vi].concat(copy.slice(1)));
+                            }
+                        })
+                    }else{
+                        newSqua.push(v);
+                    }
+                })
+                rect.map((v)=>{
+                    let copy = v;
+                    let specArr = v[0].split(' ');
+                    if(specArr.length > 0){
+                        specArr.map((vi)=>{
+                            if(vi != ' ' && vi){
+                                newRect.push([vi].concat(copy.slice(1)));
+                            }
+                        })
+                    }else{
+                        newRect.push(v);
+                    }
+                })
+                squa = newSqua;
+                rect = newRect;
+                newSqua = [];
+                newRect = [];
+                squa.map((v)=>{//处理多壁厚的数据
+                    let copy = v;
+                    let lanArr = v[1].split(' ');
+                    let spec = v[0].split('*');
+                    var $spec = '';
+                    let type = '矩管';
+                    if(spec[0] == spec[1]){
+                        type = '方管';
+                    }
+                    if((spec[0]-0) > (spec[1]-0)){
+                        let temp = spec[0];
+                        spec[0] = spec[1];
+                        spec[1] = temp;
+                        $spec = `${spec[0]}*${spec[1]}`;
+                    }else{
+                        $spec = `${spec[0]}*${spec[1]}`;
+                    }
+                    if(lanArr.length > 0){
+                        lanArr.map((vi)=>{
+                            if(vi != ' ' && vi){
+                                vi = (vi-0).toFixed(2);
+                                newSqua.push([`${$spec}*${vi}`,type].concat(copy.slice(2)));//100比较夸张，主要是为了取后面完整的结果
+                            }
+                        })
+                    }else{
+                        newSqua.push(v);
+                    }
+                })
+                rect.map((v)=>{
+                    let copy = v;
+                    let lanArr = v[1].split(' ');
+                    let spec = v[0].split('*');
+                    var $spec = '';
+                    let type = '矩管';
+                    if(spec[0] == spec[1]){
+                        type = '方管';
+                    }
+                    if((spec[0]-0) > (spec[1]-0)){
+                        let temp = spec[0];
+                        spec[0] = spec[1];
+                        spec[1] = temp;
+                        $spec = `${spec[0]}*${spec[1]}`;
+                    }else{
+                        $spec = `${spec[0]}*${spec[1]}`;
+                    }
+                    if(lanArr.length > 0){
+                        lanArr.map((vi)=>{
+                            if(vi != ' ' && vi){
+                                vi = (vi-0).toFixed(2);
+                                newRect.push([`${$spec}*${vi}`,type].concat(copy.slice(2)));
+                            }
+                        })
+                    }else{
+                        newRect.push(v);
+                    }
+                })
+                squa = newSqua;
+                rect = newRect;
+                newSqua = [];
+                newRect = [];
+                options[i].head = ['规格','类型'].concat(options[i].head.slice(3));
+                squa.map((v)=>{
+                    let copy = v;
+                    for(var j=2;j<copy.length;j++){
+                        if(copy[j]){
+                            newSqua.push([copy[0],copy[1],options[i].head[j],copy[j]]);
+                        }
+                    }
+                })
+                rect.map((v)=>{
+                    let copy = v;
+                    for(var j=2;j<copy.length;j++){
+                        if(copy[j]){
+                            newRect.push([copy[0],copy[1],options[i].head[j],copy[j]]);
+                        }
+                    }
+                })
+                squa = newSqua;
+                rect = newRect;
+                options[i].squa = squa;
+                options[i].rect = rect;
+            }
+            return options;
+        }
+        mergeData(options){
+            var i = 0;
+            var mergeResult = {};
+            mergeResult.line = [];
+            mergeResult.head = [];
+            for(;i<options.length;i++){
+                let material = '';
+                if(options[i].name.indexOf('镀锌带') > -1){
+                    material = '镀锌带'
+                }else if(options[i].name.indexOf('镀锌') > -1){
+                    material = '镀锌'
+                }else if(options[i].name.indexOf('黑管') > -1){
+                    material = '黑管'
+                }
+                options[i].head.map((v)=>{
+                    if(v != '规格' && v !='类型' && mergeResult.head.indexOf(v) < 0){
+                        mergeResult.head.push(v);
+                    }
+                })
+                options[i].squa.map((v)=>{
+                    mergeResult.line.push([...v,material]);
+                })
+                options[i].rect.map((v)=>{
+                    mergeResult.line.push([...v,material]);
+                })
+            }
+            return mergeResult;
         }
     }
     return ParseValue;

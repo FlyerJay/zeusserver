@@ -59,17 +59,15 @@ module.exports = app => {
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
-            var $1 = parseValue.removeEmptyLine(options);
+            var $1 = parseValue.parseToLine(options);
             var $2 = parseValue.removeUnuseTable($1);
-            var $3 = parseValue.mixinSpec($2)
-            //var $2 = parseValue.findFixedLine($1);
-            // var $2 = parseValue.findRealHead($1);
-            // var $3 = parseValue.resetLine($2);
-            // var $4 = parseValue.parseLine($3);
+            var $3 = parseValue.mixinLand($2);
+            var $4 = parseValue.separateData($3);
+            var $5 = parseValue.mergeData($4);
 
-            var result = $3;
+            const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return result
+            return $5
         }
     }
     return Excel;

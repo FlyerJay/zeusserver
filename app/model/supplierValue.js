@@ -32,7 +32,7 @@ module.exports = app => {
             comment:"规格"
         },
         lastUpdateTime: {
-            type:STRING,
+            type:INTEGER,
             allowNull:false,
             comment:"最近更新时间"
         },
@@ -146,7 +146,8 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少公司信息'
                 }
-                const result = yield this.create(Object.assign(options,{lastUpdateTime:new Date().getTime()}));
+                var time = String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
+                const result = yield this.create(Object.assign(options,{lastUpdateTime:Number(time)}));
                 return {
                     code:200,
                     msg:"添加数据成功",
