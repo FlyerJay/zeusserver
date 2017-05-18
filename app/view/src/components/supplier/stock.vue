@@ -29,24 +29,28 @@
                     <el-option :label="item.address" :value="item.address" v-for="(item, index) in inventoryList" :key="index"></el-option>
                 </el-select>
             </el-form-item>
-    
+            <el-form-item>
+                <el-upload class="upload-demo" action="http://127.0.0.1:7001/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+            </el-form-item>
             <el-form-item>
                 <el-button type="warning" @click="searchPrice">查询</el-button>
-             </el-form-item>
-       </el-form>
-
-       <el-table :data="inventoryList" style="width: 100%" height="500" :loading="loading">
-              <el-table-column property="spec" label="规格"></el-table-column>
-              <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
-              <el-table-column property="type" label="类别"></el-table-column>
-              <el-table-column property="supplierName" label="供应商"></el-table-column>
-              <el-table-column property="inventoryAmount" label="库存数量(支)"></el-table-column>
-              <el-table-column property="inventoryWeight" label="库存重量(吨)"></el-table-column>
-              <el-table-column property="perAmount" label="单件支数"></el-table-column>
-              <el-table-column inline-template label="操作" align="center" property="id">
-                  <el-button type="text" size="mini" @click.native="">修改</el-button>
-              </el-table-column>
-       </el-table>
+            </el-form-item>
+        </el-form>
+    
+        <el-table :data="inventoryList" style="width: 100%" height="500" :loading="loading">
+            <el-table-column property="spec" label="规格"></el-table-column>
+            <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
+            <el-table-column property="type" label="类别"></el-table-column>
+            <el-table-column property="supplierName" label="供应商"></el-table-column>
+            <el-table-column property="inventoryAmount" label="库存数量(支)"></el-table-column>
+            <el-table-column property="inventoryWeight" label="库存重量(吨)"></el-table-column>
+            <el-table-column property="perAmount" label="单件支数"></el-table-column>
+            <el-table-column inline-template label="操作" align="center" property="id">
+                <el-button type="text" size="mini" @click.native="">修改</el-button>
+            </el-table-column>
+        </el-table>
     </div>
 </template>
 

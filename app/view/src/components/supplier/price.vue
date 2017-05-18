@@ -29,7 +29,16 @@
                       <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
-
+            <el-form-item>
+            <el-upload
+                class="upload-demo"
+                action="http://127.0.0.1:7001/zues/api/upload/excel"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+            </el-form-item>
               <el-form-item>
                 <el-button type="warning" @click="searchPrice">查询</el-button>
               </el-form-item>
