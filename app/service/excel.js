@@ -1,6 +1,6 @@
 'use strict';
 
-const xlsx = require('xlsx');
+const xlsx = require('../xlsx');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
@@ -49,13 +49,18 @@ module.exports = app => {
                 res(result);
             })
             if(query && query.type == 'inventory'){
-                return yield this.inventoryParse(result,query);
+                return yield this.inventoryDispatch(result,query);
             }
             return yield this.valueParse(result,query);
             //return result;
         }
-        * inventoryParse(options,query){
-
+        * inventoryDispatch(options,query){
+            const parseInventory = this.ctx.service.parseInventory;
+            switch(query.supplier){
+                case '兴强':
+                    return yield parseInventory.XQ(options,query);
+                    break;
+            }
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
