@@ -26,7 +26,7 @@
             <el-form-item label="所在地">
                 <el-select v-model="searchInvenParam.address" placeholder="全部">
                     <el-option :value='0'>全部</el-option>
-                    <el-option :label="item.address" :value="item.address" v-for="(item, index) in inventoryList" :key="index"></el-option>
+                    <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
     

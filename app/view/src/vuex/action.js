@@ -120,3 +120,18 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
+//定制货品价格列表,上传文件
+export const upLoadFile = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/upload/excel')
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}

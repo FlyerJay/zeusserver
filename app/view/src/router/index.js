@@ -14,6 +14,7 @@ import Order from '../components/order/order'
 import List from '../components/order/list'
 import Search from '../components/order/search'
 import Cart from '../components/order/Cart'
+import Demand from '../components/order/demand'
 
 Vue.use(Router)
 
@@ -39,6 +40,10 @@ export default new Router({
         {
           path: 'list',
           component: List
+        },
+        {
+          path: 'demand',
+          component: Demand
         }
       ]
     },
