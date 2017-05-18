@@ -47,15 +47,16 @@ module.exports = app => {
                     }
                 });
                 res(result);
-            })
-            if(query && query.type == 'inventory'){
-                return yield this.inventoryParse(result,query);
-            }
-            return yield this.valueParse(result,query);
-            //return result;
+            });
+            return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
         }
         * inventoryParse(options,query){
+            const parseValue = this.ctx.service.parseInventory;
+            var $1 = parseValue.parseToLine(options);
+            
+            var result = $1;
 
+            return result
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
