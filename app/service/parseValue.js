@@ -415,6 +415,7 @@ module.exports = app => {
             var i = 0;
             var mergeResult = {};
             mergeResult.line = [];
+            mergeResult.head = [];
             for(;i<options.length;i++){
                 let material = '';
                 if(options[i].name.indexOf('镀锌带') > -1){
@@ -424,7 +425,11 @@ module.exports = app => {
                 }else if(options[i].name.indexOf('黑管') > -1){
                     material = '黑管'
                 }
-                console.log(material);
+                options[i].head.map((v)=>{
+                    if(v != '规格' && v !='类型' && mergeResult.head.indexOf(v) < 0){
+                        mergeResult.head.push(v);
+                    }
+                })
                 options[i].squa.map((v)=>{
                     mergeResult.line.push([...v,material]);
                 })

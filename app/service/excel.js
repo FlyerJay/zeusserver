@@ -66,9 +66,9 @@ module.exports = app => {
             var $4 = parseValue.separateData($3);
             var $5 = parseValue.mergeData($4);
 
-            var result = $5;
+            const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return result
+            return $5
         }
     }
     return Excel;
