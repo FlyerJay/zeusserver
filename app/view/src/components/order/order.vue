@@ -28,6 +28,9 @@
           {
             url: '/order/list',
             name: '订单详情'
+          },{
+            url: '/order/demand',
+            name:'定制化需求'
           }
         ]
       }
