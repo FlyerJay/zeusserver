@@ -2,7 +2,8 @@ const state = {
   supList: [],
   supAddress: [],
   priceList:[],
-  inventoryList:[]
+  inventoryList:[],
+  depriceList:[]
 }
 
 const mutations = {

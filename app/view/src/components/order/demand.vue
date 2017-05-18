@@ -3,7 +3,7 @@
         <el-upload
            class="upload-demo"
            action="url" >
-            <el-button size="big" >定制需求上传</el-button>
+            <el-button size="big" type="warning" >定制需求上传</el-button>
         </el-upload>
         <div class="title">定制货品价格列表</div> 
         <div class="tb-wrap">
@@ -14,9 +14,9 @@
                 </el-table-column>
                 <el-table-column prop="type" label="类别" width="">
                 </el-table-column>
-                <el-table-column inline-template label="需求明细" align="center" property="id">
+                <el-table-column label="需求明细" align="center" property="id">
                      <template scope="scope">
-                        <el-button size="small" @click="enterCheck(scope.index, scope.row)" >点击查看</el-button>
+                        <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning" >点击查看</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="charAdjust" label="工期">
@@ -114,7 +114,7 @@
            return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
          },
       
-         enterCheck(index, row) {
+         enterNum(index, row) {
                 this.dlgDemandVisible = true;
                 this.demandParams.demandListId = row.demandListId;
             }
