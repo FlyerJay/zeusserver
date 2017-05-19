@@ -1,8 +1,9 @@
 const state = {
-  stockList: [],
+  stockList: [],//库存表单
   cartList: [],
   demandList:[],
-  orderList:[]
+  orderList:[],
+  ordAddress:[]  //到岸目的地
 }
 
 
