@@ -1,6 +1,6 @@
 'use strict';
 
-const xlsx = require('xlsx');
+const xlsx = require('../xlsx');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('uuid');
@@ -47,6 +47,7 @@ module.exports = app => {
                     }
                 });
                 res(result);
+<<<<<<< HEAD
             });
             return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
         }
@@ -57,6 +58,21 @@ module.exports = app => {
             var result = $1;
 
             return result
+=======
+            })
+            if(query && query.type == 'inventory'){
+                return yield this.inventoryDispatch(result,query);
+            }
+            return yield this.valueParse(result,query);
+            //return result;
+        }
+        * inventoryDispatch(options,query){
+            const parseInventory = this.ctx.service.parseInventory;
+            switch(query.supplier){
+                case '兴强':
+                    return yield parseInventory.XQ(options,query);
+            }
+>>>>>>> c61fb501fc7c286e60a07755efee3286891537cd
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;

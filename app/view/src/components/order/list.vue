@@ -1,15 +1,15 @@
 <template>
     <div class="order-wrap">
-        <el-form :inline="true" :model="stockParams" class="demo-form-inline">
+        <el-form :inline="true" :model="orderParams" class="demo-form-inline">
             <el-form-item label="订单号">
-                <el-input v-model="stockParams.spec" placeholder="支持模糊搜索"></el-input>
+                <el-input v-model="orderParams.id" placeholder="支持模糊搜索"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="searchStock">查询</el-button>
+                <el-button type="warning" @click="searchOrder">查询</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="stockList" stripe style="width: 100%">
+            <el-table :data="orderList" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="spec" label="订单号" width="">
                 </el-table-column>
                 <el-table-column prop="date" label="供应商数量" width="">
@@ -28,7 +28,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id">
                     <template scope="scope">
-                        <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">下单</el-button>
+                        <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
         </el-table-column>
       </el-table>
@@ -49,23 +49,21 @@
 
 <script>
     import {
-        loadStock,
-        addTocart
+        loadOrderList
     } from '../../vuex/action'
     
     export default {
         vuex: {
             actions: {
-                loadStock,
-                addTocart
+               loadOrderList
             },
             getters: {
                 userInfo: ({
                     common
                 }) => common.userInfo,
-                stockList: ({
+                orderList: ({
                     order
-                }) => order.stockList
+                }) => order.orderList
             }
         },
         data() {
@@ -76,19 +74,17 @@
                     charAmount: '',
                     supplierInventoryId: ''
                 },
-                stockParams: {
-                    spec: '',
-                    material: '',
-                    type: '',
-                    region: '',
+                orderParams: {
+                    id: '',
                     comId: this.userInfo.comId
                 },
-                dlgShopVisible: false
+                dlgShopVisible: false,
+                loading:true
             }
         },
         methods: {
-            searchStock() {
-                this.loadStock(this.stockParams)
+            searchOrder() {
+                this.loadOrderList(this.orderParams)
             },
             confirmTocart() {
                 this.addTocart(this.cartParams)
@@ -106,7 +102,7 @@
             }
         },
         mounted: function() {
-            this.loadStock(this.stockParams)
+            this.loadOrderList(this.orderParams)
         }
     }
 </script>
