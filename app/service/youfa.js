@@ -32,6 +32,30 @@ module.exports = app => {
                     }
                 })
                 options[i].lines = newLine;
+                //先匹配最后一项有米的数据吧
+                options[i].lines.map((v)=>{
+                    if(/\*\d*米/.test(v[3])){
+                        v[3] = v[3].replace(/\*\d*米/g,(w)=>{
+                            let long = w.replace(/[^0-9]/ig,'');
+                            v.push(long);
+                            return ''
+                        })
+                    }else{
+                        v.push(6);
+                    }
+                })
+                //再匹配件/支
+                options[i].lines.map((v)=>{
+                    if(/[(（].*[)）]*/.test(v[3])){//后面的*号表示还有可能忘了加反括号，全角半角括号就算了，你他妈忘了加算怎么回事啊！
+                        v[3] = v[3].replace(/[(（].*[)）]*/g,(w)=>{
+                            let per = w.replace(/[^0-9]/ig,'');
+                            v.push(per);
+                            return ''
+                        })
+                    }else{
+                        v.push(100);
+                    }
+                })
             }
             return options;
         }
