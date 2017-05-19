@@ -67,7 +67,7 @@ export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
   return axios.post('http://127.0.0.1:7001/zues/api/price/update', newPriceParam)
   .then(function (response) {
     if (response.data.code === 200) {
-      priceList({ dispatch }, searchSupParam);
+      loadSupPriceList({ dispatch }, searchSupParam);
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();

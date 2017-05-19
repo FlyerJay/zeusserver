@@ -136,6 +136,7 @@
                this.dlgPriceVisible = true;
                this.newPriceParam.value = row.value;
                this.newPriceParam.supplierValueId = row.supplierValueId;
+               this.newPriceParam.row = row;
 
             },
             confirmChangePrice(row){
