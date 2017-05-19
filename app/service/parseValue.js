@@ -156,13 +156,13 @@ module.exports = app => {
                 options[i].content = options[i].content.replace(/[0-9]\n/g,function(w){
                     return w.substring(0,1) + ' ';
                 });//匹配数字后的换行
-                options[i].content = options[i].content.replace(/( \n)|(\s\n)|(\n )|(\n\s)|(\n{2,}|(\r\n))/g,' ');//匹配所有换行的其他情况
+                options[i].content = options[i].content.replace(/( \n)|(\n )|(\n{2,})|(\r\n)/g,' ');//匹配所有换行的其他情况
                 // options[i].content = options[i].content.replace(/\s\n/g,' ');//匹配空格后的换行
                 // options[i].content = options[i].content.replace(/\n /g,' ');//匹配换行后空格
                 // options[i].content = options[i].content.replace(/\n\s/g,' ');//匹配换行后空格
                 // options[i].content = options[i].content.replace(/\n{2,}/g,' ');//匹配连续换行多次
                 options[i].content = options[i].content.replace(/\"/g,' ');
-                res.lines = options[i].content.split('\n');
+                res.lines = options[i].content.split('\r\t\n');
                 res.lineLength = (res.lines[0]+'').split(',').length;
                 res.lineAmount = res.lines.length
                 for(var j = res.lineAmount-1;j>0;j--){//去掉空行干扰项
