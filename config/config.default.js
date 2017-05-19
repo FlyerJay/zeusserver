@@ -19,5 +19,9 @@ module.exports = appInfo => {
       username: 'pro',
       password: '080728',
     },
+    proxyworker:{
+      port: 10086,
+    }
   }
 }
+

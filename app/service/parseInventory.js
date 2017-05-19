@@ -1,18 +1,21 @@
 'use strict';
+const utils = require('../utils');
 
 module.exports = app => {
     class ParseInventory extends app.Service {
         * XQ(options,query){
-            const parseValue = this.ctx.service.parseValue;
-            var $1 = parseValue.parseToLine(options);
-            var $2 = this.getTableHead($1);//找到表格的开头部分，根据表头含有的关键字查找
+            // const parseValue = this.ctx.service.parseValue;
+            // var $1 = parseValue.parseToLine(options);
+            var $2 = this.getTableHead(options);//找到表格的开头部分，根据表头含有的关键字查找
             var $3 = this.dealRepeatHeadTable($2);//处理表头中含有重复表头的情况也就是一行中有多条有用的数据
             var $4 = this.mixinSpec($3);//拆分多个规格，并让规格为空的行继承上一行的规格
             var $5 = this.mixinLand($4);//拆分壁厚，并让空壁厚继承上一行的壁厚(壁厚这里会多一个区间处理)
             var $6 = this.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
-            return $5;
+            var $7 = this.mergeSpecAndLand($6);
+            var $8 = this.mergeData($7);
+            return $8;
         }
-        getTableHead(options){
+        getTableHead(options){/*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息 */
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
@@ -49,7 +52,7 @@ module.exports = app => {
             }
             return options;
         }
-        dealRepeatHeadTable(options){
+        dealRepeatHeadTable(options){/**此方法用来处理表格含有多列信息的情况，会把表头和表内容拆分成单列信息，如果不是多列信息就不做处理 */
             var i = 0;
             for(;i<options.length;i++){//寻找重复表头的长度
                 let elements = options[i].lines[0].split(',');
@@ -121,57 +124,98 @@ module.exports = app => {
             }
             return result;
         }
-        mixinSpec(options,spec=0){
+        mixinSpec(options,spec=0){/**处理一行中有多个规格的情况以及一行中没有规格的情况，并最终输出每行都有一个规格的数据*/
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
-                let specArr = lines[0][spec].split(' ');
-                if(specArr.length > 0);
-            }
-            i = 0;
-            for(;i<options.length;i++){
-                let lines = options[i].lines;
                 let lastSpec = lines[0][spec];
-                let specArr = lastSpec.split('*');
-                if(specArr[0] > specArr[1]){
-                    lastSpec = `${specArr[1]}*${specArr[0]}`
-                }
                 lines.map((v)=>{
                     if(!v[spec]){
                         v[spec] = lastSpec;
                     }else{
                         lastSpec = v[spec];
-                        specArr = lastSpec.split('*');
-                        if(specArr[0] > specArr[1]){
-                            lastSpec = `${specArr[1]}*${specArr[0]}`
-                        }
-                        v[spec] = lastSpec;
                     }
                 })
                 options[i].lines = lines;
             }
+            i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let newLines = [];
+                lines.map((v)=>{
+                    let lineSpec = v[spec];
+                    let specArr = lineSpec.split(' ');
+                    if(specArr.length > 1){
+                        specArr.map((vi)=>{
+                            newLines.push([vi].concat(v.slice(1)));
+                        })
+                    }else{
+                        newLines.push(v);
+                    }
+                })
+                options[i].lines = newLines;
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let newLine = [];
+                lines.map((v)=>{
+                    let specArr = v[spec].split('*');
+                    let specLine = '';
+                    if(Number(specArr[0]) > Number(specArr[1])){
+                        specLine = `${specArr[1]}*${specArr[0]}`;
+                        v[spec] = specLine;
+                    }
+                    if(v[spec].indexOf('*') > -1){
+                        newLine.push(v);
+                    }
+                })
+                options[i].lines = newLine;
+            }
             return options;
         }
-        mixinLand(options,column=1){
+        mixinLand(options,column=1){/**处理一行中含有多个壁厚（一般是一个区间2.25-2.75）以及没有壁厚的情况，根据索引查到对应的几种壁厚，再拆分成多行 */
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
-                let lastColumn = lines[0][column];
-                lastColumn = (lastColumn - 0).toFixed(2);
                 lines.map((v)=>{
-                    if(!v[column]){
-                        v[column] = lastColumn;
-                    }else{
-                        lastColumn = v[column];
-                        lastColumn = (lastColumn - 0).toFixed(2);
-                        v[column] = lastColumn;
+                    v[column] = v[column].replace(/(~)|(~~)|(--)/g,'-');
+                    v[column] = v[column].replace(/\*.*/g,function(w){
+                        console.log(w);
+                        return w;
+                    });//这风骚的*号
+                    if(v[column].indexOf('-') > -1){
+                        v[column] = utils.land[v[column]];
                     }
                 })
-                options[i].lines = lines;
+                let lastLand = lines[0][column];
+                lines.map((v)=>{
+                    if(!v[column]){
+                        v[column] = lastLand;
+                    }else{
+                        lastLand = v[column];
+                    }
+                })
+                let newLines = [];
+                lines.map((v)=>{
+                    var lanArr = v[column].split(' ');
+                    if(lanArr.length > 1){
+                        lanArr.map((vi)=>{
+                            let arr = v.slice(0,column)
+                            newLines.push(arr.concat([vi].concat(v.slice(column+1))));
+                        })
+                    }else{
+                        newLines.push(v);
+                    }
+                })
+                options[i].lines = newLines;
+                options[i].lines.map((v)=>{
+                    v[column] = (v[column]-0).toFixed(2);
+                })
             }
             return options;
         }
-        requireColumn(options,column){
+        requireColumn(options,column){/**从整理好的数据中取几列数据，并且这几列数据每行中不能有为空的情况，也就是说指定的列必须是有值得行才会被取出来 */
             var i = 0;
             for(;i<options.length;i++){
                 let head = options[i].head;
@@ -198,11 +242,62 @@ module.exports = app => {
                     index.map((vi)=>{
                         line.push(v[vi]);
                     })
-                    newLines.push(line);
+                    let breakFlag = false;
+                    v.map((vi)=>{
+                        if(!vi){
+                            breakFlag = true;
+                        }
+                    })
+                    if(!breakFlag){
+                        newLines.push(line);
+                    }
                 })
                 options[i].lines = newLines;
+                options[i].head = column;
             }
             return options;
+        }
+        mergeSpecAndLand(options){/**合并数据中的壁厚和规格，为导入数据做准备工作 */
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let head = options[i].head;
+                let specIndex = head.indexOf('规格');
+                let landIndex = head.indexOf('壁厚');
+                if(specIndex > -1 && landIndex > -1){
+                    lines.map((v)=>{
+                        v[specIndex] = `${v[specIndex]}*${v[landIndex]}`;
+                        v.splice(landIndex,1);
+                    })
+                }else{
+                    continue;
+                }
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                let head = options[i].head;
+                let landIndex = head.indexOf('壁厚');
+                if(landIndex > -1){
+                    options[i].head.splice(landIndex,1);
+                }
+            }
+            return options;
+        }
+        separateSpecAndLong(options){/**拆分规格和长度，长度不作为关联项，只是作展示使用 */
+
+        }
+        mergeData(options){/**合并全部的数据 */
+            var i = 0;
+            var result = {};
+            result.head = options[0].head;
+            result.line = [];
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                lines.map((v)=>{
+                    result.line.push(v);
+                })
+            }
+            return result;
         }
     }
     return ParseInventory;

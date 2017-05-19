@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "egg": "^1.0.0",
+    "egg-development-proxyworker": "^1.0.1",
     "egg-sequelize": "^2.0.1",
     "formidable": "^1.1.1",
     "mysql": "^2.13.0",

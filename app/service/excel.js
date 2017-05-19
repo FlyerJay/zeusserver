@@ -47,7 +47,13 @@ module.exports = app => {
                     }
                 });
                 res(result);
-            })
+            });
+            return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
+        }
+        * inventoryParse(options,query){
+            const parseValue = this.ctx.service.parseValue;
+            var $1 = parseValue.parseToLine(options);
+            var result = $1;
             if(query && query.type == 'inventory'){
                 return yield this.inventoryDispatch(result,query);
             }
