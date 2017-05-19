@@ -21,7 +21,7 @@ module.exports = app => {
                 let lines = options[i].lines;
                 for(var j=0;j<lines.length;j++){
                     let elements = lines[j].split(',');
-                    if(elements.indexOf('规格') > -1 && elements.indexOf('壁厚') > -1)
+                    if((elements.indexOf('规格') > -1 && elements.indexOf('壁厚') > -1) || elements.indexOf('规格/壁厚') > -1)
                         break;
                 }
                 lines = lines.slice(j);

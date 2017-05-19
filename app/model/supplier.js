@@ -116,12 +116,22 @@ module.exports = app => {
                 var values = '';
                 var value = '';
                 for(var props in options){
-                    yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
-                        replacements:{
-                            supplierId:options.supplierId,
-                            value:options[props]
-                        }
-                    })
+                    if(props == 'freight'){
+                        yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address',{
+                            replacements:{
+                                address:options.address?options.address:'',
+                                freight:options.freight
+                            }
+                        })
+                    }else{
+                        yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
+                            replacements:{
+                                supplierId:options.supplierId,
+                                value:options[props]
+                            }
+                        })
+                    }
+                   
                 }
                 return {
                     code:200,
