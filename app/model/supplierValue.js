@@ -157,7 +157,7 @@ module.exports = app => {
                 }
             },
             * updateValue(options) {
-                if(!options.supplierId) return {
+                if(!options.supplierValueId) return {
                     code: -1,
                     msg: '缺少必要参数'
                 }
