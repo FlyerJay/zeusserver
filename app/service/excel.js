@@ -47,6 +47,18 @@ module.exports = app => {
                     }
                 });
                 res(result);
+<<<<<<< HEAD
+            });
+            return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
+        }
+        * inventoryParse(options,query){
+            const parseValue = this.ctx.service.parseInventory;
+            var $1 = parseValue.parseToLine(options);
+            
+            var result = $1;
+
+            return result
+=======
             })
             if(query && query.type == 'inventory'){
                 return yield this.inventoryDispatch(result,query);
@@ -60,6 +72,7 @@ module.exports = app => {
                 case '兴强':
                     return yield parseInventory.XQ(options,query);
             }
+>>>>>>> c61fb501fc7c286e60a07755efee3286891537cd
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
