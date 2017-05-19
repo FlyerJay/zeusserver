@@ -120,14 +120,14 @@ module.exports = app => {
                         yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address',{
                             replacements:{
                                 address:options.address?options.address:'',
-                                freight:options.freight
+                                freight:options.freight+''
                             }
                         })
-                    }else{
+                    }else if(props != 'row'){
                         yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
                             replacements:{
                                 supplierId:options.supplierId,
-                                value:options[props]
+                                value:options[props]+''
                             }
                         })
                     }
