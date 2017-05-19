@@ -1,4 +1,5 @@
 'use strict';
+const utils = require('../utils');
 
 module.exports = app => {
     class ParseInventory extends app.Service {
@@ -125,30 +126,49 @@ module.exports = app => {
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
-                let specArr = lines[0][spec].split(' ');
-                if(specArr.length > 0);
-            }
-            i = 0;
-            for(;i<options.length;i++){
-                let lines = options[i].lines;
                 let lastSpec = lines[0][spec];
-                let specArr = lastSpec.split('*');
-                if(specArr[0] > specArr[1]){
-                    lastSpec = `${specArr[1]}*${specArr[0]}`
-                }
                 lines.map((v)=>{
                     if(!v[spec]){
                         v[spec] = lastSpec;
                     }else{
                         lastSpec = v[spec];
-                        specArr = lastSpec.split('*');
-                        if(specArr[0] > specArr[1]){
-                            lastSpec = `${specArr[1]}*${specArr[0]}`
-                        }
-                        v[spec] = lastSpec;
                     }
                 })
                 options[i].lines = lines;
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let newLines = [];
+                lines.map((v)=>{
+                    let lineSpec = v[spec];
+                    let specArr = lineSpec.split(' ');
+                    if(specArr.length > 1){
+                        specArr.map((vi)=>{
+                            newLines.push([vi].concat(v.slice(1)));
+                        })
+                    }else{
+                        newLines.push(v);
+                    }
+                })
+                options[i].lines = newLines;
+            }
+            i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let newLine = [];
+                lines.map((v)=>{
+                    let specArr = v[spec].split('*');
+                    let specLine = '';
+                    if(Number(specArr[0]) > Number(specArr[1])){
+                        specLine = `${specArr[1]}*${specArr[0]}`;
+                        v[spec] = specLine;
+                    }
+                    if(v[spec].indexOf('*') > -1){
+                        newLine.push(v);
+                    }
+                })
+                options[i].lines = newLine;
             }
             return options;
         }
@@ -156,18 +176,36 @@ module.exports = app => {
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
-                let lastColumn = lines[0][column];
-                lastColumn = (lastColumn - 0).toFixed(2);
                 lines.map((v)=>{
-                    if(!v[column]){
-                        v[column] = lastColumn;
-                    }else{
-                        lastColumn = v[column];
-                        lastColumn = (lastColumn - 0).toFixed(2);
-                        v[column] = lastColumn;
+                    v[column] = v[column].replace(/(~)|(~~)|(--)/g,'-');
+                    if(v[column].indexOf('-') > -1){
+                        v[column] = utils.land[v[column]];
                     }
                 })
-                options[i].lines = lines;
+                let lastLand = lines[0][column];
+                lines.map((v)=>{
+                    if(!v[column]){
+                        v[column] = lastLand;
+                    }else{
+                        lastLand = v[column];
+                    }
+                })
+                let newLines = [];
+                lines.map((v)=>{
+                    var lanArr = v[column].split(' ');
+                    if(lanArr.length > 1){
+                        lanArr.map((vi)=>{
+                            let arr = v.slice(0,column)
+                            newLines.push(arr.concat([vi].concat(v.slice(column+1))));
+                        })
+                    }else{
+                        newLines.push(v);
+                    }
+                })
+                options[i].lines = newLines;
+                options[i].lines.map((v)=>{
+                    v[column] = (v[column]-0).toFixed(2);
+                })
             }
             return options;
         }
@@ -198,9 +236,18 @@ module.exports = app => {
                     index.map((vi)=>{
                         line.push(v[vi]);
                     })
-                    newLines.push(line);
+                    let breakFlag = false;
+                    v.map((vi)=>{
+                        if(!vi){
+                            breakFlag = true;
+                        }
+                    })
+                    if(!breakFlag){
+                        newLines.push(line);
+                    }
                 })
                 options[i].lines = newLines;
+                options[i].head = column;
             }
             return options;
         }
