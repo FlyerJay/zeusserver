@@ -1,5 +1,17 @@
 <template>
-    <div>
+    <div> 
+          <div style="margin-top: 20px">
+            <el-form style="margin-top:20px">
+                <el-form-item label="库存紧张">
+                    <el-tag  color="red">  </el-tag>
+                </el-form-item>
+                 <el-form-item label="已选商品(含运费):">
+                    <span>999</span>
+                    <el-button @click="submitOrder()">提交</el-button>
+                </el-form-item>
+            </el-form>
+            
+          </div>
           <el-table
                 ref="multipleTable"
                 :data="cartList"
@@ -31,21 +43,23 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div style="margin-top: 20px">
-            <el-button @click="submitOrder()">提交</el-button>
-        </div>
+
   </div>
 </template>
 
 <script>
     import {
-      loadCartList
+      loadCartList,
+      addToList,
+      removeCartList
     } from '../../vuex/action'
 
     export default {
         vuex: {
             actions: {
-                loadCartList
+                loadCartList,
+                addToList,
+                removeCartList
             },
             getters: {
                 userInfo: ({
@@ -53,7 +67,10 @@
                 }) => common.userInfo,
                 cartList: ({
                     order
-                }) => order.cartList
+                }) => order.cartList,
+                orderList:({
+                    order
+                }) => order.orderList
             }
         },
         data() {
@@ -79,7 +96,14 @@
                 this.multipleSelection = val;
             },
             submitOrder() {
-
+               this.addToList(this.multipleSelection)
+               .then(rs => {
+                 this.$message({
+                 message: `下单成功`,
+                  type: 'success'
+                 });
+                 this.removeCartList(this.multipleSelection)
+              });
             }
         },
         mounted: function() {

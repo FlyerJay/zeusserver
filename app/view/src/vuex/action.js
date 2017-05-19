@@ -63,12 +63,28 @@ export const loadStock = ({ dispatch }, params) => {
   });
 }
 
+
+//加载到岸目的的地址
+export const loadOrdAddress = ({ dispatch }, params) => {
+  axios.get('http://127.0.0.1:7001/zues/api/supplier/address', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+     dispatch('UPDATE_ORDERFORM', 'ordAddress', response.data.data)
+    } else if (response.data.code === -1) {
+     dispatch('UPDATE_ORDERFORM', 'ordAddress', [])
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+
 //添加到购物车
 export const addTocart = ({ dispatch }, params) => {
   return axios.post('http://127.0.0.1:7001/zues/api/chart/addToChart', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'stockList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -93,6 +109,37 @@ export const loadCartList = ({ dispatch }, params) => {
   });
 }
 
+//购物车页面，添加到订单列表
+export const addToList = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/order/add', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//购物车页面，将添加到订单列表的数据从购物车列表中删除
+export const removeCartList = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/chart/remove', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+
 
 //加载订单详情
 export const loadOrderList = ({ dispatch }, params) => {
@@ -109,6 +156,26 @@ export const loadOrderList = ({ dispatch }, params) => {
   });
 }
 
+//订单详情页，删除未审核的订单；
+export const removeOrderList = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/order/remove', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+
+
+
+
+
 //供应商价格表
 export const loadSupPriceList = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/price/list', { params })
@@ -123,6 +190,7 @@ export const loadSupPriceList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
 //供应商库存数量
 export const loadSupInventoryList = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/inventory/list', { params })
