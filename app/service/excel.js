@@ -59,7 +59,6 @@ module.exports = app => {
             switch(query.supplier){
                 case '兴强':
                     return yield parseInventory.XQ(options,query);
-                    break;
             }
         }
         * valueParse(options,query){
