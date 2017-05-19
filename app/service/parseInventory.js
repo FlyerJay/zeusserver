@@ -180,6 +180,10 @@ module.exports = app => {
                 let lines = options[i].lines;
                 lines.map((v)=>{
                     v[column] = v[column].replace(/(~)|(~~)|(--)/g,'-');
+                    v[column] = v[column].replace(/\*.*/g,function(w){
+                        console.log(w);
+                        return w;
+                    });//这风骚的*号
                     if(v[column].indexOf('-') > -1){
                         v[column] = utils.land[v[column]];
                     }

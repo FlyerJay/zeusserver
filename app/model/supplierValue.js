@@ -76,6 +76,7 @@ module.exports = app => {
                 LEFT JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
+                AND s.supplierId = sv.supplierId
                 ${addressCondition}
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
@@ -97,6 +98,7 @@ module.exports = app => {
                 LEFT JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
+                AND s.supplierId = sv.supplierId
                 ${addressCondition}
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
