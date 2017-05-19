@@ -4,9 +4,9 @@ const utils = require('../utils');
 module.exports = app => {
     class ParseInventory extends app.Service {
         * XQ(options,query){
-            const parseValue = this.ctx.service.parseValue;
-            var $1 = parseValue.parseToLine(options);
-            var $2 = this.getTableHead($1);//找到表格的开头部分，根据表头含有的关键字查找
+            // const parseValue = this.ctx.service.parseValue;
+            // var $1 = parseValue.parseToLine(options);
+            var $2 = this.getTableHead(options);//找到表格的开头部分，根据表头含有的关键字查找
             var $3 = this.dealRepeatHeadTable($2);//处理表头中含有重复表头的情况也就是一行中有多条有用的数据
             var $4 = this.mixinSpec($3);//拆分多个规格，并让规格为空的行继承上一行的规格
             var $5 = this.mixinLand($4);//拆分壁厚，并让空壁厚继承上一行的壁厚(壁厚这里会多一个区间处理)
