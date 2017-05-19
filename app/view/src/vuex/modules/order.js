@@ -1,7 +1,8 @@
 const state = {
   stockList: [],
   cartList: [],
-  demandList:[]
+  demandList:[],
+  orderList:[]
 }
 
 
