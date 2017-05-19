@@ -47,6 +47,24 @@ export const addNewSup = ({ dispatch }, newSupParam, searchSupParam) => {
   });
 }
 
+//修改供应商----更新所修改的供应商
+export const updataSup = ({ dispatch },newSupParam, searchSupParam) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/supplier/update', newSupParam)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      loadSupList({ dispatch }, searchSupParam);
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+
+
+
 //现货查询
 export const loadStock = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/product/list', { params })

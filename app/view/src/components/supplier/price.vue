@@ -7,15 +7,22 @@
 
             <el-form-item label="类别">
                 <el-select v-model="searchParam.type">
-                     <el-option :value='0'>全部</el-option>
-                     <el-option :label="item.type" :value="item.type" v-for="(item,index) in priceList" :key="index"></el-option>
+                      <el-option value="全部">全部</el-option>
+                      <el-option value="镀带方矩管">镀带方矩管</el-option>
+                      <el-option value="方矩管">方矩管</el-option>
+                      <el-option value="镀锌方矩管">镀锌方矩管</el-option>
+                      <el-option value="镀锌角槽">镀锌角槽</el-option>
+                      <el-option value="其它">其它</el-option>
                 </el-select>                
             </el-form-item>
 
             <el-form-item label="材质" >
                 <el-select v-model="searchParam.material">
                      <el-option :value='0'>全部</el-option>
-                     <el-option :label="item.material" :value="item.material" v-for="(item,index) in priceList" :key="index"></el-option>
+                      <el-option value="黑管">黑管</el-option>
+                      <el-option value="镀锌">镀锌</el-option>
+                      <el-option value="镀锌带">镀锌带</el-option>
+                      <el-option value="其它">其它</el-option>
                 </el-select>                
             </el-form-item>
 
@@ -33,9 +40,7 @@
             <el-upload
                 class="upload-demo"
                 action="http://127.0.0.1:7001/zues/api/upload/excel"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList">
+                >
                 <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
             </el-form-item>
