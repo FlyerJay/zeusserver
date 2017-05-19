@@ -7,7 +7,11 @@ module.exports = app => {
             var $1 = parseInventory.getTableHead(options);
             var $2 = parseInventory.dealRepeatHeadTable($1);
             var $3 = this.separateSpecAndPer($2);
-            return $3;
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = parseInventory.mergeSpecAndLand($5);
+            var $7 = parseInventory.mergeData($6);
+            return $5;
         }
         separateSpecAndPer(options){/**分离规格和单支件数 */
             var i = 0;
@@ -41,7 +45,7 @@ module.exports = app => {
                             return ''
                         })
                     }else{
-                        v.push(6);
+                        v.push('6');
                     }
                 })
                 //再匹配件/支
@@ -56,6 +60,21 @@ module.exports = app => {
                         v.push(100);
                     }
                 })
+                options[i].lines.map((v)=>{//去掉第3列
+                    v.splice(2,1);
+                })
+                options[i].lines.map((v)=>{//规格中还有坑，有可能有50*60*6这种情况
+                    var specArr = v[2].split('*');
+                    specArr.length > 2 ? v[3]=specArr[2] : '';
+                    v[2] = `${specArr[0]}*${specArr[1]}`;
+                })
+                newLine = [];
+                options[i].lines.map((v)=>{//交换元素位置
+                    v = [v[2],v[0],v[3],v[1],v[4]];
+                    newLine.push(v);
+                })
+                options[i].head = ['规格','壁厚','长度','件数','支/件'];
+                options[i].lines = newLine;
             }
             return options;
         }
