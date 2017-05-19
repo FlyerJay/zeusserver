@@ -62,9 +62,12 @@ module.exports = app => {
         }
         * inventoryDispatch(options,query){
             const parseInventory = this.ctx.service.parseInventory;
+            const youfa = this.ctx.service.youfa;
             switch(query.supplier){
                 case '兴强':
                     return yield parseInventory.XQ(options,query);
+                case '友发':
+                    return yield youfa.YF(options,query);
             }
         }
         * valueParse(options,query){
