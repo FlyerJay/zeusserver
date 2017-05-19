@@ -73,7 +73,7 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
                 s.supplierName,s.address,s.benifit
                 FROM supplier_value sv
-                LEFT JOIN supplier s ON
+                INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
@@ -95,7 +95,7 @@ module.exports = app => {
                 }),
                 app.model.query(`SELECT count(1) as count
                 FROM supplier_value sv
-                LEFT JOIN supplier s ON
+                INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
