@@ -250,3 +250,35 @@ export const upLoadFile = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
+//管理员下单审核界面，加载订单详情
+export const loadSpecList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/order/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'specList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//管理员后操作记录，加载操作表
+
+export const loadOperateList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/user', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'operateList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
