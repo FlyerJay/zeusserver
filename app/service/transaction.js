@@ -87,6 +87,9 @@ module.exports = app => {
                             },
                             lastUpdateTime:{
                                 $eq:time,
+                            },
+                            material:{
+                                $eq:info.material
                             }
                         },
                         transaction:t

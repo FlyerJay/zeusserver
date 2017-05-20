@@ -218,7 +218,6 @@ module.exports = app => {
                 })
                 options[i].lines = newLines;
                 options[i].lines.map((v)=>{
-                    console.log(v);
                     v[column] = (v[column]-0).toFixed(2);
                 })
             }
