@@ -15,13 +15,19 @@ module.exports = app => {
             var $8 = this.mergeData($7);
             return $8;
         }
-        getTableHead(options){/*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息 */
+        getTableHead(options,keywords=['规格','壁厚']){/*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息,用数组表示表头包含哪些关键字 */
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
                 for(var j=0;j<lines.length;j++){
                     let elements = lines[j].split(',');
-                    if((elements.indexOf('规格') > -1 && elements.indexOf('壁厚') > -1) || elements.indexOf('规格/壁厚') > -1)
+                    let flag = true;
+                    keywords.map((v)=>{
+                        if(elements.indexOf(v) < 0){
+                            flag = false;
+                        }
+                    })
+                    if(flag)
                         break;
                 }
                 lines = lines.slice(j);
@@ -181,7 +187,6 @@ module.exports = app => {
                 lines.map((v)=>{
                     v[column] = v[column].replace(/(~)|(~~)|(--)/g,'-');
                     v[column] = v[column].replace(/\*.*/g,function(w){
-                        console.log(w);
                         return w;
                     });//这风骚的*号
                     if(v[column].indexOf('-') > -1){
@@ -201,8 +206,10 @@ module.exports = app => {
                     var lanArr = v[column].split(' ');
                     if(lanArr.length > 1){
                         lanArr.map((vi)=>{
-                            let arr = v.slice(0,column)
-                            newLines.push(arr.concat([vi].concat(v.slice(column+1))));
+                            if(vi){
+                                let arr = v.slice(0,column)
+                                newLines.push(arr.concat([vi].concat(v.slice(column+1))));
+                            }
                         })
                     }else{
                         newLines.push(v);
@@ -243,17 +250,22 @@ module.exports = app => {
                         line.push(v[vi]);
                     })
                     let breakFlag = false;
-                    v.map((vi)=>{
-                        if(!vi){
-                            breakFlag = true;
-                        }
-                    })
-                    if(!breakFlag){
-                        newLines.push(line);
-                    }
+                    newLines.push(line);
                 })
                 options[i].lines = newLines;
                 options[i].head = column;
+                newLines = [];
+                let breakFlag = false;
+                options[i].lines.map((v)=>{
+                    breakFlag = false;
+                    v.map((vi)=>{
+                        if(!vi)
+                            breakFlag = true;
+                    })
+                    if(!breakFlag)
+                        newLines.push(v);
+                })
+                options[i].lines = newLines;
             }
             return options;
         }

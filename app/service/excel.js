@@ -68,6 +68,8 @@ module.exports = app => {
                     return yield parseInventory.XQ(options,query);
                 case '友发':
                     return yield youfa.YF(options,query);
+                case '连创':
+                    return yield youfa.LC(options,query);
             }
         }
         * valueParse(options,query){
