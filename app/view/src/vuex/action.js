@@ -62,8 +62,20 @@ export const updataSup = ({ dispatch },newSupParam, searchSupParam) => {
   });
 }
 
-
-
+//修改供应商出厂价格----更新价格表格
+export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/price/update', newPriceParam)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      loadSupPriceList({ dispatch }, searchSupParam);
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
 
 //现货查询
 export const loadStock = ({ dispatch }, params) => {

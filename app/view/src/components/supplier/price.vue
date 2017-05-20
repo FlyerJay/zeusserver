@@ -55,24 +55,41 @@
               <el-table-column property="type" label="类别"></el-table-column>
               <el-table-column property="supplierName" label="供应商"></el-table-column>
               <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
-              <el-table-column inline-template label="操作" align="center" property="id">
-                  <el-button type="text" size="mini" @click.native="">修改</el-button>
+
+              <el-table-column label="操作" align="center" >
+                   <template scope="scope">
+                        <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning">修改</el-button>
+                   </template>
               </el-table-column>
        </el-table>
+
+       <el-dialog title="" v-model="dlgPriceVisible">
+          <el-form :model="newPriceParam">
+            <el-form-item label="修改后的价格：">
+              <el-input v-model="newPriceParam.value" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dlgPriceVisible = false">取 消</el-button>
+            <el-button type="warning" @click="confirmChangePrice(newPriceParam.row)">确 定</el-button>
+          </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
     import {
         loadSupPriceList,
-        loadSupAddress
+        loadSupAddress,
+        updataPrice
     } from '../../vuex/action'
 
     export default {
         vuex:{
             actions:{
                 loadSupPriceList,
-                loadSupAddress
+                loadSupAddress,
+                updataPrice
             },
             getters:{
                 priceList: ({
@@ -96,7 +113,15 @@
                     address:'',
                     comId: this.userInfo.comId
                 },
-                loading: true
+                newPriceParam:{
+                    value:'',
+                    supplierValueId:'',
+                    row:'',
+                    comId:this.userInfo.comId
+
+                },
+                loading: true,
+                dlgPriceVisible:false
             }
         },
         methods: {
@@ -106,9 +131,27 @@
                 .then(rs=>{
                     this.loading = false;
                 })
+            },
+            changePrice(index, row){
+               this.dlgPriceVisible = true;
+               this.newPriceParam.value = row.value;
+               this.newPriceParam.supplierValueId = row.supplierValueId;
+               this.newPriceParam.row = row;
+
+            },
+            confirmChangePrice(row){
+               this.updataPrice(this.newPriceParam, this.newPriceParam.supplierValueId)
+              .then(rs => {
+                this.$message({
+                  message: `价格修改成功`,
+                  type: 'success'
+                });
+                this.dlgPriceVisible = false;
+                row.value =  this.newPriceParam.value;
+              })
             }
         },
-        mounted: function() {
+          mounted: function() {
             this.loadSupPriceList({
                 comId :this.userInfo.comId
             });
