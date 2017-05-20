@@ -55,16 +55,18 @@ module.exports = app => {
         * inventoryImport(options,info){
             const time = info.time;
             var supplierId = 0;
-            for(var i = 0;i < options.length;i++){
-                options[i].line.map((v)=>{
-                    let specArr = v[0].split('*');
-                    if(specArr[0] == specArr[1]){
-                        v.push('方管')
-                    }else{
-                        v.push("矩管")
-                    }
-                })
-            }
+            let line = options.line
+            let newLine = [];
+            line.map((v)=>{
+                let specArr = v[0].split('*');
+                if(specArr[0] == specArr[1]){
+                    v.push('方管')
+                }else{
+                    v.push("矩管")
+                }
+                newLine.push(v);
+            })
+            options.line = newLine;
             app.model.transaction((t)=>{
                 return app.model.Supplier.findOne({
                     where:{

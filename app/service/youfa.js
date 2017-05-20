@@ -37,9 +37,10 @@ module.exports = app => {
             var $5 = parseInventory.mixinSpec($4);
             var $6 = parseInventory.mixinLand($5);
             var $7 = parseInventory.requireColumn($6,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
-            var $8 = parseInventory.mergeData($7);
-            var $9 = this.lcRemoveOrder($8);
-            return $9;
+            var $8 = parseInventory.mergeSpecAndLand($7);
+            var $9 = parseInventory.mergeData($8);
+            var $10 = this.lcRemoveOrder($9);
+            return $10;
         }
         * DZ(options,query) {//友发德众处理程序
             const parseInventory = this.ctx.service.parseInventory;
@@ -49,8 +50,9 @@ module.exports = app => {
             var $4 = parseInventory.mixinSpec($3);
             var $5 = parseInventory.mixinLand($4);
             var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
-            var $7 = parseInventory.mergeData($6);
-            return $7; 
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8; 
         }
         * ZD(options,query) {
             const parseInventory = this.ctx.service.parseInventory;
@@ -61,10 +63,11 @@ module.exports = app => {
             var $5 = this.xqSeparate($4);
             var $6 = this.zdAdditionPer($5);
             var $7 = parseInventory.mixinSpec($6);
-            var $8 = parseInventory.mixinLand($7);
+            var $8 = parseInventory.mixinLand($7,3);
             var $9 = parseInventory.requireColumn($8,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
-            var $10 = parseInventory.mergeData($9);
-            return $10;
+            var $10 = parseInventory.mergeSpecAndLand($9);
+            var $11 = parseInventory.mergeData($10);
+            return $11;
         }
         zdAdditionPer(options){
             var i = 0;

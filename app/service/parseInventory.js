@@ -182,6 +182,7 @@ module.exports = app => {
         }
         mixinLand(options,column=1){/**处理一行中含有多个壁厚（一般是一个区间2.25-2.75）以及没有壁厚的情况，根据索引查到对应的几种壁厚，再拆分成多行 */
             var i = 0;
+           
             for(;i<options.length;i++){
                 let lines = options[i].lines;
                 lines.map((v)=>{
@@ -217,6 +218,7 @@ module.exports = app => {
                 })
                 options[i].lines = newLines;
                 options[i].lines.map((v)=>{
+                    console.log(v);
                     v[column] = (v[column]-0).toFixed(2);
                 })
             }
