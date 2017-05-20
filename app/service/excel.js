@@ -10,9 +10,25 @@ module.exports = app => {
         * read(stream,query) {
             const extendsNameArr = stream.filename.split('.');
             const extendsName = extendsNameArr[extendsNameArr.length - 1];
+            const fileName = extendsNameArr[0];
             if(extendsName.indexOf('xls') < 0) return {
                 code:-1,
                 msg:'文件后缀必须是xls或xlsx'
+            }
+            let fileInfo = {};
+            let params = fileName.split('_');
+            if(params.length != 3) return {
+                code:-1,
+                msg:"请按照格式书写文件名"
+            }
+            fileInfo.supplier = params[0];
+            fileInfo.material = params[1];
+            fileInfo.time = params[2];
+            if(fileInfo.time.length != 8){
+                return {
+                    code:-1,
+                    msg:"文件的时间不正确"
+                }
             }
             const uniqueName = uuid.v4() + `.${extendsName}`;
             const filepath = path.resolve(__dirname,`../../upload/${uniqueName}`);
@@ -48,29 +64,40 @@ module.exports = app => {
                 });
                 res(result);
             });
-            return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
+            return query && query.type == 'inventory' ? yield this.inventoryParse(result,fileInfo) : yield this.valueParse(result,fileInfo);
         }
         * inventoryParse(options,query){
             const parseValue = this.ctx.service.parseValue;
             var $1 = parseValue.parseToLine(options);
             var result = $1;
-            if(query && query.type == 'inventory'){
-                return yield this.inventoryDispatch(result,query);
-            }
-            return yield this.valueParse(result,query);
-            //return result;
+            return yield this.inventoryDispatch(result,query);
         }
         * inventoryDispatch(options,query){
             const parseInventory = this.ctx.service.parseInventory;
             const youfa = this.ctx.service.youfa;
+            var result = {};
             switch(query.supplier){
+                case '源泰':
+                    result =  yield parseInventory.WZ(options,query);
+                    break;
                 case '兴强':
-                    return yield parseInventory.XQ(options,query);
-                case '友发':
-                    return yield youfa.YF(options,query);
+                    result = yield youfa.XQ(options,query);
+                    break;
+                case '邯郸友发':
+                    result = yield youfa.YF(options,query);
+                    break;
                 case '连创':
-                    return yield youfa.LC(options,query);
+                    result = yield youfa.LC(options,query);
+                    break;
+                case '友发德众':
+                    result = yield youfa.DZ(options,query);
+                    break;
+                case '邯郸正大':
+                    result = yield youfa.ZD(options,query);
+                    break;
             }
+            yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            return result;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;

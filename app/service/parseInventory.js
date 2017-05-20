@@ -3,7 +3,7 @@ const utils = require('../utils');
 
 module.exports = app => {
     class ParseInventory extends app.Service {
-        * XQ(options,query){
+        * WZ(options,query){
             // const parseValue = this.ctx.service.parseValue;
             // var $1 = parseValue.parseToLine(options);
             var $2 = this.getTableHead(options);//找到表格的开头部分，根据表头含有的关键字查找
@@ -253,7 +253,11 @@ module.exports = app => {
                     newLines.push(line);
                 })
                 options[i].lines = newLines;
-                options[i].head = column;
+                let head = [];
+                column.map((v)=>{
+                    head.push(v);
+                })
+                options[i].head = head;
                 newLines = [];
                 let breakFlag = false;
                 options[i].lines.map((v)=>{

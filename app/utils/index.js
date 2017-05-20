@@ -7,6 +7,9 @@ module.exports = {
 			"" :
 			( text + "" ).replace( rtrim, "" );
     },
+    getCurrentDate:function(){
+        return String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
+    },
     land:{
         '2.5-2.75':'2.5 2.75',
         '2.5-3.0':'2.5 2.75 3.0',

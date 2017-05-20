@@ -56,6 +56,10 @@ module.exports = app => {
         inventoryWeight: {
             type:STRING,
             comment:"库存重量"
+        },
+        long:{
+            type:STRING,
+            comment:"长度"
         }
     },{
         freezeTabName:true,
@@ -77,7 +81,7 @@ module.exports = app => {
                     typeCondition = `AND si.type = :type`
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.supplierId,si.comId,si.spec,si.lastUpdateTime,
-                si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierName,s.address,s.benifit,f.freight FROM supplier_inventory si
+                si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierName,s.address,s.benifit,f.freight FROM supplier_inventory si
                 INNER JOIN supplier s ON
                 s.comId = si.comId
                 AND s.supplierName LIKE :supplierName
@@ -213,7 +217,7 @@ module.exports = app => {
             * queryProduct(options){
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
-                    si.type,si.material,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
+                    si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
                     FROM supplier_inventory si
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId

@@ -2,7 +2,7 @@
 
 module.exports = app => {
     class youfa extends app.Service {
-        * YF(options,query) {
+        * YF(options,query) {//邯郸友发处理程序
             const parseInventory = this.ctx.service.parseInventory;
             var $1 = parseInventory.getTableHead(options,['规格/壁厚']);
             var $2 = parseInventory.dealRepeatHeadTable($1);
@@ -11,9 +11,24 @@ module.exports = app => {
             var $5 = parseInventory.mixinLand($4);
             var $6 = parseInventory.mergeSpecAndLand($5);
             var $7 = parseInventory.mergeData($6);
-            return $5;
+            
+            return $7;
         }
-        * LC(options,query) {
+        * XQ(options,query){//兴强处理程序
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','支/件']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.dealMutipleHead($2);
+            var $4 = parseInventory.requireColumn($3,['规格','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $5 = this.xqSeparate($4);
+            var $6 = parseInventory.mixinSpec($5);
+            var $7 = parseInventory.mixinLand($6,3);
+            var $8 = parseInventory.requireColumn($7,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $9 = parseInventory.mergeSpecAndLand($8);
+            var $10 = parseInventory.mergeData($9);
+            return $10;
+        }
+        * LC(options,query) {//连创处理程序
             const parseInventory = this.ctx.service.parseInventory;
             var $1 = parseInventory.getTableHead(options,['件数']);
             var $2 = this.lcHeadRevise($1);
@@ -25,6 +40,104 @@ module.exports = app => {
             var $8 = parseInventory.mergeData($7);
             var $9 = this.lcRemoveOrder($8);
             return $9;
+        }
+        * DZ(options,query) {//友发德众处理程序
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.separateSpecAndPer($2);
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $7 = parseInventory.mergeData($6);
+            return $7; 
+        }
+        * ZD(options,query) {
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','件数']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.headTrim($2);
+            var $4 = this.zdRemoveUnuseLine($3);
+            var $5 = this.xqSeparate($4);
+            var $6 = this.zdAdditionPer($5);
+            var $7 = parseInventory.mixinSpec($6);
+            var $8 = parseInventory.mixinLand($7);
+            var $9 = parseInventory.requireColumn($8,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $10 = parseInventory.mergeData($9);
+            return $10;
+        }
+        zdAdditionPer(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                lines.map((v)=>{
+                    v.push('100');
+                })
+                options[i].head.push('支/件');
+            }
+            return options;
+        }
+        zdRemoveUnuseLine(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let newLine = [];
+                lines.map((v)=>{
+                    if(v[0]){
+                        v[0] = v[0].replace(/[JF]/g,'');
+                        newLine.push(v);
+                    }
+                })
+                options[i].lines = newLine;
+            }
+            return options;
+        }
+        headTrim(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let head = options[i].head;
+                let newHead = [];
+                head.map((v)=>{
+                    v = v.trim();
+                    newHead.push(v);
+                })
+                options[i].head = newHead;
+            }
+            return options;
+        }
+        xqSeparate(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                lines.map((v)=>{
+                    let specArr = v[0].split('*');
+                    specArr.length>2?v.push(specArr[2]):v.push('1.2');
+                    specArr.length>3?v.push(specArr[3]):v.push('6');
+                    v[0] = `${specArr[0]}*${specArr[1]}`;
+                })
+                options[i].head.push('壁厚','长度');
+            }
+            return options;
+        }
+        dealMutipleHead(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                let head = options[i].head;
+                let firstLine = options[i].lines[0];
+                let isMutiple = false;
+                head.map((v)=>{
+                    if(!v) isMutiple = true;
+                })
+                if(isMutiple){
+                    firstLine.map((v,index)=>{
+                        if(v){
+                            head[index] = v;
+                        }
+                    })
+                    options[i].lines = options[i].lines.slice(1);
+                }
+            }
+            return options;
         }
         lcHeadRevise(options){
             var i = 0;
@@ -71,8 +184,8 @@ module.exports = app => {
                         console.log(w);
                         return '';
                     });
-                    if(/\d*支\/件/.test(v[0])){
-                        v[0] = v[0].replace(/\d*支\/件/g,(w)=>{
+                    if(/[(（]*\d*支\/件[)）]*/.test(v[0])){
+                        v[0] = v[0].replace(/[(（]*\d*支\/件[)）]*/g,(w)=>{
                             per = w.replace(/[^0-9]/ig,'');
                             v.push(per);
                             return ''
