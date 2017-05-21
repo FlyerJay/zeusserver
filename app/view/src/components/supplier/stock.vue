@@ -30,7 +30,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-upload class="upload-demo" action="http://127.0.0.1:7001/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+                <el-upload class="upload-demo" action="http://127.0.0.1:7001/zues/api/upload/excel?type=inventory&supplier=天一" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
             </el-form-item>

@@ -47,32 +47,17 @@ module.exports = app => {
                     }
                 });
                 res(result);
-<<<<<<< HEAD
             });
-            return query && query.type == 'inventory' ? yield this.inventoryParse(result,query) : yield this.valueParse(result,query);
-        }
-        * inventoryParse(options,query){
-            const parseValue = this.ctx.service.parseInventory;
-            var $1 = parseValue.parseToLine(options);
-            
-            var result = $1;
-
-            return result
-=======
-            })
-            if(query && query.type == 'inventory'){
-                return yield this.inventoryDispatch(result,query);
-            }
-            return yield this.valueParse(result,query);
-            //return result;
+            return query && query.type == 'inventory' ? yield this.inventoryDispatch(result,query) : yield this.valueParse(result,query);
         }
         * inventoryDispatch(options,query){
             const parseInventory = this.ctx.service.parseInventory;
             switch(query.supplier){
                 case '兴强':
                     return yield parseInventory.XQ(options,query);
+                case '天一':
+                    return yield parseInventory.TianYi(options,query);
             }
->>>>>>> c61fb501fc7c286e60a07755efee3286891537cd
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
