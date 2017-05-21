@@ -89,8 +89,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 }),
                 app.model.query(`SELECT count(1) as count
@@ -103,8 +103,7 @@ module.exports = app => {
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
-                ORDER BY sv.lastUpdateTime DESC
-                LIMIT :start,:offset`,{
+                ORDER BY sv.lastUpdateTime DESC`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,

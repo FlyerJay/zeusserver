@@ -83,8 +83,8 @@ module.exports = app => {
                     replacements:{
                         userId:options.userId?options.userId:'',
                         comId:options.comId?options.comId:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 }),
                 app.model.query(`SELECT count(1) AS count FROM chart c
@@ -104,8 +104,7 @@ module.exports = app => {
                 AND f.comId = c.comId
                 WHERE c.userId = :userId AND
                 c.comId = :comId
-                ORDER BY c.createTime DESC
-                LIMIT :start,:offset`,
+                ORDER BY c.createTime DESC`,
                 {
                     replacements:{
                         userId:options.userId?options.userId:'',

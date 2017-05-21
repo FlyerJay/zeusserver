@@ -99,7 +99,26 @@ module.exports = app => {
                         data:err
                     };
                 })
-                
+            },
+            * list(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                const list = yield this.findAndCountAll({
+                    offset:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
+                    limit:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    where:{
+                        comId:{
+                            $eq:options.comId
+                        }
+                    }
+                })
+                return {
+                    code:200,
+                    msg:"查询数据成功",
+                    data:list
+                }
             }
         }
     })

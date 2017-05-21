@@ -74,8 +74,7 @@ module.exports = app => {
                 f.address = s.address
                 WHERE s.comId = :comId AND
                 s.supplierName LIKE :supplierName
-                ${condition}
-                LIMIT :start,:offset`,{
+                ${condition}`,{
                     replacements:{
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         comId:options.comId,
