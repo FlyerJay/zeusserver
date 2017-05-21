@@ -70,8 +70,8 @@ module.exports = app => {
                     replacements:{
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 }),
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
