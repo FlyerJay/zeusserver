@@ -119,7 +119,7 @@
           material: '',
           type: '',
           address: '',
-          page: 1,
+          page:1,
           comId: this.userInfo.comId
         },
         dlgShopVisible: false,

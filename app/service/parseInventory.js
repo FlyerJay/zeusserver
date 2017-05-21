@@ -315,7 +315,6 @@ module.exports = app => {
             }
             return result;
         }
-
         * TY(options, query) {
             const parseValue = this.ctx.service.parseValue;
             var methods = {
@@ -367,6 +366,7 @@ module.exports = app => {
                         })
                         options[i].lines = newLine;
                     }
+                    console.log(options);
                     return options;
                 },
                 mergeSpecAndLand(options) { /**合并数据中的壁厚和规格，为导入数据做准备工作 */
@@ -375,6 +375,7 @@ module.exports = app => {
                         let lines = options[i].lines;
                         let head = options[i].head;
                         let specIndex = head.indexOf('（镀管）');
+                        let landIndex = head.indexOf('壁厚');
                         if (specIndex > -1 && landIndex > -1) {
                             lines.map((v) => {
                                 v[specIndex] = `${v[specIndex]}*${v[landIndex]}`;
@@ -387,11 +388,10 @@ module.exports = app => {
                     return options;
                 }
             }
-            var $1 = parseValue.parseToLine(options);
-            var $2 = this.getTableHead($1, ['壁厚', '件数']); //找到表格的开头部分，根据表头含有的关键字查找
-            var $3 = this.dealRepeatHeadTable($2); //
-            var $4 = methods.mixinSpec($3); //
-            var $5 = methods.mergeSpecAndLand($4); //
+            var $1 = this.getTableHead(options, ['壁厚', '件数']); //找到表格的开头部分，根据表头含有的关键字查找
+            var $2 = this.dealRepeatHeadTable($1); //
+            var $3 = methods.mixinSpec($2); //
+            var $4 = methods.mergeSpecAndLand($3); //
             return $4;
         }
     }
