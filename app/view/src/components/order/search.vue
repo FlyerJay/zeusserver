@@ -58,6 +58,16 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="block">
+          <span class="demonstration">直接前往</span>
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="stockParams.page"
+            :page-size="30"
+            layout=" prev, pager, next, jumper"
+            :total="1000">
+          </el-pagination>
+      </div>
       <el-dialog title="" v-model="dlgShopVisible">
         <el-form :model="cartParams">
           <el-form-item label="需求数量：">
@@ -112,10 +122,11 @@
           material: '',
           type: '',
           address: '',
+          page:0,
           comId: this.userInfo.comId
         },
         dlgShopVisible: false,
-        loading:true
+        loading:true,
       }
     },
     methods: {
@@ -138,10 +149,15 @@
       },
       dateFormat(row, column) {
         return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
-      }
+      },
+       //页码变更
+      handleCurrentChange(val){
+          this.stockParams.page  = val;
+          this.loadStock(this.stockParams);
+       }      
     },
     mounted: function() {
-      this.loadStock(this.stockParams)
+       this.loadStock(this.stockParams)
        this.loadOrdAddress({
                 comId: this.userInfo.comId
             });
