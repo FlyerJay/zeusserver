@@ -31,7 +31,7 @@
             </el-form-item>
             <el-form-item>
                 <el-upload class="upload-demo" action="http://127.0.0.1:7001/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
-                    <el-button size="small" type="primary">点击上传</el-button>
+                    <el-button type="warning">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
             <el-form-item>
@@ -39,7 +39,7 @@
             </el-form-item>
         </el-form>
     
-        <el-table :data="inventoryList" style="width: 100%" height="500" :loading="loading">
+        <el-table :data="inventoryList" style="width: 100%" :loading="loading">
             <el-table-column property="spec" label="规格"></el-table-column>
             <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
             <el-table-column property="type" label="类别"></el-table-column>

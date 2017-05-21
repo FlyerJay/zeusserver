@@ -71,7 +71,8 @@
     import {
       loadCartList,
       addToList,
-      removeCartList
+      removeCartList,
+      updateCart
     } from '../../vuex/action'
 
     export default {
