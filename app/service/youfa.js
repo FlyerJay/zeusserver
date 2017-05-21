@@ -69,6 +69,65 @@ module.exports = app => {
             var $11 = parseInventory.mergeData($10);
             return $11;
         }
+        * TY(options,query) {
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['壁厚','件数']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.separateSpecAndPer($2);
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = this.tyHeadDeal($5);
+            var $7 = parseInventory.requireColumn($6,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $8 = parseInventory.mergeSpecAndLand($7);
+            var $9 = parseInventory.mergeData($8);
+            return $9;
+        }
+        * XD(options,query) {
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['壁厚','件数']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.xdSeparate($2);
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8;
+        }
+        xdSeparate(options) {
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                let per = '';
+                lines.map((v)=>{
+                    if(v[0]){
+                        per = '';
+                    }
+                    if(/[(（]*\d*支[)）]*/.test(v[0])){
+                        v[0] = v[0].replace(/[(（]*\d*支[)）]*/g,(w)=>{
+                            per = w.replace(/[^0-9]/ig,'');
+                            v.push(per);
+                            return ''
+                        })
+                    }else{
+                        v.push(per?per:'100');//没有件数数据的默认给100
+                    }
+                    var landArr = v[1].split('*');
+                    landArr.length > 1 ? v[1]=landArr[0] : '';
+                    landArr[1] ? v.push(landArr[1].replace('米','')):v.push('6');
+                })
+                options[i].head.push('支/件','长度');
+            }
+            return options;
+        }
+        tyHeadDeal(options) {
+            var i = 0;
+            for(;i<options.length;i++){
+                let head = options[i].head;
+                head[0] = '规格';
+            }
+            return options;
+        }
         zdAdditionPer(options){
             var i = 0;
             for(;i<options.length;i++){
@@ -187,8 +246,8 @@ module.exports = app => {
                         console.log(w);
                         return '';
                     });
-                    if(/[(（]*\d*支\/件[)）]*/.test(v[0])){
-                        v[0] = v[0].replace(/[(（]*\d*支\/件[)）]*/g,(w)=>{
+                    if(/[(（]*\d*[支]*\/件[)）]*/.test(v[0])){
+                        v[0] = v[0].replace(/[(（]*\d*[支]*\/件[)）]*/g,(w)=>{
                             per = w.replace(/[^0-9]/ig,'');
                             v.push(per);
                             return ''
