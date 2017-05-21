@@ -166,7 +166,6 @@
             <select name="" class="input company">
                 <option value="">请选择公司</option>
                 <option value="">南京奎鑫</option>
-                <option value=""></option>
             </select>
           </li>
           <li>
@@ -201,7 +200,6 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            debugger
             setCookie('userId', res.data.userInfo.userId);
             setCookie('userToken', res.data.userInfo.userToken);
             setCookie('userName', res.data.userInfo.userName);

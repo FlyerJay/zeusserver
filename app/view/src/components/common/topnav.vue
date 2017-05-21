@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="h-contain clearfix">
-    <ul class="nav">
+    <ul class="nav clearfix">
       <li class="nav-item">
         <a href="#/order/search" :class="[ mainRoute === 'order' ? 'active' : '' ]">宙斯报价系统</a>
       </li>
@@ -10,7 +10,12 @@
       <li class="nav-item">
         <a href="#/manager/review" :class="[ mainRoute === 'manager' ? 'active' : '' ]">管理员后台</a>
       </li>
+      <li class="user-wrap">
+        <span>欢迎你，{{userInfo.userId}}</span><span class="vertline">|</span></spalign><span @click="loginout()" class="loginout">退出系统</span>
+      </li>
     </ul>
+    <div>
+    </div>
   </div>
 </template>
 
@@ -20,7 +25,31 @@
       getters: {
         mainRoute: ({
           common
-        }) => common.mainRoute
+        }) => common.mainRoute,
+        userInfo: ({
+          common
+        }) => common.userInfo
+      }
+    },
+    methods: {
+      loginout() {
+        this.delCookie('userId');
+        this.delCookie('comId');
+        document.location.href = "http://127.0.0.1:8080/login.html"
+      },
+      getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+          return unescape(arr[2]);
+        else
+          return null;
+      },
+      delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = this.getCookie(name);
+        if (cval != null)
+          document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
       }
     }
   }
@@ -47,6 +76,20 @@
         &:hover {
           background-color: #253340;
         }
+      }
+    }
+    .user-wrap {
+      color: #fff;
+      position: absolute;
+      right: 215px;
+      top: 11px;
+      .loginout {
+        display: inline-block;
+        cursor: pointer;
+      }
+      .vertline {
+        display: inline-block;
+        margin: 0 10px;
       }
     }
   }

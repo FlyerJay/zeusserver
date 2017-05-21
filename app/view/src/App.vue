@@ -11,12 +11,21 @@
 
 <script>
     import topNav from './components/common/topnav'
+    import {
+        updateForm,
+    } from './vuex/action'
     export default {
         vuex: {
             getters: {
                 menuArr: ({
                     common
-                }) => common.menuArr
+                }) => common.menuArr,
+                userInfo: ({
+                    common
+                }) => common.userInfo
+            },
+            actions: {
+                updateForm
             }
         },
         data() {
@@ -35,8 +44,13 @@
             },
             isLogin() {
                 var userId = this.getCookie('userId');
+                var comId = this.getCookie('comId');
+                var info = {
+                    userId: userId,
+                    comId: comId
+                }
                 if (userId) {
-                    return
+                    this.updateForm('userInfo', info);
                 } else {
                     document.location.href = 'http://127.0.0.1:8080/login.html'
                 }
@@ -98,10 +112,10 @@
         position: fixed;
         top: 0;
         left: 0;
-        margin-left: 190px;
-        width: 86.4%;
-        z-index: 10001;
+        padding-left: 190px;
         background: #2b3b4b;
+        width: 100%;
+        z-index: 100;
     }
     
     main {
@@ -157,7 +171,8 @@
         width: 120px;
     }
     
-    .el-loading-mask {
+    body .el-loading-mask {
+        z-index: 99;
         .el-loading-spinner {
             .path {
                 stroke: #f7ba2a;
