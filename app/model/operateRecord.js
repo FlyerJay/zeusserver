@@ -8,11 +8,12 @@
 module.exports = app => {
     const { STRING, INTEGER} = app.Sequelize;
 
-    return app.model.define('operateRecord',{
+    return app.model.define('OperateRecord',{
         recordId:{
             type:INTEGER,
             primaryKey:true,
             allowNull:false,
+            autoIncrement: true,
             comment:"记录主键"
         },
         userId: {
@@ -41,5 +42,30 @@ module.exports = app => {
         underscored:true,
 		tableName:"operate_record",
 		timestamps:false,
+        classMethods:{
+            * list(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                const result = yield this.findAndCountAll({
+                    where:{
+                        comId:{
+                            $eq:options.comId
+                        }
+                    }
+                })
+                if(!result[0] || result[0].length < 1) return {
+                    code:-1,
+                    msg:"没有操作记录",
+                    data:[]
+                }
+                return {
+                    code:200,
+                    data:result[0],
+                    msg:"查询成功",
+                }
+            }
+        }
     })
 }

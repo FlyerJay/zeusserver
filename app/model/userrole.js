@@ -52,25 +52,54 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * update(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
                 if(!options.userId) return {
                     code:-1,
                     msg:"请选择修改的用户"
                 }
                 if(!options.operator) return{
                     code:-1,
-                    msg:"请带上操作人"
+                    msg:"请带上操作人Id:operator"
                 }
-                this.update(options,{
-                    where:{
-                        userId:{
-                            $eq:options.userId,
+                var self = this;
+                return app.model.transaction(async (t)=>{
+                    return await self.findOne({
+                        where:{
+                            userId:{
+                                $eq:options.userId,
+                            }
+                        },
+                        transaction:t
+                    }).then(async (res)=>{
+                        for(var arr in options){
+                            res[arr] = options[arr];
                         }
+                        res.save({transaction:t});
+                        return await app.model.OperateRecord.create({
+                            userId:options.operator,
+                            comId:options.comId,
+                            type:'修改用户权限',
+                            detail:`修改了用户${options.userId}的权限`,
+                            createTime:+new Date()
+                        },{transaction:t})
+                    })
+                }).then((res)=>{
+                    return {
+                        code:200,
+                        msg:"权限修改成功",
+                        data:res
                     }
+                }).catch((err)=>{
+                    return {
+                        code:-1,
+                        msg:'修改权限出错',
+                        data:err
+                    };
                 })
-                return {
-                    code:200,
-                    msg:"权限修改成功"
-                }
+                
             }
         }
     })
