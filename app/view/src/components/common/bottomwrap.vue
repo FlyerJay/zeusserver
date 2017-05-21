@@ -3,7 +3,7 @@
     <div class="main-left">
       <left-nav></left-nav>
     </div>
-    <div class="main-right">
+    <div class="main-right clearfix">
       <router-view></router-view>
     </div>
   </div>

@@ -5,25 +5,24 @@
           <el-input v-model="stockParams.spec" placeholder="规格"></el-input>
         </el-form-item>
         <el-form-item label="到岸目的地">
-          <el-select v-model="stockParams.address" placeholder="活动区域">
-            <el-option :value='0'>全部</el-option>
+          <el-select v-model="stockParams.address" placeholder="请选择">
+            <el-option value="">全部</el-option>
             <el-option :label="item.address" :value="item.address" v-for="(item,index) in ordAddress" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="材质">
           <el-select v-model="stockParams.material" placeholder="材质">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option value="">全部</el-option>
+            <el-option value="黑管">黑管</el-option>
+            <el-option value="镀锌带">镀锌带</el-option>
+            <el-option value="镀锌">镀锌</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类别">
           <el-select v-model="stockParams.type">
-            <el-option value="全部">全部</el-option>
-            <el-option value="镀带方矩管">镀带方矩管</el-option>
-            <el-option value="方矩管">方矩管</el-option>
-            <el-option value="镀锌方矩管">镀锌方矩管</el-option>
-            <el-option value="镀锌角槽">镀锌角槽</el-option>
-            <el-option value="其它">其它</el-option>
+            <el-option value="">全部</el-option>
+            <el-option value="方管">方管</el-option>
+            <el-option value="矩管">矩管</el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -32,7 +31,7 @@
       </el-form>
       <div class="title">厂家现货价格/库存表:</div>
       <div class="tb-wrap">
-        <el-table :data="stockList" stripe style="width: 100%" :load="loading">
+        <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
           <el-table-column prop="spec" label="规格" width="">
           </el-table-column>
           <el-table-column prop="lastUpdateTime" label="最新更新时间" width="" :formatter="dateFormat">
@@ -58,28 +57,26 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="block">
-          <span class="demonstration">直接前往</span>
+      <div class="page-wrap">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="stockParams.page"
-            :page-size="30"
-            layout=" prev, pager, next, jumper"
-            :total="1000">
+            layout=" prev, pager, next"
+            :total="stockInfo.totalCount"
+          >
           </el-pagination>
       </div>
-      <el-dialog title="" v-model="dlgShopVisible">
+      <el-dialog title="" v-model="dlgShopVisible" size="tiny">
         <el-form :model="cartParams">
           <el-form-item label="需求数量：">
             <el-input v-model="cartParams.charAmount" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dlgSupVisible = false">取 消</el-button>
           <el-button type="warning" @click="confirmTocart">确 定</el-button>
+          <el-button @click="dlgShopVisible = false">取 消</el-button>
         </div>
      </el-dialog>
-     <div>购物车图标</div>
   </div>
 </template>
 
@@ -101,9 +98,9 @@
         userInfo: ({
           common
         }) => common.userInfo,
-        stockList: ({
+        stockInfo: ({
           order
-        }) => order.stockList,
+        }) => order.stockInfo,
         ordAddress :({
           order
         }) => order.ordAddress
@@ -126,12 +123,16 @@
           comId: this.userInfo.comId
         },
         dlgShopVisible: false,
-        loading:true,
+        loading: true,
       }
     },
     methods: {
       searchStock() {
+        this.loading = true;
         this.loadStock(this.stockParams)
+        .then(() => {
+          this.loading =  false;
+       });
       },
       confirmTocart() {
         this.addTocart(this.cartParams)
@@ -152,15 +153,22 @@
       },
        //页码变更
       handleCurrentChange(val){
-          this.stockParams.page  = val;
-          this.loadStock(this.stockParams);
+          this.stockParams.page = val;
+          this.loading = true;
+          this.loadStock(this.stockParams)
+          .then(() => {
+            this.loading =  false;
+          });
        }      
     },
     mounted: function() {
        this.loadStock(this.stockParams)
+       .then(() => {
+          this.loading =  false;
+       });
        this.loadOrdAddress({
-                comId: this.userInfo.comId
-            });
+          comId: this.userInfo.comId
+       });
     }
   }
 </script>
