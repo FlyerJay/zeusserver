@@ -24,6 +24,26 @@
         },
         components: {
             topNav
+        },
+        methods: {
+            getCookie(name) {
+                var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+                if (arr = document.cookie.match(reg))
+                    return unescape(arr[2]);
+                else
+                    return null;
+            },
+            isLogin() {
+                var userId = this.getCookie('userId');
+                if (userId) {
+                    return
+                } else {
+                    document.location.href = 'http://127.0.0.1:8080/login.html'
+                }
+            }
+        },
+        mounted: function() {
+            this.isLogin()
         }
     }
 </script>
@@ -136,6 +156,7 @@
         height: 31px;
         width: 120px;
     }
+    
     .el-loading-mask {
         .el-loading-spinner {
             .path {
@@ -146,6 +167,7 @@
             }
         }
     }
+    
     .home-wrap {
         .el-button.el-button--default {
             &:hover {
@@ -159,5 +181,4 @@
             }
         }
     }
-   
 </style>

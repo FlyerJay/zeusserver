@@ -29,7 +29,7 @@
           <el-button type="warning" @click="searchStock">厂家现货查询</el-button>
         </el-form-item>
       </el-form>
-      <div class="title">厂家现货价格/库存表:</div>
+      <div class="sea-title">厂家现货价格/库存表:</div>
       <div class="tb-wrap">
         <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
           <el-table-column prop="spec" label="规格" width="">
@@ -172,3 +172,10 @@
     }
   }
 </script>
+
+<style>
+  .sea-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+</style>
