@@ -27,15 +27,15 @@
             </el-table-column>
             <el-table-column prop="supplierName" label="供应商">
             </el-table-column>
-            <el-table-column prop="value" label="出厂单价(含运费)">
+            <el-table-column prop="freight" label="出厂单价(含运费)">
             </el-table-column>
-            <el-table-column prop="freight" label="采购数量(支)">
+            <el-table-column prop="chartAmount" label="采购数量(支)">
             </el-table-column>
             <el-table-column prop="benifit" label="采购吨位(吨)">
             </el-table-column>
             <el-table-column prop="charAdjust" label="采购下浮(元/吨)">
             </el-table-column>
-            <el-table-column prop="benifit" label="金额">
+            <el-table-column prop="value" label="金额">
             </el-table-column>
             <el-table-column label="操作" align="center" property="id">
                 <template scope="scope">
@@ -75,11 +75,16 @@
         },
         data() {
             return {
-                params: {
+                listParams: {
                     userId: this.userInfo.userId,
                     comId: this.userInfo.comId,
                 },
-                multipleSelection: []
+                submitParams: {
+                    comId: this.userInfo.comId,
+                    userId: this.userInfo.userId,
+                    supplierInventoryIds: []
+                },
+                supplierInventoryIds: []
             }
         },
         methods: {
@@ -93,21 +98,21 @@
                 }
             },
             handleSelectionChange(val) {
-                this.multipleSelection = val;
+                this.supplierInventoryIds = val;
             },
             submitOrder() {
-               this.addToList(this.params)
+               this.submitParams.supplierInventoryIds = this.supplierInventoryIds;
+               this.addToList(this.submitParams)
                .then(rs => {
                  this.$message({
                  message: `下单成功`,
                   type: 'success'
                  });
-                 this.removeCartList(this.multipleSelection)
               });
             }
         },
         mounted: function() {
-            this.loadCartList(this.params)
+            this.loadCartList(this.listParams)
         }
     }
 </script>
