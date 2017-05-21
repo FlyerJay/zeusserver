@@ -15,25 +15,39 @@
       </el-form-item>
     </el-form>
   
-  
-    <el-row type="flex" align="middle" style="padding:20px 0;">
-      <el-col :span="10">
-        <el-button type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>
-        <el-button type="warning" @click="dlgFreightVisible = true">每日运费录入</el-button>
-      </el-col>
-    </el-row>
-  
-    <el-table :data="supList" style="width: 100%" height="" :loading="loading">
-      <el-table-column property="supplierName" label="供应商名称"></el-table-column>
-      <el-table-column property="address" label="供应商所在地"></el-table-column>
-      <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
-      <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
-      <el-table-column  label="操作" align="center" property="id">
-          <template scope="scope">
-              <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
-          </template>
-      </el-table-column>
-    </el-table>
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="供应商信息" name="first">
+            <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>
+            <el-table :data="supList" style="width: 100%" height="" :loading="loading">
+              <el-table-column property="supplierName" label="供应商名称"></el-table-column>
+              <el-table-column property="address" label="供应商所在地"></el-table-column>
+              <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
+              <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
+              <el-table-column  label="操作" align="center" property="id">
+                  <template scope="scope">
+                      <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
+                  </template>
+              </el-table-column>
+            </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="运费信息" name="second">
+            <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgFreightVisible = true">每日运费录入</el-button>
+            <el-table :data="freightList" style="width: 100%" height="" :loading="loading">
+              <el-table-column property="address" label="所在地"></el-table-column>
+              <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
+              <el-table-column  label="操作" align="center" property="id">
+                  <template scope="scope">
+                      <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
+                  </template>
+              </el-table-column>
+            </el-table>
+        </el-tab-pane>
+    </el-tabs>
+
+
+
+
+    
   
      <el-row type="flex" justify="end" style="padding:20px 0; ">
          <el-pagination :current-page="5" layout="prev, pager, next">
@@ -115,7 +129,8 @@
     loadSupList,
     loadSupAddress,
     addNewSup,
-    updataSup
+    updataSup,
+    loadfreightList
   } from '../../vuex/action'
   
   export default {
@@ -124,7 +139,8 @@
         loadSupList,
         loadSupAddress,
         addNewSup,
-        updataSup
+        updataSup,
+        loadfreightList
       },
       getters: {
         supList: ({
@@ -135,7 +151,10 @@
         }) => supplier.supAddress,
         userInfo: ({
           common
-        }) => common.userInfo
+        }) => common.userInfo,
+        freightList:({
+          supplier
+        })=>supplier.freightList
       }
     },
     data() {
@@ -171,6 +190,7 @@
           resource: '',
           desc: ''
         },
+        activeName:"first",
         dlgSupVisible: false,
         dlgFreightVisible: false,
         dlgChangeSupVisible:false,
@@ -218,6 +238,9 @@
             row.freight = this.changeSupParam.freight;
             row.benifit = this.changeSupParam.benifit;
           })
+      },
+      handleClick(tab, event){
+           console.log(tab, event);
       }
 
     },
@@ -226,6 +249,9 @@
         comId: this.userInfo.comId
       })
       this.loadSupList({
+        comId: this.userInfo.comId
+      })
+      this.loadfreightList({
         comId: this.userInfo.comId
       })
     }

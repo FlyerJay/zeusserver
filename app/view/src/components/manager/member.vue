@@ -20,7 +20,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="memberList" stripe style="width: 100%" :load="loading">
+             <el-table :data="memberList" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="spec" label="用户ID" width="">
                 </el-table-column>
                 <el-table-column prop="date" label="供应商现货查询" width="">
@@ -40,7 +40,16 @@
                </el-table-column>
             </el-table>
        </div>
-
+       <div class="block">
+          <span class="demonstration">直接前往</span>
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="memberParams.page"
+            :page-size="30"
+            layout=" prev, pager, next, jumper"
+            :total="1000">
+          </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -69,6 +78,7 @@ export default {
       	 memberParams: {
                     id: '',
                     address:'',
+                    page:1,
                     comId: this.userInfo.comId
                 },
       	 loading:true
@@ -77,10 +87,13 @@ export default {
   methods:{
     changeAuthority(index, row){
     	console.log(row)
+    },
+    handleCurrentChange(val){
+      this.memberParams.page = val;
     }
   },
   mounted: function() {
-         
+          
   }
 }
 </script>

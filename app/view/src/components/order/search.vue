@@ -122,7 +122,7 @@
           material: '',
           type: '',
           address: '',
-          page:0,
+          page:1,
           comId: this.userInfo.comId
         },
         dlgShopVisible: false,

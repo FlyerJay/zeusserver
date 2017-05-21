@@ -173,7 +173,7 @@ export const removeCartList = ({ dispatch }, params) => {
 
 //加载订单详情
 export const loadOrderList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/order/list', { params })
+  return axios.get('http://127.0.0.1:7001/zues/api/order/detail', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
@@ -282,3 +282,17 @@ export const loadOperateList = ({ dispatch }, params) => {
   });
 }
 
+//供应商运费
+export const loadfreightList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/freight/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_SUPFORM', 'freightList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
