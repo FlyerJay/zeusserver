@@ -50,6 +50,10 @@ module.exports = app => {
             type:STRING,
             comment:"运费"
         },
+        customerName:{
+            type:STRING,
+            comment:"客户名称"
+        },
         totalPrice:{
             type:STRING,
             comment:"总成本"
