@@ -96,7 +96,7 @@
                 this.multipleSelection = val;
             },
             submitOrder() {
-               this.addToList(this.multipleSelection)
+               this.addToList(this.params)
                .then(rs => {
                  this.$message({
                  message: `下单成功`,
