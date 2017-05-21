@@ -159,9 +159,7 @@ module.exports = app => {
                     msg:"系统中不存在的订单号",
                 }
                 var list = [];
-                console.log($1[0][0].supplierInventoryIds);
                 var goods = $1[0][0].supplierInventoryIds.split(',')
-                console.log(goods);
                 for(var i = 0;i<goods.length;i++){
                     var key = goods[i].split(':')[0];
                     var amount = goods[i].split(':')[1];

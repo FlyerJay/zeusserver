@@ -60,7 +60,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const [$1,$2] = yield [app.model.query(`SELECT c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,c.supplierInventoryId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
                 LEFT JOIN supplier_value sv ON
