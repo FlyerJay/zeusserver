@@ -226,6 +226,7 @@ module.exports = app => {
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
+                    AND (s.address = :address OR :address = '')
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
@@ -244,6 +245,7 @@ module.exports = app => {
                             type:options.type?options.type:'',
                             start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
                             offset:options.pageSize?options.pageSize:30,
+                            address:options.address?options.address:''
                         }
                     }),
                     app.model.query(`SELECT count(1) as count
@@ -256,6 +258,7 @@ module.exports = app => {
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
+                    AND (s.address = :address OR :address = '')
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
@@ -271,6 +274,7 @@ module.exports = app => {
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
+                            address:options.address?options.address:''
                         }
                     })
                     ]

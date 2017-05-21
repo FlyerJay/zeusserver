@@ -367,6 +367,7 @@ module.exports = app => {
                         })
                         options[i].lines = newLine;
                     }
+                    console.log(options);
                     return options;
                 },
                 mergeSpecAndLand(options) { /**合并数据中的壁厚和规格，为导入数据做准备工作 */
