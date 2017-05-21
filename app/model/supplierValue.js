@@ -103,8 +103,7 @@ module.exports = app => {
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
-                ORDER BY sv.lastUpdateTime DESC
-                LIMIT :start,:offset`,{
+                ORDER BY sv.lastUpdateTime DESC`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,

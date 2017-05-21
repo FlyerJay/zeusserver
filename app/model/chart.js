@@ -104,8 +104,7 @@ module.exports = app => {
                 AND f.comId = c.comId
                 WHERE c.userId = :userId AND
                 c.comId = :comId
-                ORDER BY c.createTime DESC
-                LIMIT :start,:offset`,
+                ORDER BY c.createTime DESC`,
                 {
                     replacements:{
                         userId:options.userId?options.userId:'',

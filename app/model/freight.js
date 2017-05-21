@@ -111,7 +111,7 @@ module.exports = app => {
                 }),
                 app.model.query(`SELECT count(1) as count FROM freight 
                 WHERE comId = :comId
-                ORDER BY lastUpdateTime DESC LIMIT :start,:offset`,{
+                ORDER BY lastUpdateTime DESC`,{
                     replacements:{
                         comId:options.comId,
                         start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),

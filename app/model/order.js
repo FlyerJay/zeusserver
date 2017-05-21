@@ -80,7 +80,6 @@ module.exports = app => {
                 WHERE o.comId = :comId
                 ${userCondition}
                 ORDER BY o.createTime ASC
-                LIMIT :start,:offset
                 `,{
                     replacements:{
                         comId:options.comId,
