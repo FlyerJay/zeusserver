@@ -14,6 +14,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Order.verify(ctx.request.body);
     }
+    * userRoleList(){
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Userrole.list(ctx.query);
+    }
   }
   return ManageController;
 };
