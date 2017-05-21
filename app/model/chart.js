@@ -153,6 +153,31 @@ module.exports = app => {
                     msg:"添加购物车成功"
                 }
             },
+            * update(options) {
+                if(!options.chartId) return {
+                    code:-1,
+                    msg:"修改信息需要购物车主键"
+                }
+                var data = yield this.findOne({
+                    where:{
+                        chartId:{
+                            $eq:options.chartId
+                        }
+                    }
+                }) 
+                if(!data) return {
+                    code:-1,
+                    msg:"未找到该购物车数据"
+                }
+                for(var props in options){
+                    data[props] ? data[props] = options[props] : '';
+                }
+                yield data.save();
+                return {
+                    code:200,
+                    msg:"信息修改成功"
+                }
+            },
             * remove(options) {
                 if(!options.chartId) return {
                     code:-1,

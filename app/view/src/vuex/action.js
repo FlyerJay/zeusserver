@@ -124,6 +124,19 @@ export const addTocart = ({ dispatch }, params) => {
   });
 }
 
+//修改购物车信息
+export const updateCart = ({dispatch},params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/chart/upate',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+}
+
 //加载购物车列表
 export const loadCartList = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/chart/list', { params })
