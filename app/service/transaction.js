@@ -2,6 +2,7 @@
 /**
  * 数据库事务处理，主要是表导入事务
  */
+var utils = require('../utils');
 
 module.exports = app => {
     class TransAction extends app.Service {
@@ -47,6 +48,75 @@ module.exports = app => {
                 })
             }).then((res)=>{
                 console.log('事务执行完毕');
+            }).catch((err)=>{
+                console.log(err);
+            })
+        }
+        * inventoryImport(options,info){
+            const time = info.time;
+            var supplierId = 0;
+            let line = options.line
+            let newLine = [];
+            line.map((v)=>{
+                let specArr = v[0].split('*');
+                if(specArr[0] == specArr[1]){
+                    v.push('方管')
+                }else{
+                    v.push("矩管")
+                }
+                newLine.push(v);
+            })
+            options.line = newLine;
+            app.model.transaction((t)=>{
+                return app.model.Supplier.findOne({
+                    where:{
+                        supplierName:{
+                            $eq:info.supplier
+                        }
+                    },
+                    attributes:['supplierId','supplierName'],
+                    transaction:t
+                }).then((data)=>{
+                    if(data){
+                        supplierId = data.dataValues.supplierId;
+                    }
+                    return app.model.SupplierInventory.destroy({
+                        where:{
+                            supplierId:{
+                                $eq:supplierId,
+                            },
+                            lastUpdateTime:{
+                                $eq:time,
+                            },
+                            material:{
+                                $eq:info.material
+                            }
+                        },
+                        transaction:t
+                    })
+                }).then((data)=>{
+                    let line = options.line;
+                    return Promise.all(line.map((v) => {
+                        if(supplierId != 0 ){
+                            app.model.SupplierInventory.create({
+                                supplierId:supplierId,
+                                comId:'01',
+                                spec:v[0],
+                                type:v[4],
+                                long:v[1],
+                                material:info.material,
+                                inventoryAmount:v[2],
+                                perAmount:v[3],
+                                lastUpdateTime:time,
+                            },{transaction:t})
+                        }else{
+                            res({code:-1,msg:"供应商不存在的"});
+                        }
+                    }))
+                })
+
+            }).then((res)=>{
+                console.log("事务执行完毕");
             }).catch((err)=>{
                 console.log(err);
             })

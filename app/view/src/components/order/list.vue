@@ -1,7 +1,7 @@
 <template>
     <div class="order-wrap">
         <el-form :inline="true" :model="orderParams" class="demo-form-inline">
-            <el-form-item label="订单号">
+            <el-form-item label="订单号:">
                 <el-input v-model="orderParams.id" placeholder="支持模糊搜索"></el-input>
             </el-form-item>
             <el-form-item>
@@ -30,32 +30,24 @@
                     <template scope="scope">
                         <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <el-dialog title="" v-model="dlgShopVisible">
-      <el-form :model="cartParams">
-        <el-form-item label="需求数量：">
-          <el-input v-model="cartParams.charAmount" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dlgSupVisible = false">取 消</el-button>
-        <el-button type="warning" @click="confirmTocart">确 定</el-button>
-      </div>
-  </el-dialog>
-  </div>
+               </el-table-column>
+            </el-table>
+       </div>
+
+     </div>
 </template>
 
 <script>
     import {
-        loadOrderList
+        loadOrderList,
+        removeOrderList
     } from '../../vuex/action'
     
     export default {
         vuex: {
             actions: {
-               loadOrderList
+               loadOrderList,
+               removeOrderList
             },
             getters: {
                 userInfo: ({
@@ -68,17 +60,17 @@
         },
         data() {
             return {
-                cartParams: {
+                ordParams: {
                     userId: this.userInfo.userId,
                     comId: this.userInfo.comId,
                     charAmount: '',
-                    supplierInventoryId: ''
+                    supplierInventoryId: '',
+                    id:''
                 },
                 orderParams: {
                     id: '',
                     comId: this.userInfo.comId
                 },
-                dlgShopVisible: false,
                 loading:true
             }
         },
@@ -86,19 +78,29 @@
             searchOrder() {
                 this.loadOrderList(this.orderParams)
             },
-            confirmTocart() {
-                this.addTocart(this.cartParams)
-                    .then(rs => {
-                        this.$message({
-                            message: `成功添加到购物车`,
-                            type: 'success'
-                        });
-                        this.dlgShopVisible = false;
-                    });
-            },
             enterNum(index, row) {
-                this.dlgShopVisible = true;
-                this.cartParams.supplierInventoryId = row.supplierInventoryId;
+             
+                this.ordParams.id = row.id;
+                 
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!',
+                  },
+                  this.removeOrderList(this.ordParams.id)
+
+                  );
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                  });          
+                });
+      
             }
         },
         mounted: function() {

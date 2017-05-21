@@ -77,12 +77,36 @@ module.exports = app => {
                     userToken: uuid.v4(),
                     valid:1,
                 };
-                var result = yield this.create(Object.assign(options,extendFiled));
-                return {
-                    data:result,
-                    code:200,
-                    meg:'注册成功',
-                }
+                var self = this;
+                return app.model.transaction(async (t)=>{
+                    return await self.create(Object.assign(options,extendFiled)
+                    ,{transaction:t}).then(async (res)=>{
+                        const data = res.dataValues;
+                        var role = await app.model.Userrole.create({
+                            userId:data.userId,
+                            comId:data.comId,
+                            adminAuth:0,
+                            valueAuth:0,
+                            inventoryAuth:0,
+                            demandAuth:0,
+                            orderAuth:0,
+                            lastUpdateTime:new Date().getTime()
+                        },{transaction:t})
+                        var userData = {
+                            userInfo:res,
+                            userRole:role
+                        }
+                        return userData;
+                    })
+                }).then((res)=>{
+                    return {
+                        data:res,
+                        code:200,
+                        msg:"注册成功"
+                    }
+                }).catch((err)=>{
+                    console.log(err);
+                });
             },
             * userLogin(options){
                 if(!options || !options.userId || !options.password || !options.comId) return {
@@ -115,8 +139,18 @@ module.exports = app => {
                     code:-1,
                     msg:'公司信息有误'
                 }
+                const role = yield app.model.Userrole.findOne({
+                    where:{
+                        userId:{
+                            $eq:options.userId
+                        }
+                    }
+                })
                 return {
-                    data:isExist,
+                    data:{
+                        userInfo:isExist,
+                        userRole:role
+                    },
                     code:200,
                     msg:'登录成功',
                 }

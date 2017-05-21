@@ -3,25 +3,31 @@ const utils = require('../utils');
 
 module.exports = app => {
     class ParseInventory extends app.Service {
-        * XQ(options, query) {
-            const parseValue = this.ctx.service.parseValue;
-            var $1 = parseValue.parseToLine(options);
-            var $2 = this.getTableHead($1, '规格', '壁厚'); //找到表格的开头部分，根据表头含有的关键字查找
-            var $3 = this.dealRepeatHeadTable($2); //处理表头中含有重复表头的情况也就是一行中有多条有用的数据
-            var $4 = this.mixinSpec($3); //拆分多个规格，并让规格为空的行继承上一行的规格
-            var $5 = this.mixinLand($4); //拆分壁厚，并让空壁厚继承上一行的壁厚(壁厚这里会多一个区间处理)
-            var $6 = this.requireColumn($5, ['规格', '壁厚', '长度', '件数', '支/件']); //从表格中取出需要保留的列，其他列都删除掉
+        * WZ(options,query){
+            // const parseValue = this.ctx.service.parseValue;
+            // var $1 = parseValue.parseToLine(options);
+            var $2 = this.getTableHead(options);//找到表格的开头部分，根据表头含有的关键字查找
+            var $3 = this.dealRepeatHeadTable($2);//处理表头中含有重复表头的情况也就是一行中有多条有用的数据
+            var $4 = this.mixinSpec($3);//拆分多个规格，并让规格为空的行继承上一行的规格
+            var $5 = this.mixinLand($4);//拆分壁厚，并让空壁厚继承上一行的壁厚(壁厚这里会多一个区间处理)
+            var $6 = this.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
             var $7 = this.mergeSpecAndLand($6);
             var $8 = this.mergeData($7);
             return $8;
         }
-        getTableHead(options, headKeyword1, headKeyword2) { /*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息 */
+        getTableHead(options,keywords=['规格','壁厚']){/*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息,用数组表示表头包含哪些关键字 */
             var i = 0;
             for (; i < options.length; i++) {
                 let lines = options[i].lines;
                 for (var j = 0; j < lines.length; j++) {
                     let elements = lines[j].split(',');
-                    if (elements.indexOf(headKeyword1) > -1 && elements.indexOf(headKeyword2) > -1)
+                    let flag = true;
+                    keywords.map((v)=>{
+                        if(elements.indexOf(v) < 0){
+                            flag = false;
+                        }
+                    })
+                    if(flag)
                         break;
                 }
                 lines = lines.slice(j);
@@ -176,11 +182,14 @@ module.exports = app => {
         }
         mixinLand(options, column = 1) { /**处理一行中含有多个壁厚（一般是一个区间2.25-2.75）以及没有壁厚的情况，根据索引查到对应的几种壁厚，再拆分成多行 */
             var i = 0;
-            for (; i < options.length; i++) {
+            for(;i<options.length;i++){
                 let lines = options[i].lines;
-                lines.map((v) => {
-                    v[column] = v[column].replace(/(~)|(~~)|(--)/g, '-');
-                    if (v[column].indexOf('-') > -1) {
+                lines.map((v)=>{
+                    v[column] = v[column].replace(/(~)|(~~)|(--)/g,'-');
+                    v[column] = v[column].replace(/\*.*/g,function(w){
+                        return w;
+                    });//这风骚的*号
+                    if(v[column].indexOf('-') > -1){
                         v[column] = utils.land[v[column]];
                     }
                 })
@@ -195,10 +204,12 @@ module.exports = app => {
                 let newLines = [];
                 lines.map((v) => {
                     var lanArr = v[column].split(' ');
-                    if (lanArr.length > 1) {
-                        lanArr.map((vi) => {
-                            let arr = v.slice(0, column)
-                            newLines.push(arr.concat([vi].concat(v.slice(column + 1))));
+                    if(lanArr.length > 1){
+                        lanArr.map((vi)=>{
+                            if(vi){
+                                let arr = v.slice(0,column)
+                                newLines.push(arr.concat([vi].concat(v.slice(column+1))));
+                            }
                         })
                     } else {
                         newLines.push(v);
@@ -239,17 +250,26 @@ module.exports = app => {
                         line.push(v[vi]);
                     })
                     let breakFlag = false;
-                    v.map((vi) => {
-                        if (!vi) {
-                            breakFlag = true;
-                        }
-                    })
-                    if (!breakFlag) {
-                        newLines.push(line);
-                    }
+                    newLines.push(line);
                 })
                 options[i].lines = newLines;
-                options[i].head = column;
+                let head = [];
+                column.map((v)=>{
+                    head.push(v);
+                })
+                options[i].head = head;
+                newLines = [];
+                let breakFlag = false;
+                options[i].lines.map((v)=>{
+                    breakFlag = false;
+                    v.map((vi)=>{
+                        if(!vi)
+                            breakFlag = true;
+                    })
+                    if(!breakFlag)
+                        newLines.push(v);
+                })
+                options[i].lines = newLines;
             }
             return options;
         }

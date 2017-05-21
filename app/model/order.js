@@ -195,6 +195,56 @@ module.exports = app => {
                         }
                     }
                 })
+            },
+            * verify(options){
+                if(!options.orderNo) return {
+                    code:-1,
+                    msg:"需要订单号才能审核"
+                }
+                if(!options.operator) return {
+                    code:-1,
+                    msg:"请填写审核人"
+                }
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"请填写公司信息"
+                }
+                const res = yield this.findOne({
+                    where:{
+                        orderNo:{
+                            $eq:options.orderNo,
+                        }
+                    }
+                })
+                if(!res) return {
+                    code:-1,
+                    msg:"订单不存在"
+                }
+                res.validate = 1;
+                var self = this;
+                return app.model.transaction(async (t)=>{
+                    return await self.save({transaction:t}).then(async (res)=>{
+                        return await app.model.OperateRecord.create({
+                            userId:options.operator,
+                            comId:options.comId,
+                            type:'审核订单',
+                            detail:`审核通过了${options.orderNo}订单`,
+                            createTime:+new Date()
+                        },{transaction:t})
+                    })
+                }).then((res)=>{
+                    return {
+                        code:200,
+                        msg:"订单审核成功",
+                        data:res
+                    }
+                }).catch((err)=>{
+                    return {
+                        code:-1,
+                        msg:"订单审核出错",
+                        data:err
+                    }
+                })
             }
         }
     })

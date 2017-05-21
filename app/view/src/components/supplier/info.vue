@@ -23,13 +23,15 @@
       </el-col>
     </el-row>
   
-    <el-table :data="supList" style="width: 100%" height="" v-loading="loading">
+    <el-table :data="supList" style="width: 100%" height="" :loading="loading">
       <el-table-column property="supplierName" label="供应商名称"></el-table-column>
       <el-table-column property="address" label="供应商所在地"></el-table-column>
       <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
       <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
-      <el-table-column inline-template label="操作" align="center" property="id">
-        <el-button type="text" size="mini" @click.native="">修改</el-button>
+      <el-table-column  label="操作" align="center" property="id">
+          <template scope="scope">
+              <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
+          </template>
       </el-table-column>
     </el-table>
   
@@ -82,6 +84,29 @@
         <el-button type="warning" @click="addSup">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="" v-model="dlgChangeSupVisible">
+      <el-form :model="changeSupParam">
+        <el-form-item label="供应商名称：">
+          <el-input v-model="changeSupParam.supplierName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在地：">
+          <el-select v-model="changeSupParam.address" placeholder="请选择活动区域">
+            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="运费：">
+          <el-input v-model="changeSupParam.freight" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="政策下浮：">
+          <el-input v-model="changeSupParam.benifit" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dlgSupVisible = false">取 消</el-button>
+        <el-button type="warning" @click="changeSup(changeSupParam.row)">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,7 +114,8 @@
   import {
     loadSupList,
     loadSupAddress,
-    addNewSup
+    addNewSup,
+    updataSup
   } from '../../vuex/action'
   
   export default {
@@ -97,7 +123,8 @@
       actions: {
         loadSupList,
         loadSupAddress,
-        addNewSup
+        addNewSup,
+        updataSup
       },
       getters: {
         supList: ({
@@ -125,6 +152,15 @@
           benifit: '',
           comId: this.userInfo.comId
         },
+        changeSupParam:{
+          supplierName: '',
+          address: '',
+          freight: '',
+          benifit: '',
+          supplierId:'',
+          row:'',
+          comId: this.userInfo.comId
+        },
         form: {
           name: '',
           region: '',
@@ -137,7 +173,8 @@
         },
         dlgSupVisible: false,
         dlgFreightVisible: false,
-        loading: false
+        dlgChangeSupVisible:false,
+        loading: true
       }
     },
     methods: {
@@ -155,9 +192,34 @@
               message: `信息录入成功`,
               type: 'success'
             });
-            this.dialogFormVisible = false;
+            this.dlgSupVisible = false;
+            this.dlgFreightVisible = false
+          })
+      },
+      changeSupList(index, row){
+         this.dlgChangeSupVisible=true;
+         this.changeSupParam.supplierName = row.supplierName;
+         this.changeSupParam.address = row.address;
+         this.changeSupParam.freight = row.freight ;
+         this.changeSupParam.benifit = row.benifit;
+         this.changeSupParam.supplierId = row.supplierId;
+         this.changeSupParam.row = row
+      },
+      changeSup(row){
+           this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
+          .then(rs => {
+            this.$message({
+              message: `信息修改成功`,
+              type: 'success'
+            });
+            this.dlgChangeSupVisible=false;
+            row.supplierName =  this.changeSupParam.supplierName;
+            row.address = this.changeSupParam.address;
+            row.freight = this.changeSupParam.freight;
+            row.benifit = this.changeSupParam.benifit;
           })
       }
+
     },
     mounted: function() {
       this.loadSupAddress({
