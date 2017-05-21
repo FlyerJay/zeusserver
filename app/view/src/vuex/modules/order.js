@@ -1,5 +1,5 @@
 const state = {
-  stockList: [],//库存表单
+  stockInfo: {},//库存表单
   cartList: [],
   demandList:[],
   orderList:[],
