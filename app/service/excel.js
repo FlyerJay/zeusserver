@@ -80,6 +80,9 @@ module.exports = app => {
                 case '源泰':
                     result =  yield parseInventory.WZ(options,query);
                     break;
+                case '天一':
+                    result =  yield parseInventory.TY(options,query);
+                    break;
                 case '兴强':
                     result = yield youfa.XQ(options,query);
                     break;
