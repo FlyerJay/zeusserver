@@ -2,7 +2,7 @@
 
 module.exports = app => {
   class DemandController extends app.Controller {
-    * list() {//查看操作记录
+    * list() {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Demand.list(ctx.query);
     };
@@ -16,7 +16,7 @@ module.exports = app => {
     }
     * remove(){
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Demand.remove(ctx.query);
+      ctx.body = yield ctx.model.Demand.remove(ctx.request.body);
     }
   }
   return DemandController;

@@ -90,11 +90,11 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少类型"
                 }
-                if(!options.type) return {
+                if(!options.userId) return {
                     code:-1,
                     msg:"缺少业务员"
                 }
-                const data = yield this.create(Object.assign({dealStatus:0,createTime:+new Date()}));
+                const data = yield this.create(Object.assign(options,{dealStatus:0,createTime:+new Date()}));
                 return {
                     code:200,
                     data:data,
@@ -128,7 +128,7 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少查询主键"
                 }
-                yield this.destory({
+                yield this.destroy({
                     where:{
                         demandId:{
                             $in:options.demandId.split(',')
