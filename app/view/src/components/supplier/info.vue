@@ -37,17 +37,12 @@
               <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
               <el-table-column  label="操作" align="center" property="id">
                   <template scope="scope">
-                      <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
+                      <el-button size="small" @click="changeFreList(scope.index, scope.row)" type="warning">修改</el-button>
                   </template>
               </el-table-column>
             </el-table>
         </el-tab-pane>
     </el-tabs>
-
-
-
-
-    
   
      <el-row type="flex" justify="end" style="padding:20px 0; ">
          <el-pagination :current-page="5" layout="prev, pager, next">
@@ -76,29 +71,22 @@
         <el-button type="warning" @click="addSup">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--修改运费信息对话框-->
     <el-dialog title="" v-model="dlgFreightVisible">
       <el-form :model="newSupParam">
-        <el-form-item label="供应商名称：">
-          <el-input v-model="newSupParam.supplierName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="所在地：">
-          <el-select v-model="newSupParam.address" placeholder="请选择活动区域">
-            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="运费：">
           <el-input v-model="newSupParam.freight" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="政策下浮：">
-          <el-input v-model="newSupParam.benifit" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dlgFreightVisible = false">取 消</el-button>
-        <el-button type="warning" @click="addSup">确 定</el-button>
+        <el-button type="warning" @click="changeFre(newSupParam.row)">确 定</el-button>
       </div>
     </el-dialog>
+    
 
+    <!--修改供应商信息-->
     <el-dialog title="" v-model="dlgChangeSupVisible">
       <el-form :model="changeSupParam">
         <el-form-item label="供应商名称：">
@@ -130,7 +118,8 @@
     loadSupAddress,
     addNewSup,
     updataSup,
-    loadfreightList
+    loadfreightList,
+    updateFre
   } from '../../vuex/action'
   
   export default {
@@ -140,7 +129,8 @@
         loadSupAddress,
         addNewSup,
         updataSup,
-        loadfreightList
+        loadfreightList,
+        updateFre
       },
       getters: {
         supList: ({
@@ -169,6 +159,7 @@
           address: '',
           freight: '',
           benifit: '',
+          freightId:'',
           comId: this.userInfo.comId
         },
         changeSupParam:{
@@ -205,18 +196,18 @@
             this.loading = false;
           })
       },
-      addSup() {
+      addSup() {//录入供应商信息与运费信息
         this.addNewSup(this.newSupParam, this.searchSupParam)
           .then(rs => {
             this.$message({
               message: `信息录入成功`,
               type: 'success'
-            });
+            })
             this.dlgSupVisible = false;
             this.dlgFreightVisible = false
           })
       },
-      changeSupList(index, row){
+      changeSupList(index, row){//修改供应商信息
          this.dlgChangeSupVisible=true;
          this.changeSupParam.supplierName = row.supplierName;
          this.changeSupParam.address = row.address;
@@ -225,7 +216,7 @@
          this.changeSupParam.supplierId = row.supplierId;
          this.changeSupParam.row = row
       },
-      changeSup(row){
+      changeSup(row){//确认修改供应商信息
            this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
           .then(rs => {
             this.$message({
@@ -237,6 +228,27 @@
             row.address = this.changeSupParam.address;
             row.freight = this.changeSupParam.freight;
             row.benifit = this.changeSupParam.benifit;
+            this.loadSupList(this.searchSupParam);
+          })
+      },
+      changeFreList(index, row){
+         this.dlgFreightVisible=true;
+         this.newSupParam.freight = row.freight ;
+         this.newSupParam.freightId = row.freightId;
+         this.newSupParam.address = row.address;
+         this.newSupParam.row = row
+      },
+      changeFre(row){//确认修改运费
+           this.updateFre(this.newSupParam, this.newSupParam.freightId)
+            .then(rs => {
+            this.$message({
+              message: `信息修改成功`,
+              type: 'success'
+            })
+            this.dlgFreightVisible=false;
+            row.freight = this.newSupParam.freight;
+            
+            this.loadfreightList(this.searchSupParam);
           })
       },
       handleClick(tab, event){
