@@ -124,6 +124,19 @@ export const addTocart = ({ dispatch }, params) => {
   });
 }
 
+//修改购物车信息
+export const updateCart = ({dispatch},params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/chart/upate',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+}
+
 //加载购物车列表
 export const loadCartList = ({ dispatch }, params) => {
   return axios.get('http://127.0.0.1:7001/zues/api/chart/list', { params })
@@ -236,20 +249,6 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
   });
 }
 
-//定制货品价格列表,上传文件
-export const upLoadFile = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/upload/excel')
-  .then(function (response) {
-    if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
-      return Promise.resolve();
-    } else if (response.data.code === -1) {
-      return Promise.reject();
-    }
-  })
-  .catch(function (response) {
-  });
-}
 
 //管理员下单审核界面，加载订单详情
 export const loadSpecList = ({ dispatch }, params) => {
@@ -296,13 +295,44 @@ export const loadfreightList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
-//更新供应商运费
 
+
+//更新供应商运费
 export const updateFre = ({ dispatch },newSupParam, searchSupParam) => {
   return axios.post('http://127.0.0.1:7001/zues/api/freight/update', newSupParam)
   .then(function (response) {
     if (response.data.code === 200) {
       loadfreightList({ dispatch }, searchSupParam);
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//加载定制需求表
+export const loadDemandList = ({ dispatch }, params) => {
+  return axios.get('http://127.0.0.1:7001/zues/api/demand/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//添加的定制需求
+export const addToDemandList = ({ dispatch }, params) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/demand/add', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
