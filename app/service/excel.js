@@ -59,7 +59,9 @@ module.exports = app => {
                         var resout = {};
                         resout.name = sheetName;
                         resout.content = csv;
-                        result.push(resout);
+                        if(resout.content){
+                            result.push(resout);
+                        }
                     }
                 });
                 res(result);
@@ -78,10 +80,10 @@ module.exports = app => {
             var result = {};
             switch(query.supplier){
                 case '源泰':
-                    result =  yield parseInventory.WZ(options,query);
+                    result = yield parseInventory.WZ(options,query);
                     break;
                 case '天一':
-                    result =  yield parseInventory.TY(options,query);
+                    result = yield youfa.TY(options,query);
                     break;
                 case '兴强':
                     result = yield youfa.XQ(options,query);
@@ -97,6 +99,9 @@ module.exports = app => {
                     break;
                 case '邯郸正大':
                     result = yield youfa.ZD(options,query);
+                    break;
+                case '利顺信达':
+                    result = yield youfa.XD(options,query);
                     break;
             }
             yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
