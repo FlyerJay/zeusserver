@@ -139,8 +139,18 @@ module.exports = app => {
                     code:-1,
                     msg:'公司信息有误'
                 }
+                const role = yield app.model.Userrole.findOne({
+                    where:{
+                        userId:{
+                            $eq:options.userId
+                        }
+                    }
+                })
                 return {
-                    data:isExist,
+                    data:{
+                        userInfo:isExist,
+                        userRole:role
+                    },
                     code:200,
                     msg:'登录成功',
                 }
