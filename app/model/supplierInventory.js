@@ -100,8 +100,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM supplier_inventory si
@@ -115,8 +115,7 @@ module.exports = app => {
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
-                ORDER BY si.lastUpdateTime DESC
-                LIMIT :start,:offset`,{
+                ORDER BY si.lastUpdateTime DESC`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,
@@ -219,10 +218,15 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
                     FROM supplier_inventory si
+                    INNER JOIN (select *,max(lastUpdateTime) AS time FROM supplier_inventory WHERE spec LIKE :spec AND (type = :type OR :type = '') GROUP BY supplierId,spec,material) ss
+                    ON si.lastUpdateTime = ss.time
+                    AND si.supplierId = ss.supplierId
+                    AND si.spec = ss.spec
+                    AND si.material = ss.material
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
-                    LEFT JOIN supplier_value sv
+                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
                     AND si.material = sv.material
@@ -233,21 +237,26 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
-                            start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                            offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                            start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                            offset:options.pageSize?options.pageSize:30,
                         }
                     }),
                     app.model.query(`SELECT count(1) as count
                     FROM supplier_inventory si
+                    INNER JOIN (select *,max(lastUpdateTime) AS time FROM supplier_inventory WHERE spec LIKE :spec AND (type = :type OR :type = '') GROUP BY supplierId,spec,material) ss
+                    ON si.lastUpdateTime = ss.time
+                    AND si.supplierId = ss.supplierId
+                    AND si.spec = ss.spec
+                    AND si.material = ss.material
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
-                    LEFT JOIN supplier_value sv
+                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
                     ON si.spec = sv.spec
                     AND si.type = sv.type
                     AND si.material = sv.material
@@ -258,13 +267,10 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC
-                    LIMIT :start,:offset`,{
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
-                            start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                            offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
                         }
                     })
                     ]
