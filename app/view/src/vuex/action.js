@@ -309,3 +309,18 @@ export const loadfreightList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+//更新供应商运费
+
+export const updateFre = ({ dispatch },newSupParam, searchSupParam) => {
+  return axios.post('http://127.0.0.1:7001/zues/api/freight/update', newSupParam)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      loadfreightList({ dispatch }, searchSupParam);
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
