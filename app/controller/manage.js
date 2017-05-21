@@ -10,6 +10,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Userrole.update(ctx.request.body);
     }
+    * orderVerify() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Order.verify(ctx.request.body);
+    }
   }
   return ManageController;
 };
