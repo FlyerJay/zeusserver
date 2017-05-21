@@ -50,6 +50,10 @@ module.exports = app => {
             type:STRING,
             comment:"运费"
         },
+        customerName:{
+            type:STRING,
+            comment:"客户名称"
+        },
         totalPrice:{
             type:STRING,
             comment:"总成本"
@@ -146,8 +150,8 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const list = yield this.findAndCountAll({
-                    offset:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                    limit:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                    limit:options.pageSize?options.pageSize:30,
                     where:{
                         comId:{
                             $eq:options.comId

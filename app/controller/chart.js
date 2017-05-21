@@ -14,6 +14,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Chart.remove(ctx.request.body);
     }
+    * update() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Chart.update(ctx.request.body);
+    }
   }
   return ChartController;
 };
