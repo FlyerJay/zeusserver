@@ -315,7 +315,7 @@ export const loadDemandList = ({ dispatch }, params) => {
   return axios.get('/zues/api/demand/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -330,7 +330,7 @@ export const addToDemandList = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/add', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();

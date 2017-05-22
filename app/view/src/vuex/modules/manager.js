@@ -1,8 +1,7 @@
 const state = {
   specList:[],
   memberList:[],
-  operateList:[],
-  demandList:[]
+  operateList:[]
 }
 
 const mutations = {
