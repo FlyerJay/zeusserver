@@ -5,8 +5,10 @@ module.exports = options => {
         var userId = this.cookies.get('userId');
         var comId = this.cookies.get('comId');
         var role = this.cookies.get('userRole');
-        this.query = this.query?Object.assign(this.query,{userId,comId,role}):this.query
-        this.request.body = this.request.body?Object.assign(this.request.body,{userId,comId,role}):this.request.body
+        if(userId&&comId&&role){
+            this.query = this.query?Object.assign(this.query,{userId,comId,role}):this.query
+            this.request.body = this.request.body?Object.assign(this.request.body,{userId,comId,role}):this.request.body
+        }
         yield next;
     };
 };
