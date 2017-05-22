@@ -52,11 +52,6 @@
             </el-table>
         </el-tab-pane>
     </el-tabs>
-  
-     <el-row type="flex" justify="end" style="padding:20px 0; ">
-         <el-pagination :current-page="5" layout="prev, pager, next">
-         </el-pagination>
-     </el-row>
      
     <!--供应商信息录入dlg--> 
     <el-dialog title="" v-model="dlgSupVisible">
