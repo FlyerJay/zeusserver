@@ -218,11 +218,6 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
                     FROM supplier_inventory si
-                    INNER JOIN (select *,max(lastUpdateTime) AS time FROM supplier_inventory WHERE spec LIKE :spec AND (type = :type OR :type = '') GROUP BY supplierId,spec,material) ss
-                    ON si.lastUpdateTime = ss.time
-                    AND si.supplierId = ss.supplierId
-                    AND si.spec = ss.spec
-                    AND si.material = ss.material
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
@@ -250,11 +245,6 @@ module.exports = app => {
                     }),
                     app.model.query(`SELECT count(1) as count
                     FROM supplier_inventory si
-                    INNER JOIN (select *,max(lastUpdateTime) AS time FROM supplier_inventory WHERE spec LIKE :spec AND (type = :type OR :type = '') GROUP BY supplierId,spec,material) ss
-                    ON si.lastUpdateTime = ss.time
-                    AND si.supplierId = ss.supplierId
-                    AND si.spec = ss.spec
-                    AND si.material = ss.material
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
