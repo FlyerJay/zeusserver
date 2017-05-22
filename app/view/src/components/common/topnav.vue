@@ -11,7 +11,7 @@
         <a href="#/manager/review" :class="[ mainRoute === 'manager' ? 'active' : '' ]">管理员后台</a>
       </li>
       <li class="user-wrap">
-        <span>欢迎你，{{userInfo.userId}}</span><span class="vertline">|</span></spalign><span @click="loginout()" class="loginout">退出系统</span>
+        <span>欢迎，{{userInfo.userId}}</span><span class="vertline">|</span></spalign><span @click="loginout()" class="loginout">退出系统</span>
       </li>
     </ul>
     <div>

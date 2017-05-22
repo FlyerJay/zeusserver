@@ -8,21 +8,17 @@
             <el-form-item label="类别">
                 <el-select v-model="searchParam.type">
                       <el-option value="全部">全部</el-option>
-                      <el-option value="镀带方矩管">镀带方矩管</el-option>
-                      <el-option value="方矩管">方矩管</el-option>
-                      <el-option value="镀锌方矩管">镀锌方矩管</el-option>
-                      <el-option value="镀锌角槽">镀锌角槽</el-option>
-                      <el-option value="其它">其它</el-option>
+                      <el-option value="矩管">矩管</el-option>
+                      <el-option value="方管">方管</el-option>
                 </el-select>                
             </el-form-item>
 
             <el-form-item label="材质" >
                 <el-select v-model="searchParam.material">
-                     <el-option :value='0'>全部</el-option>
+                     <el-option value="">全部</el-option>
                       <el-option value="黑管">黑管</el-option>
                       <el-option value="镀锌">镀锌</el-option>
                       <el-option value="镀锌带">镀锌带</el-option>
-                      <el-option value="其它">其它</el-option>
                 </el-select>                
             </el-form-item>
 
@@ -49,7 +45,7 @@
               </el-form-item>
        </el-form>
 
-       <el-table :data="priceList" style="width: 100%" :loading="loading">
+       <el-table :data="priceList" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
               <el-table-column property="spec" label="规格"></el-table-column>
               <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
               <el-table-column property="type" label="类别"></el-table-column>
@@ -153,7 +149,9 @@
         },
           mounted: function() {
             this.loadSupPriceList({
-                comId :this.userInfo.comId
+                comId: this.userInfo.comId
+            }).then(rs => {
+                this.loading = false;
             });
             this.loadSupAddress({
                 comId: this.userInfo.comId

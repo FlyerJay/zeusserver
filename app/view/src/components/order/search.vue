@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="searchStock">厂家现货查询</el-button>
+          <el-button type="warning" @click="searchStock" :loading="loading">厂家现货查询</el-button>
         </el-form-item>
       </el-form>
       <div class="sea-title">厂家现货价格/库存表:</div>
@@ -34,7 +34,7 @@
         <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
           <el-table-column prop="spec" label="规格" width="">
           </el-table-column>
-          <el-table-column prop="lastUpdateTime" label="最新更新时间" width="" :formatter="dateFormat">
+          <el-table-column prop="lastUpdateTime" label="最新更新时间" width="">
           </el-table-column>
           <el-table-column prop="type" label="类别" width="">
           </el-table-column>

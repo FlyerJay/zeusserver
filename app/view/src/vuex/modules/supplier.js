@@ -1,5 +1,5 @@
 const state = {
-  supList: [],
+  supInfo: {},
   supAddress: [],
   priceList:[],
   inventoryList:[],
