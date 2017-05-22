@@ -194,18 +194,19 @@
         comId: '01'
       }
       $.ajax({
-        url: 'http://www.flyerjay.date/zues/api/user/login ',
+        url: '/zues/api/user/login ',
         data: params,
         contentType: 'application/x-www-form-urlencoded',
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
+            debugger
             setCookie('userId', res.data.userInfo.userId);
             setCookie('userToken', res.data.userInfo.userToken);
             setCookie('userName', res.data.userInfo.userName);
             setCookie('comId', res.data.userInfo.comId);
             setCookie('userRole', res.data.userRole);
-            document.location.href = 'http://www.flyerjay.date/view';
+            document.location.href = 'http://127.0.0.1:8080/view';
           } else {
 
           }

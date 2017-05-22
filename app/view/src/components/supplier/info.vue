@@ -226,7 +226,8 @@
               type: 'success'
             })
             this.dlgSupVisible = false;
-            this.dlgFreightVisible = false
+            this.dlgFreightVisible = false;
+            this.loadSupList(this.searchSupParam);
           })
       },
       changeSupList(index, row){//修改供应商信息
