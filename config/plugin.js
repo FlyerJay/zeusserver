@@ -7,4 +7,5 @@ exports.sequelize = {
 exports.proxyworker = {
   enable: true,
   package: 'egg-development-proxyworker',
-};
+}
+exports.static = true;
