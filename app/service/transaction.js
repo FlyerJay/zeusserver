@@ -15,6 +15,9 @@ module.exports = app => {
                         },
                         lastUpdateTime:{
                             $eq:query.time
+                        },
+                        material:{
+                            $eq:query.material
                         }
                     },
                     transaction:t,
