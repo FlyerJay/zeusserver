@@ -45,7 +45,7 @@ module.exports = app => {
                                 spec:v[0],
                                 type:v[1],
                                 value:v[3],
-                                material:info.material,
+                                material:query.material,
                                 lastUpdateTime:query.time,
                             },{transaction:t})
                         }
