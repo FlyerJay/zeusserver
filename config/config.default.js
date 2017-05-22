@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require("path");
 module.exports = appInfo => {
   return {
     keys: appInfo.name + '_1492401589170_1020',
@@ -21,6 +22,14 @@ module.exports = appInfo => {
     },
     proxyworker:{
       port: 10086,
+    },
+    static:{
+      prefix: '/public/',
+      dir: path.join(appInfo.baseDir, 'app/public'),
+      // support lazy load
+      dynamic: true,
+      preload: false,
+      buffer: false,
     }
   }
 }
