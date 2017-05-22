@@ -35,7 +35,7 @@
             <el-form-item>
             <el-upload
                 class="upload-demo"
-                action="http://127.0.0.1:7001/zues/api/upload/excel"
+                action="http://www.flyerjay.date/zues/api/upload/excel"
                 >
                 <el-button type="warning">上传价格表</el-button>
             </el-upload>

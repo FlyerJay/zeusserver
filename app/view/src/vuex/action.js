@@ -4,7 +4,7 @@ export const updateForm = ({ dispatch }, key, val) => {
 
 //加载供应商列表
 export const loadSupList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/supplier/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/supplier/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_SUPFORM', 'supInfo', response.data.data);
@@ -20,7 +20,7 @@ export const loadSupList = ({ dispatch }, params) => {
 
 //加载供应商所在地 
 export const loadSupAddress = ({ dispatch }, params) => {
-  axios.get('http://127.0.0.1:7001/zues/api/supplier/address', { params })
+  axios.get('http://www.flyerjay.date/zues/api/supplier/address', { params })
   .then(function (response) {
     if (response.data.code === 200) {
      dispatch('UPDATE_SUPFORM', 'supAddress', response.data.data)
@@ -34,7 +34,7 @@ export const loadSupAddress = ({ dispatch }, params) => {
 
 //新增供应商 
 export const addNewSup = ({ dispatch }, newSupParam, searchSupParam) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/supplier/add', newSupParam)
+  return axios.post('http://www.flyerjay.date/zues/api/supplier/add', newSupParam)
   .then(function (response) {
     if (response.data.code === 200) {
       loadSupList({ dispatch }, searchSupParam);
@@ -49,7 +49,7 @@ export const addNewSup = ({ dispatch }, newSupParam, searchSupParam) => {
 
 //修改供应商----更新所修改的供应商
 export const updataSup = ({ dispatch },newSupParam, searchSupParam) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/supplier/update', newSupParam)
+  return axios.post('http://www.flyerjay.date/zues/api/supplier/update', newSupParam)
   .then(function (response) {
     if (response.data.code === 200) {
       loadSupList({ dispatch }, searchSupParam);
@@ -64,7 +64,7 @@ export const updataSup = ({ dispatch },newSupParam, searchSupParam) => {
 
 //修改供应商出厂价格----更新价格表格
 export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/price/update', newPriceParam)
+  return axios.post('http://www.flyerjay.date/zues/api/price/update', newPriceParam)
   .then(function (response) {
     if (response.data.code === 200) {
       loadSupPriceList({ dispatch }, searchSupParam);
@@ -79,7 +79,7 @@ export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
 
 //现货查询
 export const loadStock = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/product/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/product/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'stockInfo', response.data.data)
@@ -96,7 +96,7 @@ export const loadStock = ({ dispatch }, params) => {
 
 //加载到岸目的的地址
 export const loadOrdAddress = ({ dispatch }, params) => {
-  axios.get('http://127.0.0.1:7001/zues/api/supplier/address', { params })
+  axios.get('http://www.flyerjay.date/zues/api/supplier/address', { params })
   .then(function (response) {
     if (response.data.code === 200) {
      dispatch('UPDATE_ORDERFORM', 'ordAddress', response.data.data)
@@ -111,7 +111,7 @@ export const loadOrdAddress = ({ dispatch }, params) => {
 
 //添加到购物车
 export const addTocart = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/chart/addToChart', params)
+  return axios.post('http://www.flyerjay.date/zues/api/chart/addToChart', params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
@@ -126,7 +126,7 @@ export const addTocart = ({ dispatch }, params) => {
 
 //修改购物车信息
 export const updateCart = ({dispatch},params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/chart/upate',params)
+  return axios.post('http://www.flyerjay.date/zues/api/chart/upate',params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
@@ -139,7 +139,7 @@ export const updateCart = ({dispatch},params) => {
 
 //加载购物车列表
 export const loadCartList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/chart/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
@@ -154,7 +154,7 @@ export const loadCartList = ({ dispatch }, params) => {
 
 //购物车页面，添加到订单列表
 export const addToList = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/order/add', params)
+  return axios.post('http://www.flyerjay.date/zues/api/order/add', params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
@@ -169,7 +169,7 @@ export const addToList = ({ dispatch }, params) => {
 
 //购物车页面，将添加到订单列表的数据从购物车列表中删除
 export const removeCartList = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/chart/remove', params)
+  return axios.post('http://www.flyerjay.date/zues/api/chart/remove', params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
@@ -186,7 +186,7 @@ export const removeCartList = ({ dispatch }, params) => {
 
 //加载订单详情
 export const loadOrderList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/order/detail', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/order/detail', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
@@ -201,7 +201,7 @@ export const loadOrderList = ({ dispatch }, params) => {
 
 //订单详情页，删除未审核的订单；
 export const removeOrderList = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/order/remove', params)
+  return axios.post('http://www.flyerjay.date/zues/api/order/remove', params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
@@ -221,7 +221,7 @@ export const removeOrderList = ({ dispatch }, params) => {
 
 //供应商价格表
 export const loadSupPriceList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/price/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/price/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_SUPFORM', 'priceList', response.data.data.row)
@@ -236,7 +236,7 @@ export const loadSupPriceList = ({ dispatch }, params) => {
 
 //供应商库存数量
 export const loadSupInventoryList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/inventory/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/inventory/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_SUPFORM', 'inventoryList', response.data.data.row)
@@ -252,7 +252,7 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
 
 //管理员下单审核界面，加载订单详情
 export const loadSpecList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/order/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/order/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'specList', response.data.data.row)
@@ -268,7 +268,7 @@ export const loadSpecList = ({ dispatch }, params) => {
 //管理员后操作记录，加载操作表
 
 export const loadOperateList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/user', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/user', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'operateList', response.data.data.row)
@@ -283,7 +283,7 @@ export const loadOperateList = ({ dispatch }, params) => {
 
 //供应商运费
 export const loadfreightList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/freight/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/freight/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_SUPFORM', 'freightList', response.data.data.row)
@@ -299,7 +299,7 @@ export const loadfreightList = ({ dispatch }, params) => {
 
 //更新供应商运费
 export const updateFre = ({ dispatch },newSupParam, searchSupParam) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/freight/update', newSupParam)
+  return axios.post('http://www.flyerjay.date/zues/api/freight/update', newSupParam)
   .then(function (response) {
     if (response.data.code === 200) {
       loadfreightList({ dispatch }, searchSupParam);
@@ -314,7 +314,7 @@ export const updateFre = ({ dispatch },newSupParam, searchSupParam) => {
 
 //加载定制需求表
 export const loadDemandList = ({ dispatch }, params) => {
-  return axios.get('http://127.0.0.1:7001/zues/api/demand/list', { params })
+  return axios.get('http://www.flyerjay.date/zues/api/demand/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
@@ -329,7 +329,7 @@ export const loadDemandList = ({ dispatch }, params) => {
 
 //添加的定制需求
 export const addToDemandList = ({ dispatch }, params) => {
-  return axios.post('http://127.0.0.1:7001/zues/api/demand/add', params)
+  return axios.post('http://www.flyerjay.date/zues/api/demand/add', params)
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'demandList', response.data.data.row)
