@@ -30,10 +30,6 @@
           {
             url: '/supplier/stock',
             name: '供应商库存'
-          },
-          {
-            url: '/supplier/demandprice',
-            name: '定制需求报价'
           }
         ]
       }
