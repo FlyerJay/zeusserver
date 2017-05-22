@@ -194,7 +194,7 @@
         comId: '01'
       }
       $.ajax({
-        url: 'http://127.0.0.1:7001/zues/api/user/login ',
+        url: 'http://www.flyerjay.date/zues/api/user/login ',
         data: params,
         contentType: 'application/x-www-form-urlencoded',
         type: 'post',
@@ -205,7 +205,7 @@
             setCookie('userName', res.data.userInfo.userName);
             setCookie('comId', res.data.userInfo.comId);
             setCookie('userRole', res.data.userRole);
-            document.location.href = 'http://127.0.0.1:8080';
+            document.location.href = 'http://www.flyerjay.date/view';
           } else {
 
           }
