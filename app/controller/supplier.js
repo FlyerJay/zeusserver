@@ -4,6 +4,7 @@ module.exports = app => {
   class SupplierController extends app.Controller {
     * list() {
       const ctx = this.ctx;
+      console.log(ctx.cookies.get('userToken'));
       ctx.body = yield ctx.model.Supplier.getList(ctx.query);
     }
     * update() {
