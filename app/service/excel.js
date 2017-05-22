@@ -17,19 +17,17 @@ module.exports = app => {
             }
             let fileInfo = {};
             let params = fileName.split('_');
-            if(query.type == 'inventory'){
-                if(params.length != 3) return {
+            if(params.length != 3) return {
+                code:-1,
+                msg:"请按照格式书写文件名"
+            }
+            fileInfo.supplier = params[0];
+            fileInfo.material = params[1];
+            fileInfo.time = params[2];
+            if(fileInfo.time.length != 8){
+                return {
                     code:-1,
-                    msg:"请按照格式书写文件名"
-                }
-                fileInfo.supplier = params[0];
-                fileInfo.material = params[1];
-                fileInfo.time = params[2];
-                if(fileInfo.time.length != 8){
-                    return {
-                        code:-1,
-                        msg:"文件的时间不正确"
-                    }
+                    msg:"文件的时间不正确"
                 }
             }
             const uniqueName = uuid.v4() + `.${extendsName}`;
@@ -116,13 +114,14 @@ module.exports = app => {
             var $3 = parseValue.mixinLand($2);
             var $4 = parseValue.separateData($3);
             var $5 = parseValue.mergeData($4);
+            var data = {
+                code:200,
+                msg:"正在解析中，请耐心等待"
+            }
 
             const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return {
-                code:200,
-                msg:"正在解析中，请耐心等待"
-            };
+            return data
         }
     }
     return Excel;

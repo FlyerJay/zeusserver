@@ -7,12 +7,14 @@ var utils = require('../utils');
 module.exports = app => {
     class TransAction extends app.Service {
         * valueImport(options,query) {
-            var time = String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
             return app.model.transaction((t)=>{
                 return app.model.SupplierValue.destroy({
                     where:{
                         comId:{
                             $eq:query.comId?query.comId:'01'
+                        },
+                        lastUpdateTime:{
+                            $eq:query.time
                         }
                     },
                     transaction:t,
@@ -41,7 +43,7 @@ module.exports = app => {
                                 type:v[1],
                                 value:v[3],
                                 material:v[4],
-                                lastUpdateTime:time,
+                                lastUpdateTime:query.time,
                             },{transaction:t})
                         }
                     }))
