@@ -63,8 +63,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         comId:options.comId,
                         address:options.address?options.address:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 }),
                 app.model.query(`SELECT count(1) as count 
@@ -79,8 +79,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         comId:options.comId,
                         address:options.address?options.address:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {

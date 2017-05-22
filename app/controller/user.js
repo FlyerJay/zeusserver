@@ -4,7 +4,6 @@ module.exports = app => {
   class UserController extends app.Controller {
     * login() {
       const ctx = this.ctx;
-      console.log(ctx.request.body)
       const user =  yield ctx.model.User.userLogin(ctx.request.body);
       if(user.code == 200){
         var info = user.data.userInfo.dataValues;
