@@ -8,7 +8,7 @@ module.exports = app => {
     class TransAction extends app.Service {
         * valueImport(options,query) {
             var time = String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
-            app.model.transaction((t)=>{
+            return app.model.transaction((t)=>{
                 return app.model.SupplierValue.destroy({
                     where:{
                         comId:{
@@ -47,9 +47,15 @@ module.exports = app => {
                     }))
                 })
             }).then((res)=>{
-                console.log('事务执行完毕');
+                return {
+                    code:200,
+                    msg:"解析完成"
+                }
             }).catch((err)=>{
-                console.log(err);
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
             })
         }
         * inventoryImport(options,info){
@@ -67,7 +73,7 @@ module.exports = app => {
                 newLine.push(v);
             })
             options.line = newLine;
-            app.model.transaction((t)=>{
+            return app.model.transaction((t)=>{
                 return app.model.Supplier.findOne({
                     where:{
                         supplierName:{
@@ -116,9 +122,15 @@ module.exports = app => {
                 })
 
             }).then((res)=>{
-                console.log("事务执行完毕");
+                return {
+                    code:200,
+                    msg:"解析完成"
+                }
             }).catch((err)=>{
-                console.log(err);
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
             })
         }
     }

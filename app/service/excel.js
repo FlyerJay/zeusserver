@@ -17,17 +17,19 @@ module.exports = app => {
             }
             let fileInfo = {};
             let params = fileName.split('_');
-            if(params.length != 3) return {
-                code:-1,
-                msg:"请按照格式书写文件名"
-            }
-            fileInfo.supplier = params[0];
-            fileInfo.material = params[1];
-            fileInfo.time = params[2];
-            if(fileInfo.time.length != 8){
-                return {
+            if(query.type == 'inventory'){
+                if(params.length != 3) return {
                     code:-1,
-                    msg:"文件的时间不正确"
+                    msg:"请按照格式书写文件名"
+                }
+                fileInfo.supplier = params[0];
+                fileInfo.material = params[1];
+                fileInfo.time = params[2];
+                if(fileInfo.time.length != 8){
+                    return {
+                        code:-1,
+                        msg:"文件的时间不正确"
+                    }
                 }
             }
             const uniqueName = uuid.v4() + `.${extendsName}`;
@@ -104,8 +106,8 @@ module.exports = app => {
                     result = yield youfa.XD(options,query);
                     break;
             }
-            yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
-            return result;
+            const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            return data;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
@@ -117,7 +119,7 @@ module.exports = app => {
 
             const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return $5
+            return result
         }
     }
     return Excel;
