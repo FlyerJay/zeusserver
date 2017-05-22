@@ -200,13 +200,12 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            debugger
             setCookie('userId', res.data.userInfo.userId);
             setCookie('userToken', res.data.userInfo.userToken);
             setCookie('userName', res.data.userInfo.userName);
             setCookie('comId', res.data.userInfo.comId);
             setCookie('userRole', res.data.userRole);
-            document.location.href = 'http://127.0.0.1:8080/view';
+            document.location.href = 'http://www.flyerjay.date/view';
           } else {
 
           }
