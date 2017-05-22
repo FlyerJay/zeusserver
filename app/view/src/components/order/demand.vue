@@ -1,6 +1,16 @@
 <template>
     <div> 
-
+        <el-form :inline="true" :model="searchDePriParam" class="demo-form-inline">
+          <el-form-item label="规格：">
+             <el-input v-model="searchDePriParam.spec" placeholder="输入规格"></el-input>
+          </el-form-item>
+          <el-form-item label="时间：">
+              <el-input v-model="searchDePriParam.date" placeholder="时间"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="warning" @click="">查询</el-button>
+          </el-form-item>
+       </el-form>
         <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true">定制需求录入</el-button>
         <div class="title">定制货品列表</div> 
         <div class="tb-wrap">
@@ -22,7 +32,7 @@
                 </el-table-column>
                 <el-table-column prop="factoryPrice" label="出厂价">
                 </el-table-column>
-                <el-table-column prop="freight" label="运费）">
+                <el-table-column prop="freight" label="运费">
                 </el-table-column>
                 <el-table-column prop="totalPrice" label="总成本"> 
                 </el-table-column>
@@ -97,6 +107,12 @@
                     charAddress:'',
                     charTel:'',
                     demandListId:''
+                },
+                searchDePriParam:{
+                    spec:'',
+                    date:'',
+                    comId:this.userInfo.comId
+
                 },
                 dlgDemandVisible:false,
                 loading:true
