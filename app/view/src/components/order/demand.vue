@@ -87,16 +87,16 @@
                 userInfo: ({
                     common
                 }) => common.userInfo,
-                demandList: ({
-                    manager
-                }) => manager.demandList
+                demandList:({
+                    order
+                }) => order.demandList
             }
         },
         data() {
             return {
                 params: {
                    // userId: this.userInfo.userId,
-                    comId: this.userInfo.comId,
+                    comId: this.userInfo.comId
                 },
                 demandParams:{
                     userId: this.userInfo.userId,
@@ -127,6 +127,7 @@
                 this.demandParams.demandListId = row.demandListId;
          },
          submitDdemand(){
+            console.log(this.demandParams)
             this.addToDemandList(this.demandParams)
             .then(rs => {
             this.$message({
