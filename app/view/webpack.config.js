@@ -223,7 +223,13 @@ switch (process.env.npm_lifecycle_event) {
         compress: true,
         stats: 'errors-only',
         port: '8080',
-        historyApiFallback: true
+        historyApiFallback: true,
+        proxy: {  
+          '/zues/api': {  
+              target: 'http://127.0.0.1:7001',  
+              secure: false
+          }  
+        } 
       },
       plugins: [
         new HtmlWebpackPlugin({

@@ -35,7 +35,7 @@
       loginout() {
         this.delCookie('userId');
         this.delCookie('comId');
-        document.location.href = "http://127.0.0.1:8080/login.html"
+        document.location.href = "login.html"
       },
       getCookie(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");

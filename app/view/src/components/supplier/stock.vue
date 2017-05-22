@@ -30,7 +30,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-upload class="upload-demo" action="http://www.flyerjay.date/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+                <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
                     <el-button type="warning">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
