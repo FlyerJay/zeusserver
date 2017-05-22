@@ -110,7 +110,7 @@ module.exports = app => {
                             return ''
                         })
                     }else{
-                        v.push(per?per:'100');//没有件数数据的默认给100
+                        v.push(per?per:'0');//没有件数数据的默认给100
                     }
                     var landArr = v[1].split('*');
                     landArr.length > 1 ? v[1]=landArr[0] : '';
@@ -133,7 +133,7 @@ module.exports = app => {
             for(;i<options.length;i++){
                 let lines = options[i].lines;
                 lines.map((v)=>{
-                    v.push('100');
+                    v.push('0');
                 })
                 options[i].head.push('支/件');
             }
@@ -253,7 +253,7 @@ module.exports = app => {
                             return ''
                         })
                     }else{
-                        v.push(per?per:'100');//没有件数数据的默认给100
+                        v.push(per?per:'0');//没有件数数据的默认给100
                     }
                     var landArr = v[1].split('*');
                     landArr.length > 1 ? v[1]=landArr[0] : '';
@@ -307,7 +307,7 @@ module.exports = app => {
                             return ''
                         })
                     }else{
-                        v.push(100);
+                        v.push('0');
                     }
                 })
                 options[i].lines.map((v)=>{//去掉第3列
