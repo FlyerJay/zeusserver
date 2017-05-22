@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="所在地">
         <el-select v-model="searchSupParam.address" placeholder="全部">
-          <el-option :value='0'>全部</el-option>
+          <el-option value="">全部</el-option>
           <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -15,10 +15,10 @@
       </el-form-item>
     </el-form>
   
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="供应商信息" name="first">
             <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>
-            <el-table :data="supList" style="width: 100%" height="" :loading="loading">
+            <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中">
               <el-table-column property="supplierName" label="供应商名称"></el-table-column>
               <el-table-column property="address" label="供应商所在地"></el-table-column>
               <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
@@ -29,10 +29,19 @@
                   </template>
               </el-table-column>
             </el-table>
+            <div class="page-wrap">
+              <el-pagination
+                @current-change="handleInfoCurrentChange"
+                :current-page.sync="searchSupParam.page"
+                layout=" prev, pager, next"
+                :total="supInfo.totalCount"
+              >
+              </el-pagination>
+            </div>
         </el-tab-pane>
         <el-tab-pane label="运费信息" name="second">
             <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgFreightVisible = true">每日运费录入</el-button>
-            <el-table :data="freightList" style="width: 100%" height="" :loading="loading">
+            <el-table :data="freightList" style="width: 100%" v-loading.body="freightloading" element-loading-text="拼命加载中">
               <el-table-column property="address" label="所在地"></el-table-column>
               <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
               <el-table-column  label="操作" align="center" property="id">
@@ -43,12 +52,8 @@
             </el-table>
         </el-tab-pane>
     </el-tabs>
-  
-     <el-row type="flex" justify="end" style="padding:20px 0; ">
-         <el-pagination :current-page="5" layout="prev, pager, next">
-         </el-pagination>
-     </el-row>
      
+    <!--供应商信息录入dlg--> 
     <el-dialog title="" v-model="dlgSupVisible">
       <el-form :model="newSupParam">
         <el-form-item label="供应商名称：">
@@ -84,7 +89,6 @@
         <el-button type="warning" @click="changeFre(newSupParam.row)">确 定</el-button>
       </div>
     </el-dialog>
-    
 
     <!--修改供应商信息-->
     <el-dialog title="" v-model="dlgChangeSupVisible">
@@ -133,9 +137,9 @@
         updateFre
       },
       getters: {
-        supList: ({
+        supInfo: ({
           supplier
-        }) => supplier.supList,
+        }) => supplier.supInfo,
         supAddress: ({
           supplier
         }) => supplier.supAddress,
@@ -152,6 +156,7 @@
         searchSupParam: {
           supplierName: '',
           address: '',
+          page: 1,
           comId: this.userInfo.comId
         },
         newSupParam: {
@@ -185,17 +190,34 @@
         dlgSupVisible: false,
         dlgFreightVisible: false,
         dlgChangeSupVisible:false,
-        loading: true
+        infoloading: true,
+        freightloading: true
       }
     },
     methods: {
       searchSup() {
-        this.loading = true;
+        this.infoloading = true;
         this.loadSupList(this.searchSupParam)
           .then(rs => {
-            this.loading = false;
+            this.infoloading = false;
           })
       },
+      handleInfoCurrentChange(val){
+          this.searchSupParam.page = val;
+          this.infoloading = true;
+          this.loadSupList(this.searchSupParam)
+          .then(() => {
+            this.infoloading =  false;
+          });
+      },  
+      handleFreightCurrentChange(val){
+          this.searchSupParam.page = val;
+          this.freightloading = true;
+          this.loadfreightList(this.searchSupParam)
+          .then(() => {
+            this.freightloading =  false;
+          });
+      },  
       addSup() {//录入供应商信息与运费信息
         this.addNewSup(this.newSupParam, this.searchSupParam)
           .then(rs => {
@@ -251,20 +273,20 @@
             this.loadfreightList(this.searchSupParam);
           })
       },
-      handleClick(tab, event){
-           console.log(tab, event);
-      }
-
     },
     mounted: function() {
       this.loadSupAddress({
         comId: this.userInfo.comId
-      })
+      });
       this.loadSupList({
         comId: this.userInfo.comId
-      })
+      }).then(rs => {
+        this.infoloading = false;
+      });
       this.loadfreightList({
         comId: this.userInfo.comId
+      }).then(rs => {
+        this.freightloading = false;
       })
     }
   }

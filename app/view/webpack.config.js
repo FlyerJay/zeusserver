@@ -133,7 +133,7 @@ switch (process.env.npm_lifecycle_event) {
         path: './build/',
         filename: '[name]_[hash:8].js',
         chunkFilename: '[name]_[chunkhash:8].js',
-        publicPath: '//s' + randomNum() + '.hdslb.com/bfs/static/space/'
+        publicPath: ''
       },
       module: {
         loaders: styleLoaders({

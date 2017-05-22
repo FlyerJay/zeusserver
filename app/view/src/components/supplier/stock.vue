@@ -39,7 +39,7 @@
             </el-form-item>
         </el-form>
     
-        <el-table :data="inventoryList" style="width: 100%" :loading="loading">
+        <el-table :data="inventoryList" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
             <el-table-column property="spec" label="规格"></el-table-column>
             <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
             <el-table-column property="type" label="类别"></el-table-column>
@@ -95,14 +95,16 @@
             searchPrice() {
                 this.loading = true;
                 this.loadSupInventoryList(this.searchInvenParam)
-                    .then(rs => {
-                        this.loading = false;
-                    })
+                .then(rs=>{
+                    this.loading = false;
+                })
             }
         },
         mounted: function() {
             this.loadSupInventoryList({
                 comId: this.userInfo.comId
+            }).then(rs=>{
+                    this.loading = false;
             });
             this.loadSupAddress({
                 comId: this.userInfo.comId
