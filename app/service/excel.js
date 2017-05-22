@@ -119,7 +119,10 @@ module.exports = app => {
 
             const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return result
+            return {
+                code:200,
+                msg:"正在解析中，请耐心等待"
+            };
         }
     }
     return Excel;
