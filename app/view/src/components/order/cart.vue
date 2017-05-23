@@ -18,7 +18,8 @@
                 border
                 tooltip-effect="dark"
                 style="width: 100%"
-                @selection-change="handleSelectionChange">
+                @selection-change="handleSelectionChange"
+                v-loading.body="loading">
             <el-table-column type="selection" width="">
             </el-table-column>
             <el-table-column prop="spec" label="规格" width="">
@@ -29,11 +30,11 @@
             </el-table-column>
             <el-table-column prop="freight" label="出厂单价(含运费)">
             </el-table-column>
-            <el-table-column prop="chartAmount" label="采购数量(支)">
+            <el-table-column prop="chartAmount" label="采购数量(件)">
             </el-table-column>
-            <el-table-column prop="benifit" label="采购吨位(吨)">
+            <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
             </el-table-column>
-            <el-table-column prop="charAdjust" label="采购下浮(元/吨)">
+            <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
             </el-table-column>
             <el-table-column prop="value" label="金额">
             </el-table-column>
@@ -52,7 +53,7 @@
                     <el-input v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="采购下浮">
-                    <el-input v-model="changeParams.charAdjust" auto-complete="off" type="number"></el-input>
+                    <el-input v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -107,13 +108,13 @@
                     supplierInventoryIds: []
                 },
                 changeParams:{
-                    comId: this.userInfo.comId,
-                    userId:this.userInfo.userId,
+                    chartId:'',
                     chartAmount:'',
                     charAdjust:''
                 },
                 supplierInventoryIds: [],
-                dialogVisible:false
+                dialogVisible:false,
+                loading: true,
             }
         },
         methods: {
@@ -125,6 +126,16 @@
                 } else {
                     this.$refs.multipleTable.clearSelection();
                 }
+            },
+            weightFormatter(row,column) {
+                const specArr = row.spec.split('*');
+                const height = Number(specArr[0]);
+                const width = Number(specArr[1]);
+                const land = Number(specArr[2]);
+                const long = Number(row.long);
+                const perimeter = 2 * height + 2 * width;
+                const amount = Number(row.chartAmount);
+                return ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2) + 'kg';
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
@@ -145,10 +156,13 @@
             },
             submitChange(data) {
                 this.dialogVisible = false;
+                this.updateCart(this.changeParams);
             }
         },
         mounted: function() {
-            this.loadCartList(this.listParams)
+            this.loadCartList(this.listParams).then(()=>{
+                this.loading = false;
+            })
         }
     }
 </script>

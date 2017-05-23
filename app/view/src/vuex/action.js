@@ -124,10 +124,10 @@ export const addTocart = ({ dispatch }, params) => {
 
 //修改购物车信息
 export const updateCart = ({dispatch},params) => {
-  return axios.post('/zues/api/chart/upate',params)
+  return axios.post('/zues/api/chart/update',params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      //dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     }else if (response.data.code === -1) {
       return Promise.reject();
@@ -140,7 +140,8 @@ export const loadCartList = ({ dispatch }, params) => {
   return axios.get('/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      var mixinData = Object.assign(response.data.data.row,{chartWeight:''})
+      dispatch('UPDATE_ORDERFORM', 'cartList', mixinData)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
