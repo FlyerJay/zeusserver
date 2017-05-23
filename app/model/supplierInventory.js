@@ -87,7 +87,7 @@ module.exports = app => {
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
                 ${addressCondition}
-                INNER JOIN freight f ON
+                LEFT JOIN freight f ON
                 f.address = s.address
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
@@ -110,7 +110,7 @@ module.exports = app => {
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
                 ${addressCondition}
-                INNER JOIN freight f ON
+                LEFT JOIN freight f ON
                 f.address = s.address
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
@@ -228,7 +228,7 @@ module.exports = app => {
                     AND si.material = sv.material
                     AND si.spec = sv.spec
                     AND sv.comId = si.comId
-                    INNER JOIN freight f ON
+                    LEFT JOIN freight f ON
                     f.address = s.address
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
@@ -255,7 +255,7 @@ module.exports = app => {
                     AND si.material = sv.material
                     AND si.spec = sv.spec
                     AND sv.comId = si.comId
-                    INNER JOIN freight f ON
+                    LEFT JOIN freight f ON
                     f.address = s.address
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec

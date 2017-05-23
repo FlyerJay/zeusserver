@@ -60,7 +60,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const [$1,$2] = yield [app.model.query(`SELECT c.chartAmount,c.chartAdjust,si.spec,si.type,s.supplierName,c.supplierInventoryId,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,si.spec,si.long,si.type,s.supplierName,c.supplierInventoryId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
                 LEFT JOIN supplier_value sv ON
@@ -170,7 +170,7 @@ module.exports = app => {
                     msg:"未找到该购物车数据"
                 }
                 for(var props in options){
-                    data[props] ? data[props] = options[props] : '';
+                    data[props] = options[props];
                 }
                 yield data.save();
                 return {

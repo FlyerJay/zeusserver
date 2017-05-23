@@ -87,7 +87,7 @@ module.exports = app => {
                     msg:'修改的记录不存在'
                 }
                 for(var props in options){
-                    result[props]?result[props] = options[props]:'';
+                    result[props] = options[props];
                 }
                 result.save();
                 return {

@@ -20,18 +20,20 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-             <el-table :data="memberList" stripe style="width: 100%" :load="loading">
-                <el-table-column prop="spec" label="用户ID" width="">
+             <el-table :data="userRoleList" stripe style="width: 100%" :load="loading">
+                <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
-                <el-table-column prop="date" label="供应商现货查询" width="">
+                <el-table-column prop="userId" label="供应商现货查询" width="">
                 </el-table-column>
-                <el-table-column prop="type" label="购物车页面" width="">
+                <el-table-column prop="userId" label="购物车页面" width="">
                 </el-table-column>
-                <el-table-column prop="supplierName" label="供应商目录及运费">
+                <el-table-column prop="demandAuth" label="供应商目录及运费">
                 </el-table-column>
-                <el-table-column prop="inventoryAmount" label="供应商库存">
+                 <el-table-column prop="valueAuth" label="供应商价格表">
                 </el-table-column>
-                <el-table-column prop="inventoryWeight" label="采购下单审核">
+                <el-table-column prop="inventoryAuth" label="供应商库存表">
+                </el-table-column>
+                <el-table-column prop="orderAuth" label="采购下单审核">
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id">
                     <template scope="scope">
@@ -68,9 +70,9 @@ export default {
         userInfo:({
         	common
         })=>common.userInfo,
-        memberList:({
+        userRoleList:({
         	manager
-        })=>manager.memberList
+        })=>manager.userRoleList
      }
   },
   data(){
@@ -81,6 +83,7 @@ export default {
                     page:1,
                     comId: this.userInfo.comId
                 },
+        
       	 loading:true
       }
   },
@@ -93,7 +96,10 @@ export default {
     }
   },
   mounted: function() {
-          
+
+         this.loadmemberList(this.memberParams); 
+         console.log(this.memberParams);
+         console.log(this.userRoleList)
   }
 }
 </script>

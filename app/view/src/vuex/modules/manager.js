@@ -1,6 +1,6 @@
 const state = {
   specList:[],
-  memberList:[],
+  userRoleList:[],
   operateList:[]
 }
 
