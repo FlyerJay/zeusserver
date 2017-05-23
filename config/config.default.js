@@ -26,7 +26,6 @@ module.exports = appInfo => {
     static:{
       prefix: '/public/',
       dir: path.join(appInfo.baseDir, 'app/public'),
-      // support lazy load
       dynamic: true,
       preload: false,
       buffer: false,

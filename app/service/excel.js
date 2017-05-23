@@ -104,8 +104,8 @@ module.exports = app => {
                     result = yield youfa.XD(options,query);
                     break;
             }
-            yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
-            return result;
+            const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            return data;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
@@ -114,10 +114,14 @@ module.exports = app => {
             var $3 = parseValue.mixinLand($2);
             var $4 = parseValue.separateData($3);
             var $5 = parseValue.mergeData($4);
+            var data = {
+                code:200,
+                msg:"正在解析中，请耐心等待"
+            }
 
             const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
-            return $5
+            return data
         }
     }
     return Excel;

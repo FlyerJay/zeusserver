@@ -140,6 +140,7 @@
               });
             },
             updateChart(index,row) {
+                console.log(index,row);
                 this.dialogVisible = true;
                 for(var props in row){
                     this.changeParams[props] ? this.changeParams[props] = row[props] : '';

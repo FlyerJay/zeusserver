@@ -7,12 +7,17 @@ var utils = require('../utils');
 module.exports = app => {
     class TransAction extends app.Service {
         * valueImport(options,query) {
-            var time = String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
-            app.model.transaction((t)=>{
+            return app.model.transaction((t)=>{
                 return app.model.SupplierValue.destroy({
                     where:{
                         comId:{
                             $eq:query.comId?query.comId:'01'
+                        },
+                        lastUpdateTime:{
+                            $eq:query.time
+                        },
+                        material:{
+                            $eq:query.material
                         }
                     },
                     transaction:t,
@@ -38,18 +43,24 @@ module.exports = app => {
                                 supplierId:supplierIndex[v[2]],
                                 comId:'01',
                                 spec:v[0],
-                                type:v[1],
+                                type:query.material,
                                 value:v[3],
-                                material:v[4],
-                                lastUpdateTime:time,
+                                material:v[1],
+                                lastUpdateTime:query.time,
                             },{transaction:t})
                         }
                     }))
                 })
             }).then((res)=>{
-                console.log('事务执行完毕');
+                return {
+                    code:200,
+                    msg:"解析完成"
+                }
             }).catch((err)=>{
-                console.log(err);
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
             })
         }
         * inventoryImport(options,info){
@@ -67,7 +78,7 @@ module.exports = app => {
                 newLine.push(v);
             })
             options.line = newLine;
-            app.model.transaction((t)=>{
+            return app.model.transaction((t)=>{
                 return app.model.Supplier.findOne({
                     where:{
                         supplierName:{
@@ -102,9 +113,9 @@ module.exports = app => {
                                 supplierId:supplierId,
                                 comId:'01',
                                 spec:v[0],
-                                type:v[4],
+                                type:info.material,
                                 long:v[1],
-                                material:info.material,
+                                material:v[4],
                                 inventoryAmount:v[2],
                                 perAmount:v[3],
                                 lastUpdateTime:time,
@@ -116,9 +127,15 @@ module.exports = app => {
                 })
 
             }).then((res)=>{
-                console.log("事务执行完毕");
+                return {
+                    code:200,
+                    msg:"解析完成"
+                }
             }).catch((err)=>{
-                console.log(err);
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
             })
         }
     }
