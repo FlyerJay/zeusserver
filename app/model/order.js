@@ -113,7 +113,7 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                if(!options.supplierInventoryIds) return {
+                if(!options.supplierInventoryIds) return  {
                     code:-1,
                     msg:"缺少货物信息"
                 }
