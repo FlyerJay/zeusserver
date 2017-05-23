@@ -81,7 +81,7 @@ module.exports = app => {
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
-                ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec
+                ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec DESC
                 LIMIT :start,:offset`,{
                     replacements:{
                         address:options.address?options.address:'',
@@ -103,7 +103,7 @@ module.exports = app => {
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
-                ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec`,{
+                ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec DESC`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,

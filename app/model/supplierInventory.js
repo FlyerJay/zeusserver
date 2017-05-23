@@ -92,7 +92,7 @@ module.exports = app => {
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
-                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
+                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec DESC
                 LIMIT :start,:offset`,{
                     replacements:{
                         address:options.address?options.address:'',
@@ -115,7 +115,7 @@ module.exports = app => {
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
-                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
+                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec DESC`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,
@@ -233,7 +233,7 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec DESC
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
@@ -260,7 +260,7 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec DESC`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
