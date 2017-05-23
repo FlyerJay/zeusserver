@@ -161,7 +161,12 @@ module.exports = app => {
                 return {
                     code:200,
                     msg:"查询数据成功",
-                    data:list
+                    data:{
+                        totalCount:list.count,
+                        row:list.rows,
+                        page:options.page?options.page:1,
+                        pageSize:options.pageSize?options.pageSize:30
+                    }
                 }
             }
         }
