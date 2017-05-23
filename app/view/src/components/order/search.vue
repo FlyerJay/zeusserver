@@ -69,7 +69,7 @@
       <el-dialog title="" v-model="dlgShopVisible" size="tiny">
         <el-form :model="cartParams">
           <el-form-item label="需求数量：">
-            <el-input v-model="cartParams.charAmount" auto-complete="off"></el-input>
+            <el-input v-model="cartParams.chartAmount" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -111,7 +111,7 @@
         cartParams: {
           userId: this.userInfo.userId,
           comId: this.userInfo.comId,
-          charAmount: '',
+          chartAmount: '',
           supplierInventoryId: ''
         },
         stockParams: {
