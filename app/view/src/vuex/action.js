@@ -45,6 +45,32 @@ export const addNewSup = ({ dispatch }, newSupParam) => {
   .catch(function (response) {
   });
 }
+//删除供应商 
+export const deletSupplier = ({ dispatch }, params) => {
+  return axios.post('/zues/api/supplier/remove', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+//删除运费
+export const deleteFreight = ({ dispatch }, params) => {
+  return axios.post('/zues/api/freight/remove', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
 
 //修改供应商----更新所修改的供应商
 export const updataSup = ({ dispatch },newSupParam) => {
