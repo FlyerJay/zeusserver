@@ -1,56 +1,58 @@
 <template lang="html">
-  <div>
-    <el-form :inline="true" :model="searchSupParam" class="demo-form-inline">
-      <el-form-item label="供应商名称">
-        <el-input v-model="searchSupParam.supplierName" placeholder="支持关键词/模糊搜索"></el-input>
-      </el-form-item>
-      <el-form-item label="所在地">
-        <el-select v-model="searchSupParam.address" placeholder="全部">
-          <el-option value="">全部</el-option>
-          <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="warning" @click="searchSup">查询</el-button>
-      </el-form-item>
-    </el-form>
-  
+  <div class="sup-info">
     <el-tabs v-model="activeName" type="card">
-        <el-tab-pane label="供应商信息" name="first">
-            <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>
-            <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中">
-              <el-table-column property="supplierName" label="供应商名称"></el-table-column>
-              <el-table-column property="address" label="供应商所在地"></el-table-column>
-              <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
-              <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
-              <el-table-column  label="操作" align="center" property="id">
-                  <template scope="scope">
-                      <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
-                  </template>
-              </el-table-column>
-            </el-table>
-            <div class="page-wrap">
-              <el-pagination
-                @current-change="handleInfoCurrentChange"
-                :current-page.sync="searchSupParam.page"
-                layout=" prev, pager, next"
-                :total="supInfo.totalCount"
-              >
-              </el-pagination>
-            </div>
-        </el-tab-pane>
-        <el-tab-pane label="运费信息" name="second">
-            <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgFreightVisible = true">每日运费录入</el-button>
-            <el-table :data="freightList" style="width: 100%" v-loading.body="freightloading" element-loading-text="拼命加载中">
-              <el-table-column property="address" label="所在地"></el-table-column>
-              <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
-              <el-table-column  label="操作" align="center" property="id">
-                  <template scope="scope">
-                      <el-button size="small" @click="changeFreList(scope.index, scope.row)" type="warning">修改</el-button>
-                  </template>
-              </el-table-column>
-            </el-table>
-        </el-tab-pane>
+      <el-tab-pane label="供应商信息" name="first">
+        <el-form :inline="true" :model="searchSupParam" class="demo-form-inline">
+          <el-form-item label="供应商名称">
+            <el-input v-model="searchSupParam.supplierName" placeholder="支持关键词/模糊搜索"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地">
+            <el-select v-model="searchSupParam.address" placeholder="全部">
+              <el-option value="">全部</el-option>
+              <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="warning" @click="searchSup">查询</el-button>
+          </el-form-item>
+        </el-form>
+        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>
+        <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中">
+          <el-table-column property="supplierName" label="供应商名称"></el-table-column>
+          <el-table-column property="address" label="供应商所在地"></el-table-column>
+          <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
+          <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
+          <el-table-column label="操作" align="center" property="id">
+            <template scope="scope">
+              <el-button size="small" @click="changeSupList(scope.index, scope.row)" type="warning">修改</el-button>
+              <el-button size="small" @click="deleteSup(scope.index, scope.row)" type="danger">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="page-wrap">
+          <el-pagination
+            @current-change="handleInfoCurrentChange"
+            :current-page.sync="searchSupParam.page"
+            layout=" prev, pager, next"
+            :total="supInfo.totalCount"
+          >
+          </el-pagination>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="运费信息" name="second">
+          <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgFreightVisible = true">每日运费录入</el-button>
+          <el-table :data="freightList" style="width: 100%" v-loading.body="freightloading" element-loading-text="拼命加载中">
+            <el-table-column property="address" label="所在地"></el-table-column>
+            <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
+            <el-table-column  label="操作" align="center" property="id">
+            <template scope="scope">
+              <el-button size="small" @click="changeFreList(scope.index, scope.row)" type="warning">
+                修改</el-button>
+              <el-button size="small" @click="deleteFre(scope.index, scope.row)" type="danger">删除</el-button>
+            </template>
+            </el-table-column>
+          </el-table>
+      </el-tab-pane>
     </el-tabs>
      
     <!--供应商信息录入dlg--> 
@@ -80,13 +82,16 @@
     <!--修改运费信息对话框-->
     <el-dialog title="" v-model="dlgFreightVisible">
       <el-form :model="newSupParam">
+        <el-form-item label="所在地：">
+          <el-input v-model="newSupParam.address" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="运费：">
           <el-input v-model="newSupParam.freight" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dlgFreightVisible = false">取 消</el-button>
         <el-button type="warning" @click="changeFre(newSupParam.row)">确 定</el-button>
+        <el-button @click="dlgFreightVisible = false">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -123,7 +128,9 @@
     addNewSup,
     updataSup,
     loadfreightList,
-    updateFre
+    updateFre,
+    deletSupplier,
+    deleteFreight
   } from '../../vuex/action'
   
   export default {
@@ -134,7 +141,9 @@
         addNewSup,
         updataSup,
         loadfreightList,
-        updateFre
+        updateFre,
+        deletSupplier,
+        deleteFreight
       },
       getters: {
         supInfo: ({
@@ -146,9 +155,9 @@
         userInfo: ({
           common
         }) => common.userInfo,
-        freightList:({
+        freightList: ({
           supplier
-        })=>supplier.freightList
+        }) => supplier.freightList
       }
     },
     data() {
@@ -164,32 +173,28 @@
           address: '',
           freight: '',
           benifit: '',
-          freightId:'',
+          freightId: '',
           comId: this.userInfo.comId
         },
-        changeSupParam:{
+        changeSupParam: {
           supplierName: '',
           address: '',
           freight: '',
           benifit: '',
-          supplierId:'',
-          row:'',
+          supplierId: '',
+          row: '',
           comId: this.userInfo.comId
         },
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+        deleteSupParams: {
+          supplierId: ''
         },
-        activeName:"first",
+        deleteFreParams: {
+          freightId: ''
+        },
+        activeName: "first",
         dlgSupVisible: false,
         dlgFreightVisible: false,
-        dlgChangeSupVisible:false,
+        dlgChangeSupVisible: false,
         infoloading: true,
         freightloading: true
       }
@@ -202,23 +207,23 @@
             this.infoloading = false;
           })
       },
-      handleInfoCurrentChange(val){
-          this.searchSupParam.page = val;
-          this.infoloading = true;
-          this.loadSupList(this.searchSupParam)
+      handleInfoCurrentChange(val) {
+        this.searchSupParam.page = val;
+        this.infoloading = true;
+        this.loadSupList(this.searchSupParam)
           .then(() => {
-            this.infoloading =  false;
+            this.infoloading = false;
           });
-      },  
-      handleFreightCurrentChange(val){
-          this.searchSupParam.page = val;
-          this.freightloading = true;
-          this.loadfreightList(this.searchSupParam)
+      },
+      handleFreightCurrentChange(val) {
+        this.searchSupParam.page = val;
+        this.freightloading = true;
+        this.loadfreightList(this.searchSupParam)
           .then(() => {
-            this.freightloading =  false;
+            this.freightloading = false;
           });
-      },  
-      addSup() {//录入供应商信息与运费信息
+      },
+      addSup() { //录入供应商信息与运费信息
         this.addNewSup(this.newSupParam, this.searchSupParam)
           .then(rs => {
             this.$message({
@@ -230,47 +235,63 @@
             this.loadSupList(this.searchSupParam);
           })
       },
-      changeSupList(index, row){//修改供应商信息
-         this.dlgChangeSupVisible=true;
-         this.changeSupParam.supplierName = row.supplierName;
-         this.changeSupParam.address = row.address;
-         this.changeSupParam.freight = row.freight ;
-         this.changeSupParam.benifit = row.benifit;
-         this.changeSupParam.supplierId = row.supplierId;
-         this.changeSupParam.row = row
+      deleteSup(index, row) {
+        this.deleteSupParams.supplierId = row.supplierId.toString();
+        this.deletSupplier(this.deleteSupParams)
+          .then(rs => {
+            this.$message({
+              message: `删除成功`,
+              type: 'success'
+            })
+            this.loadSupList(this.searchSupParam);
+          })
       },
-      changeSup(row){//确认修改供应商信息
-           this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
+      deleteFre(index, row) {
+        this.deleteFreParams.freightId = row.freightId.toString();
+        this.deleteFreight(this.deleteFreParams)
+          .then(rs => {
+            this.$message({
+              message: `删除成功`,
+              type: 'success'
+            })
+            this.loadfreightList(this.searchSupParam);
+          })
+      },
+      changeSupList(index, row) { //修改供应商信息
+        this.dlgChangeSupVisible = true;
+        this.changeSupParam.supplierName = row.supplierName;
+        this.changeSupParam.address = row.address;
+        this.changeSupParam.freight = row.freight;
+        this.changeSupParam.benifit = row.benifit;
+        this.changeSupParam.supplierId = row.supplierId;
+        this.changeSupParam.row = row
+      },
+      changeSup(row) { //确认修改供应商信息
+        this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
           .then(rs => {
             this.$message({
               message: `信息修改成功`,
               type: 'success'
             });
-            this.dlgChangeSupVisible=false;
-            row.supplierName =  this.changeSupParam.supplierName;
-            row.address = this.changeSupParam.address;
-            row.freight = this.changeSupParam.freight;
-            row.benifit = this.changeSupParam.benifit;
+            this.dlgChangeSupVisible = false;
             this.loadSupList(this.searchSupParam);
           })
       },
-      changeFreList(index, row){
-         this.dlgFreightVisible=true;
-         this.newSupParam.freight = row.freight ;
-         this.newSupParam.freightId = row.freightId;
-         this.newSupParam.address = row.address;
-         this.newSupParam.row = row
+      changeFreList(index, row) {
+        this.dlgFreightVisible = true;
+        this.newSupParam.freight = row.freight;
+        this.newSupParam.freightId = row.freightId;
+        this.newSupParam.address = row.address;
+        this.newSupParam.row = row
       },
-      changeFre(row){//确认修改运费
-           this.updateFre(this.newSupParam, this.newSupParam.freightId)
-            .then(rs => {
+      changeFre(row) { //确认修改运费
+        this.updateFre(this.newSupParam, this.newSupParam.freightId)
+          .then(rs => {
             this.$message({
               message: `信息修改成功`,
               type: 'success'
             })
-            this.dlgFreightVisible=false;
-            row.freight = this.newSupParam.freight;
-            
+            this.dlgFreightVisible = false;
             this.loadfreightList(this.searchSupParam);
           })
       },
@@ -294,6 +315,10 @@
   }
 </script>
 
-<style lang="css">
-  
+<style lang="less" scoped>
+  .sup-info {
+    .demo-form-inline {
+        margin-top: 16px;
+    }
+  }
 </style>
