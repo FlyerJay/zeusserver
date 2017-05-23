@@ -7,15 +7,10 @@
     
             <el-form-item label="类别">
                 <el-select v-model="searchInvenParam.type">
-                    <el-option :value='0'>全部</el-option>
-                    <el-option :label="item.type" :value="item.type" v-for="(item,index) in inventoryList" :key="index"></el-option>
-                </el-select>
-            </el-form-item>
-    
-            <el-form-item label="材质">
-                <el-select v-model="searchInvenParam.material">
-                    <el-option :value='0'>全部</el-option>
-                    <el-option :label="item.material" :value="item.material" v-for="(item,index) in inventoryList" :key="index"></el-option>
+                    <el-option value="">全部</el-option>
+                    <el-option value="黑管">黑管</el-option>
+                    <el-option value="镀锌">镀锌</el-option>
+                    <el-option value="镀锌带">镀锌带</el-option>
                 </el-select>
             </el-form-item>
     
@@ -44,7 +39,7 @@
             <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
             <el-table-column property="type" label="类别"></el-table-column>
             <el-table-column property="supplierName" label="供应商"></el-table-column>
-            <el-table-column property="inventoryAmount" label="库存数量(支)"></el-table-column>
+            <el-table-column property="inventoryAmount" label="库存数量(件)"></el-table-column>
             <el-table-column property="inventoryWeight" label="库存重量(吨)"></el-table-column>
             <el-table-column property="perAmount" label="单件支数"></el-table-column>
             <el-table-column inline-template label="操作" align="center" property="id">
