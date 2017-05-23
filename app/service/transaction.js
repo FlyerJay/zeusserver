@@ -43,9 +43,9 @@ module.exports = app => {
                                 supplierId:supplierIndex[v[2]],
                                 comId:'01',
                                 spec:v[0],
-                                type:v[1],
+                                type:query.material,
                                 value:v[3],
-                                material:query.material,
+                                material:v[1],
                                 lastUpdateTime:query.time,
                             },{transaction:t})
                         }
@@ -113,9 +113,9 @@ module.exports = app => {
                                 supplierId:supplierId,
                                 comId:'01',
                                 spec:v[0],
-                                type:v[4],
+                                type:info.material,
                                 long:v[1],
-                                material:info.material,
+                                material:v[4],
                                 inventoryAmount:v[2],
                                 perAmount:v[3],
                                 lastUpdateTime:time,

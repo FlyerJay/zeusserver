@@ -92,7 +92,7 @@ module.exports = app => {
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
-                ORDER BY si.lastUpdateTime DESC
+                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
                 LIMIT :start,:offset`,{
                     replacements:{
                         address:options.address?options.address:'',
@@ -115,7 +115,7 @@ module.exports = app => {
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
-                ORDER BY si.lastUpdateTime DESC`,{
+                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,
@@ -222,18 +222,18 @@ module.exports = app => {
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
-                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
-                    ON si.spec = sv.spec
+                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
+                    ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
                     AND si.material = sv.material
-                    AND si.supplierId = sv.supplierId
+                    AND si.spec = sv.spec
                     AND sv.comId = si.comId
                     INNER JOIN freight f ON
                     f.address = s.address
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
@@ -249,18 +249,18 @@ module.exports = app => {
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
-                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,spec,material) sv
-                    ON si.spec = sv.spec
+                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
+                    ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
                     AND si.material = sv.material
-                    AND si.supplierId = sv.supplierId
+                    AND si.spec = sv.spec
                     AND sv.comId = si.comId
                     INNER JOIN freight f ON
                     f.address = s.address
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId`,{
+                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
