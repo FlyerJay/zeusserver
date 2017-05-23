@@ -8,7 +8,7 @@
               <el-input v-model="searchDePriParam.date" placeholder="时间"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="warning" @click="">查询</el-button>
+            <el-button type="warning" @click="searchDemand">查询</el-button>
           </el-form-item>
        </el-form>
         <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true">定制需求录入</el-button>
@@ -138,6 +138,9 @@
             this.dlgDemandVisible = false;
             
            })
+        },
+        searchDemand(){
+          console.log(this.demandList);
         }
        },
          mounted: function() {
