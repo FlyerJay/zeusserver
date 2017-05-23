@@ -45,6 +45,20 @@ export const addNewSup = ({ dispatch }, newSupParam) => {
   .catch(function (response) {
   });
 }
+
+//新增运费信息 
+export const addNewFre = ({ dispatch }, params) => {
+  return axios.post('/zues/api/freight/add', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
 //删除供应商 
 export const deletSupplier = ({ dispatch }, params) => {
   return axios.post('/zues/api/supplier/remove', params)
@@ -58,7 +72,7 @@ export const deletSupplier = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
-//删除运费
+//删除运费信息
 export const deleteFreight = ({ dispatch }, params) => {
   return axios.post('/zues/api/freight/remove', params)
   .then(function (response) {
@@ -206,8 +220,6 @@ export const removeCartList = ({ dispatch }, params) => {
   });
 }
 
-
-
 //加载订单详情
 export const loadOrderList = ({ dispatch }, params) => {
   return axios.get('/zues/api/order/detail', { params })
@@ -237,11 +249,6 @@ export const removeOrderList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
-
-
-
-
-
 
 //供应商价格表
 export const loadSupPriceList = ({ dispatch }, params) => {
@@ -324,11 +331,10 @@ export const loadfreightList = ({ dispatch }, params) => {
 
 
 //更新供应商运费
-export const updateFre = ({ dispatch },newSupParam, searchSupParam) => {
-  return axios.post('/zues/api/freight/update', newSupParam)
+export const updateFre = ({ dispatch }, params) => {
+  return axios.post('/zues/api/freight/update', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      loadfreightList({ dispatch }, searchSupParam);
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();

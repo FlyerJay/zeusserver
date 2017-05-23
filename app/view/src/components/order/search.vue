@@ -35,7 +35,11 @@
           </el-table-column>
           <el-table-column prop="value" label="出厂价(元/吨)">
           </el-table-column>
-          <el-table-column prop="inventoryAmount" label="库存（支）">
+          <el-table-column prop="inventoryAmount" label="库存（件）">
+          </el-table-column>
+          <el-table-column prop="perWeight" label="单支重量">
+          </el-table-column>
+          <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter">
           </el-table-column>
           <el-table-column prop="freight" label="运费（元）">
           </el-table-column>
@@ -126,6 +130,18 @@
         .then(() => {
           this.loading =  false;
        });
+      },
+     weightFormatter(row, column) {
+          const specArr = row.spec.split('*');
+          const height = Number(specArr[0]);
+          const width = Number(specArr[1]);
+          const land = Number(specArr[2]);
+          const long = Number(row.long);
+          const perimeter = 2 * height + 2 * width;
+          const amount = Number(row.perAmount);
+          const inventoryAmount = Number(row.inventoryAmount);
+          row.perWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
+          return ((perimeter / 3.14 - land) * land * 6 * 0.02466 * amount * inventoryAmount/1000).toFixed(2);
       },
       confirmTocart() {
         this.addTocart(this.cartParams)

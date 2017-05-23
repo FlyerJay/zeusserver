@@ -20,15 +20,17 @@
     
             <el-form-item label="所在地">
                 <el-select v-model="searchInvenParam.address" placeholder="全部">
-                    <el-option :value='0'>全部</el-option>
+                    <el-option value="">全部</el-option>
                     <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
+    
             <el-form-item>
-                <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+                <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
                     <el-button type="warning">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
+    
             <el-form-item>
                 <el-button type="warning" @click="searchPrice">查询</el-button>
             </el-form-item>
@@ -40,10 +42,11 @@
             <el-table-column property="type" label="类别"></el-table-column>
             <el-table-column property="supplierName" label="供应商"></el-table-column>
             <el-table-column property="inventoryAmount" label="库存数量(件)"></el-table-column>
-            <el-table-column property="inventoryWeight" label="库存重量(吨)"></el-table-column>
             <el-table-column property="perAmount" label="单件支数"></el-table-column>
+            <el-table-column property="perWeight" label="单支重量(kg)"></el-table-column>
+            <el-table-column property="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter"></el-table-column>
             <el-table-column inline-template label="操作" align="center" property="id">
-                <el-button type="text" size="mini" @click.native="">修改</el-button>
+                <el-button type="warning" size="small" @click.native="">修改</el-button>
             </el-table-column>
         </el-table>
     </div>
@@ -90,16 +93,28 @@
             searchPrice() {
                 this.loading = true;
                 this.loadSupInventoryList(this.searchInvenParam)
-                .then(rs=>{
-                    this.loading = false;
-                })
-            }
+                    .then(rs => {
+                        this.loading = false;
+                    })
+            },
+            weightFormatter(row, column) {
+                const specArr = row.spec.split('*');
+                const height = Number(specArr[0]);
+                const width = Number(specArr[1]);
+                const land = Number(specArr[2]);
+                const long = Number(row.long);
+                const perimeter = 2 * height + 2 * width;
+                const amount = Number(row.perAmount);
+                const inventoryAmount = Number(row.inventoryAmount);
+                row.perWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
+                return ((perimeter / 3.14 - land) * land * 6 * 0.02466 * amount * inventoryAmount/1000).toFixed(2);
+            },
         },
         mounted: function() {
             this.loadSupInventoryList({
                 comId: this.userInfo.comId
-            }).then(rs=>{
-                    this.loading = false;
+            }).then(rs => {
+                this.loading = false;
             });
             this.loadSupAddress({
                 comId: this.userInfo.comId
