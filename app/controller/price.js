@@ -18,6 +18,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.SupplierValue.deleteValue(ctx.request.body);
     }
+    * adjust(){
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.SupplierValue.adjustValue(ctx.request.body);
+    }
   }
   return PriceController;
 };

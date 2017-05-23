@@ -140,8 +140,7 @@ export const loadCartList = ({ dispatch }, params) => {
   return axios.get('/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      var mixinData = Object.assign(response.data.data.row,{chartWeight:''})
-      dispatch('UPDATE_ORDERFORM', 'cartList', mixinData)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();

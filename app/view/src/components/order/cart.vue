@@ -2,9 +2,9 @@
     <div> 
           <div style="margin-top: 20px">
             <el-form style="margin-top:20px">
-                <el-form-item label="库存紧张">
+                <!--<el-form-item label="库存紧张">
                     <el-tag  color="red">  </el-tag>
-                </el-form-item>
+                </el-form-item>-->
                  <el-form-item label="已选商品(含运费):">
                     <span>999</span>
                     <el-button @click="submitOrder()">提交</el-button>
@@ -28,7 +28,7 @@
             </el-table-column>
             <el-table-column prop="supplierName" label="供应商">
             </el-table-column>
-            <el-table-column prop="freight" label="出厂单价(含运费)">
+            <el-table-column prop="value" label="出厂单价(含运费)">
             </el-table-column>
             <el-table-column prop="chartAmount" label="采购数量(件)">
             </el-table-column>
@@ -36,7 +36,7 @@
             </el-table-column>
             <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
             </el-table-column>
-            <el-table-column prop="value" label="金额">
+            <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
             </el-table-column>
             <el-table-column label="操作" align="center" property="id">
                 <template scope="scope">
@@ -135,7 +135,14 @@
                 const long = Number(row.long);
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.chartAmount);
+                row.chartWeight = ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2);
                 return ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2) + 'kg';
+            },
+            totalPriceFormatter(row,column){
+                const price = Number(row.value);
+                const amount = Number(row.chartAmount);
+                row.totalPrice = price?price*amount:'';
+                return price?price*amount:'';
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
