@@ -9,11 +9,17 @@ module.exports = app => {
     const { STRING, INTEGER, DOUBLE} = app.Sequelize;
 
     return app.model.define('OrderDetail',{
+        orderDetailId:{
+            type:INTEGER,
+            autoIncrement: true,
+            primaryKey:true,
+            allowNull:false,
+            comment:"订单详情主键"
+        },
         orderNo: {
             type: STRING(50),
-            primaryKey: true,
             allowNull:false,
-            comment:"定制需求主键"
+            comment:"订单编号"
         },
         supplierInventoryId: {
             type: INTEGER,
@@ -34,7 +40,7 @@ module.exports = app => {
             comment:"总吨数"
         },
         orderDcrease: {
-            type: STRING(10),
+            type:DOUBLE(10,2),
             comment:"订单下浮"
         },
     },{

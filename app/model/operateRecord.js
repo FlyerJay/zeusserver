@@ -55,14 +55,12 @@ module.exports = app => {
                         }
                     }
                 })
-                if(!result[0] || result[0].length < 1) return {
-                    code:-1,
-                    msg:"没有操作记录",
-                    data:[]
-                }
                 return {
                     code:200,
-                    data:result[0],
+                    data:{
+                        totalCount:result.count,
+                        row:result.rows
+                    },
                     msg:"查询成功",
                 }
             }

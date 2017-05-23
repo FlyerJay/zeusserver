@@ -10,25 +10,18 @@
         </el-form>
         <div class="tb-wrap">
             <el-table :data="orderList" stripe style="width: 100%" :load="loading">
-                <el-table-column prop="spec" label="订单号" width="">
-                </el-table-column>
-                <el-table-column prop="date" label="供应商数量" width="">
-                </el-table-column>
-                <el-table-column prop="type" label="类别" width="">
-                </el-table-column>
-                <el-table-column prop="supplierName" label="总吨位">
-                </el-table-column>
-                <el-table-column prop="inventoryAmount" label="总价">
-                </el-table-column>
-                <el-table-column prop="inventoryWeight" label="采购下浮总额">
-                </el-table-column>
-                <el-table-column prop="freight" label="下单人">
-                </el-table-column>
-                <el-table-column prop="freight" label="状态">
-                </el-table-column>
+                <el-table-column prop="orderNo" label="订单号" width=""/>
+                <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width=""/>
+                <el-table-column prop="supplierCount" width='160' label="供应商数量"/>
+                <el-table-column prop="orderWeight" label="总吨位"/>
+                <el-table-column prop="orderPrice" label="总价"/>
+                <el-table-column prop="orderAdjust" label="采购下浮总额"/>
+                <el-table-column prop="userId" width='80' label="下单人"/>
+                <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"/>
                 <el-table-column label="操作" align="center" property="id">
                     <template scope="scope">
-                        <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
+                        <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看详情</el-button>
+                        <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>
@@ -77,6 +70,12 @@
         methods: {
             searchOrder() {
                 this.loadOrderList(this.orderParams)
+            },
+            statusFormatter(row,column){
+                return row.validate === 0 ? '未审核' : '已审核';
+            },
+            dateFormat(row, column) {
+                return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
             },
             enterNum(index, row) {
              

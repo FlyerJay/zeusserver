@@ -108,9 +108,9 @@
                     comId: this.userInfo.comId,
                     userId: this.userInfo.userId,
                     supplierInventoryIds: [],
-                    totalWeight: 0,
-                    totalPrice: 0,
-                    totalAdjust: 0
+                    orderWeight: 0,
+                    orderPrice: 0,
+                    orderAdjust: 0
                 },
                 changeParams:{
                     chartId: '',
@@ -143,8 +143,8 @@
                 const long = Number(row.long);
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.chartAmount);
-                row.chartWeight = ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2);
-                return ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2) + 'kg';
+                row.chartWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount)/1000).toFixed(2);
+                return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount)/1000).toFixed(2);
             },
             purePriceFormatter(row,column){
                 const value = Number(row.value);
@@ -153,16 +153,16 @@
                 return value + freight
             },
             adjustFormatter(row,column){
-                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * Math.ceil(row.chartWeight);
+                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
                 row.totalAdjust = adjust;
                 return adjust;
             },
             totalPriceFormatter(row,column){
                 const price = Number(row.purePrice);
-                const amount = Number(row.chartAmount);
-                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * Math.ceil(row.chartWeight);
-                row.totalPrice = price?price*amount-adjust:'';
-                return price?price*amount-adjust:'';
+                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
+                const totoalPice = price?price*row.chartWeight-adjust:'';
+                row.totalPrice = totoalPice.toFixed(2);
+                return totoalPice.toFixed(2);
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
@@ -170,7 +170,7 @@
                 var totalWeight = 0;
                 var totalAdjust = 0;
                 this.supplierInventoryIds.map((v)=>{
-                    totalPrice += v.totalPrice?v.totalPrice:0;
+                    totalPrice += v.totalPrice?Number(v.totalPrice):0;
                     totalWeight += v.chartWeight?Number(v.chartWeight):0;
                     totalAdjust += v.totalAdjust?Number(v.totalAdjust):0;
                 })
@@ -180,9 +180,9 @@
             },
             submitOrder() {
                this.submitParams.supplierInventoryIds = this.supplierInventoryIds;
-               this.submitParams.totalWeight = this.totalWeight;
-               this.submitParams.totalPrice = this.totalPrice;
-               this.submitParams.totalAdjust = this.totalAdjust;
+               this.submitParams.orderWeight = this.totalWeight;
+               this.submitParams.orderPrice = this.totalPrice;
+               this.submitParams.orderAdjust = this.totalAdjust;
                this.addToList(this.submitParams)
                .then(rs => {
                  this.$message({
@@ -207,7 +207,7 @@
         },
         filters:{
             priceFilter:function(v){
-                return '￥' + v.toFixed(2);
+                return '￥' + Number(v).toFixed(2);
             }
         }
     }

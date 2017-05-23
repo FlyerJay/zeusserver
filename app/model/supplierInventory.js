@@ -127,9 +127,12 @@ module.exports = app => {
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {
-                    code:-1,
+                    code:200,
                     msg:"数据为空",
-                    data:[]
+                    data:{
+                        count:0,
+                        row:[]
+                    }
                 }
                 let result= {};
                 result.row = $1[0];
@@ -269,9 +272,12 @@ module.exports = app => {
                     })
                     ]
                 if(!$1[0] || $1[0].length <= 0) return {
-                    code:-1,
+                    code:200,
                     msg:'查询数据为空',
-                    data:[]
+                    data:{
+                        count:0,
+                        row:[]
+                    }
                 }
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;

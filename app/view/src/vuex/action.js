@@ -222,7 +222,7 @@ export const removeCartList = ({ dispatch }, params) => {
 
 //加载订单详情
 export const loadOrderList = ({ dispatch }, params) => {
-  return axios.get('/zues/api/order/detail', { params })
+  return axios.get('/zues/api/order/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)

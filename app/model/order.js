@@ -21,22 +21,21 @@ module.exports = app => {
             comment:"公司编号",
         },
         userId: {
-            type: INTEGER,
+            type: STRING(20),
             allowNull:false,
             comment:"公司名称"
         },
         orderPrice: {
-            type: DOUBLE(15,2),
+            type: DOUBLE(10,2),
             comment: "订单价格",
         },
         orderWeight:{
-            type:DOUBLE(15,2),
+            type:DOUBLE(10,2),
             comment:"订单总吨位"
         },
-        supplierInventoryIds:{
-            type:STRING,
-            allowNull:false,
-            comment:"库存编号及数量"
+        orderAdjust:{
+            type:DOUBLE(10,2),
+            comment:"下浮总额"
         },
         validate:{
             type:INTEGER,
@@ -59,21 +58,25 @@ module.exports = app => {
                     code:-1,
                     msg:"请输入公司编号"
                 }
-                var userCondition = ''
-                if(options.userId) {
-                    userCondition = 'AND o.userId = :userId'
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"请输入用户信息"
                 }
-                const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,ui.userName,o.createTime,o.validate FROM tb_order o
+                const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
+                (select count(distinct supplierId) from supplier_inventory where supplierInventoryId in (select supplierInventoryId from order_detail where orderNo = o.orderNo)) as supplierCount
+                FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                ${userCondition}
-                ORDER BY o.createTime ASC
+                AND o.userId = :userId
+                AND orderNo LIKE :orderNo
+                ORDER BY o.createTime DESC
                 LIMIT :start,:offset
                 `,{
                     replacements:{
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
+                        orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
                         start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
                         offset:options.pageSize?options.pageSize:30,
                     }
@@ -82,21 +85,26 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                ${userCondition}
-                ORDER BY o.createTime ASC
+                AND o.userId = :userId
+                AND orderNo LIKE :orderNo
+                ORDER BY o.createTime DESC
                 `,{
                     replacements:{
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 })]
                 var result = {}
                 if(!$1[0] || $1[0].length <= 0) return {
-                    code:-1,
+                    code:200,
                     msg:'查询数据为空',
-                    data:[]
+                    data:{
+                        row:[],
+                        count:0
+                    }
                 }
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
@@ -140,12 +148,50 @@ module.exports = app => {
                     }
                 }
                 let orderNo = `${year}${mouth}${date}${hour}${min}${sec}${options.comId}${random}`
-                const result = yield this.create(Object.assign(options,{validate:0,createTime:new Date().getTime(),orderNo}));
-                return {
-                    code:200,
-                    msg:"下单成功",
-                    data:result
-                }
+                var self = this;
+                return app.model.transaction(async (t)=>{
+                    return await self.create({
+                        orderNo,
+                        userId:options.userId,
+                        comId:options.comId,
+                        orderPrice:options.orderPrice?Number(options.orderPrice):0.00,
+                        orderWeight:options.orderWeight?Number(options.orderWeight):0.00,
+                        orderAdjust:options.orderAdjust?Number(options.orderAdjust):0.00,
+                        validate:0,
+                        createTime:+new Date()
+                    },{transaction:t}).then((res)=>{
+                        var orderDetail = options.supplierInventoryIds;
+                        return Promise.all(orderDetail.map((v)=>{
+                            app.model.OrderDetail.create({
+                                orderNo,
+                                supplierInventoryId: v.supplierInventoryId,
+                                orderAmount:Number(v.chartAmount),
+                                unitPrice:Number(v.purePrice),
+                                Weight:Number(v.chartWeight),
+                                orderDcrease:Number(v.totalAdjust)
+                            },{transaction:t})
+                            app.model.Chart.destroy({
+                                where:{
+                                    chartId:{
+                                        $eq:v.chartId
+                                    }
+                                },
+                                transaction:t
+                            })
+                        }))
+                    })
+                }).then((res)=>{
+                    return {
+                        code:200,
+                        msg:"下单成功"
+                    }
+                }).catch((err)=>{
+                    console.log(err);
+                    return {
+                        code:-1,
+                        msg:"下单失败"
+                    }
+                })
             },
             * orderDetail(options){
                 if(!options.orderNo) return {

@@ -27,7 +27,7 @@
           },
           {
             url: '/order/list',
-            name: '订单详情'
+            name: '订单列表'
           },{
             url: '/order/demand',
             name:'定制化需求'

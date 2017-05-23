@@ -90,9 +90,12 @@ module.exports = app => {
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {
-                    code:-1,
+                    code:200,
                     msg:"数据为空",
-                    data:[]
+                    data:{
+                        count:0,
+                        row:[]
+                    }
                 }
                 let result= {};
                 result.row = $1[0];
