@@ -180,8 +180,7 @@ export const loadCartList = ({ dispatch }, params) => {
   return axios.get('/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      var mixinData = Object.assign(response.data.data.row,{chartWeight:''})
-      dispatch('UPDATE_ORDERFORM', 'cartList', mixinData)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -375,15 +374,16 @@ export const addToDemandList = ({ dispatch }, params) => {
   });
 }
 
-//读取成员信息
 
+//读取成员信息
 export const loadmemberList = ({ dispatch }, params) => {
   return axios.get('/zues/api/userrole/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'memberList', response.data.data.row)
+      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
+      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', {})
       return Promise.reject();
     }
   })

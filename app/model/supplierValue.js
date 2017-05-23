@@ -41,7 +41,7 @@ module.exports = app => {
             comment:"类别"
         },
         value: {
-            type:STRING,
+            type:INTEGER,
             comment:"出厂价"
         },
         material: {
@@ -147,6 +147,7 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少公司信息'
                 }
+                options.value = Number(options.value);
                 var time = String(new Date().getFullYear())+String((new Date().getMonth()+1)<10?'0'+(new Date().getMonth()+1):(new Date().getMonth()+1))+String(new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate());
                 const result = yield this.create(Object.assign(options,{lastUpdateTime:Number(time)}));
                 return {
@@ -160,6 +161,7 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少必要参数'
                 }
+                options.value = Number(options.value);
                 const result = yield this.update(options,{
                     where :{
                         supplierInventoryId:{
@@ -178,6 +180,45 @@ module.exports = app => {
                 return {
                     code: 200,
                     msg: '更新数据成功'
+                }
+            },
+            * adjustValue(options){
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                if(!options.lastUpdateTime) return {
+                    code:-1,
+                    msg:"缺少时间"
+                }
+                if(!options.adjust) return {
+                    code:-1,
+                    msg:"缺少调整价格"
+                }
+                options.adjust = Number(options.adjust);
+                const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust} where
+                    sv.comId = :comId
+                    AND sv.lastUpdateTime = :lastUpdateTime
+                    AND (sv.spec = :spec OR :spec = '')
+                    AND (sv.type = :type OR :type = '')
+                    AND (f.address = :address OR :address = '')
+                    AND s.supplierName LIKE :supplierName
+                    AND s.comId = sv.comId
+                    AND s.supplierId = sv.supplierId
+                    AND s.address = f.address
+                `,{
+                    replacements:{
+                        comId:options.comId,
+                        lastUpdateTime:options.lastUpdateTime,
+                        spec:options.spec?options.spec:'',
+                        type:options.type?options.type:'',
+                        address:options.address?options.address:'',
+                        supplierName:options.supplierName?`%${options.supplierName}%`:'%%'
+                    }
+                })
+                return {
+                    code:200,
+                    msg:"批量修改成功"
                 }
             },
             * deleteValue(options) {
