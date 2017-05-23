@@ -43,7 +43,7 @@
             <el-table-column property="supplierName" label="供应商"></el-table-column>
             <el-table-column property="inventoryAmount" label="库存数量(件)"></el-table-column>
             <el-table-column property="perAmount" label="单件支数"></el-table-column>
-            <el-table-column property="perWeight" label="单支重量(kg)"></el-table-column>
+            <el-table-column property="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter"></el-table-column>
             <el-table-column property="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter"></el-table-column>
             <el-table-column inline-template label="操作" align="center" property="id">
                 <el-button type="warning" size="small" @click.native="">修改</el-button>
@@ -106,8 +106,18 @@
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.perAmount);
                 const inventoryAmount = Number(row.inventoryAmount);
-                row.perWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
                 return ((perimeter / 3.14 - land) * land * 6 * 0.02466 * amount * inventoryAmount/1000).toFixed(2);
+            },
+            perWeightFormatter(row, column) {
+                const specArr = row.spec.split('*');
+                const height = Number(specArr[0]);
+                const width = Number(specArr[1]);
+                const land = Number(specArr[2]);
+                const long = Number(row.long);
+                const perimeter = 2 * height + 2 * width;
+                const amount = Number(row.perAmount);
+                const inventoryAmount = Number(row.inventoryAmount);
+                return ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
             },
         },
         mounted: function() {

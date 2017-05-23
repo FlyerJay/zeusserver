@@ -35,6 +35,7 @@
             :current-page.sync="searchSupParam.page"
             layout=" prev, pager, next"
             :total="supInfo.totalCount"
+            :page-size="30"
           >
           </el-pagination>
         </div>
