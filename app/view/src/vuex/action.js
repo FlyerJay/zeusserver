@@ -303,9 +303,10 @@ export const loadOperateList = ({ dispatch }, params) => {
   return axios.get('/zues/api/operate/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'operateInfo', response.data.data.row)
+      dispatch('UPDATE_MANAGERFORM', 'operateInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
+      dispatch('UPDATE_MANAGERFORM', 'operateInfo', {})
       return Promise.reject();
     }
   })

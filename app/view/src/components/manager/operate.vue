@@ -43,7 +43,8 @@ export default {
   },
   methods:{
     test(){
-      console.log(operateInfo);
+      console.log(this.operateParams);
+      console.log(this.operateInfo);
     }
   },
    mounted: function() {
