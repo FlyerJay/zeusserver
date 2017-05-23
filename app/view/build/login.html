@@ -88,7 +88,6 @@
     }
 
     .main-wrap .login-form {
-      height: 250px;
       background-color: #fff;
       position: absolute;
       right: 170px;
@@ -136,7 +135,12 @@
     .login-btn:hover {
       background-color: #f1d664
     }
-
+    .warn-txt {
+      color: #ff0000;
+      font-size: 13px;
+      margin-top: 15px;
+      padding-left: 2px;
+    }
   </style>
 </head>
 
@@ -165,9 +169,10 @@
           <li>
             <select name="" class="input company">
                 <option value="">请选择公司</option>
-                <option value="">南京奎鑫</option>
+                <option value="01">南京奎鑫</option>
             </select>
           </li>
+          <li class="warn-txt"></li>
           <li>
             <a class="login-btn">登录</a>
           </li>
@@ -185,13 +190,12 @@
 </html>
 <script>
   (function () {
-
     $('.login-btn').on('click', function (e) {
       e.preventDefault();
       var params = {
         userId: $('.userId').val(),
         password: $('.password').val(),
-        comId: '01'
+        comId: $('.company').val()
       }
       $.ajax({
         url: '/zues/api/user/login ',
@@ -200,17 +204,15 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            setCookie('userId', res.data.userInfo.userId);
-            setCookie('userToken', res.data.userInfo.userToken);
-            setCookie('userName', res.data.userInfo.userName);
-            setCookie('comId', res.data.userInfo.comId);
-            setCookie('userRole', res.data.userRole);
             document.location.href = 'http://www.flyerjay.date/view';
           } else {
-
+            $('.warn-txt').text(res.msg)
           }
         }
       })
+    });
+    $('.input').focus(function(){
+      $('.warn-txt').text('');
     });
 
     function setCookie(name, value) {

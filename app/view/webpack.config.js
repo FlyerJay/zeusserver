@@ -170,10 +170,10 @@ switch (process.env.npm_lifecycle_event) {
   case 'test':
     config = merge(common, {
       output: {
-        path: './build/',
+        path: '../public/',
         filename: '[name]_[hash:8].js',
         chunkFilename: '[name]_[chunkhash:8].js',
-        publicPath: '//s1.hdslb.com/bfs/b/space/'
+        publicPath: ''
       },
       module: {
         loaders: styleLoaders({
