@@ -1,7 +1,7 @@
 const state = {
   specList:[],
   userRoleInfo:{},
-  operateList:[]
+  operateInfo:{}
 }
 
 const mutations = {

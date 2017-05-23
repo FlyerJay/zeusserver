@@ -1,12 +1,14 @@
 <template lang="html">
     <div class='order-wrap'>
-	     <el-table :data="operateList" :load="loading">
+	     <el-table :data="operateInfo.row" :load="loading">
 	     	<el-table-column prop="recordId" label="序号"></el-table-column>
 	     	<el-table-column prop="createTime" label="时间"></el-table-column>
 	     	<el-table-column prop="userId" label="用户ID"></el-table-column>
 	     	<el-table-column prop="type" label="修改记录"></el-table-column>
 	     	<el-table-column prop="detail" label="操作明细"></el-table-column>
 	     </el-table>
+       <el-button type="primary" @click="test">查询</el-button>
+
     </div>
 </template>
 
@@ -25,9 +27,9 @@ export default {
         userInfo:({
         	common
         })=>common.userInfo,
-        operateList:({
+        operateInfo:({
         	manager
-        })=>manager.operateList
+        })=>manager.operateInfo
      }
   },
   data(){
@@ -39,11 +41,14 @@ export default {
       	 loading:true
       }
   },
+  methods:{
+    test(){
+      console.log(operateInfo);
+    }
+  },
    mounted: function() {
-       this.loadOperateList({
-        comId: this.userInfo.comId
-      });
-  }
+       this.loadOperateList(this.operateParams);
+   }
   }
 
 </script>

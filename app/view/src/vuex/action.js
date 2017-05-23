@@ -303,7 +303,7 @@ export const loadOperateList = ({ dispatch }, params) => {
   return axios.get('/zues/api/operate/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'operateList', response.data.data.row)
+      dispatch('UPDATE_MANAGERFORM', 'operateInfo', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -384,6 +384,20 @@ export const loadmemberList = ({ dispatch }, params) => {
       return Promise.resolve();
     } else if (response.data.code === -1) {
       dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', {})
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//更新成员权限，修改权限
+export const updateuserRole = ({ dispatch },newParam) => {
+  return axios.post('/zues/api/userrole/update', newParam)
+  .then(function (response) {
+    if (response.data.code === 200) {   
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
       return Promise.reject();
     }
   })

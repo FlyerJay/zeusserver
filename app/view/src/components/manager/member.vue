@@ -23,37 +23,39 @@
              <el-table :data="userRoleInfo.rows" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
-                <el-table-column label="供应商现货查询" align="center" property="userId">
-                    <template scope="scope">
-                        <i class="el-icon-check"></i>
-                    </template>
+                <el-table-column label="下单权限" align="center" prop="orderAuth">
+                      <template scope="scope" align="center">
+                        <i v-if ="Boolean(scope.row.orderAuth)"  class="el-icon-check"></i>
+                        <i v-else class="el-icon-close"></i>
+                     </template>
                </el-table-column>
-                <el-table-column prop="userId" label="购物车页面" width="">
-                    <template scope="scope">
-                        <i class="el-icon-check"></i>
-                    </template>
-                </el-table-column>
                 <el-table-column prop="demandAuth" label="供应商目录及运费">
-                    <template scope="scope" >
-                        <i v-if ="demandAuth(scope.index, scope.row)"  class="el-icon-check"></i>
+                    <template scope="scope" align="center" >
+                        <i v-if ="Boolean(scope.row.demandAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
                  <el-table-column prop="valueAuth" label="供应商价格表">
                      <template scope="scope" >
-                        <i v-if ="valueAuth(scope.index, scope.row)"  class="el-icon-check"></i>
+                        <i v-if ="Boolean(scope.row.valueAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
                 <el-table-column prop="inventoryAuth" label="供应商库存表">
                       <template scope="scope" >
-                        <i v-if ="inventoryAuth(scope.index, scope.row)"  class="el-icon-check"></i>
+                        <i v-if ="Boolean(scope.row.inventoryAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column prop="orderAuth" label="采购下单审核">
+                 <el-table-column prop="demandAuth" label="定制需求权限">
+                    <template scope="scope" align="center" >
+                        <i v-if ="Boolean(scope.row.demandAuth)"  class="el-icon-check"></i>
+                        <i v-else class="el-icon-close"></i>
+                    </template>
+                </el-table-column>
+                <el-table-column prop=" adminAuth" label="采购下单审核">
                      <template scope="scope" >
-                        <i v-if ="orderAuth(scope.index, scope.row)"  class="el-icon-check"></i>
+                        <i v-if ="Boolean(scope.row.adminAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
@@ -74,19 +76,50 @@
             :total="userRoleInfo.totalCount">
           </el-pagination>
         </div>
+
+
+        <!--修改权限弹框-->
+        <el-dialog title="修改权限" :visible.sync="dlgChangeAuthVisible">
+              <el-form v-model="authParams">
+                  <el-form-item label="下单权限:">
+                      <el-checkbox  v-model="authParams.orderAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <!--<el-form-item label="供应商目录及运费:">
+                      <el-checkbox  v-model="authParams.demandAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>-->
+                  <el-form-item label="供应商价格表：">
+                      <el-checkbox  v-model="authParams.valueAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <el-form-item label="供应商库存表：">
+                      <el-checkbox  v-model="authParams.inventoryAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <el-form-item label="定制需求权限：">
+                      <el-checkbox  v-model="authParams.demandAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <el-form-item label="采购下单审核：">
+                      <el-checkbox  v-model="authParams.adminAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+              </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dlgChangeAuthVisible = false">取 消</el-button>
+              <el-button type="primary" @click="confireChangeAuth">确 定</el-button>
+            </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
 
 import{
-    loadmemberList
+    loadmemberList,
+    updateuserRole
 }from '../../vuex/action'
 
 export default {
   vuex:{
      actions:{
-       loadmemberList
+       loadmemberList,
+       updateuserRole
      },
      getters:{
         userInfo:({
@@ -105,12 +138,24 @@ export default {
                     page:1,
                     comId: this.userInfo.comId
                 },
-      	 loading:true
+        authParams:{
+          orderAuth:'',
+          valueAuth:'',
+          inventoryAuth:'',
+          demandAuth:'',
+          adminAuth:'',
+          userId:'',
+          comId: this.userInfo.comId,
+          operator:''
+        },
+      	 loading:true,
+         dlgChangeAuthVisible:false
       }
   },
   methods:{
-    changeAuthority(index, row){
-    	console.log(row);
+    changeAuthority(index, row){//修改权限
+      this.dlgChangeAuthVisible = true;
+      this.authParams.userId = row.userId;
     },
     handleCurrentChange(val){
       this.memberParams.page = val;
@@ -123,33 +168,23 @@ export default {
           this.loading =  false;
        });
     },
-    demandAuth(index,row){
-       if(row.demandAuth){
-          return true;
-        }else{
-          return false;
-        }
-   },
-   valueAuth(index,row){
-       if(row.valueAuth){
-          return true;
-        }else{
-          return false;
-        }
-   },
-     inventoryAuth(index,row){
-       if(row.inventoryAuth){
-          return true;
-        }else{
-          return false;
-        }
-   },
-     orderAuth(index,row){
-       if(row.orderAuth){
-          return true;
-        }else{
-          return false;
-        }
+   confireChangeAuth(){
+    console.log(this.authParams.userId);
+    this.authParams.operator = "flyer";
+    this.authParams.orderAuth = Number(this.authParams.orderAuth);
+    this.authParams.valueAuth = Number(this.authParams.valueAuth);
+    this.authParams.inventoryAuth = Number(this.authParams.inventoryAuth);
+    this.authParams.demandAuth = Number(this.authParams.demandAuth);
+    this.authParams.adminAuth = Number(this.authParams.adminAuth);
+    this.updateuserRole(this.authParams)
+    .then(rs => {
+            this.$message({
+              message: `信息修改成功`,
+              type: 'success'
+            });
+            this.dlgChangeAuthVisible = false;
+            this.loadmemberList(this.authParams);
+          })
    }
    },
     mounted: function() {
