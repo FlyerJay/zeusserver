@@ -6,7 +6,7 @@
                     <el-tag  color="red">  </el-tag>
                 </el-form-item>-->
                  <el-form-item label="已选商品(含运费):">
-                    <span>999</span>
+                    <span>{{totalPrice|priceFilter}}</span>
                     <el-button @click="submitOrder()">提交</el-button>
                 </el-form-item>
             </el-form>
@@ -115,6 +115,7 @@
                 supplierInventoryIds: [],
                 dialogVisible:false,
                 loading: true,
+                totalPrice:0,
             }
         },
         methods: {
@@ -141,11 +142,17 @@
             totalPriceFormatter(row,column){
                 const price = Number(row.value);
                 const amount = Number(row.chartAmount);
-                row.totalPrice = price?price*amount:'';
-                return price?price*amount:'';
+                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * Math.ceil(row.chartWeight);
+                row.totalPrice = price?price*amount-adjust:'';
+                return price?price*amount-adjust:'';
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
+                var totalPrice = 0;
+                this.supplierInventoryIds.map((v)=>{
+                    totalPrice += v.totalPrice?v.totalPrice:0;
+                })
+                this.totalPrice = totalPrice;
             },
             submitOrder() {
                this.submitParams.supplierInventoryIds = this.supplierInventoryIds;
@@ -170,6 +177,11 @@
             this.loadCartList(this.listParams).then(()=>{
                 this.loading = false;
             })
+        },
+        filters:{
+            priceFilter:function(v){
+                return '￥' + v.toFixed(2);
+            }
         }
     }
 </script>

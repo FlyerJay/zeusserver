@@ -63,7 +63,7 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,si.spec,si.long,si.type,s.supplierName,c.supplierInventoryId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
-                LEFT JOIN supplier_value sv ON
+                LEFT JOIN (select *,max(lastUpdateTime) from supplier_value group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
                 si.material = sv.material
@@ -90,7 +90,7 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) AS count FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierInventoryId = c.supplierInventoryId
-                LEFT JOIN supplier_value sv ON
+                LEFT JOIN (select *,max(lastUpdateTime) from supplier_value group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
                 si.material = sv.material

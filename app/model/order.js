@@ -6,28 +6,32 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING , INTEGER } = app.Sequelize;
+    const { STRING , INTEGER,DOUBLE } = app.Sequelize;
 
     return app.model.define('Order',{
         orderNo: {
-            type:STRING,
+            type:STRING(50),
             primaryKey: true,
             allowNull:false,
             comment:"订单编号"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             allowNull:false,
             comment:"公司编号",
         },
         userId: {
-            type: STRING,
+            type: INTEGER,
             allowNull:false,
             comment:"公司名称"
         },
         orderPrice: {
-            type: STRING,
+            type: DOUBLE(15,2),
             comment: "订单价格",
+        },
+        orderWeight:{
+            type:DOUBLE(15,2),
+            comment:"订单总吨位"
         },
         supplierInventoryIds:{
             type:STRING,
