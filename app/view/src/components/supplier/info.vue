@@ -284,6 +284,7 @@
       }).then(rs => {
         this.infoloading = false;
       });
+
       this.loadfreightList({
         comId: this.userInfo.comId
       }).then(rs => {

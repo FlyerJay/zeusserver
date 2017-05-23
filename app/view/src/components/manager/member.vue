@@ -16,11 +16,11 @@
 	          </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="">查询</el-button>
+                <el-button type="warning" @click="searchSup">查询</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-             <el-table :data="userRoleList" stripe style="width: 100%" :load="loading">
+             <el-table :data="userRoleInfo.rows" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
                 <el-table-column prop="userId" label="供应商现货查询" width="">
@@ -49,7 +49,7 @@
             :current-page.sync="memberParams.page"
             :page-size="30"
             layout=" prev, pager, next, jumper"
-            :total="1000">
+            :total="userRoleInfo.totalCount">
           </el-pagination>
         </div>
     </div>
@@ -70,9 +70,9 @@ export default {
         userInfo:({
         	common
         })=>common.userInfo,
-        userRoleList:({
+        userRoleInfo:({
         	manager
-        })=>manager.userRoleList
+        })=>manager.userRoleInfo
      }
   },
   data(){
@@ -93,13 +93,14 @@ export default {
     },
     handleCurrentChange(val){
       this.memberParams.page = val;
+    },
+    searchSup(){
+      console.log(this.userRoleInfo)
     }
   },
-  mounted: function() {
-
-         this.loadmemberList(this.memberParams); 
-         console.log(this.memberParams);
-         console.log(this.userRoleList)
+    mounted: function() {
+      this.loadmemberList(this.memberParams)
+        
   }
 }
 </script>
