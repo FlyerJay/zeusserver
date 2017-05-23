@@ -5,7 +5,7 @@
                 <!--<el-form-item label="库存紧张">
                     <el-tag  color="red">  </el-tag>
                 </el-form-item>-->
-                 <el-form-item label="已选商品(含运费):">
+                <el-form-item label="已选商品(含运费):">
                     <span>{{totalPrice|priceFilter}}</span>
                     <el-button @click="submitOrder()">提交</el-button>
                 </el-form-item>
@@ -28,13 +28,15 @@
             </el-table-column>
             <el-table-column prop="supplierName" label="供应商">
             </el-table-column>
-            <el-table-column prop="value" label="出厂单价(含运费)">
+            <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="出厂单价(含运费)">
             </el-table-column>
             <el-table-column prop="chartAmount" label="采购数量(件)">
             </el-table-column>
             <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
             </el-table-column>
             <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
+            </el-table-column>
+            <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="下浮总额(元)">
             </el-table-column>
             <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
             </el-table-column>
@@ -105,17 +107,22 @@
                 submitParams: {
                     comId: this.userInfo.comId,
                     userId: this.userInfo.userId,
-                    supplierInventoryIds: []
+                    supplierInventoryIds: [],
+                    totalWeight: 0,
+                    totalPrice: 0,
+                    totalAdjust: 0
                 },
                 changeParams:{
-                    chartId:'',
-                    chartAmount:'',
-                    charAdjust:''
+                    chartId: '',
+                    chartAmount: '',
+                    charAdjust: ''
                 },
                 supplierInventoryIds: [],
-                dialogVisible:false,
+                dialogVisible: false,
                 loading: true,
-                totalPrice:0,
+                totalPrice: 0,
+                totalWeight: 0,
+                totalAdjust: 0
             }
         },
         methods: {
@@ -139,8 +146,19 @@
                 row.chartWeight = ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2);
                 return ((perimeter/3.14 - land) * land * 6 * 0.02466 * amount).toFixed(2) + 'kg';
             },
+            purePriceFormatter(row,column){
+                const value = Number(row.value);
+                const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+                row.purePrice = value + freight;
+                return value + freight
+            },
+            adjustFormatter(row,column){
+                const adjust = Number(row.chartAdjust?row.chartAdjust:0) * Math.ceil(row.chartWeight);
+                row.totalAdjust = adjust;
+                return adjust;
+            },
             totalPriceFormatter(row,column){
-                const price = Number(row.value);
+                const price = Number(row.purePrice);
                 const amount = Number(row.chartAmount);
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * Math.ceil(row.chartWeight);
                 row.totalPrice = price?price*amount-adjust:'';
@@ -149,18 +167,27 @@
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
                 var totalPrice = 0;
+                var totalWeight = 0;
+                var totalAdjust = 0;
                 this.supplierInventoryIds.map((v)=>{
                     totalPrice += v.totalPrice?v.totalPrice:0;
+                    totalWeight += v.chartWeight?Number(v.chartWeight):0;
+                    totalAdjust += v.totalAdjust?Number(v.totalAdjust):0;
                 })
                 this.totalPrice = totalPrice;
+                this.totalWeight = totalWeight;
+                this.totalAdjust = totalAdjust;
             },
             submitOrder() {
                this.submitParams.supplierInventoryIds = this.supplierInventoryIds;
+               this.submitParams.totalWeight = this.totalWeight;
+               this.submitParams.totalPrice = this.totalPrice;
+               this.submitParams.totalAdjust = this.totalAdjust;
                this.addToList(this.submitParams)
                .then(rs => {
                  this.$message({
-                 message: `下单成功`,
-                  type: 'success'
+                    message: `下单成功`,
+                    type: 'success'
                  });
               });
             },
