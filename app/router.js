@@ -49,11 +49,13 @@ module.exports = app => {
   app.get('/zues/api/order/detail','order.detail');
   app.post('/zues/api/order/add','order.add');
   app.post('/zues/api/order/remove','order.remove');
+
   //管理员操作
   app.get('/zues/api/operate/list','manage.operateList');
   app.get('/zues/api/userrole/list','manage.userRoleList');
   app.post('/zues/api/userrole/update','manage.updateUserRole');
   app.post('/zues/api/order/verify','manage.orderVerify');
+  
   //定制化需求
   app.get('/zues/api/demand/list','demand.list');
   app.post('/zues/api/demand/add','demand.add');

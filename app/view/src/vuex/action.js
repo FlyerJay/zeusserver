@@ -264,10 +264,11 @@ export const loadSpecList = ({ dispatch }, params) => {
   });
 }
 
+
 //管理员后操作记录，加载操作表
 
 export const loadOperateList = ({ dispatch }, params) => {
-  return axios.get('/zues/api/user', { params })
+  return axios.get('/zues/api/operate/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'operateList', response.data.data.row)
@@ -279,6 +280,7 @@ export const loadOperateList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
 
 //供应商运费
 export const loadfreightList = ({ dispatch }, params) => {
@@ -332,6 +334,22 @@ export const addToDemandList = ({ dispatch }, params) => {
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//读取成员信息
+
+export const loadmemberList = ({ dispatch }, params) => {
+  return axios.get('/zues/api/userrole/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'memberList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
