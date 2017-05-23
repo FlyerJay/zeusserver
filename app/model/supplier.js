@@ -17,23 +17,27 @@ module.exports = app => {
             comment:"供应商编号",
         },
         supplierName: {
-            type: STRING,
+            type: STRING(15),
             allowNull:false,
             comment:"供应商名称"
         },
         comId: {
-            type:STRING,
+            type:STRING(2),
             allowNull:false,
             comment:"公司编号"
         },
         address: {
-            type:STRING,
+            type:STRING(20),
             allowNull:false,
             comment:"供应商地址"
         },
         benifit: {
-            type:STRING,
+            type:STRING(10),
             comment:"优惠"
+        },
+        isDelete:{
+            type:STRING(1),
+            comment:"是否删除"
         }
     },{
         freezeTabName:true,
@@ -57,6 +61,7 @@ module.exports = app => {
                 f.address = s.address
                 WHERE s.comId = :comId AND
                 s.supplierName LIKE :supplierName
+                AND s.isDelete = 'N'
                 ${condition}
                 LIMIT :start,:offset`,{
                     replacements:{
@@ -74,6 +79,7 @@ module.exports = app => {
                 f.address = s.address
                 WHERE s.comId = :comId AND
                 s.supplierName LIKE :supplierName
+                AND s.isDelete = 'N'
                 ${condition}`,{
                     replacements:{
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
@@ -172,11 +178,9 @@ module.exports = app => {
                 }
             },
             * remove(options){
-                const result = yield this.destroy({
-                    where:{
-                        supplierId:{
-                            $in:options.supplierId.split(','),
-                        }
+                const result = yield app.model.query("update supplier set isDelete = 'Y' where supplierId in (:supplierIds)",{
+                    replacements:{
+                        supplierIds:options.supplierId.split(',')
                     }
                 })
                 if(result) return {

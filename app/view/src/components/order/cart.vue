@@ -39,7 +39,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" property="id">
                 <template scope="scope">
-                    <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
+                    <el-button size="small" @click="updateChart(scope.row)" type="warning">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -49,15 +49,15 @@
             custom-class="zues-dialog">
             <el-form :model="changeParams">
                 <el-form-item label="采购数量">
-                    <el-input v-model="changeParams.chartAmount" auto-complete="off"></el-input>
+                    <el-input v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="采购下浮">
-                    <el-input v-model="changeParams.charAdjust" auto-complete="off"></el-input>
+                    <el-input v-model="changeParams.charAdjust" auto-complete="off" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dlgSupVisible = false">取 消</el-button>
-                <el-button type="warning" @click="changeSup(changeSupParam.row)">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="warning" @click="submitChange(changeParams)">确 定</el-button>
             </div>
         </el-dialog>
   </div>
@@ -139,12 +139,12 @@
                  });
               });
             },
-            updateChart(index,row) {
-                console.log(index,row);
+            updateChart(row) {
                 this.dialogVisible = true;
-                for(var props in row){
-                    this.changeParams[props] ? this.changeParams[props] = row[props] : '';
-                }
+                this.changeParams = row;
+            },
+            submitChange(data) {
+                this.dialogVisible = false;
             }
         },
         mounted: function() {
