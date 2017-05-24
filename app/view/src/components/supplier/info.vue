@@ -22,7 +22,7 @@
           <el-table-column property="address" label="供应商所在地"></el-table-column>
           <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
           <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
-          <el-table-column label="操作" align="center" property="id" v-if="Boolean(supplierAuth)">
+          <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
             <template scope="scope" >
               <el-button size="small" @click="changeSupDlg(scope.index, scope.row)" type="warning">修改</el-button>
               <el-button size="small" @click="deleteSup(scope.index, scope.row)" type="danger">删除</el-button>
@@ -218,7 +218,6 @@
         deleteFreParams: {
           freightId: ''
         },
-        supplierAuth:parseInt(this.userInfo.roleInfo.charAt(3)),
         activeName: "first",
         dlgSupVisible: false,
         dlgChangeSupVisible: false,
@@ -372,6 +371,11 @@
       }).then(rs => {
         this.freightloading = false;
       })
+    },
+    computed: {
+      supplierAuth() {
+        return Boolean(parseInt(this.userInfo.userRole.charAt(3)));
+      }
     }
   }
 </script>

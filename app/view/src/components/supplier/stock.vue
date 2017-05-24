@@ -31,7 +31,7 @@
     
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
-                    <el-button type="warning" v-if="Boolean(inventoryAuth)">上传库存表</el-button>
+                    <el-button type="warning" v-if="inventoryAuth">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
     
@@ -91,7 +91,6 @@
                     address: '',
                     page: 1
                 },
-                inventoryAuth:parseInt(this.userInfo.roleInfo.charAt(2)),
                 loading: true
             }
         },
@@ -141,7 +140,13 @@
                 this.loading = false;
             });
             this.loadSupAddress();
+        },
+        computed: {
+            inventoryAuth() {
+                return Boolean(parseInt(this.userInfo.userRole.charAt(2)));
+            }
         }
+        
     }
 </script>
 

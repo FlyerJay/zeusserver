@@ -60,7 +60,7 @@
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" property="id" v-if="Boolean(adminAuthority)">
+                <el-table-column label="操作" align="center" property="id" v-if="adminAuthority">
                     <template scope="scope">
                         <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="warning">修改权限</el-button>
                     </template>
@@ -147,7 +147,6 @@ export default {
           comId: this.userInfo.comId,
           operator:''
         },
-        adminAuthority:parseInt(this.userInfo.roleInfo.charAt(0)),
       	 loading: true,
          updateload: false,  
          dlgChangeAuthVisible: false
@@ -204,6 +203,11 @@ export default {
         .then(rs => {
             this.loading = false;
         })
+    },
+    computed: {
+      adminAuthority() {
+        return Boolean(parseInt(this.userInfo.userRole.charAt(0)));
+      }
     }
 }
 </script>

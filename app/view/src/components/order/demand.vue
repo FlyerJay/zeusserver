@@ -11,7 +11,7 @@
             <el-button type="warning" @click="searchDemand">查询</el-button>
           </el-form-item>
        </el-form>
-        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true" v-if="Boolean(demandAuth)">定制需求录入</el-button>
+        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true" v-if="demandAuth">定制需求录入</el-button>
         <div class="title">定制货品列表</div> 
         <div class="tb-wrap">
           <el-table :data="demandInfo.row" stripe style="width: 100%" :load="loading">
@@ -114,7 +114,6 @@
                     comId:this.userInfo.comId
 
                 },
-                demandAuth:parseInt(this.userInfo.roleInfo.charAt(4)),
                 dlgDemandVisible:false,
                 loading:true
             }
@@ -153,7 +152,12 @@
        },
          mounted: function() {
             this.loadDemandList(this.params)
+        },
+      computed: {
+        demandAuth() {
+            return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
         }
+      }
     }
 </script>
 <style lang="css">

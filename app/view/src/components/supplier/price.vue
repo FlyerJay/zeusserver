@@ -29,7 +29,7 @@
             </el-form-item>
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel">
-                    <el-button type="warning" v-if="Boolean(valueAuth)">上传价格表</el-button>
+                    <el-button type="warning" v-if="valueAuth">上传价格表</el-button>
                 </el-upload>
             </el-form-item>
     
@@ -115,7 +115,6 @@
                     supplierValueId: '',
                     row: ''
                 },
-                valueAuth: parseInt(this.userInfo.roleInfo.charAt(1)),
                 loading: true,
                 dlgPriceVisible: false
             }
@@ -159,9 +158,12 @@
                 this.loading = false;
             });
             this.loadSupAddress();
-            this.getUserRole(this.searchParam.userId);
-
-             
+            this.getUserRole(this.searchParam.userId);     
+        },
+        computed: {
+            valueAuth() {
+                return Boolean(parseInt(this.userInfo.userRole.charAt(1)));
+            }
         }
     }
 </script>

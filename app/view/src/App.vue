@@ -47,7 +47,8 @@
                 var comId = this.getCookie('comId');
                 var info = {
                     userId: userId,
-                    comId: comId
+                    comId: comId,
+                    userRole: '001001'
                 }
                 if (userId) {
                     this.updateForm('userInfo', info);
