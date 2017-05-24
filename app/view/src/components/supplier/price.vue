@@ -29,7 +29,7 @@
             </el-form-item>
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel">
-                    <el-button type="warning">上传价格表</el-button>
+                    <el-button type="warning" v-if="Boolean(valueAuth)">上传价格表</el-button>
                 </el-upload>
             </el-form-item>
     
@@ -42,9 +42,9 @@
             <el-table-column property="supplierName" label="供应商"></el-table-column>
             <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
     
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作" align="center" v-if="Boolean(valueAuth)">
                 <template scope="scope">
-                        <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning">修改</el-button>
+                        <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning"  >修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -71,7 +71,8 @@
     import {
         loadSupPriceList,
         loadSupAddress,
-        updataPrice
+        updataPrice,
+        getUserRole
     } from '../../vuex/action'
     
     export default {
@@ -79,7 +80,8 @@
             actions: {
                 loadSupPriceList,
                 loadSupAddress,
-                updataPrice
+                updataPrice,
+                getUserRole
             },
             getters: {
                 price: ({
@@ -90,12 +92,17 @@
                 }) => supplier.supAddress,
                 userInfo: ({
                     common
-                }) => common.userInfo
+                }) => common.userInfo,
+                userRoleInfo:({
+                    manager
+                }) => manager.userRoleInfo,
+
             }
         },
         data() {
             return {
                 searchParam: {
+                    userId: this.userInfo.userId,
                     spec: '',
                     type: '',
                     material: '',
@@ -108,6 +115,7 @@
                     supplierValueId: '',
                     row: ''
                 },
+                valueAuth: parseInt(this.userInfo.roleInfo.charAt(1)),
                 loading: true,
                 dlgPriceVisible: false
             }
@@ -151,6 +159,9 @@
                 this.loading = false;
             });
             this.loadSupAddress();
+            this.getUserRole(this.searchParam.userId);
+
+             
         }
     }
 </script>

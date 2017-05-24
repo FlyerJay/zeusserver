@@ -1,8 +1,9 @@
 const state = {
   topMenuData: [],
   userInfo: {
-    comId: '',
-    userId: ''
+    comId: '01',
+    userId: 'flyer',
+    roleInfo:'001001'
   },
   mainRoute: ''
 }

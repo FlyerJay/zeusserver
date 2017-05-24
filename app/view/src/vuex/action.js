@@ -451,3 +451,20 @@ export const removeCookie = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
+//读取权限
+
+export const getUserRole = ({ dispatch }, params) => {
+  return axios.get('/zues/api/userrole/list', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', response.data.data)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', {})
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
