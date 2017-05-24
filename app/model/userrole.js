@@ -24,6 +24,11 @@ module.exports = app => {
             allowNull:false,
             comment:"管理员权限"
         },
+        supplierAuth:{
+            type:INTEGER,
+            allowNull:false,
+            comment:"供应商录入权限"
+        },
         valueAuth: {
             type:INTEGER,
             allowNull:false,
@@ -117,7 +122,12 @@ module.exports = app => {
                 return {
                     code:200,
                     msg:"查询数据成功",
-                    data:list
+                    data:{
+                        totalCount:list.count,
+                        row:list.rows,
+                        page:options.page?options.page:1,
+                        pageSize:options.pageSize?options.pageSize:30,
+                    }
                 }
             }
         }

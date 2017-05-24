@@ -13,7 +13,7 @@ module.exports = app => {
           }
         }
         var _role = user.data.userRole.dataValues;
-        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['demandAuth']}${_role['orderAuth']}`;
+        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}`;
         ctx.cookies.set('userRole',role)
       }
       ctx.body = user;
