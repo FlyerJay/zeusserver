@@ -174,7 +174,7 @@
         this.loadStock(this.stockParams)
           .then(() => {
             this.loading = false;
-          });
+        });
       }
     },
     mounted: function() {
