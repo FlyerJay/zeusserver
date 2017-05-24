@@ -280,6 +280,21 @@ export const loadSupPriceList = ({ dispatch }, params) => {
   });
 }
 
+//价格表价格调整
+export const supPriceAdjust = ({ dispatch }, params) => {
+  return axios.post('/zues/api/price/adjust', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_SUPFORM', 'price', response.data.data)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
 //供应商库存数量
 export const loadSupInventoryList = ({ dispatch }, params) => {
   return axios.get('/zues/api/inventory/list', { params })

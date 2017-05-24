@@ -5,7 +5,8 @@
                 <el-input v-model="memberParams.userId" placeholder="支持模糊搜索"></el-input>
             </el-form-item>
             <el-form-item label="请选择公司:">
-              <el-select v-model="memberParams.comId" placeholder="活动区域">
+              <el-select v-model="memberParams.comId" placeholder="全部">
+	            <el-option value="">全部</el-option>
 	            <el-option value="南京奎鑫">南京奎鑫</el-option>
 	            <el-option value='武汉奎鑫'>武汉奎鑫</el-option>
 	            <el-option value='西安奎鑫'>西安奎鑫</el-option>
@@ -16,11 +17,11 @@
 	          </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="searchSup">查询</el-button>
+                <el-button type="warning" @click="searchSup" :loading="loading">查询</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-             <el-table :data="userRoleInfo.rows" stripe style="width: 100%" :load="loading">
+             <el-table :data="userRoleInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
                 <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
                 <el-table-column label="下单权限" align="center" prop="orderAuth">
@@ -66,20 +67,19 @@
                </el-table-column>
             </el-table>
        </div>
-       <div class="block">
-          <span class="demonstration">直接前往</span>
+       <div class="page-wrap">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="memberParams.page"
             :page-size="30"
-            layout=" prev, pager, next, jumper"
+            layout=" prev, pager, next"
             :total="userRoleInfo.totalCount">
           </el-pagination>
         </div>
 
 
         <!--修改权限弹框-->
-        <el-dialog title="修改权限" :visible.sync="dlgChangeAuthVisible">
+        <el-dialog title="修改权限" v-model="dlgChangeAuthVisible" size="tiny">
               <el-form v-model="authParams">
                   <el-form-item label="下单权限:">
                       <el-checkbox  v-model="authParams.orderAuth" auto-complete="off"></el-checkbox>
@@ -101,8 +101,8 @@
                   </el-form-item>
               </el-form>
             <div slot="footer" class="dialog-footer">
+              <el-button type="warning" @click="confireChangeAuth" :loading="updateload">确 定</el-button>
               <el-button @click="dlgChangeAuthVisible = false">取 消</el-button>
-              <el-button type="primary" @click="confireChangeAuth">确 定</el-button>
             </div>
       </el-dialog>
     </div>
@@ -133,11 +133,10 @@ export default {
   data(){
       return{
       	 memberParams: {
-                    userId: '',
-                    comId:'',
-                    page:1,
-                    comId: this.userInfo.comId
-                },
+            userId: '',
+            page:1,
+            comId: ''
+        },
         authParams:{
           orderAuth:'',
           valueAuth:'',
@@ -148,48 +147,63 @@ export default {
           comId: this.userInfo.comId,
           operator:''
         },
-      	 loading:true,
-         dlgChangeAuthVisible:false
+      	 loading: true,
+         updateload: false,  
+         dlgChangeAuthVisible: false
       }
   },
   methods:{
-    changeAuthority(index, row){//修改权限
-      this.dlgChangeAuthVisible = true;
-      this.authParams.userId = row.userId;
+    changeAuthority(index, row){//修改权限弹窗
+        this.dlgChangeAuthVisible = true;
+        this.authParams.userId = row.userId;
+        this.authParams.orderAuth = Boolean(row.orderAuth);
+        this.authParams.valueAuth = Boolean(row.valueAuth);
+        this.authParams.inventoryAuth = Boolean(row.inventoryAuth);
+        this.authParams.demandAuth = Boolean(row.demandAuth);
+        this.authParams.adminAuth = Boolean(row.adminAuth);
     },
     handleCurrentChange(val){
       this.memberParams.page = val;
     },
     searchSup(){//查找成员
-     
-      this.loading = true;
+        this.loading = true;
+        this.memberParams.page = 1;
         this.loadmemberList(this.memberParams)
         .then(() => {
-          this.loading =  false;
+          this.loading = false;
        });
     },
-   confireChangeAuth(){
-    console.log(this.authParams.userId);
-    this.authParams.operator = "flyer";
-    this.authParams.orderAuth = Number(this.authParams.orderAuth);
-    this.authParams.valueAuth = Number(this.authParams.valueAuth);
-    this.authParams.inventoryAuth = Number(this.authParams.inventoryAuth);
-    this.authParams.demandAuth = Number(this.authParams.demandAuth);
-    this.authParams.adminAuth = Number(this.authParams.adminAuth);
-    this.updateuserRole(this.authParams)
-    .then(rs => {
+    confireChangeAuth(){
+        let upateParam = {};
+        upateParam.operator = this.userInfo.userId;
+        upateParam.orderAuth = Number(this.authParams.orderAuth);
+        upateParam.valueAuth = Number(this.authParams.valueAuth);
+        upateParam.inventoryAuth = Number(this.authParams.inventoryAuth);
+        upateParam.demandAuth = Number(this.authParams.demandAuth);
+        upateParam.adminAuth = Number(this.authParams.adminAuth);
+        this.updateload = true;
+        this.updateuserRole(upateParam)
+        .then(rs => {
             this.$message({
-              message: `信息修改成功`,
-              type: 'success'
+                message: `权限修改成功`,
+                type: 'success'
             });
+            this.updateload = false;
             this.dlgChangeAuthVisible = false;
-            this.loadmemberList(this.authParams);
-          })
-   }
-   },
+            this.loading = true;
+            this.loadmemberList(this.memberParams)
+            .then(rs => {
+                this.loading = false;
+            });
+        });
+    },
+  },
     mounted: function() {
-      this.loadmemberList(this.memberParams)
-      }
+        this.loadmemberList(this.memberParams)
+        .then(rs => {
+            this.loading = false;
+        })
+    }
 }
 </script>
 

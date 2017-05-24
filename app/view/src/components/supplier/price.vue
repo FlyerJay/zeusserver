@@ -123,12 +123,11 @@
             },
             changePrice(index, row) {
                 this.dlgPriceVisible = true;
-                this.newPriceParam.value = row.value;
+                this.newPriceParam.value = Number(row.value);
                 this.newPriceParam.supplierValueId = row.supplierValueId;
-                this.newPriceParam.row = row;
             },
             confirmChangePrice(row) {
-                this.updataPrice(this.newPriceParam, this.newPriceParam.supplierValueId)
+                this.updataPrice(this.newPriceParam)
                     .then(rs => {
                         this.$message({
                             message: `价格修改成功`,

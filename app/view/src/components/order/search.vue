@@ -168,9 +168,6 @@
         this.dlgShopVisible = true;
         this.cartParams.supplierInventoryId = row.supplierInventoryId;
       },
-      dateFormat(row, column) {
-        return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
-      },
       handleCurrentChange(val) {
         this.stockParams.page = val;
         this.loading = true;
@@ -185,9 +182,7 @@
         .then(() => {
           this.loading = false;
         });
-      this.loadOrdAddress({
-        comId: this.userInfo.comId
-      });
+      this.loadOrdAddress();
     }
   }
 </script>
