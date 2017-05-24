@@ -164,10 +164,14 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少必要参数'
                 }
+                if(!options.value) return {
+                    code:-1,
+                    msg:"没有修改的价格"
+                }
                 options.value = Number(options.value);
                 const result = yield this.update(options,{
                     where :{
-                        supplierInventoryId:{
+                        supplierValueId:{
                             $eq:options.supplierValueId,
                         }
                     }

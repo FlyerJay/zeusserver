@@ -46,6 +46,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="page-wrap">
+            <el-pagination
+                @current-change="handleCurrentChange"
+                :current-page.sync="listParams.page"
+                layout=" prev, pager, next"
+                :page-size="30"
+                :total="cartList.totalCount"
+            >
+            </el-pagination>
+        </div>
         <el-dialog
             :visible.sync="dialogVisible"
             size="tiny"
@@ -103,6 +113,7 @@
                 listParams: {
                     userId: this.userInfo.userId,
                     comId: this.userInfo.comId,
+                    page:1
                 },
                 submitParams: {
                     comId: this.userInfo.comId,
@@ -126,6 +137,11 @@
             }
         },
         methods: {
+            handleCurrentChange() {
+                this.loadCartList(this.listParams).then(()=>{
+                    this.loading = false;
+                })
+            },
             toggleSelection(rows) {
                 if (rows) {
                     rows.forEach(row => {
