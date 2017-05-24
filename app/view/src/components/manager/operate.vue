@@ -1,6 +1,5 @@
 <template lang="html">
     <div class='order-wrap'>
-<<<<<<< HEAD
         <el-form :inline="true" :model="operateParams" class="demo-form-inline">
             <!--<el-form-item label="用户ID:">
                     <el-input v-model="" placeholder="支持模糊搜索"></el-input>
@@ -20,17 +19,6 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="operateParams.page" :page-size="30" layout=" prev, pager, next" :total="operateInfo.totalCount">
             </el-pagination>
         </div>
-=======
-	     <el-table :data="operateInfo.row" :load="loading">
-	     	<el-table-column prop="recordId" label="序号"></el-table-column>
-	     	<el-table-column prop="createTime" label="时间"></el-table-column>
-	     	<el-table-column prop="userId" label="用户ID"></el-table-column>
-	     	<el-table-column prop="type" label="修改记录"></el-table-column>
-	     	<el-table-column prop="detail" label="操作明细"></el-table-column>
-	     </el-table>
-       
-
->>>>>>> f1bd3c8c691c0359e22e618ea122df4e76c51a1d
     </div>
 </template>
 
