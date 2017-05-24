@@ -275,26 +275,48 @@
           })
       },
       deleteSup(index, row) {
-        this.deleteSupParams.supplierId = row.supplierId.toString();
-        this.deletSupplier(this.deleteSupParams)
-          .then(rs => {
-            this.$message({
-              message: `删除成功`,
-              type: 'success'
-            })
-            this.loadSupList(this.searchSupParam);
-          })
+        this.$confirm('确认删除?', '提示', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确定',
+          type: 'warning'
+        }).then(() => {
+          this.deleteSupParams.supplierId = row.supplierId.toString();
+          this.deletSupplier(this.deleteSupParams)
+            .then(rs => {
+              this.$message({
+                message: `删除成功`,
+                type: 'success'
+              })
+              this.loadSupList(this.searchSupParam);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });    
       },
       deleteFre(index, row) {
-        this.deleteFreParams.freightId = row.freightId.toString();
-        this.deleteFreight(this.deleteFreParams)
-          .then(rs => {
-            this.$message({
-              message: `删除成功`,
-              type: 'success'
-            })
-            this.loadfreightList(this.searchSupParam);
-          })
+        this.$confirm('确认删除?', '提示', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确定',
+          type: 'warning'
+        }).then(() => {
+          this.deleteFreParams.freightId = row.freightId.toString();
+          this.deleteFreight(this.deleteFreParams)
+            .then(rs => {
+              this.$message({
+                message: `删除成功`,
+                type: 'success'
+              })
+              this.loadfreightList(this.searchSupParam);
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });  
       },
       changeSupDlg(index, row) { //修改供应商dlg
         this.dlgChangeSupVisible = true;
@@ -344,7 +366,6 @@
       }).then(rs => {
         this.infoloading = false;
       });
-
       this.loadfreightList({
         comId: this.userInfo.comId
       }).then(rs => {

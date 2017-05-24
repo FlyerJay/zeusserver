@@ -96,7 +96,6 @@
         },
         methods: {
             searchStock() {
-                console.log(0);
                 this.loading = true;
                 this.searchInvenParam.page = 1;
                 this.loadSupInventoryList(this.searchInvenParam)
@@ -127,7 +126,6 @@
                 return ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
             },
             handleCurrentChange(val) {
-                console.log(1)
                 this.searchInvenParam.page = val;
                 this.loading = true;
                 this.loadSupInventoryList(this.searchInvenParam)
