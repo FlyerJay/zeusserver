@@ -31,7 +31,7 @@
     
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
-                    <el-button type="warning">上传库存表</el-button>
+                    <el-button type="warning" v-if="Boolean(inventoryAuth)">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
     
@@ -46,7 +46,7 @@
             <el-table-column property="perAmount" label="单件支数"></el-table-column>
             <el-table-column property="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter"></el-table-column>
             <el-table-column property="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter"></el-table-column>
-            <el-table-column inline-template label="操作" align="center" property="id">
+            <el-table-column inline-template label="操作" align="center" property="id" v-if="Boolean(inventoryAuth)">
                 <el-button type="warning" size="small" @click.native="">修改</el-button>
             </el-table-column>
         </el-table>
@@ -91,6 +91,7 @@
                     address: '',
                     page: 1
                 },
+                inventoryAuth:parseInt(this.userInfo.roleInfo.charAt(2)),
                 loading: true
             }
         },
