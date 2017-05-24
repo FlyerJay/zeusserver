@@ -1,10 +1,10 @@
 const state = {
   supInfo: {},
   supAddress: [],
-  priceList:[],
-  inventoryList:[],
-  depriceList:[],
-  freightList:[]
+  price: {},
+  inventory: {},
+  depriceList: [],
+  freightList: []
 
 }
 

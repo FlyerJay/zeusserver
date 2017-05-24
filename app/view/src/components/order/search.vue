@@ -171,7 +171,6 @@
       dateFormat(row, column) {
         return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
       },
-      //页码变更
       handleCurrentChange(val) {
         this.stockParams.page = val;
         this.loading = true;
