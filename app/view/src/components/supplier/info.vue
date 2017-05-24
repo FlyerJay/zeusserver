@@ -13,7 +13,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="warning" @click="searchSup">查询</el-button>
+            <el-button type="warning" @click="searchSup" :loading="infoloading">查询</el-button>
           </el-form-item>
         </el-form>
         <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true">供应商信息录入</el-button>

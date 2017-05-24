@@ -270,7 +270,7 @@ export const loadSupPriceList = ({ dispatch }, params) => {
   return axios.get('/zues/api/price/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_SUPFORM', 'priceList', response.data.data.row)
+      dispatch('UPDATE_SUPFORM', 'price', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -285,7 +285,7 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
   return axios.get('/zues/api/inventory/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_SUPFORM', 'inventoryList', response.data.data.row)
+      dispatch('UPDATE_SUPFORM', 'inventory', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
