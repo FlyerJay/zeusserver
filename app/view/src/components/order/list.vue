@@ -9,7 +9,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="orderList" stripe style="width: 100%" :load="loading">
+            <el-table :data="orderList" stripe style="width: 100%" v-loading.body="loading">
                 <el-table-column prop="orderNo" label="订单号" width="200"/>
                 <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"/>
                 <el-table-column prop="supplierCount" label="供应商"/>
@@ -26,10 +26,20 @@
                </el-table-column>
             </el-table>
        </div>
+       <div class="page-wrap">
+            <el-pagination
+                @current-change="handleCurrentChange"
+                :current-page.sync="orderParams.page"
+                layout=" prev, pager, next"
+                :page-size="30"
+                :total="orderList.totalCount"
+            >
+            </el-pagination>
+        </div>
        <el-dialog
             :visible.sync="detailDialogShow"
             size="small">
-            <el-table :data="orderDetail" stripe style="width: 100%" :load="detailLoading">
+            <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading">
                 <el-table-column prop="spec" label="规格"/>
                 <el-table-column prop="type" label="类型"/>
                 <el-table-column prop="supplierName" label="供应商"/>
@@ -70,16 +80,10 @@
         },
         data() {
             return {
-                ordParams: {
-                    userId: this.userInfo.userId,
-                    comId: this.userInfo.comId,
-                    charAmount: '',
-                    supplierInventoryId: '',
-                    id:''
-                },
                 orderParams: {
                     orderNo:'',
-                    comId: this.userInfo.comId
+                    comId: this.userInfo.comId,
+                    page:1,
                 },
                 loading: true,
                 detailLoading: true,
@@ -87,8 +91,11 @@
             }
         },
         methods: {
+            handleCurrentChange() {
+                this.loadList();
+            },
             searchOrder() {
-                this.loadOrderList(this.orderParams)
+                this.loadList();
             },
             statusFormatter(row,column){
                 return row.validate === 0 ? '未审核' : '已审核';
@@ -106,7 +113,7 @@
             enterNum(index, row) {
                 const orderNoArr = [row.orderNo].join(',');
                  
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                this.$confirm('该订单将被删除, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
@@ -117,23 +124,23 @@
                   },
                   this.removeOrderList({orderNo:orderNoArr})
                   );
-                  this.loading = true
-                  this.loadOrderList(this.orderParams).then(()=>{
-                      this.loading = false;
-                  });
+                  this.loadList();
                 }).catch(() => {
                   this.$message({
                     type: 'info',
                     message: '已取消删除'
                   });          
                 });
+            },
+            loadList(){
+                this.loading = true
+                this.loadOrderList(this.orderParams).then(()=>{
+                    this.loading = false;
+                });
             }
         },
         mounted: function() {
-            this.loading = true
-            this.loadOrderList(this.orderParams).then(()=>{
-                this.loading = false;
-            });
+            this.loadList();
         }
     }
 </script>
