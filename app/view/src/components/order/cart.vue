@@ -15,7 +15,7 @@
           <div class="tb-wrap">
             <el-table
                     ref="multipleTable"
-                    :data="cartList"
+                    :data="cartList.row"
                     border
                     tooltip-effect="dark"
                     style="width: 100%"
