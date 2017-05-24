@@ -220,7 +220,7 @@ export const removeCartList = ({ dispatch }, params) => {
   });
 }
 
-//加载订单详情
+//加载订单列表
 export const loadOrderList = ({ dispatch }, params) => {
   return axios.get('/zues/api/order/list', { params })
   .then(function (response) {
@@ -235,7 +235,22 @@ export const loadOrderList = ({ dispatch }, params) => {
   });
 }
 
-//订单详情页，删除未审核的订单；
+//查看订单详情
+export const loadOrderDetail = ({ dispatch }, params) => {
+  return axios.get('/zues/api/order/detail', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'orderDetail', response.data.data.row)
+      return Promise.resolve(response.data.data.row);
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+//订单列表页，删除未审核的订单；
 export const removeOrderList = ({ dispatch }, params) => {
   return axios.post('/zues/api/order/remove', params)
   .then(function (response) {

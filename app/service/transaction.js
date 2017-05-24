@@ -16,7 +16,7 @@ module.exports = app => {
                         lastUpdateTime:{
                             $eq:query.time
                         },
-                        material:{
+                        type:{
                             $eq:query.material
                         }
                     },
@@ -99,7 +99,7 @@ module.exports = app => {
                             lastUpdateTime:{
                                 $eq:time,
                             },
-                            material:{
+                            type:{
                                 $eq:info.material
                             }
                         },

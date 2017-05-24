@@ -3,7 +3,8 @@ const state = {
   cartList: [],
   demandList: [],
   orderList: [],
-  ordAddress: []  //到岸目的地
+  ordAddress: [],  //到岸目的地
+  orderDetail: [],
 }
 
 

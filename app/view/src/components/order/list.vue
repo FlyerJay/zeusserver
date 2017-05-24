@@ -2,7 +2,7 @@
     <div class="order-wrap">
         <el-form :inline="true" :model="orderParams" class="demo-form-inline">
             <el-form-item label="订单号:">
-                <el-input v-model="orderParams.id" placeholder="支持模糊搜索"></el-input>
+                <el-input v-model="orderParams.orderNo" placeholder="支持模糊搜索"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="warning" @click="searchOrder">查询</el-button>
@@ -10,37 +10,51 @@
         </el-form>
         <div class="tb-wrap">
             <el-table :data="orderList" stripe style="width: 100%" :load="loading">
-                <el-table-column prop="orderNo" label="订单号" width=""/>
-                <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width=""/>
-                <el-table-column prop="supplierCount" width='160' label="供应商数量"/>
+                <el-table-column prop="orderNo" label="订单号" width="200"/>
+                <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"/>
+                <el-table-column prop="supplierCount" label="供应商"/>
                 <el-table-column prop="orderWeight" label="总吨位"/>
                 <el-table-column prop="orderPrice" label="总价"/>
-                <el-table-column prop="orderAdjust" label="采购下浮总额"/>
-                <el-table-column prop="userId" width='80' label="下单人"/>
+                <el-table-column prop="orderAdjust" label="下浮总额"/>
+                <el-table-column prop="userId" label="下单人"/>
                 <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"/>
-                <el-table-column label="操作" align="center" property="id">
+                <el-table-column label="操作" align="left" width="140" property="id">
                     <template scope="scope">
-                        <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看详情</el-button>
+                        <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
                         <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>
        </div>
-
+       <el-dialog
+            :visible.sync="detailDialogShow"
+            size="small">
+            <el-table :data="orderDetail" stripe style="width: 100%" :load="detailLoading">
+                <el-table-column prop="spec" label="规格"/>
+                <el-table-column prop="type" label="类型"/>
+                <el-table-column prop="supplierName" label="供应商"/>
+                <el-table-column prop="orderAmount" label="数量"/>
+                <el-table-column prop="unitPrice" label="单价"/>
+                <el-table-column prop="Weight" label="重量"/>
+                <el-table-column prop="orderDcrease" label="下浮"/>
+            </el-table>
+        </el-dialog>
      </div>
 </template>
 
 <script>
     import {
         loadOrderList,
-        removeOrderList
+        removeOrderList,
+        loadOrderDetail 
     } from '../../vuex/action'
     
     export default {
         vuex: {
             actions: {
-               loadOrderList,
-               removeOrderList
+                loadOrderList,
+                removeOrderList,
+                loadOrderDetail
             },
             getters: {
                 userInfo: ({
@@ -48,8 +62,11 @@
                 }) => common.userInfo,
                 orderList: ({
                     order
-                }) => order.orderList
-            }
+                }) => order.orderList,
+                orderDetail: ({
+                    order
+                }) => order.orderDetail
+            },
         },
         data() {
             return {
@@ -61,10 +78,12 @@
                     id:''
                 },
                 orderParams: {
-                    id: '',
+                    orderNo:'',
                     comId: this.userInfo.comId
                 },
-                loading:true
+                loading: true,
+                detailLoading: true,
+                detailDialogShow: false,
             }
         },
         methods: {
@@ -77,9 +96,15 @@
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
             },
+            viewDetail(index,row) {
+                this.detailDialogShow = true;
+                this.detailLoading = true;
+                this.loadOrderDetail({orderNo:row.orderNo}).then(()=>{
+                    this.detailLoading = false;
+                });
+            },
             enterNum(index, row) {
-             
-                this.ordParams.id = row.id;
+                const orderNoArr = [row.orderNo].join(',');
                  
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                   confirmButtonText: '确定',
@@ -90,20 +115,25 @@
                     type: 'success',
                     message: '删除成功!',
                   },
-                  this.removeOrderList(this.ordParams.id)
-
+                  this.removeOrderList({orderNo:orderNoArr})
                   );
+                  this.loading = true
+                  this.loadOrderList(this.orderParams).then(()=>{
+                      this.loading = false;
+                  });
                 }).catch(() => {
                   this.$message({
                     type: 'info',
                     message: '已取消删除'
                   });          
                 });
-      
             }
         },
         mounted: function() {
-            this.loadOrderList(this.orderParams)
+            this.loading = true
+            this.loadOrderList(this.orderParams).then(()=>{
+                this.loading = false;
+            });
         }
     }
 </script>

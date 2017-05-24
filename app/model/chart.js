@@ -18,19 +18,29 @@ module.exports = app => {
             comment:"购物车Id(主键无实际意义)",
         },
         userId: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"用户Id(主键)"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             allowNull:false,
             comment:"公司编号(关联公司信息)"
         },
-        supplierInventoryId: {
-            type: INTEGER,
-            allowNull: false,
-            comment:"库存编号（关联库存信息）"
+        spec:{
+            type:STRING(20),
+            allowNull:false,
+            comment:"规格"
+        },
+        supplierId:{
+            type:INTEGER,
+            allNull:false,
+            comment:"供应商主键"
+        },
+        type:{
+            type:STRING(10),
+            allNull:false,
+            comment:"类型"
         },
         chartAmount: {
             type: INTEGER,
@@ -60,9 +70,11 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,si.spec,si.long,si.type,s.supplierName,c.supplierInventoryId,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,si.spec,si.supplierId,si.long,si.type,s.supplierName,c.supplierId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
-                si.supplierInventoryId = c.supplierInventoryId
+                si.supplierId = c.supplierId
+                AND si.type = c.type
+                AND si.spec = c.spec
                 LEFT JOIN (select *,max(lastUpdateTime) from supplier_value group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
@@ -89,7 +101,9 @@ module.exports = app => {
                 }),
                 app.model.query(`SELECT count(1) AS count FROM chart c
                 LEFT JOIN supplier_inventory si ON
-                si.supplierInventoryId = c.supplierInventoryId
+                si.supplierId = c.supplierId
+                AND si.type = c.type
+                AND si.spec = c.spec
                 LEFT JOIN (select *,max(lastUpdateTime) from supplier_value group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
@@ -150,7 +164,23 @@ module.exports = app => {
                 if(!options.chartAdjust) {
                     options.chartAdjust = 0;
                 }
-                const result = yield this.create(Object.assign(options,{createTime:new Date().getTime()}));
+                const inventory = yield app.model.SupplierInventory.findOne({
+                    where:{
+                        supplierInventoryId:{
+                            $eq:options.supplierInventoryId
+                        }
+                    }
+                })
+                const result = yield this.create({
+                    userId:options.userId,
+                    comId:options.comId,
+                    spec:inventory.spec,
+                    type:inventory.type,
+                    supplierId:inventory.supplierId,
+                    chartAmount:options.chartAmount,
+                    chartAdjust:options.chartAdjust,
+                    createTime:new Date().getTime()
+                });
                 return {
                     code:200,
                     msg:"添加购物车成功"

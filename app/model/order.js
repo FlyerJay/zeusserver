@@ -63,7 +63,7 @@ module.exports = app => {
                     msg:"请输入用户信息"
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
-                (select count(distinct supplierId) from supplier_inventory where supplierInventoryId in (select supplierInventoryId from order_detail where orderNo = o.orderNo)) as supplierCount
+                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
@@ -164,7 +164,9 @@ module.exports = app => {
                         return Promise.all(orderDetail.map((v)=>{
                             app.model.OrderDetail.create({
                                 orderNo,
-                                supplierInventoryId: v.supplierInventoryId,
+                                spec: v.spec,
+                                type:v.type,
+                                supplierId:v.supplierId,
                                 orderAmount:Number(v.chartAmount),
                                 unitPrice:Number(v.purePrice),
                                 Weight:Number(v.chartWeight),
@@ -186,7 +188,6 @@ module.exports = app => {
                         msg:"下单成功"
                     }
                 }).catch((err)=>{
-                    console.log(err);
                     return {
                         code:-1,
                         msg:"下单失败"
@@ -198,36 +199,21 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少订单编号,orderNo"
                 }
-                const $1 = yield app.model.query(`SELECT o.orderNo,o.comId,o.userId,o.supplierInventoryIds FROM tb_order o
-                WHERE o.orderNo = :orderNo`,{
+                const list = yield app.model.query(`select od.*,s.supplierName from order_detail od 
+                    left join supplier s
+                    on s.supplierId = od.supplierId
+                    where od.orderNo = :orderNo`,{
                     replacements:{
-                        orderNo:options.orderNo
+                        orderNo:options.orderNo,
                     }
                 })
-                if(!$1[0] || $1[0].length === 0) return {
-                    code:-1,
-                    msg:"系统中不存在的订单号",
-                }
-                var list = [];
-                var goods = $1[0][0].supplierInventoryIds.split(',')
-                for(var i = 0;i<goods.length;i++){
-                    var key = goods[i].split(':')[0];
-                    var amount = goods[i].split(':')[1];
-                    list[i] = yield app.model.query(`SELECT si.spec,si.type,si.material,:amount as amount,si.inventoryAmount,si.perAmount,s.supplierName FROM supplier_inventory si
-                    LEFT JOIN supplier s
-                    ON s.supplierId = si.supplierId
-                    WHERE si.supplierInventoryId = :key`,{
-                        replacements:{
-                            amount:amount?amount:1,
-                            key:key
-                        }
-                    })
-                }
                 return {
                     code:200,
                     msg:"查询订单成功",
-                    data:$1[0],
-                    list:list
+                    data:{
+                        row:list[0],
+                        count:list.length
+                    },
                 }
             },
             * removeOrder(options){
@@ -235,13 +221,24 @@ module.exports = app => {
                     code:-1,
                     msg:"请填写要删除的订单编号"
                 }
-                const result = yield this.destroy({
+                const result = yield [this.destroy({
                     where:{
                         orderNo:{
-                            $in:options.supplierId.split(','),
+                            $in:options.orderNo.split(','),
                         }
                     }
-                })
+                }),
+                app.model.OrderDetail.destroy({
+                    where:{
+                        orderNo:{
+                            $in:options.orderNo.split(','),
+                        }
+                    }
+                })]
+                return {
+                    code:200,
+                    msg:"删除成功",
+                }
             },
             * verify(options){
                 if(!options.orderNo) return {

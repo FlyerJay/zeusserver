@@ -84,7 +84,7 @@
                 loadCartList,
                 addToList,
                 removeCartList,
-                updateCart
+                updateCart,
             },
             getters: {
                 userInfo: ({

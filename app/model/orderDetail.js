@@ -21,9 +21,20 @@ module.exports = app => {
             allowNull:false,
             comment:"订单编号"
         },
-        supplierInventoryId: {
-            type: INTEGER,
-            comment:"库存主键"
+        spec:{
+            type:STRING(20),
+            allowNull:false,
+            comment:"规格"
+        },
+        type:{
+            type:STRING(10),
+            allowNull:false,
+            comment:"类型"
+        },
+        supplierId:{
+            type:INTEGER,
+            allowNull:false,
+            comment:"供应商主键"
         },
         orderAmount: {
             type: INTEGER,
