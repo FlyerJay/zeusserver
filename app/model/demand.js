@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING, INTEGER} = app.Sequelize;
+    const { STRING, INTEGER, DOUBLE, BIGINT } = app.Sequelize;
 
     return app.model.define('Demand',{
         demandId: {
@@ -17,21 +17,21 @@ module.exports = app => {
             comment:"定制需求主键"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             comment:"公司编号(关联公司信息)"
         },
         spec: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"规格"
         },
         type: {
-            type:STRING,
+            type:STRING(10),
             allowNull:false,
             comment:"类型",
         },
         material: {
-            type: STRING,
+            type: STRING(10),
             comment:"材质"
         },
         demandWeight: {
@@ -39,23 +39,23 @@ module.exports = app => {
             comment:"需求吨位"
         },
         userId: {
-            type: STRING,
+            type: STRING(20),
             comment:"业务员"
         },
         factoryPrice:{
-            type: STRING,
+            type: DOUBLE(10,2),
             comment:"出厂价"
         },
         freight:{
-            type:STRING,
+            type:DOUBLE(10,2),
             comment:"运费"
         },
         customerName:{
-            type:STRING,
+            type:STRING(20),
             comment:"客户名称"
         },
         totalPrice:{
-            type:STRING,
+            type:DOUBLE(10,2),
             comment:"总成本"
         },
         dealStatus:{
@@ -63,18 +63,17 @@ module.exports = app => {
             comment:"成交状态:0:未成交;1:成交成功;2:成交失败"
         },
         dealReason:{
-            type:STRING,
+            type:STRING(100),
             comment:"状态说明"
         },
         timeConsume:{
-            type:STRING,
+            type:INTEGER(10),
             comment:"需求工时"
         },
         createTime:{
-            type:STRING,
+            type:BIGINT(15),
             comment:"创建时间"
-        }
-
+        },
     },{
         freezeTabName:true,
         underscored:true,
@@ -155,6 +154,9 @@ module.exports = app => {
                     where:{
                         comId:{
                             $eq:options.comId
+                        },
+                        spec:{
+                            $like:options.spec?`%${options.spec}%`:'%%'
                         }
                     }
                 })
