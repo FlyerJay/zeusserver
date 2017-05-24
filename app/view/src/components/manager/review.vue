@@ -1,6 +1,6 @@
 <template lang="html">
     <div class='order-wrap'>
-    	  <el-table :data="specList" :load="loading">
+    	  <el-table :data="spec.row" :load="loading">
             <el-table-column type="expand">
               <template scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -36,7 +36,7 @@
     	     	<el-table-column prop="userId" label="下单人"></el-table-column>
     	     	<el-table-column label="操作">
     	     		<template scope="scope">
-    	     			<el-button size="small" @click="enterNum(scope.index, scope.row)">审核</el-button>
+    	     			<el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">审核</el-button>
     	     		</template>
     	     	</el-table-column>
     	  </el-table>
@@ -53,14 +53,13 @@
         </el-dialog>
 
 
-        <div class="block">
-          <span class="demonstration">直接前往</span>
+        <div class="page-wrap">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="specParams.page"
             :page-size="30"
-            layout=" prev, pager, next, jumper"
-            :total="1000">
+            layout=" prev, pager, next"
+            :total="spec.totalCount">
           </el-pagination>
         </div>
     </div>
@@ -82,9 +81,9 @@ export default {
         userInfo:({
         	common
         })=>common.userInfo,
-        specList:({
+        spec:({
         	manager
-        })=>manager.specList
+        })=>manager.spec
      }
   },
   data(){
@@ -94,8 +93,8 @@ export default {
               shenhe:"未审核",
               comId: this.userInfo.comId
           },
-          loading:true,
-          dlgReviewVisible:false
+          loading: true,
+          dlgReviewVisible: false
       }
   },
   methods:{
@@ -118,7 +117,7 @@ export default {
     }
   },
   mounted: function() {
-         this.loadSpecList(this.specParams)
+    this.loadSpecList(this.specParams)
   }
 }
 </script>

@@ -316,7 +316,7 @@ export const loadSpecList = ({ dispatch }, params) => {
   return axios.get('/zues/api/order/verifylist', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'specList', response.data.data.row)
+      dispatch('UPDATE_MANAGERFORM', 'spec', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -458,10 +458,10 @@ export const getUserRole = ({ dispatch }, params) => {
   return axios.get('/zues/api/userrole/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', response.data.data)
+      dispatch('UPDATE_MANAGERFORM', 'userRole', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', {})
+      dispatch('UPDATE_MANAGERFORM', 'userRole', {})
       return Promise.reject();
     }
   })

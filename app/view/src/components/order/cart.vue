@@ -7,7 +7,7 @@
                 </el-form-item>-->
                 <el-form-item label="已选商品(含运费):">
                     <span>{{totalPrice|priceFilter}}</span>
-                    <el-button @click="submitOrder()">提交</el-button>
+                    <el-button @click="submitOrder()" type="warning">提交</el-button>
                 </el-form-item>
             </el-form>
             

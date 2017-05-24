@@ -5,7 +5,7 @@
                 <el-input v-model="orderParams.orderNo" placeholder="支持模糊搜索"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="searchOrder">查询</el-button>
+                <el-button type="warning" @click="searchOrder" :loading="loading">查询</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">

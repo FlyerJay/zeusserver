@@ -1,7 +1,7 @@
 const state = {
-  specList:[],
-  userRoleInfo:{},
-  operateInfo:{}
+  spec: {},
+  userRoleInfo: {},
+  operateInfo: {}
 }
 
 const mutations = {

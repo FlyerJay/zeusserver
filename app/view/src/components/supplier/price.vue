@@ -42,7 +42,7 @@
             <el-table-column property="supplierName" label="供应商"></el-table-column>
             <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
     
-            <el-table-column label="操作" align="center" v-if="Boolean(valueAuth)">
+            <el-table-column label="操作" align="center" v-if="valueAuth">
                 <template scope="scope">
                         <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning"  >修改</el-button>
                 </template>
@@ -71,8 +71,7 @@
     import {
         loadSupPriceList,
         loadSupAddress,
-        updataPrice,
-        getUserRole
+        updataPrice
     } from '../../vuex/action'
     
     export default {
@@ -80,8 +79,7 @@
             actions: {
                 loadSupPriceList,
                 loadSupAddress,
-                updataPrice,
-                getUserRole
+                updataPrice
             },
             getters: {
                 price: ({
@@ -102,7 +100,6 @@
         data() {
             return {
                 searchParam: {
-                    userId: this.userInfo.userId,
                     spec: '',
                     type: '',
                     material: '',
@@ -158,7 +155,6 @@
                 this.loading = false;
             });
             this.loadSupAddress();
-            this.getUserRole(this.searchParam.userId);     
         },
         computed: {
             valueAuth() {

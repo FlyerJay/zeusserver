@@ -48,7 +48,7 @@
                 var info = {
                     userId: userId,
                     comId: comId,
-                    userRole: '001001'
+                    userRole: '111111'
                 }
                 if (userId) {
                     this.updateForm('userInfo', info);
