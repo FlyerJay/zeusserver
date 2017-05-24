@@ -61,34 +61,29 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                if(!options.userId) return {
-                    code:-1,
-                    msg:"请选择修改的用户"
-                }
                 if(!options.operator) return{
                     code:-1,
-                    msg:"请带上操作人Id:operator"
+                    msg:"请选择要操作的人:operator"
                 }
                 var self = this;
                 return app.model.transaction(async (t)=>{
                     return await self.findOne({
                         where:{
                             userId:{
-                                $eq:options.userId,
+                                $eq:options.operator,
                             }
                         },
                         transaction:t
                     }).then(async (res)=>{
                         for(var arr in options){
                             res[arr] = options[arr];
-                            console.log(arr,res[arr]);
                         }
                         res.save({transaction:t});
                         return await app.model.OperateRecord.create({
-                            userId:options.operator,
+                            userId:options.userId,
                             comId:options.comId,
                             type:'修改用户权限',
-                            detail:`修改了用户${options.userId}的权限`,
+                            detail:`修改了用户${options.operator}的权限`,
                             createTime:+new Date()
                         },{transaction:t})
                     })
