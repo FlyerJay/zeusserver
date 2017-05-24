@@ -53,6 +53,61 @@ module.exports = app => {
 		tableName:"tb_order",
 		timestamps:false,
         classMethods:{
+            * verifyList(options) {
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"请输入公司编号"
+                }
+                const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
+                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount
+                FROM tb_order o
+                LEFT JOIN user_info ui
+                ON ui.userId = o.userId
+                WHERE o.comId = :comId
+                AND orderNo LIKE :orderNo
+                ORDER BY o.createTime DESC
+                LIMIT :start,:offset
+                `,{
+                    replacements:{
+                        comId:options.comId,
+                        orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
+                    }
+                }),
+                app.model.query(`SELECT count(1) AS count FROM tb_order o
+                LEFT JOIN user_info ui
+                ON ui.userId = o.userId
+                WHERE o.comId = :comId
+                AND orderNo LIKE :orderNo
+                ORDER BY o.createTime DESC
+                `,{
+                    replacements:{
+                        comId:options.comId,
+                        orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
+                    }
+                })]
+                var result = {}
+                if(!$1[0] || $1[0].length <= 0) return {
+                    code:200,
+                    msg:'查询数据为空',
+                    data:{
+                        row:[],
+                        count:0
+                    }
+                }
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:30;
+                return {
+                    code: 200,
+                    data: result,
+                    msg:'查询数据成功'
+                }
+            },
             * orderList(options){
                 if(!options.comId) return {
                     code:-1,

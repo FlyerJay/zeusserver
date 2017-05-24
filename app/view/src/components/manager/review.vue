@@ -28,12 +28,12 @@
                 </el-form>
               </template>
             </el-table-column>
-    	     	<el-table-column prop="spec" label="订单号"></el-table-column>
-    	     	<el-table-column prop="supplierName" label="下单时间"></el-table-column>
-    	     	<el-table-column prop="supplierName" label="总吨位"></el-table-column>
-    	     	<el-table-column prop="supplierName" label="总价"></el-table-column>
-    	     	<el-table-column prop="supplierName" label="采购下浮总额"></el-table-column>
-    	     	<el-table-column prop="supplierName" label="下单人"></el-table-column>
+    	     	<el-table-column prop="orderNo" label="订单号"></el-table-column>
+    	     	<el-table-column prop="createTime" label="下单时间"></el-table-column>
+    	     	<el-table-column prop="orderWeight" label="总吨位"></el-table-column>
+    	     	<el-table-column prop="orderPrice" label="总价"></el-table-column>
+    	     	<el-table-column prop="orderAdjust" label="采购下浮总额"></el-table-column>
+    	     	<el-table-column prop="userId" label="下单人"></el-table-column>
     	     	<el-table-column label="操作">
     	     		<template scope="scope">
     	     			<el-button size="small" @click="enterNum(scope.index, scope.row)">审核</el-button>
@@ -89,34 +89,33 @@ export default {
   },
   data(){
       return{
-      	 specParams: {
-                    page: 1,
-                    shenhe:"未审核",
-                    comId: this.userInfo.comId
-                },
+          specParams: {
+              page: 1,
+              shenhe:"未审核",
+              comId: this.userInfo.comId
+          },
           loading:true,
           dlgReviewVisible:false
       }
   },
   methods:{
-     handleCurrentChange(val){
-       this.specParams.page = val;
-       
-     },
-     enterNum(index,row){
-       this.dialogVisible = true;
-     },
-     comfirmReview(){
+    handleCurrentChange(val){
+      this.specParams.page = val;
+    },
+    enterNum(index,row){
+      this.dialogVisible = true;
+    },
+    comfirmReview(){
       this.dialogVisible = false;
       this.specParams.shenhe = "审核"
-     },
-     handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      }
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+      .then(_ => {
+        done();
+      })
+      .catch(_ => {});
+    }
   },
   mounted: function() {
          this.loadSpecList(this.specParams)

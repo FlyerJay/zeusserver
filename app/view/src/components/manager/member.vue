@@ -176,7 +176,7 @@ export default {
     },
     confireChangeAuth(){
         let upateParam = {};
-        upateParam.operator = this.userInfo.userId;
+        upateParam.operator = this.authParams.userId;
         upateParam.orderAuth = Number(this.authParams.orderAuth);
         upateParam.valueAuth = Number(this.authParams.valueAuth);
         upateParam.inventoryAuth = Number(this.authParams.inventoryAuth);

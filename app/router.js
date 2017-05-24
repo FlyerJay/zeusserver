@@ -56,6 +56,7 @@ module.exports = app => {
   app.get('/zues/api/operate/list','manage.operateList');
   app.get('/zues/api/userrole/list','manage.userRoleList');
   app.post('/zues/api/userrole/update','manage.updateUserRole');
+  app.get('/zues/api/order/verifylist','manage.verifyList');
   app.post('/zues/api/order/verify','manage.orderVerify');
   
   //定制化需求

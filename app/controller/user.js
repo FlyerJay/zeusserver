@@ -11,12 +11,16 @@ module.exports = app => {
           if(props == 'userId' || props == 'comId' || props == 'userToken'){
             ctx.cookies.set(`${props}`,`${info[props]}`,{
               maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+              httpOnly: false,
             })
           }
         }
         var _role = user.data.userRole.dataValues;
         var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}`;
-        ctx.cookies.set('userRole',role)
+        ctx.cookies.set('userRole',role,{
+          maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+          httpOnly: false,
+        })
       }
       ctx.body = user;
     };
