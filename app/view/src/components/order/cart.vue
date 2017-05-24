@@ -12,40 +12,42 @@
             </el-form>
             
           </div>
-          <el-table
-                ref="multipleTable"
-                :data="cartList"
-                border
-                tooltip-effect="dark"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
-                v-loading.body="loading">
-            <el-table-column type="selection" width="">
-            </el-table-column>
-            <el-table-column prop="spec" label="规格" width="">
-            </el-table-column>
-            <el-table-column prop="type" label="类别" width="">
-            </el-table-column>
-            <el-table-column prop="supplierName" label="供应商">
-            </el-table-column>
-            <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="出厂单价(含运费)">
-            </el-table-column>
-            <el-table-column prop="chartAmount" label="采购数量(件)">
-            </el-table-column>
-            <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
-            </el-table-column>
-            <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
-            </el-table-column>
-            <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="下浮总额(元)">
-            </el-table-column>
-            <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
-            </el-table-column>
-            <el-table-column label="操作" align="center" property="id">
-                <template scope="scope">
-                    <el-button size="small" @click="updateChart(scope.row)" type="warning">修改</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+          <div class="tb-wrap">
+            <el-table
+                    ref="multipleTable"
+                    :data="cartList"
+                    border
+                    tooltip-effect="dark"
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange"
+                    v-loading.body="loading">
+                <el-table-column type="selection" width="">
+                </el-table-column>
+                <el-table-column prop="spec" label="规格" width="">
+                </el-table-column>
+                <el-table-column prop="type" label="类别" width="">
+                </el-table-column>
+                <el-table-column prop="supplierName" label="供应商">
+                </el-table-column>
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="出厂单价(含运费)">
+                </el-table-column>
+                <el-table-column prop="chartAmount" label="采购数量(件)">
+                </el-table-column>
+                <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
+                </el-table-column>
+                <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
+                </el-table-column>
+                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="下浮总额(元)">
+                </el-table-column>
+                <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
+                </el-table-column>
+                <el-table-column label="操作" align="center" property="id">
+                    <template scope="scope">
+                        <el-button size="small" @click="updateChart(scope.row)" type="warning">修改</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <div class="page-wrap">
             <el-pagination
                 @current-change="handleCurrentChange"

@@ -54,6 +54,14 @@ module.exports = app => {
             type:STRING(20),
             comment:"客户名称"
         },
+        customerPhone:{
+            type:STRING(11),
+            comment:"客户电话"
+        },
+        destination:{
+            type:STRING(11),
+            comment:"到岸目的地"
+        },
         totalPrice:{
             type:DOUBLE(10,2),
             comment:"总成本"
@@ -157,6 +165,9 @@ module.exports = app => {
                         },
                         spec:{
                             $like:options.spec?`%${options.spec}%`:'%%'
+                        },
+                        createTime:{
+                            $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
                         }
                     }
                 })
