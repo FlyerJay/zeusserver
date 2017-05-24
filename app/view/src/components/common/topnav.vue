@@ -20,8 +20,15 @@
 </template>
 
 <script>
+    import {
+      removeCookie
+    } from '../../vuex/action'
+
   export default {
     vuex: {
+      actions:{
+          removeCookie
+      },
       getters: {
         mainRoute: ({
           common
@@ -35,7 +42,10 @@
       loginout() {
         this.delCookie('userId');
         this.delCookie('comId');
-        document.location.href = "login.html"
+        this.removeCookie(this.userInfo)
+        .then(rs => {
+            document.location.href = "login.html"
+           })
       },
       getCookie(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
