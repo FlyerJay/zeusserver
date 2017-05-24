@@ -7,7 +7,7 @@
 	     	<el-table-column prop="type" label="修改记录"></el-table-column>
 	     	<el-table-column prop="detail" label="操作明细"></el-table-column>
 	     </el-table>
-       <el-button type="primary" @click="test">查询</el-button>
+       
 
     </div>
 </template>
@@ -41,12 +41,7 @@ export default {
       	 loading:true
       }
   },
-  methods:{
-    test(){
-      console.log(this.operateParams);
-      console.log(this.operateInfo);
-    }
-  },
+
    mounted: function() {
        this.loadOperateList(this.operateParams);
    }

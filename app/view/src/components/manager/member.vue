@@ -20,7 +20,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-             <el-table :data="userRoleInfo.rows" stripe style="width: 100%" :load="loading">
+             <el-table :data="userRoleInfo.row" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
                 <el-table-column label="下单权限" align="center" prop="orderAuth">

@@ -365,7 +365,7 @@ export const loadDemandList = ({ dispatch }, params) => {
   return axios.get('/zues/api/demand/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'demandInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -374,6 +374,7 @@ export const loadDemandList = ({ dispatch }, params) => {
   .catch(function (response) {
   });
 }
+
 
 //添加的定制需求
 export const addToDemandList = ({ dispatch }, params) => {

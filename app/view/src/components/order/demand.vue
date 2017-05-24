@@ -1,11 +1,11 @@
 <template>
     <div> 
-        <el-form :inline="true" :model="searchDePriParam" class="demo-form-inline">
+        <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
           <el-form-item label="规格：">
-             <el-input v-model="searchDePriParam.spec" placeholder="输入规格"></el-input>
+             <el-input v-model="searchDeParam.spec" placeholder="输入规格"></el-input>
           </el-form-item>
           <el-form-item label="时间：">
-              <el-input v-model="searchDePriParam.date" placeholder="时间"></el-input>
+              <el-input v-model="searchDeParam.date" placeholder="时间"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="warning" @click="searchDemand">查询</el-button>
@@ -14,7 +14,7 @@
         <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true">定制需求录入</el-button>
         <div class="title">定制货品列表</div> 
         <div class="tb-wrap">
-          <el-table :data="demandList" stripe style="width: 100%" :load="loading">
+          <el-table :data="demandInfo.row" stripe style="width: 100%" :load="loading">
                 <el-table-column prop="spec" label="规格" width="">
                 </el-table-column>
                 <el-table-column prop="createTime" label="最新更新时间(按采购)" width="" :formatter="dateFormat">
@@ -87,9 +87,9 @@
                 userInfo: ({
                     common
                 }) => common.userInfo,
-                demandList:({
+                demandInfo:({
                     order
-                }) => order.demandList
+                }) => order.demandInfo
             }
         },
         data() {
@@ -108,7 +108,7 @@
                     charTel:'',
                     demandListId:''
                 },
-                searchDePriParam:{
+                searchDeParam:{
                     spec:'',
                     date:'',
                     comId:this.userInfo.comId
@@ -120,7 +120,7 @@
         },
         methods: {
          dateFormat(row, column) {
-           return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
+           return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
          },
          enterNum(index, row) {
                 this.dlgDemandVisible = true;
@@ -140,7 +140,14 @@
            })
         },
         searchDemand(){
-          console.log(this.demandList);
+           console.log(this.searchDeParam);
+        
+           this.loading = true;
+           this.loadDemandList(this.searchDeParam)
+          .then(() => {
+            this.loading = false;
+          });
+         
         }
        },
          mounted: function() {
