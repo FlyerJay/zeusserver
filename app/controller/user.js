@@ -9,7 +9,9 @@ module.exports = app => {
         var info = user.data.userInfo.dataValues;
         for(var props in info){
           if(props == 'userId' || props == 'comId' || props == 'userToken'){
-            ctx.cookies.set(`${props}`,`${info[props]}`)
+            ctx.cookies.set(`${props}`,`${info[props]}`,{
+              maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+            })
           }
         }
         var _role = user.data.userRole.dataValues;
@@ -31,6 +33,17 @@ module.exports = app => {
 		  const ctx = this.ctx;
 		  ctx.body = yield ctx.model.User.validateUserId(ctx.query);
 	  };
+    * logout() {
+      const ctx = this.ctx;
+      ctx.cookies.set('userId',null);
+      ctx.cookies.set('comId',null);
+      ctx.cookies.set('userToken',null);
+      ctx.cookies.set('userRole',null);
+      ctx.body = {
+        code:200,
+        msg:"成功退出登录"
+      }
+    }
   }
   return UserController;
 };
