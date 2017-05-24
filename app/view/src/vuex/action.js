@@ -313,7 +313,7 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
 
 //管理员下单审核界面，加载订单详情
 export const loadSpecList = ({ dispatch }, params) => {
-  return axios.get('/zues/api/order/list', { params })
+  return axios.get('/zues/api/order/verifylist', { params })
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_MANAGERFORM', 'specList', response.data.data.row)
