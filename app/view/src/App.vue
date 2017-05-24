@@ -52,7 +52,7 @@
                 if (userId) {
                     this.updateForm('userInfo', info);
                 } else {
-                    // document.location.href = 'http://127.0.0.1:8080/build/login.html'
+                    document.location.href = 'login.html'
                 }
             }
         },

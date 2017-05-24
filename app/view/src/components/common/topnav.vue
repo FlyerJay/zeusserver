@@ -40,12 +40,10 @@
     },
     methods: {
       loginout() {
-        this.delCookie('userId');
-        this.delCookie('comId');
-        this.removeCookie(this.userInfo)
+        this.removeCookie()
         .then(rs => {
             document.location.href = "login.html"
-           })
+        })
       },
       getCookie(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
@@ -53,13 +51,6 @@
           return unescape(arr[2]);
         else
           return null;
-      },
-      delCookie(name) {
-        var exp = new Date();
-        exp.setTime(exp.getTime() - 1);
-        var cval = this.getCookie(name);
-        if (cval != null)
-          document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
       }
     }
   }
@@ -91,8 +82,9 @@
     .user-wrap {
       color: #fff;
       position: absolute;
-      right: 215px;
+      right: 220px;
       top: 11px;
+      font-size: 14px;
       .loginout {
         display: inline-block;
         cursor: pointer;
