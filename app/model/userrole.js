@@ -115,7 +115,10 @@ module.exports = app => {
                     limit:options.pageSize?options.pageSize:30,
                     where:{
                         comId:{
-                            $eq:options.comId
+                            $eq:options.comId,
+                        },
+                        userId:{
+                            $ne:options.userId,
                         }
                     }
                 })
