@@ -8,15 +8,39 @@ module.exports = app => {
     }
     * addToChart() {//添加到购物车
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.add(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Chart.add(ctx.request.body);
+      }
     }
     * remove() {//从购物车中删除
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.remove(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Chart.remove(ctx.request.body);
+      }
     }
     * update() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.update(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Chart.update(ctx.request.body);
+      }
     }
   }
   return ChartController;

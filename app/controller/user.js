@@ -30,7 +30,7 @@ module.exports = app => {
     * validate() {
 		  const ctx = this.ctx;
 		  ctx.body = yield ctx.model.User.validateUserId(ctx.query);
-	  }
+	  };
   }
   return UserController;
 };

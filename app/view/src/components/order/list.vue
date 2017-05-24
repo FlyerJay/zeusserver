@@ -91,7 +91,8 @@
             }
         },
         methods: {
-            handleCurrentChange() {
+            handleCurrentChange(val) {
+                this.orderParams.page = val;
                 this.loadList();
             },
             searchOrder() {

@@ -137,7 +137,8 @@
             }
         },
         methods: {
-            handleCurrentChange() {
+            handleCurrentChange(val) {
+                this.listParams.page = val;
                 this.loadCartList(this.listParams).then(()=>{
                     this.loading = false;
                 })

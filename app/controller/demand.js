@@ -8,15 +8,39 @@ module.exports = app => {
     };
     * add() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Demand.add(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(4) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Demand.add(ctx.request.body);
+      }
     }
     * update() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Demand.update(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(4) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Demand.update(ctx.request.body);
+      }
     }
     * remove(){
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Demand.remove(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(4) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Demand.remove(ctx.request.body);
+      }
     }
   }
   return DemandController;

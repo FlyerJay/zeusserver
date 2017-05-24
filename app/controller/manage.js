@@ -4,19 +4,51 @@ module.exports = app => {
   class ManageController extends app.Controller {
     * operateList() {//查看操作记录
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.OperateRecord.list(ctx.query);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(0) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.OperateRecord.list(ctx.query);
+      }
     };
     * updateUserRole() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Userrole.update(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Userrole.update(ctx.request.body);
+      }
     }
     * orderVerify() {
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Order.verify(ctx.request.body);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Order.verify(ctx.request.body);
+      }
     }
     * userRoleList(){
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Userrole.list(ctx.query);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Userrole.list(ctx.query);
+      }
     }
   }
   return ManageController;
