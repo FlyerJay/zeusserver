@@ -421,3 +421,18 @@ export const updateuserRole = ({ dispatch },newParam) => {
   .catch(function (response) {
   });
 }
+
+
+//删除cookie
+export const removeCookie = ({ dispatch }, params) => {
+  return axios.post('/zues/api/user/logout', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
