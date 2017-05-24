@@ -9,7 +9,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="orderList" stripe style="width: 100%" v-loading.body="loading">
+            <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading">
                 <el-table-column prop="orderNo" label="订单号" width="200"/>
                 <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"/>
                 <el-table-column prop="supplierCount" label="供应商"/>

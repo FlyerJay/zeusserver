@@ -152,7 +152,7 @@ export const addTocart = ({ dispatch }, params) => {
   return axios.post('/zues/api/chart/addToChart', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -180,7 +180,7 @@ export const loadCartList = ({ dispatch }, params) => {
   return axios.get('/zues/api/chart/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -195,7 +195,7 @@ export const addToList = ({ dispatch }, params) => {
   return axios.post('/zues/api/order/add', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -210,7 +210,7 @@ export const removeCartList = ({ dispatch }, params) => {
   return axios.post('/zues/api/chart/remove', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
@@ -225,7 +225,7 @@ export const loadOrderList = ({ dispatch }, params) => {
   return axios.get('/zues/api/order/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
+      dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       return Promise.reject();
