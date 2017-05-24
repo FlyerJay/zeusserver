@@ -81,6 +81,7 @@ module.exports = app => {
                     }).then(async (res)=>{
                         for(var arr in options){
                             res[arr] = options[arr];
+                            console.log(arr,res[arr]);
                         }
                         res.save({transaction:t});
                         return await app.model.OperateRecord.create({
