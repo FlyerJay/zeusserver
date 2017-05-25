@@ -155,6 +155,10 @@
                 }
             },
             weightFormatter(row,column) {
+                if(!row.spec) {
+                    row.chartWeight = 0;
+                    return ''
+                }
                 const specArr = row.spec.split('*');
                 const height = Number(specArr[0]);
                 const width = Number(specArr[1]);
@@ -179,7 +183,7 @@
             totalPriceFormatter(row,column){
                 const price = Number(row.purePrice);
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
-                const totoalPice = price?price*row.chartWeight-adjust:'';
+                const totoalPice = price?price*row.chartWeight-adjust:0;
                 row.totalPrice = totoalPice.toFixed(2);
                 return totoalPice.toFixed(2);
             },
