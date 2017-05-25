@@ -16,7 +16,7 @@
             <el-button type="warning" @click="searchSup" :loading="infoloading">查询</el-button>
           </el-form-item>
         </el-form>
-        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true"  v-if="Boolean(supplierAuth)">供应商信息录入</el-button>
+        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true"  v-if="supplierAuth">供应商信息录入</el-button>
         <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中">
           <el-table-column property="supplierName" label="供应商名称"></el-table-column>
           <el-table-column property="address" label="供应商所在地"></el-table-column>

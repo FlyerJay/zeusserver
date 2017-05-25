@@ -36,21 +36,10 @@
     	     	<el-table-column prop="userId" label="下单人"></el-table-column>
     	     	<el-table-column label="操作">
     	     		<template scope="scope">
-    	     			<el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning">审核</el-button>
+    	     			<el-button size="small" @click="review(scope.index, scope.row)" type="warning">审核</el-button>
     	     		</template>
     	     	</el-table-column>
     	  </el-table>
-        <el-dialog
-            title="提示"
-            :visible.sync="dlgReviewVisible"
-            size="tiny"
-            :before-close="handleClose">
-            <span>是否确认审核</span>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="comfirmReview">确 定</el-button>
-            </span>
-        </el-dialog>
 
 
         <div class="page-wrap">
@@ -69,13 +58,15 @@
 <script>
 
 import{
-    loadSpecList
-}from '../../vuex/action'
+    loadSpecList,
+    reviewSpec
+} from '../../vuex/action'
 
 export default {
   vuex:{
      actions:{
-       loadSpecList
+       loadSpecList,
+       reviewSpec
      },
      getters:{
         userInfo:({
@@ -90,30 +81,34 @@ export default {
       return{
           specParams: {
               page: 1,
-              shenhe:"未审核",
-              comId: this.userInfo.comId
+              shenhe:"未审核"
           },
-          loading: true,
-          dlgReviewVisible: false
+          reviewParams: {
+             orderNo: '',
+             operator: '',
+             comId: ''
+          },
+          loading: true
       }
   },
   methods:{
     handleCurrentChange(val){
       this.specParams.page = val;
     },
-    enterNum(index,row){
-      this.dialogVisible = true;
-    },
-    comfirmReview(){
-      this.dialogVisible = false;
-      this.specParams.shenhe = "审核"
-    },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-      .then(_ => {
-        done();
+    review(index,row){
+      this.reviewParams.orderNo = row.orderNo;
+      this.reviewParams.operator = row.userId;
+      this.reviewParams.comId = this.userInfo.comId;
+      this.$confirm('是否确认审核？')
+      .then(rs => {
+        this.reviewSpec(this.reviewParams)
+        .then(rs => {
+
+        })
       })
-      .catch(_ => {});
+      .catch(rs => {
+
+      });
     }
   },
   mounted: function() {
