@@ -64,10 +64,10 @@
             custom-class="zues-dialog">
             <el-form :model="changeParams" label-width="80px" label-position="left">
                 <el-form-item label="采购数量" >
-                    <el-input style="width:155px"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
+                    <el-input style="width:85%"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="采购下浮">
-                    <el-input style="width:155px" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
+                    <el-input style="width:85%" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

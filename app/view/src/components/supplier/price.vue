@@ -56,7 +56,7 @@
        <el-dialog title="" v-model="dlgPriceVisible">
           <el-form :model="newPriceParam" label-width="120px" label-position="left">
             <el-form-item label="修改后的价格：">
-              <el-input style="width:610px" v-model="newPriceParam.value" auto-complete="off"></el-input>
+              <el-input style="width:90%" v-model="newPriceParam.value" auto-complete="off"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
