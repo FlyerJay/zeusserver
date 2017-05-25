@@ -1,5 +1,5 @@
 const state = {
-  spec: {},
+  verify: {},
   userRoleInfo: {},
   operateInfo: {}
 }
