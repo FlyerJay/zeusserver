@@ -17,7 +17,7 @@ module.exports = app => {
     * updateUserRole() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
+      if(userRole.charAt(0) === '0'){
         ctx.body = {
           code:-1,
           msg:"抱歉，没有权限进行该操作"
@@ -29,7 +29,7 @@ module.exports = app => {
     * verifyList(){
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
+      if(userRole.charAt(0) === '0'){
         ctx.body = {
           code:-1,
           msg:"抱歉，没有权限进行该操作"
@@ -41,7 +41,7 @@ module.exports = app => {
     * orderVerify() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
+      if(userRole.charAt(0) === '0'){
         ctx.body = {
           code:-1,
           msg:"抱歉，没有权限进行该操作"
@@ -53,7 +53,7 @@ module.exports = app => {
     * userRoleList(){
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
+      if(userRole.charAt(0) === '0'){
         ctx.body = {
           code:-1,
           msg:"抱歉，没有权限进行该操作"
