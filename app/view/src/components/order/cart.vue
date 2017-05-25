@@ -59,7 +59,7 @@
             </el-pagination>
         </div>
         <el-dialog
-            :visible.sync="dialogVisible"
+            v-model="dialogVisible"
             size="tiny"
             custom-class="zues-dialog">
             <el-form :model="changeParams">

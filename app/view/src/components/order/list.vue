@@ -37,7 +37,7 @@
             </el-pagination>
         </div>
        <el-dialog
-            :visible.sync="detailDialogShow"
+            v-model="detailDialogShow"
             size="small">
             <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading">
                 <el-table-column prop="spec" label="规格"/>
