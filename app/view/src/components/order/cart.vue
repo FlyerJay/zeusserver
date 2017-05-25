@@ -43,7 +43,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id">
                     <template scope="scope">
-                        <el-button size="small" @click="updateChart(scope.row)" type="warning">修改</el-button>
+                        <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -164,10 +164,11 @@
                 const width = Number(specArr[1]);
                 const land = Number(specArr[2]);
                 const long = Number(row.long);
+                const per = Number(row.perAmount);
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.chartAmount);
-                row.chartWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount)/1000).toFixed(2);
-                return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount)/1000).toFixed(2);
+                row.chartWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
+                return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
             },
             purePriceFormatter(row,column){
                 const value = Number(row.value);
@@ -177,8 +178,8 @@
             },
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
-                row.totalAdjust = adjust;
-                return adjust;
+                row.totalAdjust = adjust.toFixed(2);
+                return adjust.toFixed(2);
             },
             totalPriceFormatter(row,column){
                 const price = Number(row.purePrice);
@@ -214,7 +215,7 @@
                  });
               });
             },
-            updateChart(row) {
+            updateChart(index,row) {
                 this.dialogVisible = true;
                 this.changeParams = row;
             },
