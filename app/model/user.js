@@ -56,7 +56,7 @@ module.exports = app => {
                 app.model.User.belongsTo(app.model.Company,{foreignKey:'comId',targetKey:'comId'});
             },
             * registeUser(options){
-                if(!options || !options.userId || !options.comId) return {
+                if(!options || !options.password || !options.comId || !options.registerId) return {
                     code:-1,
                     msg:'缺少必要字段'
                 }
@@ -67,6 +67,7 @@ module.exports = app => {
                         }
                     }
                 });
+                options.userId = registerId;
                 if(isExist) return {
                     code:-1,
                     message:"账号已存在"
