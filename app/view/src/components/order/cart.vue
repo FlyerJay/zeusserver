@@ -29,7 +29,7 @@
                 </el-table-column>
                 <el-table-column prop="supplierName" label="供应商">
                 </el-table-column>
-                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="出厂单价(含运费)">
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="到岸单价">
                 </el-table-column>
                 <el-table-column prop="chartAmount" label="采购数量(件)">
                 </el-table-column>
