@@ -1,6 +1,6 @@
 <template lang="html">
     <div class='order-wrap'>
-    	  <el-table :data="spec.row" v-loading.body="loading" element-loading-text="拼命加载中">
+    	  <el-table :data="spec.row" v-loading.body="loading" element-loading-text="拼命加载中"  @expand="handleExpand">
             <el-table-column type="expand">
               <template scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -119,6 +119,9 @@ export default {
             });
         });
       });
+    },
+    handleExpand(row, expanded) {
+      console.log(expanded)
     }
   },
   mounted: function() {
@@ -129,6 +132,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css">
-</style>
