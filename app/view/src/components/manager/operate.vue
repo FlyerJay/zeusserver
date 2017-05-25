@@ -56,7 +56,7 @@
                 console.log(this.operateInfo);
             },
             dateFormat(row, column) {
-                return new Date(parseInt(row.lastUpdateTime)).formatDate('yyyy-MM-dd hh:mm')
+                return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
             },
             handleCurrentChange(val) {
                 this.operateParams.page = val;

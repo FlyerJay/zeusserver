@@ -197,4 +197,26 @@
             }
         }
     }
+
+    .el-message-box__btns .el-button--default{
+        background-color:#FFF;
+        border: 1px solid #bfcbd9;
+        color:#1f2d3d;
+    }
+    .el-message-box__btns .el-button--primary{
+        background-color:#f7ba2a;
+        border: 1px solid #f7ba2a;
+        color:#FFF;
+    } 
+    .el-message-box__btns .el-button--default:hover{
+        border: 1px solid #f7ba2a;
+        color:#f7ba2a;
+    }
+     .el-message-box__btns .el-button--primary:hover{
+        background-color:#f7ba2a;
+        opacity: 0.5;
+        color:#fff;
+     }
+
+
 </style>

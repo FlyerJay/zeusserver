@@ -62,17 +62,17 @@
             v-model="dialogVisible"
             size="tiny"
             custom-class="zues-dialog">
-            <el-form :model="changeParams">
-                <el-form-item label="采购数量">
-                    <el-input v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
+            <el-form :model="changeParams" label-width="80px" label-position="left">
+                <el-form-item label="采购数量" >
+                    <el-input style="width:155px"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="采购下浮">
-                    <el-input v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
+                    <el-input style="width:155px" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="warning" @click="submitChange(changeParams)">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
   </div>
@@ -236,3 +236,5 @@
         }
     }
 </script>
+<style type="text/css">
+</style>
