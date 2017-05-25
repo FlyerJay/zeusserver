@@ -310,7 +310,6 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
   });
 }
 
-
 //管理员下单审核界面，加载订单详情
 export const loadSpecList = ({ dispatch }, params) => {
   return axios.get('/zues/api/order/verifylist', { params })
@@ -326,9 +325,23 @@ export const loadSpecList = ({ dispatch }, params) => {
   });
 }
 
+//管理员审核订单
+export const reviewSpec = ({ dispatch }, params) => {
+  return axios.get('/zues/api/order/verify', { params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      return Promise.reject();
+    }
+  })
+  .catch(function (response) {
+  });
+}
+
+
 
 //管理员后操作记录，加载操作表
-
 export const loadOperateList = ({ dispatch }, params) => {
   return axios.get('/zues/api/operate/list', { params })
   .then(function (response) {
@@ -437,7 +450,6 @@ export const updateuserRole = ({ dispatch },newParam) => {
   });
 }
 
-
 //删除cookie
 export const removeCookie = ({ dispatch }, params) => {
   return axios.post('/zues/api/user/logout', params)
@@ -453,7 +465,6 @@ export const removeCookie = ({ dispatch }, params) => {
 }
 
 //读取权限
-
 export const getUserRole = ({ dispatch }, params) => {
   return axios.get('/zues/api/userrole/list', { params })
   .then(function (response) {

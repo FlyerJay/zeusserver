@@ -238,6 +238,6 @@
 <style lang="css">
   .title{
     margin: 20px 0px;
-    font-size:24px;
+    font-size: 20px;
   }
 </style>
