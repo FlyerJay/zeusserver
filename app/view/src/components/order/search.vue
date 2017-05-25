@@ -65,9 +65,9 @@
           </el-pagination>
       </div>
       <el-dialog title="" v-model="dlgShopVisible" size="tiny">
-        <el-form :model="cartParams">
+        <el-form :model="cartParams" label-width="90px" label-position="left">
           <el-form-item label="需求数量：">
-            <el-input v-model="cartParams.chartAmount" auto-complete="off"></el-input>
+            <el-input style="width:320px" v-model="cartParams.chartAmount" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

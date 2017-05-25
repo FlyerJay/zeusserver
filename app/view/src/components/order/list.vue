@@ -117,7 +117,8 @@
                 this.$confirm('该订单将被删除, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
-                  type: 'warning'
+                  type: 'warning',
+                  class:'LDW'
                 }).then(() => {
                   this.$message({
                     type: 'success',

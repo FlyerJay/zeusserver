@@ -319,17 +319,24 @@ module.exports = app => {
                     code:-1,
                     msg:"订单不存在"
                 }
-                res.validate = 1;
                 var self = this;
-                return app.model.transaction(async (t)=>{
-                    return await self.save({transaction:t}).then(async (res)=>{
+                return app.model.transaction((t)=>{
+                    return self.update({validate:1},{
+                        where:{
+                            orderNo:{
+                                $eq:options.orderNo,
+                            }
+                        }
+                    }).then(async ()=>{
                         return await app.model.OperateRecord.create({
                             userId:options.operator,
                             comId:options.comId,
                             type:'审核订单',
                             detail:`审核通过了${options.orderNo}订单`,
                             createTime:+new Date()
-                        },{transaction:t})
+                        },{transaction:t}).catch((err)=>{
+                            console.log(err);
+                        })
                     })
                 }).then((res)=>{
                     return {

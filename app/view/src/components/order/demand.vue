@@ -58,9 +58,9 @@
           </el-pagination>
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
-            <el-form :model="demandParams" label-width="80px" label-position="left">
+            <el-form :model="demandParams" label-width="100px" label-position="left">
                 <el-form-item label="规格：" :required="true">
-                    <el-input v-model="demandParams.spec" auto-complete="off"></el-input>
+                    <el-input style="width:300px" v-model="demandParams.spec" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="类别：" :required="true">
                     <el-select v-model="demandParams.type" placeholder="请选择">
@@ -73,21 +73,21 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="需求吨位：" :required="true">
-                    <el-input v-model="demandParams.demandWeight" auto-complete="off"></el-input>
+                    <el-input style="width:300px" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="目的地：" :required="true">
-                    <el-input v-model="demandParams.destination" auto-complete="off"></el-input>
+                    <el-input style="width:300px" v-model="demandParams.destination" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="客户：" :required="true">
-                    <el-input v-model="demandParams.customerName" auto-complete="off"></el-input>
+                    <el-input style="width:300px" v-model="demandParams.customerName" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话：" :required="true">
-                    <el-input v-model="demandParams.customerPhone" auto-complete="off"></el-input>
+                    <el-input style="width:300px" v-model="demandParams.customerPhone" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button  type="warning" @click="dlgDemandVisible = false">取 消</el-button>
                 <el-button  type="warning" @click="submitDdemand">提 交</el-button>
+                <el-button  type="warning" @click="dlgDemandVisible = false">取 消</el-button>
             </div>
        </el-dialog>
        <el-dialog title="" v-model="dlDemandView" size="tiny">

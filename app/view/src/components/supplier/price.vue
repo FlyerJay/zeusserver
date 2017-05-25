@@ -54,14 +54,14 @@
         </div>
 
        <el-dialog title="" v-model="dlgPriceVisible">
-          <el-form :model="newPriceParam">
+          <el-form :model="newPriceParam" label-width="120px" label-position="left">
             <el-form-item label="修改后的价格：">
-              <el-input v-model="newPriceParam.value" auto-complete="off"></el-input>
+              <el-input style="width:610px" v-model="newPriceParam.value" auto-complete="off"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dlgPriceVisible = false">取 消</el-button>
             <el-button type="warning" @click="confirmChangePrice(newPriceParam.row)">确 定</el-button>
+            <el-button @click="dlgPriceVisible = false">取 消</el-button>
           </div>
       </el-dialog>
     </div>
