@@ -223,7 +223,10 @@
             }
         },
         mounted: function() {
-            this.loadDemandList(this.params)
+            this.loading = true;
+            this.loadDemandList(this.params).then(()=>{
+                this.loading = false;
+            })
         },
         computed: {
             demandAuth() {
