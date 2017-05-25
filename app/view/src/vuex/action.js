@@ -1,3 +1,4 @@
+import { Message } from 'element-ui';
 export const updateForm = ({ dispatch }, key, val) => {
   dispatch('UPDATE_FORM', key, val)
 }
@@ -10,11 +11,11 @@ export const loadSupList = ({ dispatch }, params) => {
       dispatch('UPDATE_SUPFORM', 'supInfo', response.data.data);
       return Promise.resolve();
     } else if (response.data.code === -1){
-      dispatch('UPDATE_SUPFORM', 'supInfo', {})
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -25,10 +26,11 @@ export const loadSupAddress = ({ dispatch }, params) => {
     if (response.data.code === 200) {
      dispatch('UPDATE_SUPFORM', 'supAddress', response.data.data)
     } else if (response.data.code === -1) {
-     dispatch('UPDATE_SUPFORM', 'supAddress', [])
+     showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -39,10 +41,11 @@ export const addNewSup = ({ dispatch }, newSupParam) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -53,10 +56,11 @@ export const addNewFre = ({ dispatch }, params) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 //删除供应商 
@@ -66,10 +70,11 @@ export const deletSupplier = ({ dispatch }, params) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 //删除运费信息
@@ -79,10 +84,11 @@ export const deleteFreight = ({ dispatch }, params) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -93,10 +99,11 @@ export const updataSup = ({ dispatch },newSupParam) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -108,10 +115,11 @@ export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
       loadSupPriceList({ dispatch }, searchSupParam);
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -124,10 +132,11 @@ export const loadStock = ({ dispatch }, params) => {
       return Promise.resolve();
     } else if (response.data.code === -1) {
       dispatch('UPDATE_ORDERFORM', 'stockInfo', [])
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -139,10 +148,11 @@ export const loadOrdAddress = ({ dispatch }, params) => {
     if (response.data.code === 200) {
      dispatch('UPDATE_ORDERFORM', 'ordAddress', response.data.data)
     } else if (response.data.code === -1) {
-     dispatch('UPDATE_ORDERFORM', 'ordAddress', [])
+     showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -155,10 +165,11 @@ export const addTocart = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -167,12 +178,14 @@ export const updateCart = ({dispatch},params) => {
   return axios.post('/zues/api/chart/update',params)
   .then(function (response) {
     if (response.data.code === 200) {
-      //dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     }else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
+  .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
+  });
 }
 
 //加载购物车列表
@@ -183,10 +196,11 @@ export const loadCartList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -198,10 +212,11 @@ export const addToList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -213,10 +228,11 @@ export const removeCartList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -228,10 +244,11 @@ export const loadOrderList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -243,10 +260,11 @@ export const loadOrderDetail = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'orderDetail', response.data.data.row)
       return Promise.resolve(response.data.data.row);
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -258,10 +276,11 @@ export const removeOrderList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'orderList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -273,10 +292,11 @@ export const loadSupPriceList = ({ dispatch }, params) => {
       dispatch('UPDATE_SUPFORM', 'price', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -288,10 +308,11 @@ export const supPriceAdjust = ({ dispatch }, params) => {
       dispatch('UPDATE_SUPFORM', 'price', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -303,10 +324,11 @@ export const loadSupInventoryList = ({ dispatch }, params) => {
       dispatch('UPDATE_SUPFORM', 'inventory', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -318,24 +340,26 @@ export const loadSpecList = ({ dispatch }, params) => {
       dispatch('UPDATE_MANAGERFORM', 'spec', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
 //管理员审核订单
 export const reviewSpec = ({ dispatch }, params) => {
-  return axios.get('/zues/api/order/verify', { params })
+  return axios.post('/zues/api/order/verify', params)
   .then(function (response) {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch }, response.data.msg);
   });
 }
 
@@ -350,10 +374,11 @@ export const loadOperateList = ({ dispatch }, params) => {
       return Promise.resolve();
     } else if (response.data.code === -1) {
       dispatch('UPDATE_MANAGERFORM', 'operateInfo', {})
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -366,10 +391,11 @@ export const loadfreightList = ({ dispatch }, params) => {
       dispatch('UPDATE_SUPFORM', 'freightList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -381,10 +407,11 @@ export const updateFre = ({ dispatch }, params) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -396,10 +423,11 @@ export const loadDemandList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'demandInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -412,10 +440,11 @@ export const addToDemandList = ({ dispatch }, params) => {
       dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -429,10 +458,11 @@ export const loadmemberList = ({ dispatch }, params) => {
       return Promise.resolve();
     } else if (response.data.code === -1) {
       dispatch('UPDATE_MANAGERFORM', 'userRoleInfo', {})
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -443,10 +473,11 @@ export const updateuserRole = ({ dispatch },newParam) => {
     if (response.data.code === 200) {   
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -457,10 +488,11 @@ export const removeCookie = ({ dispatch }, params) => {
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
   });
 }
 
@@ -472,10 +504,19 @@ export const getUserRole = ({ dispatch }, params) => {
       dispatch('UPDATE_MANAGERFORM', 'userRole', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
-      dispatch('UPDATE_MANAGERFORM', 'userRole', {})
-      return Promise.reject();
+      showErrorMessage({ dispatch },response.data.msg);
     }
   })
   .catch(function (response) {
+    showErrorMessage({ dispatch },response.data.msg);
+  });
+}
+
+//展示错误信息
+export const showErrorMessage = ({ dispatch }, msg) => {
+  Message({
+    showClose: true,
+    message: msg,
+    type: 'warning'
   });
 }

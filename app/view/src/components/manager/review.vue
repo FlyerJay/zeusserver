@@ -1,6 +1,6 @@
 <template lang="html">
     <div class='order-wrap'>
-    	  <el-table :data="spec.row" :load="loading">
+    	  <el-table :data="spec.row" v-loading.body="loading" element-loading-text="拼命加载中">
             <el-table-column type="expand">
               <template scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -46,7 +46,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="specParams.page"
-            :page-size="30"
+            :page-size="2"
             layout=" prev, pager, next"
             :total="spec.totalCount">
           </el-pagination>
@@ -81,7 +81,7 @@ export default {
       return{
           specParams: {
               page: 1,
-              shenhe:"未审核"
+              shenhe: "未审核"
           },
           reviewParams: {
              orderNo: '',
@@ -94,6 +94,11 @@ export default {
   methods:{
     handleCurrentChange(val){
       this.specParams.page = val;
+      this.loading = true;
+      this.loadSpecList(this.specParams)
+      .then(rs => {
+        this.loading = false;
+      });
     },
     review(index,row){
       this.reviewParams.orderNo = row.orderNo;
@@ -103,16 +108,24 @@ export default {
       .then(rs => {
         this.reviewSpec(this.reviewParams)
         .then(rs => {
-
-        })
-      })
-      .catch(rs => {
-
+            this.$message({
+              message: `审核成功`,
+              type: 'success'
+            });
+            this.loading = true;
+            this.loadSpecList(this.specParams)
+            .then(rs => {
+              this.loading = false;
+            });
+        });
       });
     }
   },
   mounted: function() {
     this.loadSpecList(this.specParams)
+    .then(rs => {
+      this.loading = false;
+    });
   }
 }
 </script>
