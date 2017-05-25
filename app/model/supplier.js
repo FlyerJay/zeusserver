@@ -159,6 +159,7 @@ module.exports = app => {
                     code:-1,
                     msg:"请选择供应商地址"
                 }
+                options.isDelete = 'N';
                 const isExsit = yield this.findOne({
                     where:{
                         supplierName:{
