@@ -28,8 +28,11 @@
                 <el-button type="warning" @click="searchPrice" :loading="loading">查询</el-button>
             </el-form-item>
             <el-form-item>
+                <el-button type="warning" @click="dlgUnitePriceVisible = true">价格调整</el-button>
+            </el-form-item>
+            <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel">
-                    <el-button type="warning" v-if="valueAuth">上传价格表</el-button>
+                    <el-button type="info" v-if="valueAuth">上传价格表</el-button>
                 </el-upload>
             </el-form-item>
     
@@ -53,17 +56,42 @@
             </el-pagination>
         </div>
 
-       <el-dialog title="" v-model="dlgPriceVisible">
-          <el-form :model="newPriceParam" label-width="120px" label-position="left">
-            <el-form-item label="修改后的价格：">
+        <el-dialog title="" v-model="dlgPriceVisible">
+            <el-form :model="newPriceParam" label-width="120px" label-position="left">
+                <el-form-item label="修改后的价格：">
+                <el-input style="width:90%" v-model="newPriceParam.value" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="warning" @click="confirmChangePrice(newPriceParam.row)">确 定</el-button>
+                <el-button @click="dlgPriceVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+
+        <!--价格统一调整dlg-->
+        <el-dialog title="" v-model="dlgUnitePriceVisible">
+          <el-form :model="unitePriceParam" label-width="120px" label-position="left">
+            <el-form-item label="规格：">
+              <el-input style="width:90%" v-model="newPriceParam.spec" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="类别：">
+              <el-input style="width:90%" v-model="newPriceParam.type" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="地址：">
+              <el-input style="width:90%" v-model="newPriceParam.address" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="最新更新时间：">
               <el-input style="width:90%" v-model="newPriceParam.value" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="供应商：">
+              <el-input style="width:90%" v-model="newPriceParam.supplierName" auto-complete="off"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="warning" @click="confirmChangePrice(newPriceParam.row)">确 定</el-button>
+            <el-button type="warning" @click="unitePriceAdjust(newPriceParam)">确 定</el-button>
             <el-button @click="dlgPriceVisible = false">取 消</el-button>
           </div>
-      </el-dialog>
+        </el-dialog>
     </div>
 </template>
 
@@ -71,6 +99,7 @@
     import {
         loadSupPriceList,
         loadSupAddress,
+        supPriceAdjust,
         updataPrice
     } from '../../vuex/action'
     
@@ -79,6 +108,7 @@
             actions: {
                 loadSupPriceList,
                 loadSupAddress,
+                supPriceAdjust,
                 updataPrice
             },
             getters: {
@@ -93,8 +123,7 @@
                 }) => common.userInfo,
                 userRoleInfo:({
                     manager
-                }) => manager.userRoleInfo,
-
+                }) => manager.userRoleInfo
             }
         },
         data() {
@@ -112,8 +141,17 @@
                     supplierValueId: '',
                     row: ''
                 },
+                unitePriceParam: {
+                    comId: '',
+                    spec: '',
+                    lastUpdateTime: '',
+                    type: '',
+                    address: '',
+                    supplierName: ''
+                },
                 loading: true,
-                dlgPriceVisible: false
+                dlgPriceVisible: false,
+                dlgUnitePriceVisible: false
             }
         },
         methods: {
@@ -148,6 +186,9 @@
                     .then(() => {
                         this.loading = false;
                     });
+            },
+            adjustPrice() {
+
             }
         },
         mounted: function() {
