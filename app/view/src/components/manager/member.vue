@@ -214,6 +214,7 @@ export default {
     addUser() {
         this.addNewUser(this.newUserParams)
         .then(rs=>{
+          this.dlgAddUserVisible = false;  
           this.loading = true;  
           this.loadmemberList(this.memberParams)
             .then(rs => {

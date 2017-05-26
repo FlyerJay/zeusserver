@@ -31,7 +31,7 @@
     
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
-                    <el-button type="warning" v-if="inventoryAuth">上传库存表</el-button>
+                    <el-button type="info" v-if="inventoryAuth">上传库存表</el-button>
                 </el-upload>
             </el-form-item>
     
