@@ -63,7 +63,7 @@ module.exports = app => {
                 var isExist = yield this.findOne({
                     where:{
                         userId:{
-                            $eq:options.userId
+                            $eq:options.registerId
                         }
                     }
                 });
@@ -91,6 +91,7 @@ module.exports = app => {
                             inventoryAuth:0,
                             demandAuth:0,
                             orderAuth:0,
+                            supplierAuth:0,
                             lastUpdateTime:new Date().getTime()
                         },{transaction:t})
                         var userData = {
