@@ -1,251 +1,243 @@
-<template lang="html">
+<template>
+    <div> 
+        <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
+          <el-form-item label="规格：">
+             <el-input v-model="searchDeParam.spec" placeholder="输入规格"></el-input>
+          </el-form-item>
+          <el-form-item label="时间：">
+            <el-date-picker
+                v-model="searchTime"
+                type="date"
+                placeholder="选择日期"
+                :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="warning" @click="searchDemand">查询</el-button>
+          </el-form-item>
+       </el-form>
+        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true" v-if="demandAuth">定制需求录入</el-button>
+        <div class="title">定制货品列表</div> 
+        <div class="tb-wrap">
+          <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading">
+                <el-table-column prop="spec" label="规格" width="">
+                </el-table-column>
+                <el-table-column prop="createTime" label="最新更新时间(按采购)" width="" :formatter="dateFormat">
+                </el-table-column>
+                <el-table-column prop="type" label="类别" width="">
+                </el-table-column>
+                <el-table-column label="需求明细" align="center" property="id">
+                     <template scope="scope">
+                        <el-button size="small" @click="viewDetail(scope.row)" type="warning" >点击查看</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="timeConsume" label="工期">
+                </el-table-column>
+                <el-table-column prop="userId" label="用户ID">
+                </el-table-column>
+                <el-table-column prop="factoryPrice" label="出厂价">
+                </el-table-column>
+                <el-table-column prop="freight" label="运费">
+                </el-table-column>
+                <el-table-column prop="totalPrice" label="总成本"> 
+                </el-table-column>
+                <el-table-column prop="dealStatus" :formatter="statusFormatter" label="成交接口">
+                </el-table-column>
+                <el-table-column prop="dealReason" label="原因">
+                </el-table-column>
+          </el-table>
+        </div>
+        <div class="page-wrap">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="searchDeParam.page"
+            layout=" prev, pager, next"
+            :page-size="30"
+            :total="demandInfo.totalCount"
+          >
+          </el-pagination>
+        </div>
+        <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
+            <el-form :model="demandParams" label-width="100px" label-position="left">
+                <el-form-item label="规格：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.spec" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="类别：" :required="true">
+                    <el-select v-model="demandParams.type" placeholder="请选择">
+                        <el-option
+                        v-for="item in typeArray"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="需求吨位：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="目的地：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.destination" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="客户：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.customerName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.customerPhone" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button  type="warning" @click="submitDdemand">提 交</el-button>
+                <el-button  type="warning" @click="dlgDemandVisible = false">取 消</el-button>
+            </div>
+       </el-dialog>
+       <el-dialog title="" v-model="dlDemandView" size="tiny">
+            <el-form :model="demandDatas" label-width="80px" label-position="left">
+                <el-form-item label="规格：">
+                   <el-input style="width:85%" v-model="demandDatas.spec" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="类别：">
+                   <el-input style="width:85%" v-model="demandDatas.type" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="需求吨位：">
+                   <el-input style="width:85%" v-model="demandDatas.demandWeight" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="目的地：">
+                   <el-input style="width:85%" v-model="demandDatas.destination" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="客户：">
+                   <el-input style="width:85%" v-model="demandDatas.customerName" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话：">
+                   <el-input style="width:85%" v-model="demandDatas.customerPhone" :disabled="true" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+       </el-dialog>
+  </div>
+</template>
 
 <script>
-  import {
-    loadSupAddress,
-    loadSupList,
-    loadfreightList,
-    addNewSup,
-    addNewFre,
-    updataSup,
-    updateFre,
-    deletSupplier,
-    deleteFreight
-  } from '../../vuex/action'
-  
-  export default {
-    vuex: {
-      actions: {
-        loadSupList,
-        loadSupAddress,
-        addNewSup,
-        addNewFre,
-        updataSup,
-        loadfreightList,
-        updateFre,
-        deletSupplier,
-        deleteFreight
-      },
-      getters: {
-        supInfo: ({
-          supplier
-        }) => supplier.supInfo,
-        supAddress: ({
-          supplier
-        }) => supplier.supAddress,
-        userInfo: ({
-          common
-        }) => common.userInfo,
-        freightList: ({
-          supplier
-        }) => supplier.freightList
-      }
-    },
-    data() {
-      return {
-        searchSupParam: {
-          supplierName: '',
-          address: '',
-          page: 1,
-          comId: this.userInfo.comId
-        },
-        newSupParam: {
-          supplierName: '',
-          address: '',
-          freight: '',
-          benifit: '',
-          freightId: '',
-          comId: this.userInfo.comId
-        },
-        changeSupParam: {
-          supplierName: '',
-          address: '',
-          freight: '',
-          benifit: '',
-          supplierId: '',
-          row: '',
-          comId: this.userInfo.comId
-        },
-        freParam: {
-          address: '',
-          freight: ''
-        },
-        changeFreParam: {
-          address: '',
-          freight: ''
-        },
-        deleteSupParams: {
-          supplierId: ''
-        },
-        deleteFreParams: {
-          freightId: ''
-        },
-        activeName: "first",
-        dlgSupVisible: false,
-        dlgChangeSupVisible: false,
-        fredlgAddshow: false,
-        fredlgChangeshow: false,
-        infoloading: true,
-        freightloading: true
-      }
-    },
-    methods: {
-      searchSup() {
-        this.infoloading = true;
-        this.loadSupList(this.searchSupParam)
-          .then(rs => {
-            this.infoloading = false;
-          })
-      },
-      handleInfoCurrentChange(val) {
-        this.searchSupParam.page = val;
-        this.infoloading = true;
-        this.loadSupList(this.searchSupParam)
-          .then(() => {
-            this.infoloading = false;
-          });
-      },
-      handleFreightCurrentChange(val) {
-        this.searchSupParam.page = val;
-        this.freightloading = true;
-        this.loadfreightList(this.searchSupParam)
-          .then(() => {
-            this.freightloading = false;
-          });
-      },
-      addSup() { //录入供应商信息
-        this.addNewSup(this.newSupParam)
-          .then(rs => {
-            this.$message({
-              message: `信息录入成功`,
-              type: 'success'
-            })
-            this.dlgSupVisible = false;
-            this.dlgFreightVisible = false;
-            this.loadSupList(this.searchSupParam);
-          })
-      },
-      addFre() { //录入运费信息
-        this.addNewFre(this.freParam)
-          .then(rs => {
-            this.$message({
-              message: `信息录入成功`,
-              type: 'success'
-            })
-            this.fredlgAddshow = false;
-            this.loadSupList(this.searchSupParam);
-          })
-      },
-      deleteSup(index, row) {
-        this.$confirm('确认删除?', '提示', {
-          cancelButtonText: '取消',
-          confirmButtonText: '确定',
-          type: 'warning'
-        }).then(() => {
-          this.deleteSupParams.supplierId = row.supplierId.toString();
-          this.deletSupplier(this.deleteSupParams)
-            .then(rs => {
-              this.$message({
-                message: `删除成功`,
-                type: 'success'
-              })
-              this.loadSupList(this.searchSupParam);
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });    
-      },
-      deleteFre(index, row) {
-        this.$confirm('确认删除?', '提示', {
-          cancelButtonText: '取消',
-          confirmButtonText: '确定',
-          type: 'warning'
-        }).then(() => {
-          this.deleteFreParams.freightId = row.freightId.toString();
-          this.deleteFreight(this.deleteFreParams)
-            .then(rs => {
-              this.$message({
-                message: `删除成功`,
-                type: 'success'
-              })
-              this.loadfreightList(this.searchSupParam);
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });  
-      },
-      changeSupDlg(index, row) { //修改供应商dlg
-        this.dlgChangeSupVisible = true;
-        this.changeSupParam.supplierName = row.supplierName;
-        this.changeSupParam.address = row.address;
-        this.changeSupParam.freight = row.freight;
-        this.changeSupParam.benifit = row.benifit;
-        this.changeSupParam.supplierId = row.supplierId;
-        this.changeSupParam.row = row
-      },
-      changeSup(row) { //确认修改供应商信息
-        this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
-          .then(rs => {
-            this.$message({
-              message: `信息修改成功`,
-              type: 'success'
-            });
-            this.dlgChangeSupVisible = false;
-            this.loadSupList(this.searchSupParam);
-          })
-      },
-      changeFreDlg(index, row) { // 修改运费dlg
-        this.fredlgChangeshow = true;
-        this.changeFreParam.freight = row.freight;
-        this.changeFreParam.freightId = row.freightId;
-        this.changeFreParam.address = row.address;
-        this.changeFreParam.row = row
-      },
-      changeFre(row) { //确认修改运费
-        this.updateFre(this.changeFreParam)
-          .then(rs => {
-            this.$message({
-              message: `信息修改成功`,
-              type: 'success'
-            })
-            this.fredlgChangeshow = false;
-            this.loadfreightList();
-          })
-      },
-    },
-    mounted: function() {
-      this.loadSupAddress({
-        comId: this.userInfo.comId
-      });
-      this.loadSupList({
-        comId: this.userInfo.comId
-      }).then(rs => {
-        this.infoloading = false;
-      });
-      this.loadfreightList({
-        comId: this.userInfo.comId
-      }).then(rs => {
-        this.freightloading = false;
-      })
-    },
-    computed: {
-      supplierAuth() {
-        return Boolean(parseInt(this.userInfo.userRole.charAt(3)));
-      }
-    }
-  }
-</script>
+    import {
+      loadDemandPriceList,
+      addToDemandList
+    } from '../../vuex/action'
 
-<style lang="less" scoped>
-  .sup-info {
-    .demo-form-inline {
-        margin-top: 16px;
+    export default {
+        vuex: {
+            actions: {
+                loadDemandPriceList,
+                addToDemandList
+            },
+            getters: {
+                userInfo: ({
+                    common
+                }) => common.userInfo,
+                demandInfo:({
+                    order
+                }) => order.demandInfo
+            }
+        },
+        data() {
+            return {
+                demandParams:{
+                    spec:'',
+                    type:'',
+                    material:'',
+                    charAddress:'',
+                    charTel:'',
+                    demandListId:'',
+                    demandWeight:'',
+                    destination:'',
+                    customerName:'',
+                    customerPhone:'',
+                },
+                demandDatas: {
+                    spec:'',
+                    type:'',
+                    charAddress:'',
+                    demandWeight:'',
+                    destination:'',
+                    customerName:'',
+                    customerPhone:'',
+                },
+                searchDeParam:{
+                    spec: '',
+                    searchTime: '',
+                    page: 1,
+                },
+                typeArray:['黑管','镀锌','镀锌带'],
+                dlgDemandVisible: false,
+                dlDemandView: false,
+                loading: true,
+                searchTime: ''
+            }
+        },
+        methods: {
+            handleCurrentChange(val) {
+                this.searchDeParam.page = val;
+                this.loading = true;
+                this.loadStock(this.searchDeParam)
+                .then(() => {
+                    this.loading = false;
+                });
+            },
+            dateFormat(row, column) {
+                return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
+            },
+            statusFormatter(row, column) {
+                const status = {
+                    '0': '未成交',
+                    '1': '已成交',
+                    '2': '成交失败' 
+                }
+                return status[row.dealStatus];
+            },
+            viewDetail(row) {
+                this.demandDatas = row;
+                this.dlDemandView = true;
+            },
+            pickerOptions(){
+
+            },
+            enterNum(index, row) {
+                this.dlgDemandVisible = true;
+                this.demandParams.demandListId = row.demandListId;
+            },
+            submitDdemand(){
+                this.addToDemandList(this.demandParams)
+                .then(rs => {
+                    this.$message({
+                        message: `信息录入成功`,
+                        type: 'success'
+                    })
+                    this.loadDemandPriceList(this.searchDeParam);
+                    this.dlgDemandVisible = false;
+                })
+            },
+            searchDemand(){
+                this.loading = true;
+                this.searchDeParam.searchTime = this.searchTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd'):'';
+                this.loadDemandPriceList(this.searchDeParam)
+                .then(() => {
+                    this.loading = false;
+                });
+            }
+        },
+        mounted: function() {
+            this.loading = true;
+            this.loadDemandPriceList(this.params).then(()=>{
+                this.loading = false;
+            })
+        },
+        computed: {
+            demandAuth() {
+                return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
+            }
+        }
     }
+</script>
+<style lang="css">
+  .title{
+    margin: 20px 0px;
+    font-size: 20px;
   }
 </style>

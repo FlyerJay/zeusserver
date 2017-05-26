@@ -61,6 +61,7 @@ module.exports = app => {
   
   //定制化需求
   app.get('/zues/api/demand/list','demand.list');
+  app.get('/zues/api/demand/price','demand.priceList');
   app.post('/zues/api/demand/add','demand.add');
   app.post('/zues/api/demand/update','demand.update');
   app.post('/zues/api/demand/remove','demand.remove');

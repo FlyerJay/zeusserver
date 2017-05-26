@@ -6,6 +6,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Demand.list(ctx.query);
     };
+    * priceList() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Demand.priceList(ctx.query);
+    };
     * add() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');

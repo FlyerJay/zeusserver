@@ -168,7 +168,41 @@ module.exports = app => {
                         },
                         createTime:{
                             $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
+                        },
+                        userId:{
+                            $eq:options.userId,
                         }
+                    }
+                })
+                return {
+                    code:200,
+                    msg:"查询数据成功",
+                    data:{
+                        totalCount:list.count,
+                        row:list.rows,
+                        page:options.page?options.page:1,
+                        pageSize:options.pageSize?options.pageSize:30
+                    }
+                }
+            },
+            * priceList(options){//定制化需求报价
+                if(!options.comId) return {
+                    code:-1,
+                    msg:"缺少公司信息"
+                }
+                const list = yield this.findAndCountAll({
+                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                    limit:options.pageSize?options.pageSize:30,
+                    where:{
+                        comId:{
+                            $eq:options.comId
+                        },
+                        spec:{
+                            $like:options.spec?`%${options.spec}%`:'%%'
+                        },
+                        createTime:{
+                            $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
+                        },
                     }
                 })
                 return {

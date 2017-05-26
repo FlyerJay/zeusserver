@@ -4,6 +4,7 @@ import Supplier from '../components/supplier/supplier'
 import Info from '../components/supplier/info'
 import Price from '../components/supplier/price'
 import Stock from '../components/supplier/stock'
+import DemandPrice from '../components/supplier/demand'
 
 //管理员后台
 import Manager from '../components/manager/manager'
@@ -64,6 +65,10 @@ export default new Router({
         {
           path: 'stock',
           component: Stock
+        },
+        {
+          path: 'demand',
+          component: DemandPrice
         }
       ]
     },
