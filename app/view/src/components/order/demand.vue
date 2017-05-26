@@ -41,7 +41,7 @@
                 </el-table-column>
                 <el-table-column prop="totalPrice" label="总成本"> 
                 </el-table-column>
-                <el-table-column prop="dealStatus" :formatter="statusFormatter" label="成交接口">
+                <el-table-column prop="dealStatus" :formatter="statusFormatter" label="成交结果">
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>

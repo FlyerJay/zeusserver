@@ -462,6 +462,22 @@ export const addToDemandList = ({ dispatch }, params) => {
   });
 }
 
+//更新定制化需求
+export const upDateDemandList = ({ dispatch }, params) => {
+  return axios.post('/zues/api/demand/update',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM','demandList', response.data.data.row)
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      showErrorMessage({ dispatch },response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error) {
+    return Promise.reject();
+  })
+}
+
 
 //读取成员信息
 export const loadmemberList = ({ dispatch }, params) => {

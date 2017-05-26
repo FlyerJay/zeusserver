@@ -24,16 +24,11 @@
                 </el-table-column>
                 <el-table-column prop="createTime" label="最新更新时间(按采购)" width="" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="type" label="类别" width="">
+                <el-table-column prop="demandWeight" label="需求吨位" width="">
                 </el-table-column>
-                <el-table-column label="需求明细" align="center" property="id">
-                     <template scope="scope">
-                        <el-button size="small" @click="viewDetail(scope.row)" type="warning" >点击查看</el-button>
-                    </template>
+                <el-table-column prop="customerName" label="客户简称">
                 </el-table-column>
-                <el-table-column prop="timeConsume" label="工期">
-                </el-table-column>
-                <el-table-column prop="userId" label="用户ID">
+                <el-table-column prop="userId" label="业务员">
                 </el-table-column>
                 <el-table-column prop="factoryPrice" label="出厂价">
                 </el-table-column>
@@ -41,9 +36,10 @@
                 </el-table-column>
                 <el-table-column prop="totalPrice" label="总成本"> 
                 </el-table-column>
-                <el-table-column prop="dealStatus" :formatter="statusFormatter" label="成交接口">
-                </el-table-column>
-                <el-table-column prop="dealReason" label="原因">
+                <el-table-column label="操作" align="center" property="id">
+                     <template scope="scope">
+                        <el-button size="small" @click="updateDemand(scope.row)" type="warning" >报价</el-button>
+                    </template>
                 </el-table-column>
           </el-table>
         </div>
@@ -59,58 +55,20 @@
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
             <el-form :model="demandParams" label-width="100px" label-position="left">
-                <el-form-item label="规格：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.spec" auto-complete="off"></el-input>
+                <el-form-item label="出厂价：" :required="true">
+                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.factoryPrice" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="类别：" :required="true">
-                    <el-select v-model="demandParams.type" placeholder="请选择">
-                        <el-option
-                        v-for="item in typeArray"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="运费：" :required="true">
+                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.freight" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="需求吨位：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="目的地：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.destination" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="客户：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.customerName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.customerPhone" auto-complete="off"></el-input>
+                <el-form-item label="总成本：" :required="true">
+                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.totalPrice" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button  type="warning" @click="submitDdemand">提 交</el-button>
+                <el-button  type="warning" @click="submitUpdate">提 交</el-button>
                 <el-button  type="warning" @click="dlgDemandVisible = false">取 消</el-button>
             </div>
-       </el-dialog>
-       <el-dialog title="" v-model="dlDemandView" size="tiny">
-            <el-form :model="demandDatas" label-width="80px" label-position="left">
-                <el-form-item label="规格：">
-                   <el-input style="width:85%" v-model="demandDatas.spec" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="类别：">
-                   <el-input style="width:85%" v-model="demandDatas.type" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="需求吨位：">
-                   <el-input style="width:85%" v-model="demandDatas.demandWeight" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="目的地：">
-                   <el-input style="width:85%" v-model="demandDatas.destination" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="客户：">
-                   <el-input style="width:85%" v-model="demandDatas.customerName" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话：">
-                   <el-input style="width:85%" v-model="demandDatas.customerPhone" :disabled="true" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
        </el-dialog>
   </div>
 </template>
@@ -118,14 +76,14 @@
 <script>
     import {
       loadDemandPriceList,
-      addToDemandList
+      upDateDemandList
     } from '../../vuex/action'
 
     export default {
         vuex: {
             actions: {
                 loadDemandPriceList,
-                addToDemandList
+                upDateDemandList
             },
             getters: {
                 userInfo: ({
@@ -159,14 +117,18 @@
                     customerName:'',
                     customerPhone:'',
                 },
+                demanUpdateParams: {
+                    demandId:0,
+                    freight:0,
+                    factoryPrice:0,
+                    totalPrice:0,
+                },
                 searchDeParam:{
                     spec: '',
                     searchTime: '',
                     page: 1,
                 },
-                typeArray:['黑管','镀锌','镀锌带'],
                 dlgDemandVisible: false,
-                dlDemandView: false,
                 loading: true,
                 searchTime: ''
             }
@@ -180,6 +142,13 @@
                     this.loading = false;
                 });
             },
+            updateDemand(row) {
+                this.dlgDemandVisible = true;
+                this.demanUpdateParams.demandId = row.demandId;
+            },
+            submitUpdate() {
+                this.upDateDemandList( this.demanUpdateParams );
+            },
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
             },
@@ -190,10 +159,6 @@
                     '2': '成交失败' 
                 }
                 return status[row.dealStatus];
-            },
-            viewDetail(row) {
-                this.demandDatas = row;
-                this.dlDemandView = true;
             },
             pickerOptions(){
 
