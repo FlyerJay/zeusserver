@@ -26,7 +26,7 @@ module.exports = app => {
     };
     * register() {
 		  const ctx = this.ctx;
-      const user =  yield ctx.model.User.userLogin(ctx.request.body);
+      const user =  yield ctx.model.User.registeUser(ctx.request.body);
       ctx.body = user;
     };
     * info() {
