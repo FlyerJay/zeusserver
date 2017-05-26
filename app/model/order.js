@@ -65,6 +65,7 @@ module.exports = app => {
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
                 AND orderNo LIKE :orderNo
+                AND validate = 0
                 ORDER BY o.createTime DESC
                 LIMIT :start,:offset
                 `,{
@@ -80,6 +81,7 @@ module.exports = app => {
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
                 AND orderNo LIKE :orderNo
+                AND validate = 0
                 ORDER BY o.createTime DESC
                 `,{
                     replacements:{
