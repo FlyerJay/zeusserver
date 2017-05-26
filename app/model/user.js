@@ -67,7 +67,7 @@ module.exports = app => {
                         }
                     }
                 });
-                options.userId = registerId;
+                options.userId = options.registerId;
                 if(isExist) return {
                     code:-1,
                     message:"账号已存在"
