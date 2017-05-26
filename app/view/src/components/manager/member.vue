@@ -17,7 +17,8 @@
 	          </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="searchSup" :loading="loading">查询</el-button>
+                <el-button type="warning" @click="searchUser" :loading="loading">查询</el-button>
+                <el-button type="info" @click="dlgAddUserVisible = true">添加用户</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
@@ -104,7 +105,36 @@
               <el-button type="warning" @click="confireChangeAuth" :loading="updateload">确 定</el-button>
               <el-button @click="dlgChangeAuthVisible = false">取 消</el-button>
             </div>
-      </el-dialog>
+        </el-dialog>
+
+        <!--添加新用户弹窗-->
+        <el-dialog title="" v-model="dlgAddUserVisible" size="tiny">
+            <el-form :model="newUserParams" label-width="100px" label-position="left">
+                <el-form-item label="用户ID：" :required="true">
+                    <el-input style="width:85%" v-model="newUserParams.registerId" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码：" :required="true">
+                    <el-input style="width:85%" v-model="newUserParams.password" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="公司：" :required="true">
+                    <el-select v-model="newUserParams.comId" placeholder="请选择">
+                        <el-option value="南京奎鑫">南京奎鑫</el-option>
+                        <el-option value='武汉奎鑫'>武汉奎鑫</el-option>
+                        <el-option value='西安奎鑫'>西安奎鑫</el-option>
+                        <el-option value='长春奎鑫'>长春奎鑫</el-option>
+                        <el-option value='沈阳奎鑫'>沈阳奎鑫</el-option>
+                        <el-option value='山东奎鑫'>山东奎鑫</el-option>
+                        <el-option value='南昌奎鑫'>南昌奎鑫</el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button  type="warning" @click="addUser">提 交</el-button>
+                <el-button  type="warning" @click="dlgAddUserVisible = false">取 消</el-button>
+            </div>
+       </el-dialog>
+
+
     </div>
 </template>
 
@@ -112,14 +142,16 @@
 
 import{
     loadmemberList,
-    updateuserRole
+    updateuserRole,
+    addNewUser
 }from '../../vuex/action'
 
 export default {
   vuex:{
      actions:{
        loadmemberList,
-       updateuserRole
+       updateuserRole,
+       addNewUser
      },
      getters:{
         userInfo:({
@@ -137,7 +169,7 @@ export default {
             page:1,
             comId: ''
         },
-        authParams:{
+        authParams: {
           orderAuth:'',
           valueAuth:'',
           inventoryAuth:'',
@@ -147,9 +179,15 @@ export default {
           comId: this.userInfo.comId,
           operator:''
         },
-      	 loading: true,
-         updateload: false,  
-         dlgChangeAuthVisible: false
+        newUserParams: {
+            registerId: '',
+            comId: '',
+            password: ''
+        },
+        loading: true,
+        updateload: false,  
+        dlgChangeAuthVisible: false,
+        dlgAddUserVisible: false
       }
   },
   methods:{
@@ -165,13 +203,23 @@ export default {
     handleCurrentChange(val){
       this.memberParams.page = val;
     },
-    searchSup(){//查找成员
+    searchUser() {//查找成员
         this.loading = true;
         this.memberParams.page = 1;
         this.loadmemberList(this.memberParams)
         .then(() => {
           this.loading = false;
        });
+    },
+    addUser() {
+        this.addNewUser(this.newUserParams)
+        .then(rs=>{
+          this.loading = true;  
+          this.loadmemberList(this.memberParams)
+            .then(rs => {
+                this.loading = false;
+            }).catch(rs=> {})
+        }).catch(rs=> {})
     },
     confireChangeAuth(){
         let upateParam = {};

@@ -494,6 +494,21 @@ export const updateuserRole = ({ dispatch },newParam) => {
   });
 }
 
+//添加新成员
+export const addNewUser = ({ dispatch }, param) => {
+  return axios.post('/zues/api/user/register', param)
+  .then(function (response) {
+    if (response.data.code === 200) {   
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //删除cookie
 export const removeCookie = ({ dispatch }, params) => {
   return axios.post('/zues/api/user/logout', params)
