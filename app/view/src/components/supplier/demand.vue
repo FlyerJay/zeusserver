@@ -16,7 +16,6 @@
             <el-button type="warning" @click="searchDemand">查询</el-button>
           </el-form-item>
        </el-form>
-        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgDemandVisible = true" v-if="demandAuth">定制需求录入</el-button>
         <div class="title">定制货品列表</div> 
         <div class="tb-wrap">
           <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading">
@@ -56,13 +55,13 @@
         <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
             <el-form :model="demandParams" label-width="100px" label-position="left">
                 <el-form-item label="出厂价：" :required="true">
-                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.factoryPrice" auto-complete="off"></el-input>
+                    <el-input style="width:85%" type="number" @input="computePrice" v-model="demanUpdateParams.factoryPrice" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="运费：" :required="true">
-                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.freight" auto-complete="off"></el-input>
+                    <el-input style="width:85%" type="number" @input="computePrice" v-model="demanUpdateParams.freight" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="总成本：" :required="true">
-                    <el-input style="width:85%" type="number" v-model="demanUpdateParams.totalPrice" auto-complete="off"></el-input>
+                    <el-input style="width:85%" type="number" :readonly="true" v-model="demanUpdateParams.totalPrice" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -122,6 +121,7 @@
                     freight:0,
                     factoryPrice:0,
                     totalPrice:0,
+                    demandWeight:0,
                 },
                 searchDeParam:{
                     spec: '',
@@ -145,9 +145,21 @@
             updateDemand(row) {
                 this.dlgDemandVisible = true;
                 this.demanUpdateParams.demandId = row.demandId;
+                this.demanUpdateParams.demandWeight = row.demandWeight;
             },
             submitUpdate() {
-                this.upDateDemandList( this.demanUpdateParams );
+                this.upDateDemandList( this.demanUpdateParams )
+                .then(()=>{
+                    this.dlgDemandVisible = false;
+                    this.$message({
+                        message: `报价已提交`,
+                        type: 'success'
+                    })
+                    this.loading = true;
+                    this.loadDemandPriceList(this.params).then(()=>{
+                        this.loading = false;
+                    })
+                })
             },
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
@@ -163,20 +175,14 @@
             pickerOptions(){
 
             },
+            totalPriceFormatter(row) {
+            },
+            computePrice() {
+                this.demanUpdateParams.totalPrice = (Number(this.demanUpdateParams.freight) + Number(this.demanUpdateParams.factoryPrice)) * Number(this.demanUpdateParams.demandWeight);
+            },
             enterNum(index, row) {
                 this.dlgDemandVisible = true;
                 this.demandParams.demandListId = row.demandListId;
-            },
-            submitDdemand(){
-                this.addToDemandList(this.demandParams)
-                .then(rs => {
-                    this.$message({
-                        message: `信息录入成功`,
-                        type: 'success'
-                    })
-                    this.loadDemandPriceList(this.searchDeParam);
-                    this.dlgDemandVisible = false;
-                })
             },
             searchDemand(){
                 this.loading = true;
@@ -197,7 +203,7 @@
             demandAuth() {
                 return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
             }
-        }
+        },
     }
 </script>
 <style lang="css">
