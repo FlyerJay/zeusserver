@@ -45,6 +45,11 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
+                <el-table-column label="交易反馈" align="center" property="id">
+                     <template scope="scope">
+                        <el-button size="small" @click="dealFeedback(scope.row)" :disabled="scope.row.totalPrice == 0 || !scope.row.totalPrice" type="warning" >填写</el-button>
+                    </template>
+                </el-table-column>
           </el-table>
         </div>
         <div class="page-wrap">
@@ -112,20 +117,44 @@
                 </el-form-item>
             </el-form>
        </el-dialog>
+
+       <el-dialog title="" v-model="dlFeedback" size="tiny">
+            <el-form :model="demandDatas" label-width="115px" label-position="left">
+                <el-form-item label="成交结果：">
+                   <el-select v-model="FeedbackParams.dealStatus" placeholder="请选择">
+                        <el-option
+                        v-for="item in dealStatusArray"
+                        :key="item.key"
+                        :label="item.key"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="原因：">
+                   <el-input style="width:85%" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button  type="warning" @click="submitFeedback">提 交</el-button>
+                <el-button  type="warning" @click="dlFeedback = false">取 消</el-button>
+            </div>
+       </el-dialog>
   </div>
 </template>
 
 <script>
     import {
       loadDemandList,
-      addToDemandList
+      addToDemandList,
+      upDateDemandList
     } from '../../vuex/action'
 
     export default {
         vuex: {
             actions: {
                 loadDemandList,
-                addToDemandList
+                addToDemandList,
+                upDateDemandList
             },
             getters: {
                 userInfo: ({
@@ -150,6 +179,11 @@
                     customerName:'',
                     customerPhone:'',
                 },
+                FeedbackParams:{
+                    demandId: '',
+                    dealStatus: 0,
+                    dealReason: '',
+                },
                 demandDatas: {
                     spec:'',
                     type:'',
@@ -165,8 +199,10 @@
                     page: 1,
                 },
                 typeArray:['黑管','镀锌','镀锌带'],
+                dealStatusArray:[{value:1,key:'交易成功'},{value:2,key:'交易失败'},{value:0,key:'未成交'}],
                 dlgDemandVisible: false,
                 dlDemandView: false,
+                dlFeedback: false,
                 loading: true,
                 searchTime: ''
             }
@@ -186,14 +222,32 @@
             statusFormatter(row, column) {
                 const status = {
                     '0': '未成交',
-                    '1': '已成交',
-                    '2': '成交失败' 
+                    '1': '交易成功',
+                    '2': '交易失败' 
                 }
                 return status[row.dealStatus];
             },
             viewDetail(row) {
                 this.demandDatas = row;
                 this.dlDemandView = true;
+            },
+            dealFeedback(row) {
+                this.dlFeedback = true;
+                this.FeedbackParams.demandId = row.demandId;
+            },
+            submitFeedback() {
+                this.upDateDemandList( this.FeedbackParams )
+                .then(()=>{
+                    this.dlFeedback = false;
+                    this.$message({
+                        message: `报价已提交`,
+                        type: 'success'
+                    })
+                    this.loading = true;
+                    this.loadDemandList(this.params).then(()=>{
+                        this.loading = false;
+                    })
+                })
             },
             pickerOptions(){
 

@@ -37,7 +37,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id">
                      <template scope="scope">
-                        <el-button size="small" @click="updateDemand(scope.row)" type="warning" >报价</el-button>
+                        <el-button size="small" :disabled="scope.row.dealStatus != 0" @click="updateDemand(scope.row)" type="warning" >报价</el-button>
                     </template>
                 </el-table-column>
           </el-table>
