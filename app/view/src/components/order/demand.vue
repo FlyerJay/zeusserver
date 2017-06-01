@@ -98,22 +98,22 @@
        <el-dialog title="" v-model="dlDemandView" size="tiny">
             <el-form :model="demandDatas" label-width="80px" label-position="left">
                 <el-form-item label="规格：">
-                   <el-input style="width:85%" v-model="demandDatas.spec" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.spec" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="类别：">
-                   <el-input style="width:85%" v-model="demandDatas.type" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.type" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="需求吨位：">
-                   <el-input style="width:85%" v-model="demandDatas.demandWeight" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="目的地：">
-                   <el-input style="width:85%" v-model="demandDatas.destination" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.destination" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="客户：">
-                   <el-input style="width:85%" v-model="demandDatas.customerName" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.customerName" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话：">
-                   <el-input style="width:85%" v-model="demandDatas.customerPhone" :disabled="true" auto-complete="off"></el-input>
+                   <el-input style="width:85%" v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
        </el-dialog>
