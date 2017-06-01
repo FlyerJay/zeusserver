@@ -7,6 +7,9 @@
             <el-form-item>
                 <el-button type="warning" @click="searchOrder" :loading="loading">查询</el-button>
             </el-form-item>
+            <el-form-item>
+                <el-button type="warning" @click="exportOrder" :loading="loading">导出Excel</el-button>
+            </el-form-item>
         </el-form>
         <div class="tb-wrap">
             <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading">
@@ -56,7 +59,8 @@
     import {
         loadOrderList,
         removeOrderList,
-        loadOrderDetail 
+        loadOrderDetail,
+        exportOrderList 
     } from '../../vuex/action'
     
     export default {
@@ -64,7 +68,7 @@
             actions: {
                 loadOrderList,
                 removeOrderList,
-                loadOrderDetail
+                loadOrderDetail,
             },
             getters: {
                 userInfo: ({
@@ -97,6 +101,10 @@
             },
             searchOrder() {
                 this.loadList();
+            },
+            exportOrder() {
+                var date = new Date().formatDate('yyyyMMdd');
+                window.open(`/zues/api/export/order/订单列表${date}.xls`);
             },
             statusFormatter(row,column){
                 return row.validate === 0 ? '未审核' : '已审核';

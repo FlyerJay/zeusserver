@@ -67,5 +67,5 @@ module.exports = app => {
   app.post('/zues/api/demand/remove','demand.remove');
 
   //导出报表
-  app.get('/zues/api/export/order','export.order');
+  app.get('/zues/api/export/order/*','export.order');
 };

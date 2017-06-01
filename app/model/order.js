@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING , INTEGER,DOUBLE } = app.Sequelize;
+    const { STRING , INTEGER, DOUBLE, BIGINT } = app.Sequelize;
 
     return app.model.define('Order',{
         orderNo: {
@@ -43,7 +43,7 @@ module.exports = app => {
             comment:"是否审核通过"
         },
         createTime:{
-            type:STRING,
+            type:BIGINT(20),
             allowNull:false,
             comment:"创建时间"
         }
