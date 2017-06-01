@@ -7,7 +7,7 @@
 var uuid = require('uuid');
 
 module.exports = app => {
-    const { STRING, INTEGER, DATE, UUID } = app.Sequelize;
+    const { STRING, INTEGER, DATE, UUID, BIGINT } = app.Sequelize;
 
     return app.model.define('Chart',{
         chartId: {
@@ -51,7 +51,7 @@ module.exports = app => {
             comment: "采购价格调整（与商家报价的相对值）"
         },
         createTime: {
-            type: STRING,
+            type: BIGINT(20),
             comment:"记录创建时间"
         }
     },{
@@ -89,7 +89,7 @@ module.exports = app => {
                 AND f.comId = c.comId
                 WHERE c.userId = :userId AND
                 c.comId = :comId
-                ORDER BY c.createTime DESC
+                ORDER BY s.supplierName DESC, c.createTime DESC
                 LIMIT :start,:offset`,
                 {
                     replacements:{

@@ -1,6 +1,6 @@
 const state = {
   stockInfo: {},//库存表单
-  cartList: [],
+  cartList: {},
   demandInfo: {},
   orderList: [],
   ordAddress: [],  //到岸目的地

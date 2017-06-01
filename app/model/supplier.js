@@ -131,7 +131,7 @@ module.exports = app => {
                                 freight:options.freight+''
                             }
                         })
-                    }else if(props != 'row'){
+                    }else if(props != 'row' && props != 'userId' && props != 'role'){
                         yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
                             replacements:{
                                 supplierId:options.supplierId,

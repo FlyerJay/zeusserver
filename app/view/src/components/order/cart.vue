@@ -6,7 +6,7 @@
                     <el-tag  color="red">  </el-tag>
                 </el-form-item>-->
                 <el-form-item label="已选商品(含运费):">
-                    <span>{{totalPrice|priceFilter}}</span>
+                    <span>{{totalPrice | priceFilter}}</span>
                     <el-button @click="submitOrder()" type="warning">提交</el-button>
                 </el-form-item>
             </el-form>
@@ -64,14 +64,17 @@
             custom-class="zues-dialog">
             <el-form :model="changeParams" label-width="80px" label-position="left">
                 <el-form-item label="采购数量" >
-                    <el-input style="width:85%"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
+                    <el-input style="width:85%" @input="computePrice"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="采购下浮">
-                    <el-input style="width:85%" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
+                    <el-input style="width:85%" @input="computePrice" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="总价">
+                    <el-input style="width:85%" v-model="changeParams.newPrice" :readonly="true" auto-complete="off" type="number"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="warning" @click="submitChange(changeParams)">确 定</el-button>
+                <el-button type="warning" @click="submitChange(changeParams.row)">确 定</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -127,8 +130,11 @@
                 },
                 changeParams:{
                     chartId: '',
-                    chartAmount: '',
-                    charAdjust: ''
+                    chartAmount: 0,
+                    chartAdjust: 0,
+                    newPrice: 0,
+                    oldPrice: 0,
+                    row: {}
                 },
                 supplierInventoryIds: [],
                 dialogVisible: false,
@@ -141,6 +147,7 @@
         methods: {
             handleCurrentChange(val) {
                 this.listParams.page = val;
+                this.loading = true;
                 this.loadCartList(this.listParams).then(()=>{
                     this.loading = false;
                 })
@@ -190,10 +197,13 @@
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
+                this.updateTotalPrice(this.supplierInventoryIds);
+            },
+            updateTotalPrice(row) {
                 var totalPrice = 0;
                 var totalWeight = 0;
                 var totalAdjust = 0;
-                this.supplierInventoryIds.map((v)=>{
+                row.map((v)=>{
                     totalPrice += v.totalPrice?Number(v.totalPrice):0;
                     totalWeight += v.chartWeight?Number(v.chartWeight):0;
                     totalAdjust += v.totalAdjust?Number(v.totalAdjust):0;
@@ -209,22 +219,56 @@
                this.submitParams.orderAdjust = this.totalAdjust;
                this.addToList(this.submitParams)
                .then(rs => {
-                 this.$message({
-                    message: `下单成功`,
-                    type: 'success'
-                 });
+                    this.$message({
+                        message: `下单成功`,
+                        type: 'success'
+                    });
+                    this.loading = true;
+                    this.loadCartList(this.listParams).then(()=>{
+                        this.loading = false;
+                    })
               });
             },
             updateChart(index,row) {
+                console.log(row);
                 this.dialogVisible = true;
-                this.changeParams = row;
+                this.changeParams.chartId = row.chartId;
+                this.changeParams.chartAmount = row.chartAmount;
+                this.changeParams.chartAdjust = row.chartAdjust;
+                this.changeParams.newPrice = row.totalPrice;
+                this.changeParams.oldPrice = row.totalPrice;
+                this.changeParams.row = row;
             },
-            submitChange(data) {
-                this.dialogVisible = false;
-                this.updateCart(this.changeParams);
+            computePrice() {
+                var specArr = this.changeParams.row.spec.split('*');
+                var height = Number(specArr[0]);
+                var width = Number(specArr[1]);
+                var land = Number(specArr[2]);
+                var long = Number(this.changeParams.row.long);
+                var per = Number(this.changeParams.row.perAmount);
+                var perimeter = 2 * height + 2 * width;
+                var weight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * this.changeParams.chartAmount * per)/1000).toFixed(2);
+                this.changeParams.newPrice = (( this.changeParams.row.purePrice - this.changeParams.chartAdjust ) * weight ).toFixed(2);
+            },
+            submitChange(row) {
+                this.updateCart(this.changeParams).then(() => {
+                    this.$message({
+                        message: `购物车修改成功`,
+                        type: 'success'
+                    });
+                    this.dialogVisible = false;
+                    row.chartAmount = this.changeParams.chartAmount;
+                    row.chartAdjust = this.changeParams.chartAdjust;
+                    this.supplierInventoryIds.map((v) => {
+                        if(v.chartId === row.chartId){
+                            this.totalPrice = Number(this.totalPrice) + Number(this.changeParams.newPrice) - Number(this.changeParams.oldPrice);
+                        }
+                    })
+                })
             }
         },
         mounted: function() {
+            this.loading = true;
             this.loadCartList(this.listParams).then(()=>{
                 this.loading = false;
             })
