@@ -44,6 +44,31 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * orderDetail(options) {
+            const list = yield app.model.query(`select od.*,s.supplierName from order_detail od 
+                left join supplier s
+                on s.supplierId = od.supplierId
+                where od.orderNo = :orderNo`,{
+                replacements:{
+                    orderNo:options.orderNo,
+                }
+            })
+            var tmpData = [];
+            tmpData.push(['规格','类型','供应商','数量','单价','重量','下浮']);
+            list[0].map((v)=>{
+                const spec = v['spec'];
+                const type = v['type'];
+                const supplierName = v['supplierName'];
+                const orderAmount = v['orderAmount'];
+                const unitPrice = v['unitPrice'];
+                const Weight = v['Weight'];
+                const orderDcrease = v['orderDcrease'];
+                var lineData = [spec,type,supplierName,orderAmount,unitPrice,Weight,orderDcrease];
+                tmpData.push(lineData);
+            })
+            var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
+            return buffer;
+        }
     }
     return Export;
 }

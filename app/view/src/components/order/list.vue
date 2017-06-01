@@ -51,6 +51,7 @@
                 <el-table-column prop="Weight" label="重量"/>
                 <el-table-column prop="orderDcrease" label="下浮"/>
             </el-table>
+            <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
      </div>
 </template>
@@ -105,6 +106,9 @@
             exportOrder() {
                 var date = new Date().formatDate('yyyyMMdd');
                 window.open(`/zues/api/export/order/订单列表${date}.xls`);
+            },
+            exportOrderDetail() {
+                window.open(`/zues/api/export/orderdetail/${this.orderDetail[0].orderNo}订单详情.xls?orderNo=${this.orderDetail[0].orderNo}`);
             },
             statusFormatter(row,column){
                 return row.validate === 0 ? '未审核' : '已审核';

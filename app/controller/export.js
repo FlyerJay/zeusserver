@@ -2,12 +2,13 @@
 
 module.exports = app => {
   class ExportController extends app.Controller {
-    * order(){
+    * order() {
         const ctx = this.ctx;
-        // ctx.response.setHeader({
-        //     'contentType':'application/vnd.ms-excel'
-        // })
         ctx.body = yield this.ctx.service.export.order(ctx.query);
+    }
+    * orderDetail() {
+        const ctx = this.ctx;
+        ctx.body = yield this.ctx.service.export.orderDetail(ctx.query);
     }
   }
   return ExportController;
