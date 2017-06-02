@@ -68,7 +68,7 @@ module.exports = app => {
                 }
                 var typeCondition = '';
                 if(options.type){
-                    typeCondition = `AND si.type = :type`
+                    typeCondition = `AND sv.type = :type`
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
                 s.supplierName,s.address,s.benifit
