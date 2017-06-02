@@ -22,12 +22,12 @@ module.exports = app => {
             comment:"供应商编号",
         },
         comId: {
-            type:STRING,
+            type:STRING(2),
             allowNull:false,
             comment:"公司编号"
         },
         spec: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"规格"
         },
@@ -37,12 +37,12 @@ module.exports = app => {
             comment:"最近更新时间"
         },
         type: {
-            type:STRING,
+            type:STRING(10),
             allowNull:false,
             comment:"类别"
         },
         material: {
-            type:STRING,
+            type:STRING(10),
             comment:"材质"
         },
         inventoryAmount: {
@@ -54,11 +54,11 @@ module.exports = app => {
             comment:"单件支数"
         },
         inventoryWeight: {
-            type:STRING,
+            type:STRING(20),
             comment:"库存重量"
         },
         long:{
-            type:STRING,
+            type:STRING(10),
             comment:"长度"
         }
     },{

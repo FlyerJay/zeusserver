@@ -10,13 +10,13 @@ module.exports = app => {
 
     return app.model.define('Company',{
         comId: {
-            type: STRING,
+            type: STRING(2),
             primaryKey: true,
             allowNull:false,
             comment:"公司编号",
         },
         comName: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"公司名称"
         }

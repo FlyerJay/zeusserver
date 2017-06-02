@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING, INTEGER} = app.Sequelize;
+    const { STRING, INTEGER, BIGINT} = app.Sequelize;
 
     return app.model.define('Freight',{
         freightId: {
@@ -17,22 +17,22 @@ module.exports = app => {
             comment:"运费主键",
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             allowNull:false,
             comment:"公司编号(关联公司信息)"
         },
         address: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"到岸目的地"
         },
         freight: {
-            type: STRING,
+            type: STRING(11),
             allowNull:false,
             comment:"运输费用"
         },
         lastUpdateTime: {
-            type: STRING,
+            type: BIGINT(20),
             comment:"记录上次更新时间"
         }
     },{

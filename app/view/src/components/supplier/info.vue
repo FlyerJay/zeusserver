@@ -271,7 +271,7 @@
               type: 'success'
             })
             this.fredlgAddshow = false;
-            this.loadSupList(this.searchSupParam);
+            this.loadfreightList(this.searchSupParam);
           })
       },
       deleteSup(index, row) {

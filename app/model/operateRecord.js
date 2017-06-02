@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING, INTEGER} = app.Sequelize;
+    const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
     return app.model.define('OperateRecord',{
         recordId:{
@@ -17,24 +17,24 @@ module.exports = app => {
             comment:"记录主键"
         },
         userId: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"操作人"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             comment:"公司编号(关联公司信息)"
         },
         type:{
-            type:STRING,
+            type:STRING(10),
             comment:"操作类型"
         },
         detail:{
-            type:STRING,
+            type:STRING(100),
             comment:"操作详情"
         },
         createTime:{
-            type:STRING,
+            type:BIGINT(20),
             comment:"操作时间"
         }
     },{

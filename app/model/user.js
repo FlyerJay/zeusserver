@@ -7,7 +7,7 @@
 var uuid = require('uuid');
 
 module.exports = app => {
-    const { STRING, INTEGER, DATE, UUID } = app.Sequelize;
+    const { STRING, INTEGER, DATE, UUID, BIGINT } = app.Sequelize;
 
     return app.model.define('User',{
         userToken: {
@@ -15,17 +15,17 @@ module.exports = app => {
             comment:"验证用户登录的凭证"
         },
         userId: {
-            type: STRING,
+            type: STRING(20),
             primaryKey: true,
             allowNull:false,
             comment:"用户Id(主键)"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             comment:"公司编号(关联公司信息)"
         },
         password: {
-            type: STRING,
+            type: STRING(20),
             allowNull:false,
             comment:"密码"
         },
@@ -35,15 +35,15 @@ module.exports = app => {
             comment:"账号是否有效",
         },
         userName: {
-            type: STRING,
+            type: STRING(20),
             comment:"用户名(昵称)"
         },
         registerTime: {
-            type: STRING,
+            type: BIGINT(20),
             comment:"注册时间"
         },
         lastLoginTime: {
-            type: STRING,
+            type: BIGINT(20),
             comment:"上次登录时间"
         }
     },{

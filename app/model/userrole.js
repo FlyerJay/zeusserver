@@ -6,17 +6,17 @@
 'use strict';
 
 module.exports = app => {
-    const { STRING, INTEGER} = app.Sequelize;
+    const { STRING, INTEGER, BIGINT} = app.Sequelize;
 
     return app.model.define('UserRole',{
         userId: {
-            type: STRING,
+            type: STRING(20),
             primaryKey: true,
             allowNull:false,
             comment:"用户Id(主键)"
         },
         comId: {
-            type: STRING,
+            type: STRING(2),
             comment:"公司编号(关联公司信息)"
         },
         adminAuth: {
@@ -47,7 +47,7 @@ module.exports = app => {
             comment:"下单权限"
         },
         lastUpdateTime: {
-            type: STRING,
+            type: BIGINT(20),
             comment:"上次更新时间"
         }
     },{
