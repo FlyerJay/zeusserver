@@ -7,6 +7,7 @@
                 </el-form-item>-->
                 <el-form-item label="已选商品(含运费):">
                     <span>{{totalPrice | priceFilter}}</span>
+                    <span>（采购吨位：{{totalWeight}}）</span>
                     <el-button @click="submitOrder()" type="warning">提交</el-button>
                 </el-form-item>
             </el-form>
@@ -230,7 +231,6 @@
               });
             },
             updateChart(index,row) {
-                console.log(row);
                 this.dialogVisible = true;
                 this.changeParams.chartId = row.chartId;
                 this.changeParams.chartAmount = row.chartAmount;

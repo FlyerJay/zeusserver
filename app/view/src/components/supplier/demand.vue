@@ -25,6 +25,8 @@
                 </el-table-column>
                 <el-table-column prop="demandWeight" label="需求吨位" width="">
                 </el-table-column>
+                <el-table-column prop="timeConsume" label="工期"> 
+                </el-table-column>
                 <el-table-column prop="customerName" label="客户简称">
                 </el-table-column>
                 <el-table-column prop="userId" label="业务员">
@@ -34,6 +36,8 @@
                 <el-table-column prop="freight" label="运费">
                 </el-table-column>
                 <el-table-column prop="totalPrice" label="总成本"> 
+                </el-table-column>
+                <el-table-column prop="comment" label="备注" width='180px'> 
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id">
                      <template scope="scope">

@@ -5,6 +5,17 @@
                     <el-input v-model="" placeholder="支持模糊搜索"></el-input>
                 </el-form-item>-->
             <el-form-item>
+                <el-form-item label="时间：">
+                    <el-date-picker
+                        v-model="searchTime"
+                        type="date"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="操作人:">
+                    <el-input v-model="operateParams.operate" placeholder="支持模糊搜索"></el-input>
+                </el-form-item>
                 <el-button type="warning" @click="searchOperate">查询</el-button>
             </el-form-item>
         </el-form>
@@ -45,18 +56,28 @@
             return {
                 operateParams: {
                     id: '',
-                    page: 1
+                    page: 1,
+                    createTime:'',
+                    operate:'',
                 },
-                loading: true
+                loading: true,
+                searchTime: '',
             }
         },
         methods: {
             searchOperate() {
-                console.log(this.operateParams);
-                console.log(this.operateInfo);
+                this.loading = true;
+                this.operateParams.createTime = this.searchTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd'):'';
+                this.loadOperateList(this.operateParams)
+                    .then(rs => {
+                        this.loading = false;
+                    });
             },
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
+            },
+            pickerOptions(){
+
             },
             handleCurrentChange(val) {
                 this.operateParams.page = val;

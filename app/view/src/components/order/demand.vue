@@ -80,6 +80,9 @@
                 <el-form-item label="需求吨位：" :required="true">
                     <el-input style="width:85%" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="工期：" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.timeConsume" type="number" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="目的地：" :required="true">
                     <el-input style="width:85%" v-model="demandParams.destination" auto-complete="off"></el-input>
                 </el-form-item>
@@ -88,6 +91,9 @@
                 </el-form-item>
                 <el-form-item label="电话：" :required="true">
                     <el-input style="width:85%" v-model="demandParams.customerPhone" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" :required="true">
+                    <el-input style="width:85%" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -106,6 +112,9 @@
                 <el-form-item label="需求吨位：">
                    <el-input style="width:85%" v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="工期：" :required="true">
+                    <el-input style="width:85%" v-model="demandDatas.timeConsume" type="number" :readonly="true" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="目的地：">
                    <el-input style="width:85%" v-model="demandDatas.destination" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
@@ -114,6 +123,9 @@
                 </el-form-item>
                 <el-form-item label="电话：">
                    <el-input style="width:85%" v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" :required="true">
+                    <el-input style="width:85%" v-model="demandDatas.comment" :readonly="true" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
        </el-dialog>
@@ -178,6 +190,8 @@
                     destination:'',
                     customerName:'',
                     customerPhone:'',
+                    timeConsume:0,
+                    comment:'',
                 },
                 FeedbackParams:{
                     demandId: '',
@@ -192,6 +206,8 @@
                     destination:'',
                     customerName:'',
                     customerPhone:'',
+                    timeConsume:0,
+                    comment:'',
                 },
                 searchDeParam:{
                     spec: '',

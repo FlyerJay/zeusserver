@@ -24,6 +24,9 @@ module.exports = app => {
             fileInfo.supplier = params[0];
             fileInfo.material = params[1];
             fileInfo.time = params[2];
+            fileInfo.fileName = fileName;
+            fileInfo.userId = query.userId;
+            fileInfo.comId = query.comId;
             if(fileInfo.time.length != 8){
                 return {
                     code:-1,

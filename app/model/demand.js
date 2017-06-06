@@ -78,6 +78,10 @@ module.exports = app => {
             type:INTEGER(10),
             comment:"需求工时"
         },
+        comment:{
+            type:STRING(100),
+            comment:"备注"
+        },
         createTime:{
             type:BIGINT(15),
             comment:"创建时间"

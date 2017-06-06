@@ -50,6 +50,14 @@ module.exports = app => {
                             },{transaction:t})
                         }
                     }))
+                }).then(() => {
+                    return app.model.OperateRecord.create({
+                        userId:query.userId,
+                        comId:query.comId,
+                        type:'上传价格表',
+                        detail:`${query.fileName}`,
+                        createTime:+new Date()
+                    },{transaction:t})
                 })
             }).then((res)=>{
                 return {
@@ -130,8 +138,15 @@ module.exports = app => {
                             }
                         }
                     }))
+                }).then(() => {
+                    return app.model.OperateRecord.create({
+                        userId:info.userId,
+                        comId:info.comId,
+                        type:'上传库存表',
+                        detail:`${info.fileName}`,
+                        createTime:+new Date()
+                    },{transaction:t})
                 })
-
             }).then((res)=>{
                 return {
                     code:200,
