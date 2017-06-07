@@ -50,6 +50,7 @@
                 <el-table-column prop="unitPrice" label="单价"/>
                 <el-table-column prop="Weight" label="重量"/>
                 <el-table-column prop="orderDcrease" label="下浮"/>
+                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮单价"/>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
@@ -115,6 +116,10 @@
             },
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
+            },
+            unitFormatter(row,colum){
+                console.log(row.orderDcrease,row.Weight)
+                return row.orderDcrease/row.Weight;
             },
             viewDetail(index,row) {
                 this.detailDialogShow = true;

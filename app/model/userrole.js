@@ -101,6 +101,20 @@ module.exports = app => {
                     };
                 })
             },
+            * getUserRole(options){
+                const result = yield this.findOne({
+                    where:{
+                        userId:{
+                            $eq:options.userId
+                        },
+                        comId:{
+                            $eq:options.comId
+                        }
+                    }
+                })
+                const _role = result.dataValues;
+                return `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}`;;
+            },
             * list(options){
                 if(!options.comId) return {
                     code:-1,

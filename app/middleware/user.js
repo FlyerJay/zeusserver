@@ -4,9 +4,13 @@ module.exports = options => {
     return function* user(next) {
         var userId = this.cookies.get('userId');
         var comId = this.cookies.get('comId');
-        var role = this.cookies.get('userRole');
         if(!/\/user\/login/.test(this.request.url)){
-            if(userId&&comId&&role){
+            if(userId&&comId){
+                const role = yield this.app.model.Userrole.getUserRole({userId,comId});
+                this.cookies.set('userRole',role,{
+                    maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+                    httpOnly: false,
+                })
                 this.query = this.query?Object.assign(this.query,{userId,comId,role}):this.query
                 this.request.body = this.request.body?Object.assign(this.request.body,{userId,comId,role}):this.request.body
                 yield next;

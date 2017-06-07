@@ -261,7 +261,17 @@
                     row.chartAdjust = this.changeParams.chartAdjust;
                     this.supplierInventoryIds.map((v) => {
                         if(v.chartId === row.chartId){
-                            this.totalPrice = Number(this.totalPrice) + Number(this.changeParams.newPrice) - Number(this.changeParams.oldPrice);
+                            this.totalPrice = (Number(this.totalPrice) + Number(this.changeParams.newPrice) - Number(this.changeParams.oldPrice)).toFixed(2);
+                            const specArr = row.spec.split('*');
+                            const height = Number(specArr[0]);
+                            const width = Number(specArr[1]);
+                            const land = Number(specArr[2]);
+                            const long = Number(row.long);
+                            const per = Number(row.perAmount);
+                            const perimeter = 2 * height + 2 * width;
+                            const amount = Number(row.chartAmount);
+                            this.totalWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
+                            this.totalAdjust = (Number(this.changeParams.chartAdjust) * Number(this.totalWeight)).toFixed(2);
                         }
                     })
                 })

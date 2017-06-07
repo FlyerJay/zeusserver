@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商">
         </el-table-column>
-        <el-table-column prop="value" label="出厂价(元/吨)">
+        <el-table-column prop="value" sortable label="出厂价(元/吨)">
         </el-table-column>
         <el-table-column prop="inventoryAmount" label="库存（件）">
         </el-table-column>
@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="benifit" label="出厂单价（元）">
+        <el-table-column prop="benifit" sortable label="出厂单价（元）">
         </el-table-column>
         <el-table-column label="操作" align="center" property="id">
           <template scope="scope">
