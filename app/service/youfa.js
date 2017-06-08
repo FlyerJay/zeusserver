@@ -69,7 +69,7 @@ module.exports = app => {
             var $11 = parseInventory.mergeData($10);
             return $11;
         }
-        * TY(options,query) {
+        * TY(options,query) {//天一
             const parseInventory = this.ctx.service.parseInventory;
             var $1 = parseInventory.getTableHead(options,['壁厚','件数']);
             var $2 = parseInventory.dealRepeatHeadTable($1);
@@ -93,6 +93,33 @@ module.exports = app => {
             var $7 = parseInventory.mergeSpecAndLand($6);
             var $8 = parseInventory.mergeData($7);
             return $8;
+        }
+        * XTY(options,query) {//拓源
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['包装数量','整件']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.xtyPreDeal($2);
+            var $4 = this.separateSpecAndPer($3);
+            return $3;
+        }
+        xtyPreDeal(options) {//拓源预处理
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                var newLine = [];
+                lines.map((v) => {
+                    if(v[0].indexOf('钢') == -1)
+                        newLine.push(v);
+                })
+                newLine.map((v) => {
+                    v.splice(0,1);
+                    v[0] = v[0].replace(/[\u4e00-\u9fa5]/g,'');
+                    v[0] = v[0].replace(/[xX]/g,'*');
+                })
+                options[i].head.splice(0,1);
+                options[i].lines = newLine;
+            }
+            return options;
         }
         xdSeparate(options) {
             var i = 0;

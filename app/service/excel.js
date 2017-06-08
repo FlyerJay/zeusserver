@@ -106,9 +106,12 @@ module.exports = app => {
                 case '利顺信达':
                     result = yield youfa.XD(options,query);
                     break;
+                case '拓源':
+                    result = yield youfa.XTY(options,query);
             }
-            const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
-            return data;
+            return result;
+            // const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            // return data;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
