@@ -100,7 +100,139 @@ module.exports = app => {
             var $2 = parseInventory.dealRepeatHeadTable($1);
             var $3 = this.xtyPreDeal($2);
             var $4 = this.separateSpecAndPer($3);
-            return $3;
+            var $5 = parseInventory.mixinSpec($4);
+            var $6 = parseInventory.mixinLand($5);
+            var $7 = parseInventory.requireColumn($6,['规格','壁厚','长度','整件','包装数量']);//从表格中取出需要保留的列，其他列都删除掉
+            var $8 = parseInventory.mergeSpecAndLand($7);
+            var $9 = parseInventory.mergeData($8);
+            return $9;
+        }
+        * DT(options,query) {//德天
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','壁厚']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = parseInventory.mixinSpec($2);
+            var $4 = parseInventory.mixinLand($3);
+            var $5 = parseInventory.requireColumn($4,['规格','壁厚','德天库','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $6 = this.dtInsertLong($5);
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8;
+        }
+        * ZT(options,query) {//中通
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','壁厚']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = parseInventory.mixinSpec($2);
+            var $4 = parseInventory.mixinLand($3);
+            var $5 = this.ztLongDeal($4);
+            var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8;
+        }
+        * JY(options,query) {//津瑜
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','壁厚']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.jySpec($2);
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','大小包装']);//从表格中取出需要保留的列，其他列都删除掉
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8;
+        }
+        * RX(options,query) {//荣祥
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['库存件数']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = this.rxDeal($2);
+            var $4 = parseInventory.mixinSpec($3);
+            var $5 = parseInventory.mixinLand($4);
+            var $6 = parseInventory.requireColumn($5,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $7 = parseInventory.mergeSpecAndLand($6);
+            var $8 = parseInventory.mergeData($7);
+            return $8;
+        }
+        rxDeal(options){
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                var newLine = [];
+                var specLast = '';
+                var longLast = '';
+                lines.map(v => {
+                    if(/\*/.test(v[0])){
+                        var specArr = v[0].split('*'); 
+                        specLast = `${specArr[0]}*${specArr[1]}`;
+                        longLast = `${specArr[3]}`;
+                    }else{
+                        v.splice(0,0,specLast);
+                        v.splice(2,0,longLast);
+                        newLine.push(v);
+                    }
+                });
+                options[i].head.splice(0,0,'规格');
+                options[i].head.splice(2,0,'长度');
+                options[i].head[1] = '壁厚';
+                options[i].head[3] = '件数';
+                options[i].head[4] = '支/件';
+                newLine.map(v => {
+                    if(/\//.test(v[3])){
+                        v[3].replace(/(\d*)\/(\d*)/,(v1,v2,v3) => {
+                            v[3] = v2;
+                            v[4] = v3;
+                        })
+                    }
+                })
+                options[i].lines = newLine;
+            }
+            return options;
+        }
+        jySpec(options) {
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                lines.map(v => {
+                    v[0] = v[0].replace(/[xX]/g,'*');
+                    v.push('6');
+                })
+                options[i].head.push('长度');
+            }
+            return options;
+        }
+        ztLongDeal(options) {//中通处理长度
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                lines.map(v => {
+                    v[3] = v[3].replace(/\s.*/g,'');//先处理掉某些特殊字符
+                })
+                lines.map(v => {
+                    if(/\d*m\/\d/.test(v[3])){
+                        v[3].replace(/(\d*)m\/(\d)/g,(v1,v2,v3) => {
+                            v[3] = v3;
+                            v[4] = v2;
+                        })
+                    }else{
+                        v[4] = '6';
+                    }
+                })
+                options[i].head[4] = '长度';
+            }
+            return options;
+        }
+        dtInsertLong(options){//德天插入长度
+            var i = 0;
+            for(;i<options.length;i++){
+                var lines = options[i].lines;
+                lines.map((v) => {
+                    v.splice(2,0,'6');
+                })
+                options[i].head.splice(2,0,'长度');
+            }
+            return options;
         }
         xtyPreDeal(options) {//拓源预处理
             var i = 0;
@@ -116,7 +248,14 @@ module.exports = app => {
                     v[0] = v[0].replace(/[\u4e00-\u9fa5]/g,'');
                     v[0] = v[0].replace(/[xX]/g,'*');
                 })
+                newLine.map((v) => {
+                    const specArr = v[0].split('*');
+                    v[0] = `${specArr[0]}*${specArr[1]}`;
+                    v.splice(1,0,specArr[2]);
+                })
                 options[i].head.splice(0,1);
+                options[i].head[0] = '规格';
+                options[i].head.splice(1,0,'壁厚');
                 options[i].lines = newLine;
             }
             return options;

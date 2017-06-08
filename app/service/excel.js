@@ -108,6 +108,19 @@ module.exports = app => {
                     break;
                 case '拓源':
                     result = yield youfa.XTY(options,query);
+                    break;
+                case '德天':
+                    result = yield youfa.DT(options,query);
+                    break;
+                case '中通':
+                    result = yield youfa.ZT(options,query);
+                    break;
+                case '津瑜':
+                    result = yield youfa.JY(options,query);
+                    break;
+                case '荣祥':
+                    result = yield youfa.RX(options,query);
+                    break;
             }
             return result;
             // const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
