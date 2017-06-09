@@ -5,6 +5,9 @@
         <el-input v-model="stockParams.spec" placeholder="规格"></el-input>
       </el-form-item>
       <el-form-item label="到岸目的地">
+        <el-input :value="this.userInfo.comId | companyFilter" :readonly="true" placeholder="目的地"></el-input>
+      </el-form-item>
+      <el-form-item label="供应商所在地">
         <el-select v-model="stockParams.address" placeholder="请选择">
           <el-option value="">全部</el-option>
           <el-option :label="item.address" :value="item.address" v-for="(item,index) in ordAddress" :key="index"></el-option>
@@ -175,6 +178,20 @@
           .then(() => {
             this.loading = false;
         });
+      }
+    },
+    filters:{
+      companyFilter(val){
+        const company = {
+          '01':'南京奎鑫',
+          '02':'武汉奎鑫',
+          '03':'西安奎鑫',
+          '04':'长春奎鑫',
+          '05':'沈阳奎鑫',
+          '06':'山东奎鑫',
+          '07':'南昌奎鑫',
+        }
+        return company[val];
       }
     },
     mounted: function() {

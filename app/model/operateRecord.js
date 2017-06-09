@@ -49,6 +49,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = yield this.findAndCountAll({
+                    order:"createTime desc",
                     where:{
                         comId:{
                             $eq:options.comId
