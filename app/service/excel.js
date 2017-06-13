@@ -122,9 +122,8 @@ module.exports = app => {
                     result = yield youfa.RX(options,query);
                     break;
             }
-            return result;
-            // const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
-            // return data;
+            const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            return data;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
