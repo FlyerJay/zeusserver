@@ -54,20 +54,19 @@ module.exports = app => {
             var $8 = parseInventory.mergeData($7);
             return $8; 
         }
-        * ZD(options,query) {
+        * ZD(options,query) {//邯郸正大
             const parseInventory = this.ctx.service.parseInventory;
             var $1 = parseInventory.getTableHead(options,['规格','件数']);
             var $2 = parseInventory.dealRepeatHeadTable($1);
             var $3 = this.headTrim($2);
             var $4 = this.zdRemoveUnuseLine($3);
-            var $5 = this.xqSeparate($4);
-            var $6 = this.zdAdditionPer($5);
-            var $7 = parseInventory.mixinSpec($6);
-            var $8 = parseInventory.mixinLand($7,3);
-            var $9 = parseInventory.requireColumn($8,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
-            var $10 = parseInventory.mergeSpecAndLand($9);
-            var $11 = parseInventory.mergeData($10);
-            return $11;
+            var $5 = this.zdSperate($4);
+            var $6 = parseInventory.mixinSpec($5);
+            var $7 = parseInventory.mixinLand($6);
+            var $8 = parseInventory.requireColumn($7,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $9 = parseInventory.mergeSpecAndLand($8);
+            var $10 = parseInventory.mergeData($9);
+            return $10;
         }
         * TY(options,query) {//天一
             const parseInventory = this.ctx.service.parseInventory;
@@ -294,14 +293,27 @@ module.exports = app => {
             }
             return options;
         }
-        zdAdditionPer(options){
+        zdSperate(options){
             var i = 0;
             for(;i<options.length;i++){
                 let lines = options[i].lines;
-                lines.map((v)=>{
-                    v.push('0');
+                let newLine = [];
+                var spec = '';
+                var per = 0;
+                lines.map( v=> {
+                    if(v[0].indexOf('*') > -1){
+                        v[0].replace(/(\d*\*\d*)[(（](\d*).*[)）]/g,(v1,v2,v3)=>{
+                            spec = v2;
+                            per = v3;
+                        })
+                    }else{
+                        v.splice(0,0,spec);
+                        v.splice(3,0,per,'6');
+                        newLine.push(v);
+                    }
                 })
-                options[i].head.push('支/件');
+                options[i].lines = newLine;
+                options[i].head = ['规格','壁厚','件数','支/件','长度'];
             }
             return options;
         }
