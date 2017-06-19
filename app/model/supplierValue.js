@@ -206,7 +206,7 @@ module.exports = app => {
                 const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust} where
                     sv.comId = :comId
                     AND sv.lastUpdateTime = :lastUpdateTime
-                    AND (sv.spec = :spec OR :spec = '')
+                    AND sv.spec LIKE :spec
                     AND (sv.type = :type OR :type = '')
                     AND (f.address = :address OR :address = '')
                     AND s.supplierName LIKE :supplierName
@@ -217,7 +217,7 @@ module.exports = app => {
                     replacements:{
                         comId:options.comId,
                         lastUpdateTime:options.lastUpdateTime,
-                        spec:options.spec?options.spec:'',
+                        spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
                         address:options.address?options.address:'',
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%'
