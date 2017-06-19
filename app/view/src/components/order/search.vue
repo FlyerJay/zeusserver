@@ -27,7 +27,7 @@
     </el-form>
     <div class="sea-title">厂家现货价格/库存表:</div>
     <div class="tb-wrap">
-      <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
+      <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
         <el-table-column prop="spec" label="规格" width="">
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="最新更新时间" width="">
@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="benifit" sortable label="出厂单价（元）">
+        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="到岸单价">
         </el-table-column>
         <el-table-column label="操作" align="center" property="id">
           <template scope="scope">
@@ -156,6 +156,12 @@
         const amount = Number(row.perAmount);
         const inventoryAmount = Number(row.inventoryAmount);
         return ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
+      },
+      purePriceFormatter(row,column){
+        const value = Number(row.value);
+        const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+        row.purePrice = value + freight;
+        return value + freight
       },
       confirmTocart() {
         this.addTocart(this.cartParams)

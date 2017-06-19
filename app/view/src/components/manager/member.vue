@@ -22,7 +22,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-             <el-table :data="userRoleInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
+             <el-table :data="userRoleInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
                 <el-table-column prop="userId" label="用户ID" width="">
                 </el-table-column>
                 <el-table-column label="下单权限" align="center" prop="orderAuth">

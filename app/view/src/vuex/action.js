@@ -108,11 +108,25 @@ export const updataSup = ({ dispatch },newSupParam) => {
 }
 
 //修改供应商出厂价格----更新价格表格
-export const updataPrice = ({ dispatch },newPriceParam, searchSupParam) => {
+export const updatePrice = ({ dispatch },newPriceParam) => {
   return axios.post('/zues/api/price/update', newPriceParam)
   .then(function (response) {
     if (response.data.code === 200) {
-      loadSupPriceList({ dispatch }, searchSupParam);
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//更新库存表库存
+export const updateStock = ({ dispatch }, newStockParam, searchSupParam) => {
+  return axios.post('/zues/api/inventory/update', newStockParam)
+  .then(function (response) {
+    if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);
@@ -300,11 +314,10 @@ export const loadSupPriceList = ({ dispatch }, params) => {
 }
 
 //价格表价格调整
-export const supPriceAdjust = ({ dispatch }, params) => {
+export const adjustPrice = ({ dispatch }, params) => {
   return axios.post('/zues/api/price/adjust', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_SUPFORM', 'price', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);

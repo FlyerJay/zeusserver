@@ -12,7 +12,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading">
+            <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column prop="orderNo" label="订单号" width="200"/>
                 <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"/>
                 <el-table-column prop="supplierCount" label="供应商"/>
@@ -42,7 +42,7 @@
        <el-dialog
             v-model="detailDialogShow"
             size="small">
-            <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading">
+            <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
                 <el-table-column prop="spec" label="规格"/>
                 <el-table-column prop="type" label="类型"/>
                 <el-table-column prop="supplierName" label="供应商"/>

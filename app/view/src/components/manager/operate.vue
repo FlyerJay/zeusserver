@@ -19,7 +19,7 @@
                 <el-button type="warning" @click="searchOperate">查询</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="operateInfo.row" v-loading.body="loading" element-loading-text="拼命加载中">
+        <el-table :data="operateInfo.row" v-loading.body="loading" element-loading-text="拼命加载中" border>
             <el-table-column prop="recordId" label="序号"></el-table-column>
             <el-table-column prop="createTime" label="时间" :formatter="dateFormat"></el-table-column>
             <el-table-column prop="userId" label="用户ID"></el-table-column>

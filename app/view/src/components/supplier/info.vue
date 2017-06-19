@@ -17,7 +17,7 @@
           </el-form-item>
         </el-form>
         <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true"  v-if="supplierAuth">供应商信息录入</el-button>
-        <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中">
+        <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中" border>
           <el-table-column property="supplierName" label="供应商名称"></el-table-column>
           <el-table-column property="address" label="供应商所在地"></el-table-column>
           <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
@@ -42,7 +42,7 @@
       </el-tab-pane>
       <el-tab-pane label="运费信息" name="second">
           <el-button style="margin:0px 0px 15px 0;" type="warning" @click="fredlgAddshow = true" v-if="Boolean(supplierAuth)">每日运费录入</el-button>
-          <el-table :data="freightList" style="width: 100%" v-loading.body="freightloading" element-loading-text="拼命加载中">
+          <el-table :data="freightList" style="width: 100%" v-loading.body="freightloading" element-loading-text="拼命加载中" border>
             <el-table-column property="address" label="所在地"></el-table-column>
             <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
             <el-table-column  label="操作" align="center" property="id" v-if="Boolean(supplierAuth)">

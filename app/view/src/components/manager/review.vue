@@ -8,7 +8,7 @@
               <el-button type="warning" @click="searchOrder" :loading="loading">查询</el-button>
           </el-form-item>
         </el-form>
-    	  <el-table :data="verify.row" v-loading.body="loading" element-loading-text="拼命加载中">
+    	  <el-table :data="verify.row" v-loading.body="loading" element-loading-text="拼命加载中" border>
     	     	<el-table-column prop="orderNo" label="订单号" width="200"></el-table-column>
     	     	<el-table-column prop="createTime" label="下单时间" :formatter="dateFormat" width="180"></el-table-column>
     	     	<el-table-column prop="orderWeight" label="总吨位"></el-table-column>
@@ -34,7 +34,7 @@
         <el-dialog
         v-model="detailDialogShow"
         size="small">
-          <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading">
+          <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
               <el-table-column prop="spec" label="规格"/>
               <el-table-column prop="type" label="类型"/>
               <el-table-column prop="supplierName" label="供应商"/>

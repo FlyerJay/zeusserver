@@ -18,7 +18,7 @@
        </el-form>
         <div class="title">定制货品列表</div> 
         <div class="tb-wrap">
-          <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading">
+          <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column prop="spec" label="规格" width="">
                 </el-table-column>
                 <el-table-column prop="createTime" label="最新更新时间(按采购)" width="" :formatter="dateFormat">
@@ -27,9 +27,9 @@
                 </el-table-column>
                 <el-table-column prop="demandWeight" label="需求吨位" width="">
                 </el-table-column>
-                <el-table-column prop="timeConsume" label="工期"> 
-                </el-table-column>
                 <el-table-column prop="customerName" label="客户简称">
+                </el-table-column>
+                <el-table-column prop="timeConsume" label="工期">
                 </el-table-column>
                 <el-table-column prop="userId" label="业务员">
                 </el-table-column>
@@ -60,6 +60,9 @@
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
             <el-form :model="demandParams" label-width="100px" label-position="left">
+                <el-form-item label="工期：" :required="true">
+                    <el-input style="width:85%" v-model="demanUpdateParams.timeConsume" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="出厂价：" :required="true">
                     <el-input style="width:85%" type="number" @input="computePrice" v-model="demanUpdateParams.factoryPrice" auto-complete="off"></el-input>
                 </el-form-item>
@@ -128,6 +131,7 @@
                     factoryPrice:0,
                     totalPrice:0,
                     demandWeight:0,
+                    timeConsume: 0
                 },
                 searchDeParam:{
                     spec: '',

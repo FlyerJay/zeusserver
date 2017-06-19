@@ -24,21 +24,26 @@
                     <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
+    
             <el-form-item>
                 <el-button type="warning" @click="searchPrice" :loading="loading">查询</el-button>
             </el-form-item>
-            <el-form-item>
-                <el-button type="warning" @click="dlgUnitePriceVisible = true">价格调整</el-button>
-            </el-form-item>
+    
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel">
                     <el-button type="info" v-if="valueAuth">上传价格表</el-button>
                 </el-upload>
             </el-form-item>
-    
         </el-form>
-    
-        <el-table :data="price.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中">
+        <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+                <el-input-number v-model="newPrice" :step="10"></el-input-number>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="warning" @click="adjustPriceEvent">价格调整</el-button>
+            </el-form-item>
+        </el-form>
+        <el-table :data="price.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
             <el-table-column property="spec" label="规格"></el-table-column>
             <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
             <el-table-column property="type" label="类别"></el-table-column>
@@ -47,15 +52,14 @@
     
             <el-table-column label="操作" align="center" v-if="valueAuth">
                 <template scope="scope">
-                        <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning"  >修改</el-button>
-                </template>
+                            <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning">修改</el-button>
+                        </template>
             </el-table-column>
         </el-table>
         <div class="page-wrap">
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchParam.page" layout=" prev, pager, next" :page-size="30" :total="price.totalCount">
             </el-pagination>
         </div>
-
         <el-dialog title="" v-model="dlgPriceVisible">
             <el-form :model="newPriceParam" label-width="120px" label-position="left">
                 <el-form-item label="修改后的价格：">
@@ -67,31 +71,6 @@
                 <el-button @click="dlgPriceVisible = false">取 消</el-button>
             </div>
         </el-dialog>
-
-        <!--价格统一调整dlg-->
-        <el-dialog title="" v-model="dlgUnitePriceVisible">
-          <el-form :model="unitePriceParam" label-width="120px" label-position="left">
-            <el-form-item label="规格：">
-              <el-input style="width:90%" v-model="newPriceParam.spec" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="类别：">
-              <el-input style="width:90%" v-model="newPriceParam.type" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="地址：">
-              <el-input style="width:90%" v-model="newPriceParam.address" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="最新更新时间：">
-              <el-input style="width:90%" v-model="newPriceParam.value" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="供应商：">
-              <el-input style="width:90%" v-model="newPriceParam.supplierName" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="warning" @click="unitePriceAdjust(newPriceParam)">确 定</el-button>
-            <el-button @click="dlgPriceVisible = false">取 消</el-button>
-          </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -99,8 +78,8 @@
     import {
         loadSupPriceList,
         loadSupAddress,
-        supPriceAdjust,
-        updataPrice
+        updatePrice,
+        adjustPrice
     } from '../../vuex/action'
     
     export default {
@@ -108,8 +87,8 @@
             actions: {
                 loadSupPriceList,
                 loadSupAddress,
-                supPriceAdjust,
-                updataPrice
+                updatePrice,
+                adjustPrice
             },
             getters: {
                 price: ({
@@ -121,7 +100,7 @@
                 userInfo: ({
                     common
                 }) => common.userInfo,
-                userRoleInfo:({
+                userRoleInfo: ({
                     manager
                 }) => manager.userRoleInfo
             }
@@ -149,7 +128,9 @@
                     address: '',
                     supplierName: ''
                 },
+                row: {},
                 loading: true,
+                newPrice: 0,
                 dlgPriceVisible: false,
                 dlgUnitePriceVisible: false
             }
@@ -167,17 +148,18 @@
                 this.dlgPriceVisible = true;
                 this.newPriceParam.value = Number(row.value);
                 this.newPriceParam.supplierValueId = row.supplierValueId;
+                this.row = row;
             },
             confirmChangePrice(row) {
-                this.updataPrice(this.newPriceParam)
+                this.updatePrice(this.newPriceParam)
                     .then(rs => {
                         this.$message({
                             message: `价格修改成功`,
                             type: 'success'
                         });
                         this.dlgPriceVisible = false;
-                        row.value = this.newPriceParam.value;
-                    })
+                        this.row.value = this.newPriceParam.value;
+                })
             },
             handleCurrentChange(val) {
                 this.searchParam.page = val;
@@ -187,8 +169,24 @@
                         this.loading = false;
                     });
             },
-            adjustPrice() {
-
+            adjustPriceEvent() {
+                var params = {
+                    spec: this.searchParam.spec,
+                    type: this.searchParam.type,
+                    supplierName: this.searchParam.supplierName,
+                    address: this.searchParam.address,
+                    comId: this.userInfo.comId,
+                    lastUpdateTime: new Date().formatDate('yyyyMMdd'),
+                    adjust: this.newPrice
+                };
+                this.adjustPrice(params)
+                    .then(rs => {
+                        this.$message({
+                            message: `价格调整成功`,
+                            type: 'success'
+                        });
+                        this.searchPrice()
+                    });
             }
         },
         mounted: function() {
