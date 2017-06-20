@@ -170,7 +170,12 @@
                     });
             },
             adjustPriceEvent() {
-                var params = {
+                this.$confirm('是否确认统一调整价格?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    var params = {
                     spec: this.searchParam.spec,
                     type: this.searchParam.type,
                     supplierName: this.searchParam.supplierName,
@@ -178,15 +183,17 @@
                     comId: this.userInfo.comId,
                     lastUpdateTime: new Date().formatDate('yyyyMMdd'),
                     adjust: this.newPrice
-                };
-                this.adjustPrice(params)
-                    .then(rs => {
-                        this.$message({
-                            message: `价格调整成功`,
-                            type: 'success'
-                        });
-                        this.searchPrice()
+                    };
+                    this.adjustPrice(params)
+                        .then(rs => {
+                            this.$message({
+                                message: `价格调整成功`,
+                                type: 'success'
+                            });
+                            this.searchPrice()
                     });
+                })
+                
             }
         },
         mounted: function() {
