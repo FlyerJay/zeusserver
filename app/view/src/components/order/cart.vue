@@ -30,15 +30,15 @@
                 </el-table-column>
                 <el-table-column prop="supplierName" label="供应商">
                 </el-table-column>
-                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="到岸单价">
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
                 </el-table-column>
                 <el-table-column prop="chartAmount" label="采购数量(件)">
                 </el-table-column>
                 <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
                 </el-table-column>
-                <el-table-column prop="chartAdjust" label="采购下浮(元/吨)">
+                <el-table-column prop="chartAdjust" label="采购议价(元/吨)">
                 </el-table-column>
-                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="下浮总额(元)">
+                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额(元)">
                 </el-table-column>
                 <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
                 </el-table-column>
@@ -67,7 +67,7 @@
                 <el-form-item label="采购数量" >
                     <el-input style="width:85%" @input="computePrice"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="采购下浮">
+                <el-form-item label="采购议价">
                     <el-input style="width:85%" @input="computePrice" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="总价">
@@ -179,10 +179,11 @@
                 return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
             },
             purePriceFormatter(row,column){
-                const value = Number(row.value);
-                const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
-                row.purePrice = value + freight;
-                return value + freight
+                // const value = Number(row.value);
+                // const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+                // row.purePrice = value + freight;
+                // return value + freight
+                return row.value - row.benifit;
             },
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;

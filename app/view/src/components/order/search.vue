@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="到岸单价">
+        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
         </el-table-column>
         <el-table-column label="操作" align="center" property="id">
           <template scope="scope">
@@ -158,10 +158,11 @@
         return ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
       },
       purePriceFormatter(row,column){
-        const value = Number(row.value);
-        const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
-        row.purePrice = value + freight;
-        return value + freight
+        // const value = Number(row.value);
+        // const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+        // row.purePrice = value + freight;
+        // return value + freight
+        return row.value - row.benifit;
       },
       confirmTocart() {
         this.addTocart(this.cartParams)

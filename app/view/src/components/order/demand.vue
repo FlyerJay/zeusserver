@@ -66,6 +66,7 @@
                 </el-form-item>
                 <el-form-item label="需求吨位：" :required="true">
                     <el-input style="width:85%" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
+                    <span class="sub-txt">（重量默认按6m计算）</span>
                 </el-form-item>
                 <el-form-item label="目的地：" :required="true">
                     <el-input style="width:85%" v-model="demandParams.destination" auto-complete="off"></el-input>
@@ -297,9 +298,16 @@ export default {
     }
 }
 </script>
-<style lang="css">
+<style lang="less" scoped>
 .title {
     margin: 20px 0px;
     font-size: 20px;
+}
+.sub-txt {
+    font-size: 12px;
+    color: #a09f9f;
+    line-height: 0px;
+    float: left;
+    margin-top: 13px;
 }
 </style>
