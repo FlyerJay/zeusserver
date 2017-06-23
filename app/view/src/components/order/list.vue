@@ -13,14 +13,14 @@
         </el-form>
         <div class="tb-wrap">
             <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column prop="orderNo" label="订单号" width="200"/>
-                <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"/>
-                <el-table-column prop="supplierCount" label="供应商"/>
-                <el-table-column prop="orderWeight" label="总吨位"/>
-                <el-table-column prop="orderPrice" label="总价"/>
-                <el-table-column prop="orderAdjust" label="下浮总额"/>
-                <el-table-column prop="userId" label="下单人"/>
-                <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"/>
+                <el-table-column prop="orderNo" label="订单号" width="200"></el-table-column>
+                <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"></el-table-column>
+                <el-table-column prop="supplierCount" label="供应商"></el-table-column>
+                <el-table-column prop="orderWeight" label="总吨位"></el-table-column>
+                <el-table-column prop="orderPrice" label="总价"></el-table-column>
+                <el-table-column prop="orderAdjust" label="下浮总额"></el-table-column>
+                <el-table-column prop="userId" label="下单人"></el-table-column>
+                <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"></el-table-column>
                 <el-table-column label="操作" align="left" width="140" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
@@ -43,14 +43,14 @@
             v-model="detailDialogShow"
             size="small">
             <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
-                <el-table-column prop="spec" label="规格"/>
-                <el-table-column prop="type" label="类型"/>
-                <el-table-column prop="supplierName" label="供应商"/>
-                <el-table-column prop="orderAmount" label="数量"/>
-                <el-table-column prop="unitPrice" label="单价"/>
-                <el-table-column prop="Weight" label="重量"/>
-                <el-table-column prop="orderDcrease" label="下浮"/>
-                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮单价"/>
+                <el-table-column prop="spec" label="规格"></el-table-column>
+                <el-table-column prop="type" label="类型"></el-table-column>
+                <el-table-column prop="supplierName" label="供应商"></el-table-column>
+                <el-table-column prop="orderAmount" label="数量"></el-table-column>
+                <el-table-column prop="unitPrice" label="单价"></el-table-column>
+                <el-table-column prop="Weight" label="重量"></el-table-column>
+                <el-table-column prop="orderDcrease" label="下浮"></el-table-column>
+                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮单价"></el-table-column>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
