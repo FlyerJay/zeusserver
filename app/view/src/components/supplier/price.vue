@@ -40,7 +40,7 @@
                 <el-input-number v-model="newPrice" :step="10"></el-input-number>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="adjustPriceEvent">价格调整</el-button>
+                <el-button type="warning" @click="adjustPriceEvent">价格调整</el-button><span class="warn-txt">（非当天上传的价格无法统一调整）</span>
             </el-form-item>
         </el-form>
         <el-table :data="price.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
@@ -210,6 +210,11 @@
     }
 </script>
 
-<style lang="css">
-    
+<style lang="less">
+    .warn-txt {
+        font-size: 12px;
+        color: #a09f9f;
+        display: inline-block;
+        margin-left: 10px;
+    }
 </style>
