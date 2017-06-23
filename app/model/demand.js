@@ -129,6 +129,7 @@ module.exports = app => {
                     }
                 })
                 for(var arr in options){
+                    if(arr == 'userId') continue;
                     result[arr] = options[arr];
                 }
                 const data = yield result.save();
