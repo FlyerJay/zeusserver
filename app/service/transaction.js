@@ -7,49 +7,56 @@ var utils = require('../utils');
 module.exports = app => {
     class TransAction extends app.Service {
         * valueImport(options,query) {
+            var indexs = {};
             return app.model.transaction((t)=>{
-                return app.model.SupplierValue.destroy({
+                return app.model.Supplier.findAll({
                     where:{
-                        comId:{
-                            $eq:query.comId?query.comId:'01'
-                        },
-                        lastUpdateTime:{
-                            $eq:query.time
-                        },
-                        type:{
-                            $eq:query.material
+                        supplierName:{
+                            $in:options.head
                         }
                     },
+                    attributes:['supplierId','supplierName'],
                     transaction:t,
-                }).then(()=>{
-                    return app.model.Supplier.findAll({
-                        where:{
-                            supplierName:{
-                                $in:options.head
-                            }
-                        },
-                        attributes:['supplierId','supplierName'],
-                        transaction:t,
-                    })
                 }).then((data)=>{
                     let supplierIndex = {};
+                    let supplierIds = [];
                     for(var j=0;j<data.length;j++){
                         supplierIndex[data[j].dataValues.supplierName] = data[j].dataValues.supplierId;
+                        supplierIds.push(data[j].dataValues.supplierId);
                     }
-                    let line = options.line;
-                    return Promise.all(line.map((v) => {
-                        if(supplierIndex[v[2]]){
-                            app.model.SupplierValue.create({
-                                supplierId:supplierIndex[v[2]],
-                                comId:'01',
-                                spec:v[0],
-                                type:query.material,
-                                value:v[3],
-                                material:v[1],
-                                lastUpdateTime:query.time,
-                            },{transaction:t})
-                        }
-                    }))
+                    indexs = supplierIndex;
+                    return app.model.SupplierValue.destroy({
+                        where:{
+                            comId:{
+                                $eq:query.comId?query.comId:'01'
+                            },
+                            lastUpdateTime:{
+                                $eq:query.time
+                            },
+                            supplierId:{
+                                $in:supplierIds
+                            },
+                            type:{
+                                $eq:query.material
+                            }
+                        },
+                        transaction:t,
+                    }).then(()=>{
+                        let line = options.line;
+                        return Promise.all(line.map((v) => {
+                            if(indexs[v[2]]){
+                                app.model.SupplierValue.create({
+                                    supplierId:indexs[v[2]],
+                                    comId:'01',
+                                    spec:v[0],
+                                    type:query.material,
+                                    value:v[3],
+                                    material:v[1],
+                                    lastUpdateTime:query.time,
+                                },{transaction:t})
+                            }
+                        }))
+                    })
                 }).then(() => {
                     return app.model.OperateRecord.create({
                         userId:query.userId,
