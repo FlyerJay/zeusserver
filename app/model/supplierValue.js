@@ -78,6 +78,13 @@ module.exports = app => {
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 ${addressCondition}
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
+                ON svv.supplierId = sv.supplierId
+                AND svv.type = sv.type
+                AND svv.material = sv.material
+                AND svv.spec = sv.spec
+                AND sv.comId = svv.comId
+                AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
@@ -100,6 +107,13 @@ module.exports = app => {
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 ${addressCondition}
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
+                ON svv.supplierId = sv.supplierId
+                AND svv.type = sv.type
+                AND svv.material = sv.material
+                AND svv.spec = sv.spec
+                AND sv.comId = svv.comId
+                AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 ${typeCondition}
