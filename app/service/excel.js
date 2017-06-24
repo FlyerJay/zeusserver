@@ -17,7 +17,7 @@ module.exports = app => {
             }
             let fileInfo = {};
             let params = fileName.split('_');
-            if(params.length != 3) return {
+            if(params.length < 3) return {
                 code:-1,
                 msg:"请按照格式书写文件名"
             }
@@ -81,46 +81,32 @@ module.exports = app => {
             const parseInventory = this.ctx.service.parseInventory;
             const youfa = this.ctx.service.youfa;
             var result = {};
-            switch(query.supplier){
-                case '源泰':
-                    result = yield parseInventory.WZ(options,query);
-                    break;
-                case '天一':
-                    result = yield youfa.TY(options,query);
-                    break;
-                case '兴强':
-                    result = yield youfa.XQ(options,query);
-                    break;
-                case '邯郸友发':
-                    result = yield youfa.YF(options,query);
-                    break;
-                case '连创':
-                    result = yield youfa.LC(options,query);
-                    break;
-                case '友发德众':
-                    result = yield youfa.DZ(options,query);
-                    break;
-                case '邯郸正大':
-                    result = yield youfa.ZD(options,query);
-                    break;
-                case '利顺信达':
-                    result = yield youfa.XD(options,query);
-                    break;
-                case '拓源':
-                    result = yield youfa.XTY(options,query);
-                    break;
-                case '德天':
-                    result = yield youfa.DT(options,query);
-                    break;
-                case '中通':
-                    result = yield youfa.ZT(options,query);
-                    break;
-                case '津瑜':
-                    result = yield youfa.JY(options,query);
-                    break;
-                case '荣祥':
-                    result = yield youfa.RX(options,query);
-                    break;
+            if(query.supplier.indexOf("源泰") > -1){
+                result = yield parseInventory.WZ(options,query);
+            }else if(query.supplier.indexOf("天一") > -1){
+                result = yield youfa.TY(options,query);
+            }else if(query.supplier.indexOf("兴强") > -1){
+                result = yield youfa.XQ(options,query);
+            }else if(query.supplier.indexOf("邯郸友发") > -1){
+                result = yield youfa.YF(options,query);
+            }else if(query.supplier.indexOf("连创") > -1){
+                result = yield youfa.LC(options,query);
+            }else if(query.supplier.indexOf("友发德众") > -1){
+                result = yield youfa.DZ(options,query);
+            }else if(query.supplier.indexOf("邯郸正大") > -1){
+                result = yield youfa.ZD(options,query);
+            }else if(query.supplier.indexOf("利顺信达") > -1){
+                result = yield youfa.XD(options,query);
+            }else if(query.supplier.indexOf("拓源") > -1){
+                result = yield youfa.XTY(options,query);
+            }else if(query.supplier.indexOf("德天") > -1){
+                result = yield youfa.DT(options,query);
+            }else if(query.supplier.indexOf("中通") > -1){
+                result = yield youfa.ZT(options,query);
+            }else if(query.supplier.indexOf("津瑜") > -1){
+                result = yield youfa.JY(options,query);
+            }else if(query.supplier.indexOf("荣祥") > -1){
+                result = yield youfa.RX(options,query);
             }
             const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
             return data;
