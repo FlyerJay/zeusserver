@@ -238,7 +238,7 @@ module.exports = app => {
                     return app.model.OperateRecord.create({
                         userId:info.userId,
                         comId:info.comId,
-                        type:'上传库存表',
+                        type:'补充临时库存表',
                         detail:`${info.fileName}`,
                         createTime:+new Date()
                     },{transaction:t})
