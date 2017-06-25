@@ -166,6 +166,95 @@ module.exports = app => {
                 }
             })
         }
+        * inventoryTempImport(options,info){
+            const time = info.time;
+            var supplierId = 0;
+            let line = options.line
+            let newLine = [];
+            line.map((v)=>{
+                let specArr = v[0].split('*');
+                if(specArr[0] == specArr[1]){
+                    v.push('方管')
+                }else{
+                    v.push("矩管")
+                }
+                newLine.push(v);
+            })
+            options.line = newLine;
+            return app.model.transaction((t)=>{
+                return app.model.Supplier.findOne({
+                    where:{
+                        supplierName:{
+                            $eq:info.supplier
+                        }
+                    },
+                    attributes:['supplierId','supplierName'],
+                    transaction:t
+                }).then((data)=>{
+                    if(data){
+                        supplierId = data.dataValues.supplierId;
+                    }
+                    if(!info.delete) return Promise.resolve();
+                    return app.model.SupplierInventory.destroy({
+                        where:{
+                            supplierId:{
+                                $eq:supplierId,
+                            },
+                            lastUpdateTime:{
+                                $eq:time,
+                            },
+                            type:{
+                                $eq:info.material
+                            }
+                        },
+                        transaction:t
+                    })
+                }).then(()=>{
+                    let line = options.line;
+                    var memerry = {};
+                    return Promise.all(line.map((v) => {
+                        if(memerry[v[0]] == 1){//导入去重
+
+                        }else{
+                            memerry[v[0]] = 1;
+                            if(supplierId != 0 ){
+                                app.model.SupplierInventory.create({
+                                    supplierId:supplierId,
+                                    comId:'01',
+                                    spec:v[0],
+                                    type:info.material,
+                                    long:v[1],
+                                    material:v[4],
+                                    inventoryAmount:v[2],
+                                    perAmount:v[3],
+                                    lastUpdateTime:time,
+                                },{transaction:t})
+                            }else{
+                                res({code:-1,msg:"供应商不存在的"});
+                            }
+                        }
+                    }))
+                }).then(()=>{
+                    return app.model.OperateRecord.create({
+                        userId:info.userId,
+                        comId:info.comId,
+                        type:'上传库存表',
+                        detail:`${info.fileName}`,
+                        createTime:+new Date()
+                    },{transaction:t})
+                })
+            }).then((res)=>{
+                return {
+                    code:200,
+                    msg:"补充临时表成功"
+                }
+            }).catch((err)=>{
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
+            })
+        }
     }
     return TransAction;
 }

@@ -24,6 +24,8 @@ module.exports = app => {
             fileInfo.supplier = params[0];
             fileInfo.material = params[1];
             fileInfo.time = params[2];
+            params[3] ? fileInfo.temp = params[3] : "";
+            params[4] ? fileInfo.delete = params[4] : "";
             fileInfo.fileName = fileName;
             fileInfo.userId = query.userId;
             fileInfo.comId = query.comId;
@@ -69,6 +71,10 @@ module.exports = app => {
                 });
                 res(result);
             });
+            if(fileInfo.temp && query && query.type == 'inventory' && fileInfo.temp == '库存表') {
+                fileInfo.delete == "覆盖" ? fileInfo.delete = true : fileInfo.delete = false;
+                return yield this.tempInventory(result,fileInfo);
+            }
             return query && query.type == 'inventory' ? yield this.inventoryParse(result,fileInfo) : yield this.valueParse(result,fileInfo);
         }
         * inventoryParse(options,query){
@@ -76,6 +82,15 @@ module.exports = app => {
             var $1 = parseValue.parseToLine(options);
             var result = $1;
             return yield this.inventoryDispatch(result,query);
+        }
+        * tempInventory(options,query){
+            const parseValue = this.ctx.service.parseValue;
+            var $1 = parseValue.parseToLine(options);
+            const youfa = this.ctx.service.youfa;
+            var result = {};
+            result = yield youfa.TEMP($1,query);
+            const data = yield this.ctx.service.transaction.inventoryTempImport(result,query);//把最终数据交给数据库事务处理
+            return data;
         }
         * inventoryDispatch(options,query){
             const parseInventory = this.ctx.service.parseInventory;

@@ -154,6 +154,17 @@ module.exports = app => {
             var $8 = parseInventory.mergeData($7);
             return $8;
         }
+        * TEMP(options,query) {//临时表
+            const parseInventory = this.ctx.service.parseInventory;
+            var $1 = parseInventory.getTableHead(options,['规格','壁厚']);
+            var $2 = parseInventory.dealRepeatHeadTable($1);
+            var $3 = parseInventory.mixinSpec($2);
+            var $4 = parseInventory.mixinLand($3);
+            var $5 = parseInventory.requireColumn($4,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            var $6 = parseInventory.mergeSpecAndLand($5);
+            var $7 = parseInventory.mergeData($6);
+            return $7;
+        }
         rxDeal(options){
             var i = 0;
             for(;i<options.length;i++){
