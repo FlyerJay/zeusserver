@@ -15,7 +15,7 @@ import Review from '../components/manager/review'
 import Order from '../components/order/order'
 import List from '../components/order/list'
 import Search from '../components/order/search'
-import Cart from '../components/order/Cart'
+import Cart from '../components/order/cart'
 import Demand from '../components/order/demand'
 
 Vue.use(Router)
