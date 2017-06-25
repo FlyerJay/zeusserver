@@ -111,9 +111,6 @@ module.exports = app => {
                             supplierId:{
                                 $eq:supplierId,
                             },
-                            lastUpdateTime:{
-                                $eq:time,
-                            },
                             type:{
                                 $eq:info.material
                             }
@@ -199,9 +196,6 @@ module.exports = app => {
                         where:{
                             supplierId:{
                                 $eq:supplierId,
-                            },
-                            lastUpdateTime:{
-                                $eq:time,
                             },
                             type:{
                                 $eq:info.material
