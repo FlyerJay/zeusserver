@@ -192,7 +192,7 @@ export default {
                 searchTime: '',
                 page: 1,
             },
-            typeArray: ['黑管', '镀锌', '镀锌带'],
+            typeArray: ['黑管', '热镀锌', '镀锌带'],
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,

@@ -9,7 +9,7 @@
                 <el-select v-model="searchInvenParam.type">
                     <el-option value="">全部</el-option>
                     <el-option value="黑管">黑管</el-option>
-                    <el-option value="镀锌">镀锌</el-option>
+                    <el-option value="热镀锌">热镀锌</el-option>
                     <el-option value="镀锌带">镀锌带</el-option>
                 </el-select>
             </el-form-item>
@@ -31,7 +31,7 @@
     
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
-                    <el-button type="info" v-if="inventoryAuth">上传库存表</el-button>
+                    <el-button type="info" v-if="inventoryAuth">上传库存表</el-button><span class="warn-txt">(命名格式：供应商名称_类型_日期[_库存表])</span>
                 </el-upload>
             </el-form-item>
     
@@ -56,9 +56,9 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchInvenParam.page" layout=" prev, pager, next" :page-size="30" :total="inventory.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgStockVisible">
+        <el-dialog title="" v-model="dlgStockVisible">  
             <el-form :model="newStockParam" label-width="120px" label-position="left">
-                <el-form-item label="修改后的价格：">
+                <el-form-item label="修改后的库存数为：">
                 <el-input style="width:90%" v-model="newStockParam.inventoryAmount" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>

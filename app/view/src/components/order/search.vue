@@ -18,7 +18,7 @@
           <el-option value="">全部</el-option>
           <el-option value="黑管">黑管</el-option>
           <el-option value="镀锌带">镀锌带</el-option>
-          <el-option value="镀锌">镀锌</el-option>
+          <el-option value="热镀锌">热镀锌</el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -40,6 +40,7 @@
         </el-table-column>
         <el-table-column prop="inventoryAmount" label="库存（件）">
         </el-table-column>
+        <el-table-column prop="perAmount" label="单件支数"></el-table-column>
         <el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter">
         </el-table-column>
         <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter">
@@ -48,7 +49,7 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
+        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价" sortable>
         </el-table-column>
         <el-table-column label="操作" align="center" property="id">
           <template scope="scope">
