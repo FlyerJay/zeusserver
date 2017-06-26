@@ -38,7 +38,7 @@ module.exports = app => {
             type: INTEGER,
             comment:"需求吨位"
         },
-        demanAmount: {
+        demandAmount: {
             type: INTEGER,
             comment:"需求数量"
         },
