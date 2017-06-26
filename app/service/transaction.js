@@ -197,7 +197,6 @@ module.exports = app => {
                     if(data){
                         supplierId = data.dataValues.supplierId;
                     }
-                    if(!info.delete) return Promise.resolve();
                     return app.model.SupplierInventory.destroy({
                         where:{
                             supplierId:{
