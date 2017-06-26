@@ -4,6 +4,7 @@ module.exports = options => {
     return function* user(next) {
         var userId = this.cookies.get('userId');
         var comId = this.cookies.get('comId');
+        userId = new Buffer(`${userId}`,'base64').toString('utf-8');
         if(!/\/user\/login/.test(this.request.url)){
             if(userId&&comId){
                 const role = yield this.app.model.Userrole.getUserRole({userId,comId});
