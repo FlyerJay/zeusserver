@@ -9,7 +9,7 @@
                 <el-select v-model="searchParam.type">
                     <el-option value="">全部</el-option>
                     <el-option value="黑管">黑管</el-option>
-                    <el-option value="镀锌">镀锌</el-option>
+                    <el-option value="热镀锌">热镀锌</el-option>
                     <el-option value="镀锌带">镀锌带</el-option>
                 </el-select>
             </el-form-item>
@@ -31,7 +31,7 @@
     
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel">
-                    <el-button type="info" v-if="valueAuth">上传价格表</el-button>
+                    <el-button type="info" v-if="valueAuth">上传价格表</el-button><span class="warn-txt">(命名格式：价格表_类型_日期)</span>
                 </el-upload>
             </el-form-item>
         </el-form>
