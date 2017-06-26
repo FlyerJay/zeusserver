@@ -123,8 +123,9 @@ module.exports = app => {
             }else if(query.supplier.indexOf("荣祥") > -1){
                 result = yield youfa.RX(options,query);
             }
-            const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
-            return data;
+            return result;
+            // const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
+            // return data;
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;

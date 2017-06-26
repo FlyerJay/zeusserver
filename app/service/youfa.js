@@ -206,7 +206,9 @@ module.exports = app => {
                 var lines = options[i].lines;
                 lines.map(v => {
                     v[0] = v[0].replace(/[xX]/g,'*');
-                    v.push('6');
+                    const landArr = v[1].split('*');
+                    v[1] = landArr[0];
+                    landArr[1] ? v.push(landArr[1]) : v.push('6');
                 })
                 options[i].head.push('长度');
             }

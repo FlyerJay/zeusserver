@@ -124,21 +124,26 @@ module.exports = app => {
                         if(memerry[v[0]] == 1){//导入去重
 
                         }else{
-                            memerry[v[0]] = 1;
-                            if(supplierId != 0 ){
-                                app.model.SupplierInventory.create({
-                                    supplierId:supplierId,
-                                    comId:'01',
-                                    spec:v[0],
-                                    type:info.material,
-                                    long:v[1],
-                                    material:v[4],
-                                    inventoryAmount:v[2] ? v[2] : '0',
-                                    perAmount:v[3] ? v[3] : '100',
-                                    lastUpdateTime:time,
-                                },{transaction:t})
+                            const specArr = memerry[v[0]].split('*');
+                            if(specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
+                                console.log(specArr);
                             }else{
-                                res({code:-1,msg:"供应商不存在的"});
+                                memerry[v[0]] = 1;
+                                if(supplierId != 0 ){
+                                    app.model.SupplierInventory.create({
+                                        supplierId:supplierId,
+                                        comId:'01',
+                                        spec:v[0],
+                                        type:info.material,
+                                        long:v[1],
+                                        material:v[4],
+                                        inventoryAmount:v[2] ? v[2] : '0',
+                                        perAmount:v[3] ? v[3] : '100',
+                                        lastUpdateTime:time,
+                                    },{transaction:t})
+                                }else{
+                                    res({code:-1,msg:"供应商不存在的"});
+                                }
                             }
                         }
                     }))
