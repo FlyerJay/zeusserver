@@ -38,6 +38,10 @@ module.exports = app => {
             type: INTEGER,
             comment:"需求吨位"
         },
+        demanAmount: {
+            type: INTEGER,
+            comment:"需求数量"
+        },
         userId: {
             type: STRING(20),
             comment:"业务员"
