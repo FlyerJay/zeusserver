@@ -259,14 +259,15 @@ module.exports = app => {
                 })
                 options[i].head = head;
                 newLines = [];
-                let breakFlag = false;
+                //let breakFlag = false;
                 options[i].lines.map((v) => {
-                    breakFlag = false;
+                    //breakFlag = false;
                     v.map((vi) => {
                         if (!vi)
-                            breakFlag = true;
+                            //breakFlag = true;
+                            vi = '0'
                     })
-                    if (!breakFlag)
+                    //if (!breakFlag)
                         newLines.push(v);
                 })
                 options[i].lines = newLines;

@@ -133,8 +133,8 @@ module.exports = app => {
                                     type:info.material,
                                     long:v[1],
                                     material:v[4],
-                                    inventoryAmount:v[2],
-                                    perAmount:v[3],
+                                    inventoryAmount:v[2] ? v[2] : '0',
+                                    perAmount:v[3] ? v[3] : '100',
                                     lastUpdateTime:time,
                                 },{transaction:t})
                             }else{
