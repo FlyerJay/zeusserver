@@ -124,7 +124,7 @@ module.exports = app => {
                         if(memerry[v[0]] == 1){//导入去重
 
                         }else{
-                            const specArr = memerry[v[0]].split('*');
+                            const specArr = v[0].split('*');
                             if(specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
@@ -164,7 +164,8 @@ module.exports = app => {
             }).catch((err)=>{
                 return {
                     code:-1,
-                    msg:"解析失败"
+                    msg:"解析失败",
+                    err:err
                 }
             })
         }
