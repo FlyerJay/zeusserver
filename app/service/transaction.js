@@ -13,6 +13,9 @@ module.exports = app => {
                     where:{
                         supplierName:{
                             $in:options.head
+                        },
+                        isDelete:{
+                            $eq:'N',
                         }
                     },
                     attributes:['supplierId','supplierName'],
@@ -103,6 +106,9 @@ module.exports = app => {
                     where:{
                         supplierName:{
                             $eq:info.supplier
+                        },
+                        isDelete:{
+                            $eq:'N',
                         }
                     },
                     attributes:['supplierId','supplierName'],
@@ -194,6 +200,9 @@ module.exports = app => {
                     where:{
                         supplierName:{
                             $eq:info.supplier
+                        },
+                        isDelete:{
+                            $eq:'N',
                         }
                     },
                     attributes:['supplierId','supplierName'],
