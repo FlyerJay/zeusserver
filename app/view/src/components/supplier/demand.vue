@@ -184,11 +184,6 @@
                 }
                 return status[row.dealStatus];
             },
-            pickerOptions(){
-
-            },
-            totalPriceFormatter(row) {
-            },
             computePrice() {
                 this.demanUpdateParams.totalPrice = (Number(this.demanUpdateParams.freight) + Number(this.demanUpdateParams.factoryPrice)) * Number(this.demanUpdateParams.demandWeight);
             },
