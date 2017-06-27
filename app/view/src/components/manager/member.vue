@@ -291,6 +291,11 @@ export default {
         },
         handleCurrentChange(val){
             this.memberParams.page = val;
+            this.loading = true;
+            this.loadmemberList(this.memberParams)
+            .then(rs => {
+                this.loading = false;
+            })
         },
         searchUser() {//查找成员
             this.loading = true;
