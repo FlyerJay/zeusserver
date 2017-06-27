@@ -129,6 +129,7 @@ module.exports = app => {
         }
         * valueParse(options,query){
             const parseValue = this.ctx.service.parseValue;
+            options.length = 1;
             var $1 = parseValue.parseToLine(options);
             var $2 = parseValue.removeUnuseTable($1);
             var $3 = parseValue.mixinLand($2);

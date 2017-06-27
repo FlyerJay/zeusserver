@@ -86,6 +86,7 @@ module.exports = app => {
                 s.comId = si.comId
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
@@ -109,6 +110,7 @@ module.exports = app => {
                 s.comId = si.comId
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
@@ -219,12 +221,14 @@ module.exports = app => {
             * queryProduct(options){
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
-                    si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.lastUpdateTime,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value
+                    si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value,
+                    CASE WHEN sv.time <> '' AND sv.time > si.lastUpdateTime THEN sv.time ELSE si.lastUpdateTime END as lastUpdateTime
                     FROM supplier_inventory si
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
+                    AND s.isDelete = 'N'
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
@@ -252,6 +256,7 @@ module.exports = app => {
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
+                    AND s.isDelete = 'N'
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type

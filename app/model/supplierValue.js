@@ -77,6 +77,7 @@ module.exports = app => {
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
                 ON svv.supplierId = sv.supplierId
@@ -106,6 +107,7 @@ module.exports = app => {
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
                 ON svv.supplierId = sv.supplierId

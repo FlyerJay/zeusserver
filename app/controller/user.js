@@ -8,7 +8,12 @@ module.exports = app => {
       if(user.code == 200){
         var info = user.data.userInfo.dataValues;
         for(var props in info){
-          if(props == 'userId' || props == 'comId' || props == 'userToken'){
+          if(props == 'userId' ){
+            ctx.cookies.set(`${props}`,new Buffer(`${info[props]}`).toString('base64'),{
+              maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+              httpOnly: false,
+            })
+          }else if(props == 'comId' || props == 'userToken'){
             ctx.cookies.set(`${props}`,`${info[props]}`,{
               maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
               httpOnly: false,
