@@ -118,7 +118,6 @@
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
             },
             unitFormatter(row,colum){
-                console.log(row.orderDcrease,row.Weight)
                 return row.orderDcrease/row.Weight;
             },
             viewDetail(index,row) {
