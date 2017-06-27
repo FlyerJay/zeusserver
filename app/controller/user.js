@@ -9,7 +9,7 @@ module.exports = app => {
         var info = user.data.userInfo.dataValues;
         for(var props in info){
           if(props == 'userId' ){
-            ctx.cookies.set(`${props}`,new Buffer(`${info[props]}`).toString('base64'),{
+            ctx.cookies.set(`${props}`,encodeURI(`${info[props]}`).toString('base64'),{
               maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
               httpOnly: false,
             })
