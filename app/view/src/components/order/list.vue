@@ -21,7 +21,7 @@
                 <el-table-column prop="orderAdjust" label="下浮总额"></el-table-column>
                 <el-table-column prop="userId" label="下单人"></el-table-column>
                 <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"></el-table-column>
-                <el-table-column label="操作" align="left" width="140" property="id">
+                <el-table-column label="操作" align="left" width="160" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
                         <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>

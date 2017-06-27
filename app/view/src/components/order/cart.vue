@@ -179,11 +179,10 @@
                 return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
             },
             purePriceFormatter(row,column){
-                // const value = Number(row.value);
-                // const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
-                // row.purePrice = value + freight;
-                // return value + freight
-                return row.value - row.benifit;
+                const value = Number(row.value);
+                const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+                row.purePrice = value + freight;
+                return (row.value - row.benifit).toFixed(2);
             },
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
@@ -211,7 +210,7 @@
                     totalAdjust += v.totalAdjust?Number(v.totalAdjust):0;
                 })
                 this.totalPrice = totalPrice;
-                this.totalWeight = totalWeight;
+                this.totalWeight = totalWeight.toFixed(2);
                 this.totalAdjust = totalAdjust;
             },
             submitOrder() {
