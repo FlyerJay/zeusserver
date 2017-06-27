@@ -63,9 +63,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width='250px' align="center" property="id" v-if="adminAuthority">
                     <template scope="scope">
-                        <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="warning">修改权限</el-button>
-                        <el-button size="small" @click="allocRole(scope.index, scope.row)" type="warning">快速设置</el-button>
-                        <el-button size="small" @click="removeUser(scope.index, scope.row)" type="warning">删除</el-button>
+                        <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
+                        <el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>
+                        <el-button size="small" @click="removeUser(scope.index, scope.row)" type="danger">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>
