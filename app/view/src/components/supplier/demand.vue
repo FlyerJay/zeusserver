@@ -25,6 +25,8 @@
                 </el-table-column>
                 <el-table-column prop="type" label="类别">
                 </el-table-column>
+                <el-table-column prop="demandAmount" label="需求数量">
+                </el-table-column>
                 <el-table-column prop="demandWeight" label="需求吨位" width="">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户简称">

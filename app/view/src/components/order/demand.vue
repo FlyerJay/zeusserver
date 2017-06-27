@@ -94,6 +94,9 @@
                 <el-form-item label="类别：">
                     <el-input style="width:85%" v-model="demandDatas.type" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="需求数量(支)：">
+                    <el-input style="width:85%" v-model="demandDatas.demandAmount" :readonly="true" auto-complete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="需求吨位：">
                     <el-input style="width:85%" v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off"></el-input>
                 </el-form-item>
@@ -170,6 +173,7 @@ export default {
                 customerPhone: '',
                 timeConsume: 0,
                 comment: '',
+                demandAmount: 0
             },
             FeedbackParams: {
                 demandId: '',
@@ -249,6 +253,7 @@ export default {
             this.demandParams.demandListId = row.demandListId;
         },
         submitDdemand() {
+            this.demandParams.demandAmount = this.demandcount;
             this.addToDemandList(this.demandParams)
                 .then(rs => {
                     this.$message({

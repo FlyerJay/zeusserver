@@ -115,7 +115,6 @@ export default {
       .then(() => {
         this.reviewVerify(this.reviewParams)
         .then(() => {
-          console.log(22)
             this.$message({
               message: `审核成功`,
               type: 'success'
@@ -126,7 +125,6 @@ export default {
               this.loading = false;
             });
         }).catch(()=>{
-          console.log(11)
         });
       }).catch(() => {
         this.$message({
