@@ -86,6 +86,7 @@ module.exports = app => {
                 s.comId = si.comId
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
@@ -109,6 +110,7 @@ module.exports = app => {
                 s.comId = si.comId
                 AND s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
+                AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
@@ -226,6 +228,7 @@ module.exports = app => {
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
+                    AND s.isDelete = 'N'
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
@@ -253,6 +256,7 @@ module.exports = app => {
                     ON s.supplierId = si.supplierId
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
+                    AND s.isDelete = 'N'
                     LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
