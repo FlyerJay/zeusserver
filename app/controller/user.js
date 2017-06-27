@@ -44,6 +44,7 @@ module.exports = app => {
 	  };
     * remove() {
       const ctx = this.ctx;
+      console.log(111);
       ctx.body = yield ctx.model.User.removeUser(ctx.request.body);
     };
     * logout() {

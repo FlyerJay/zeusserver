@@ -65,7 +65,7 @@
                     <template scope="scope">
                         <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="warning">修改权限</el-button>
                         <el-button size="small" @click="allocRole(scope.index, scope.row)" type="warning">快速设置</el-button>
-                        <el-button size="small" @click="deleteUser(scope.index, scope.row)" type="warning">删除</el-button>
+                        <el-button size="small" @click="removeUser(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>
@@ -162,7 +162,8 @@
 import{
     loadmemberList,
     updateuserRole,
-    addNewUser
+    addNewUser,
+    deleteUser
 }from '../../vuex/action'
 
 export default {
@@ -170,7 +171,8 @@ export default {
         actions:{
             loadmemberList,
             updateuserRole,
-            addNewUser
+            addNewUser,
+            deleteUser,
         },
         getters:{
             userInfo:({
@@ -313,6 +315,26 @@ export default {
                 this.loadmemberList(this.memberParams)
                 .then(rs => {
                     this.loading = false;
+                }).catch(rs=> {})
+            }).catch(rs=> {})
+        },
+        removeUser(index,row) {
+            this.$confirm('确认删除该用户?','警告',{
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.deleteUser({operator:row.userId})
+                .then(rs => {
+                    this.$message({
+                        message: `删除用户成功`,
+                        type: 'success'
+                    });
+                    this.loading = true;  
+                    this.loadmemberList(this.memberParams)
+                    .then(rs => {
+                        this.loading = false;
+                    }).catch(rs=> {})
                 }).catch(rs=> {})
             }).catch(rs=> {})
         },

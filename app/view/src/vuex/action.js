@@ -538,6 +538,21 @@ export const addNewUser = ({ dispatch }, param) => {
   });
 }
 
+//删除用户
+export const deleteUser = ({ dispatch }, param) => {
+  return axios.post('/zues/api/user/delete', param)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //删除cookie
 export const removeCookie = ({ dispatch }, params) => {
   return axios.post('/zues/api/user/logout', params)

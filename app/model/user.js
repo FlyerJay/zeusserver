@@ -162,7 +162,7 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少删除用户"
                 }
-                app.model.transaction((t) => {
+                return yield app.model.transaction((t) => {
                     return this.destroy({
                         where:{
                             userId:{
@@ -188,6 +188,16 @@ module.exports = app => {
                             createTime:+new Date()
                         },{transaction:t})
                     })
+                }).then(() => {
+                    return {
+                        code:200,
+                        msg:"删除用户成功"
+                    }
+                }).catch(err => {
+                    return {
+                        code:-1,
+                        msg:"删除用户出错"
+                    }
                 })
             },
             * getUserInfo(options){
