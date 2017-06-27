@@ -161,6 +161,7 @@ export default {
             this.row = row;
         },
         confirmChangeStock(row) {
+            
             this.updateStock(this.newStockParam)
                 .then(rs => {
                     this.$message({
