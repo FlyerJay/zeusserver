@@ -23,39 +23,39 @@
         </el-form>
         <div class="tb-wrap">
              <el-table :data="userRoleInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
-                <el-table-column prop="userId" label="用户ID" width="">
+                <el-table-column prop="userId" label="用户ID" width="160px">
                 </el-table-column>
-                <el-table-column label="下单权限" align="center" prop="orderAuth">
+                <el-table-column label="采购" align="center" prop="orderAuth">
                       <template scope="scope" align="center">
                         <i v-if ="Boolean(scope.row.orderAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                </el-table-column>
-                <el-table-column prop="demandAuth" align="center" label="供应商目录及运费">
+                <el-table-column prop="demandAuth" align="center" label="供应商设置">
                     <template scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.supplierAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
-                 <el-table-column prop="valueAuth" align="center" label="供应商价格表">
+                 <el-table-column prop="valueAuth" align="center" label="价格表">
                      <template scope="scope" >
                         <i v-if ="Boolean(scope.row.valueAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column prop="inventoryAuth" align="center" label="供应商库存表">
+                <el-table-column prop="inventoryAuth" align="center" label="库存表">
                       <template scope="scope" >
                         <i v-if ="Boolean(scope.row.inventoryAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                 <el-table-column prop="demandAuth" align="center" label="定制需求权限">
+                 <el-table-column prop="demandAuth" align="center" label="定制需求">
                     <template scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.demandAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
-                <el-table-column prop=" adminAuth" align="center" label="采购下单审核">
+                <el-table-column prop=" adminAuth" align="center" label="管理员">
                      <template scope="scope" >
                         <i v-if ="Boolean(scope.row.adminAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
