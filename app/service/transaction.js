@@ -45,7 +45,7 @@ module.exports = app => {
                         let line = options.line;
                         return Promise.all(line.map((v) => {
                             const specArr = v[0].split('*');
-                            if(specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
+                            if(v[0].length > 16 || specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
                                 if(indexs[v[2]]){
@@ -130,7 +130,7 @@ module.exports = app => {
 
                         }else{
                             const specArr = v[0].split('*');
-                            if(specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
+                            if(v[0].length > 16 || specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
                                 memerry[v[0]] = 1;
@@ -221,7 +221,7 @@ module.exports = app => {
 
                         }else{
                             const specArr = v[0].split('*');
-                            if(specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
+                            if(v[0].length > 16 || specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
                                 memerry[v[0]] = 1;

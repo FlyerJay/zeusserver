@@ -12,6 +12,7 @@ module.exports = app => {
   app.post('/zues/api/user/register', 'user.register');
   app.post('/zues/api/user/login', 'user.login');
   app.get('/zues/api/user','user.info');
+  app.get('/zues/api/delete','user.remove');
   app.get('/zues/api/user/validate','user.validate');
   app.post('/zues/api/user/logout','user.logout');
   //公司

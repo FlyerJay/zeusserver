@@ -157,6 +157,39 @@ module.exports = app => {
                     msg:'登录成功',
                 }
             },
+            * removeUser(options){
+                if(!options.operator) return {
+                    code:-1,
+                    msg:"缺少删除用户"
+                }
+                app.model.transaction((t) => {
+                    return this.destroy({
+                        where:{
+                            userId:{
+                                $eq:options.operator,
+                            }
+                        },
+                        transaction: t
+                    }).then(()=>{
+                        return app.model.Userrole.destroy({
+                            where:{
+                                userId:{
+                                    $eq:options.operator,
+                                }
+                            },
+                            transaction: t
+                        })
+                    }).then(()=>{
+                        return app.model.OperateRecord.create({
+                            userId:options.userId,
+                            comId:options.comId,
+                            type:'删除用户',
+                            detail:`删除用户${options.operator}`,
+                            createTime:+new Date()
+                        },{transaction:t})
+                    })
+                })
+            },
             * getUserInfo(options){
                 if(!options || !options.userToken) return {
                     code:-1,

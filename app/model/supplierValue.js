@@ -62,14 +62,6 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                var addressCondition = '';
-                if(options.address){
-                    addressCondition = `AND s.address = :address`
-                }
-                var typeCondition = '';
-                if(options.type){
-                    typeCondition = `AND sv.type = :type`
-                }
                 const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
                 s.supplierName,s.address,s.benifit
                 FROM supplier_value sv
@@ -78,17 +70,16 @@ module.exports = app => {
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
-                ${addressCondition}
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
+                AND (s.address = :address OR :address = '')
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) svv
                 ON svv.supplierId = sv.supplierId
                 AND svv.type = sv.type
-                AND svv.material = sv.material
                 AND svv.spec = sv.spec
                 AND sv.comId = svv.comId
                 AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
-                ${typeCondition}
+                AND (sv.type = :type OR :type = '')
                 ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec
                 LIMIT :start,:offset`,{
                     replacements:{
@@ -108,26 +99,24 @@ module.exports = app => {
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
-                ${addressCondition}
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec,material) svv
+                AND (s.address = :address OR :address = '')
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) svv
                 ON svv.supplierId = sv.supplierId
                 AND svv.type = sv.type
-                AND svv.material = sv.material
                 AND svv.spec = sv.spec
                 AND sv.comId = svv.comId
                 AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
-                ${typeCondition}
-                ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec`,{
+                AND (sv.type = :type OR :type = '')`,{
                     replacements:{
                         address:options.address?options.address:'',
                         comId:options.comId,
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
+                        offset:options.pageSize?options.pageSize:30,
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {

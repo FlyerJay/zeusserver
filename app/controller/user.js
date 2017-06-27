@@ -42,6 +42,10 @@ module.exports = app => {
 		  const ctx = this.ctx;
 		  ctx.body = yield ctx.model.User.validateUserId(ctx.query);
 	  };
+    * remove() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.User.removeUser(ctx.request.body);
+    };
     * logout() {
       const ctx = this.ctx;
       ctx.cookies.set('userId',null);

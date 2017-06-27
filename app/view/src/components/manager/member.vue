@@ -31,40 +31,41 @@
                         <i v-else class="el-icon-close"></i>
                      </template>
                </el-table-column>
-                <el-table-column prop="demandAuth" label="供应商目录及运费">
+                <el-table-column prop="demandAuth" align="center" label="供应商目录及运费">
                     <template scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.supplierAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
-                 <el-table-column prop="valueAuth" label="供应商价格表">
+                 <el-table-column prop="valueAuth" align="center" label="供应商价格表">
                      <template scope="scope" >
                         <i v-if ="Boolean(scope.row.valueAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column prop="inventoryAuth" label="供应商库存表">
+                <el-table-column prop="inventoryAuth" align="center" label="供应商库存表">
                       <template scope="scope" >
                         <i v-if ="Boolean(scope.row.inventoryAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                 <el-table-column prop="demandAuth" label="定制需求权限">
+                 <el-table-column prop="demandAuth" align="center" label="定制需求权限">
                     <template scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.demandAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
-                <el-table-column prop=" adminAuth" label="采购下单审核">
+                <el-table-column prop=" adminAuth" align="center" label="采购下单审核">
                      <template scope="scope" >
                         <i v-if ="Boolean(scope.row.adminAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" property="id" v-if="adminAuthority">
+                <el-table-column label="操作" width='250px' align="center" property="id" v-if="adminAuthority">
                     <template scope="scope">
                         <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="warning">修改权限</el-button>
                         <el-button size="small" @click="allocRole(scope.index, scope.row)" type="warning">快速设置</el-button>
+                        <el-button size="small" @click="deleteUser(scope.index, scope.row)" type="warning">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>
