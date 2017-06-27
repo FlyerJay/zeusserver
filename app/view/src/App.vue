@@ -37,18 +37,20 @@
         methods: {
             getCookie(name) {
                 var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+                debugger
                 if (arr = document.cookie.match(reg))
-                    return unescape(arr[2]);
+                    return decodeURI(arr[2]);
                 else
                     return null;
             },
             isLogin() {
                 var userId = this.getCookie('userId');
                 var comId = this.getCookie('comId');
+                var userRole = this.getCookie('userRole');
                 var info = {
                     userId: userId,
                     comId: comId,
-                    userRole: '111111'
+                    userRole: userRole
                 }
                 if (userId) {
                     this.updateForm('userInfo', info);
