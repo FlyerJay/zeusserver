@@ -272,8 +272,9 @@ module.exports = app => {
                         lines[j][2] = lines[j][2].replace(/~/g,'-');
                         lines[j][2] = lines[j][2].replace(/--/g,'-');
                     }
-                    if(utils.land[`${lines[j][2]}`]){
-                        lines[j][2] = utils.land[`${lines[j][2]}`];
+                    if(`${lines[j][2]}` && `${lines[j][2]}`.indexOf('-') > -1){
+                        const arr = `${lines[j][2]}`.split('-');
+                        lines[j][2] = utils.getLand(arr[0],arr[1]);
                     }
                 }
                 options[i].lines = lines;

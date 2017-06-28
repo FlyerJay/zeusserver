@@ -205,7 +205,8 @@ module.exports = app => {
                         return w;
                     }); //这风骚的*号
                     if (v[column].indexOf('-') > -1) {
-                        v[column] = utils.land[v[column]];
+                        const arr = v[column].split('-');
+                        v[column] = utils.getLand(arr[0],arr[1]);
                     }
                 })
                 let lastLand = lines[0][column];
