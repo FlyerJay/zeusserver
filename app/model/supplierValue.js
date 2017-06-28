@@ -64,18 +64,13 @@ module.exports = app => {
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
                 s.supplierName,s.address,s.benifit
-                FROM supplier_value sv
+                FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type) svv
-                ON svv.supplierId = sv.supplierId
-                AND svv.type = sv.type
-                AND sv.comId = svv.comId
-                AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 AND (sv.type = :type OR :type = '')
@@ -92,18 +87,13 @@ module.exports = app => {
                     }
                 }),
                 app.model.query(`SELECT count(1) as count
-                FROM supplier_value sv
+                FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
                 AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type) svv
-                ON svv.supplierId = sv.supplierId
-                AND svv.type = sv.type
-                AND sv.comId = svv.comId
-                AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
                 AND sv.comId = :comId
                 AND (sv.type = :type OR :type = '')`,{
