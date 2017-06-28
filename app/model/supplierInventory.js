@@ -229,7 +229,7 @@ module.exports = app => {
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
                     AND s.isDelete = 'N'
-                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
+                    LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
                     AND si.material = sv.material
@@ -257,7 +257,7 @@ module.exports = app => {
                     AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
                     AND s.isDelete = 'N'
-                    LEFT JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) sv
+                    LEFT JOIN (select * from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv
                     ON si.supplierId = sv.supplierId
                     AND si.type = sv.type
                     AND si.material = sv.material
