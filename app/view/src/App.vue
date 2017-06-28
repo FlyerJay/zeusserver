@@ -37,7 +37,6 @@
         methods: {
             getCookie(name) {
                 var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-                debugger
                 if (arr = document.cookie.match(reg))
                     return decodeURI(arr[2]);
                 else
