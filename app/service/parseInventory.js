@@ -47,6 +47,7 @@ module.exports = app => {
                 }
                 lines = lines.slice(j);
                 let head = lines[0];
+                if(!head) return false;
                 let headArr = head.split(',');
                 j = 0;
                 let repeat = {};

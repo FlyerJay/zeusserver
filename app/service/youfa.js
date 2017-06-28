@@ -45,6 +45,15 @@ module.exports = app => {
         * DZ(options,query) {//友发德众处理程序
             const parseInventory = this.ctx.service.parseInventory;
             var $1 = parseInventory.getTableHead(options);
+            if(!$1){
+                $1 = this.dzSpecial(options);
+                var $$2 = parseInventory.mixinSpec($1,1);
+                var $$3 = parseInventory.mixinLand($$2,3);
+                var $$4 = parseInventory.requireColumn($$3,['规格','壁厚','长度','件数','支/件']);
+                var $$5 = parseInventory.mergeSpecAndLand($$4);
+                var $$6 = parseInventory.mergeData($$5);
+                return $$6;
+            }
             var $2 = parseInventory.dealRepeatHeadTable($1);
             var $3 = this.separateSpecAndPer($2);
             var $4 = parseInventory.mixinSpec($3);
@@ -164,6 +173,67 @@ module.exports = app => {
             var $6 = parseInventory.mergeSpecAndLand($5);
             var $7 = parseInventory.mergeData($6);
             return $7;
+        }
+        dzSpecial(options){
+            var i = 0;
+            for(;i < options.length;i++){//把有用的信息的头部拼成'规格,规格,件数,支数'的形式，下面直接在每行中筛选这些信息;
+                var lineArr = options[i].lines[1].split(',')
+                lineArr.map((v,i) => {
+                    lineArr[i] = v = v.replace(/\./,'');
+                    lineArr[i] = v = v.replace(/.*规.*/,'规格');
+                    lineArr[i] = v = v.replace(/.*件.*/,'件数');
+                    lineArr[i] = v = v.replace(/.*支.*/,'支数');
+                    lineArr[i] = v = v.replace(/.*备.*/,'备注');
+                    lineArr[i] = v = v.replace(/.*壁.*/,'规格');
+                    lineArr[i] = v = v.replace(/^$/,'规格');
+                })
+                options[i].lines[1] = lineArr.join(',');
+                options[i].lines = options[i].lines.slice(1);
+            }
+            i = 0;
+            for(;i < options.length;i++){
+                options[i].lines.map((v,j) => {//把每行的字符串都切割成数组
+                    options[i].lines[j] = v = v.split(',');
+                })
+                //在表头数组中寻找'规格,规格,件数,支数'并使用mark标记其位置
+                var head =  options[i].lines[0];
+                var mark = [];
+                head.map((v,j) => {
+                    if(v == '规格' && head[j+1] == '规格' && head[j+2] == '件数' && head[j+3] == '支数'){
+                        mark.push(j);
+                    }
+                });
+                //重新设置表头，支数其实是没用的数据，刚才为了确保匹配不出错，把支数加上排除干扰项了。
+                options[i].head = ['支/件','规格','件数','壁厚','长度'];
+                options[i].lines = options[i].lines.slice(1);
+                var newLine = [];
+                //按照表头把列表的数据取出，如果mark有多个则拆分该行
+                options[i].lines.map( v => {
+                    mark.map(m =>{
+                        newLine.push(v.slice(m,m + 3));
+                    })
+                })
+                options[i].lines = newLine.slice();//这里使用深拷贝，因为newLine后面还要继续用
+                var preAmount = 0;
+                newLine = [];
+                options[i].lines.map( v => {
+                    v[0] ? v[0].replace(/.*[(（]\s*(\d+).*[)）]/,(v1,amount)=>{
+                        v[0] = preAmount = amount;
+                    }) : v[0] = preAmount;
+                    v[1] = v[1].replace(/[xX]/g,'*');
+                    /\d+.*\*\d+.*\*\d+.*\*\d+.*/.test(v[1]) ? newLine.push(v) : '';
+                })
+                newLine.map(v => {
+                    const specArr = v[1].split('*');
+                    v[1] = `${specArr[0]}*${specArr[1]}`;
+                    specArr[2] ? v.push(specArr[2]) : v.push('1.00');
+                    specArr[3] ? v.push(specArr[3]) : v.push('6');
+                    v[2] = v[2].replace(/\s/g,'');
+                    v[0] = isNaN(Number(v[0])) ? 0 : v[0];
+                })
+                options[i].lines = newLine;
+            }
+            return options;
         }
         rxDeal(options){
             var i = 0;
