@@ -13,7 +13,22 @@ module.exports = app => {
             var $6 = this.requireColumn($5, ['规格', '壁厚', '长度', '件数', '支/件']); //从表格中取出需要保留的列，其他列都删除掉
             var $7 = this.mergeSpecAndLand($6);
             var $8 = this.mergeData($7);
-            return $8;
+            var $9 = this.mergeInventory($8);
+            return $9;
+        }
+        mergeInventory(options){
+            var i = options.line.length - 1;
+            var catchArray = {};
+            for(; i >=0; i--){
+                if(catchArray[`${options.line[i][0]}${options.line[i][1]}`]){
+                    options.line[i][2] = Number(options.line[i][2]);
+                    options.line[i][2] += catchArray[`${options.line[i][0]}${options.line[i][1]}`];
+                    catchArray[`${options.line[i][0]}${options.line[i][1]}`] = options.line[i][2];
+                }else{
+                    catchArray[`${options.line[i][0]}${options.line[i][1]}`] = Number(options.line[i][2]);
+                }
+            }
+            return options;
         }
         getTableHead(options, keywords = ['规格', '壁厚']) { /*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息,用数组表示表头包含哪些关键字 */
             var i = 0;
