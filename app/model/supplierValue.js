@@ -71,10 +71,9 @@ module.exports = app => {
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) svv
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type) svv
                 ON svv.supplierId = sv.supplierId
                 AND svv.type = sv.type
-                AND svv.spec = sv.spec
                 AND sv.comId = svv.comId
                 AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
@@ -100,10 +99,9 @@ module.exports = app => {
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
-                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type,spec) svv
+                INNER JOIN (SELECT *,MAX(lastUpdateTime) AS time FROM supplier_value GROUP BY supplierId,type) svv
                 ON svv.supplierId = sv.supplierId
                 AND svv.type = sv.type
-                AND svv.spec = sv.spec
                 AND sv.comId = svv.comId
                 AND sv.lastUpdateTime = svv.time
                 WHERE sv.spec LIKE :spec
