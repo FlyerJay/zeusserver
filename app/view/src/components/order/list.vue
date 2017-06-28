@@ -46,7 +46,7 @@
                 <el-table-column prop="spec" label="规格"></el-table-column>
                 <el-table-column prop="type" label="类型"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商"></el-table-column>
-                <el-table-column prop="orderAmount" label="数量"></el-table-column>
+                <el-table-column prop="orderAmount" label="数量(件)"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价"></el-table-column>
                 <el-table-column prop="Weight" label="重量"></el-table-column>
                 <el-table-column prop="orderDcrease" label="下浮"></el-table-column>
