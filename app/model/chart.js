@@ -104,7 +104,7 @@ module.exports = app => {
                 si.supplierId = c.supplierId
                 AND si.type = c.type
                 AND si.spec = c.spec
-                LEFT JOIN (select *,max(lastUpdateTime) from supplier_value group by supplierId,type,spec) sv ON
+                LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
                 si.material = sv.material

@@ -27,7 +27,7 @@ module.exports = app => {
             comment:"公司编号"
         },
         spec: {
-            type: STRING(20),
+            type: STRING(16),
             allowNull:false,
             comment:"规格"
         },
