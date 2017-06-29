@@ -124,6 +124,7 @@ module.exports = app => {
                 result = yield youfa.RX(options,query);
             }
             // return result;
+            result = parseInventory.mergeInventory(result);
             const data = yield this.ctx.service.transaction.inventoryImport(result,query);//把最终数据交给数据库事务处理
             return data;
         }
