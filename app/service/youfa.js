@@ -175,7 +175,7 @@ module.exports = app => {
             var $7 = parseInventory.mergeData($6);
             return $7;
         }
-        dzSpecial(options){
+        dzSpecial(options){//德众黑管的特殊处理逻辑
             var i = 0;
             for(;i < options.length;i++){//把有用的信息的头部拼成'规格,规格,件数,支数'的形式，下面直接在每行中筛选这些信息;
                 var lineArr = options[i].lines[1].split(',')
@@ -217,14 +217,14 @@ module.exports = app => {
                 options[i].lines = newLine.slice();//这里使用深拷贝，因为newLine后面还要继续用
                 var preAmount = 0;
                 newLine = [];
-                options[i].lines.map( v => {
+                options[i].lines.map( v => {//从v[0]中取出支/件，其结构为[(（] 16 支[/件] [）)]
                     v[0] ? v[0].replace(/.*[(（]\s*(\d+).*[)）]/,(v1,amount)=>{
                         v[0] = preAmount = amount;
                     }) : v[0] = preAmount;
                     v[1] = v[1].replace(/[xX]/g,'*');
                     /\d+.*\*\d+.*\*\d+.*\*\d+.*/.test(v[1]) ? newLine.push(v) : '';
                 })
-                newLine.map(v => {
+                newLine.map(v => {//从规格中分离出壁厚和长度，并剔除脏数据
                     const specArr = v[1].split('*');
                     v[1] = `${specArr[0]}*${specArr[1]}`;
                     specArr[2] ? v.push(specArr[2]) : v.push('1.00');
