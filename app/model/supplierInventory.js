@@ -240,7 +240,7 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
+                    ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec
                     LIMIT :start,:offset`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
@@ -268,7 +268,7 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
+                    ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
