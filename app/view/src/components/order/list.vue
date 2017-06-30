@@ -24,7 +24,7 @@
                 <el-table-column label="操作" align="left" width="160" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
-                        <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="warning">删除</el-button>
+                        <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="danger">删除</el-button>
                     </template>
                </el-table-column>
             </el-table>

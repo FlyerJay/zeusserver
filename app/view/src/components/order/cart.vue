@@ -44,9 +44,10 @@
                 </el-table-column>
                 <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
                 </el-table-column>
-                <el-table-column label="操作" align="center" property="id">
+                <el-table-column label="操作" align="center" property="id" width="150px">
                     <template scope="scope">
                         <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
+                        <el-button size="small" @click="deleteChart(scope.index,scope.row)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -240,6 +241,27 @@
                 this.changeParams.newPrice = row.totalPrice;
                 this.changeParams.oldPrice = row.totalPrice;
                 this.changeParams.row = row;
+            },
+            deleteChart(index,row) {
+                console.log(row);
+                this.$confirm('确定删除购物车?','警告',{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.removeCartList({
+                        chartId:row.chartId+'',
+                    }).then(()=>{
+                        this.$message({
+                            message: `删除成功`,
+                            type: 'success'
+                        })
+                    })
+                    this.loading = true;
+                    this.loadCartList(this.listParams).then(()=>{
+                        this.loading = false;
+                    })
+                })
             },
             computePrice() {
                 var specArr = this.changeParams.row.spec.split('*');

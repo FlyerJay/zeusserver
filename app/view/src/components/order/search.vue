@@ -25,10 +25,9 @@
         <el-button type="warning" @click="searchStock" :loading="loading">厂家现货查询</el-button>
       </el-form-item>
     </el-form>
-    <div class="sea-title">厂家现货价格/库存表:<span class="warn-txt">(库存数量为999的为虚拟库存，其余为真实库存
-)</span></div>
+    <div class="sea-title">厂家现货价格/库存表:<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span></div>
     <div class="tb-wrap">
-      <el-table :data="stockInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
+      <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
         <el-table-column prop="spec" label="规格" width="">
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="最新更新时间" width="">
@@ -159,6 +158,16 @@
         const inventoryAmount = Number(row.inventoryAmount);
         return ((perimeter / 3.14 - land) * land * 6 * 0.02466).toFixed(2);
       },
+      tableRowClassName(row,index){
+        if(row.inventoryAmount == '999' && row.lastUpdateTime < new Date().formatDate('yyyyMMdd')){
+          return 'empty-inventory expired-inventory';
+        }
+        if(row.inventoryAmount == '999'){
+          return 'empty-inventory';
+        }
+        if(row.lastUpdateTime < new Date().formatDate('yyyyMMdd'))
+          return 'expired-inventory';
+      },
       purePriceFormatter(row,column){
         const value = Number(row.value);
         const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
@@ -211,10 +220,75 @@
     }
   }
 </script>
-
+  
 <style>
   .sea-title {
     font-size: 20px;
     margin-bottom: 10px;
+  }
+  .red-mark,.yellow-mark{
+    position:relative;
+    padding-left:10px;
+    margin-right:5px;
+  }
+  .red-mark:before{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#FF4949;
+    position:absolute;
+    top: 1px;
+    bottom: 1px;
+    left:0;
+  }
+  .yellow-mark:before{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#F7BA2A;
+    position:absolute;
+    top: 1px;
+    bottom: 1px;
+    left:0;
+  }
+  tr.empty-inventory td:nth-child(1):after{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#F7BA2A;
+    position:absolute;
+    top: 1px;
+    bottom: 1px;
+    left:0;
+  }
+  tr.empty-inventory.expired-inventory td:nth-child(1):after{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#F7BA2A;
+    position:absolute;
+    top: 1px;
+    bottom: 50%;
+    left:0;
+  }
+  tr.empty-inventory.expired-inventory td:nth-child(1):before{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#FF4949;
+    position:absolute;
+    top: 50%;
+    bottom: 1px;
+    left:0;
+  }
+  tr.expired-inventory td:nth-child(1):after{
+    content:'';
+    display:block;
+    width:8px;
+    background-color:#FF4949;
+    position:absolute;
+    top: 1px;
+    bottom: 1px;
+    left:0;
   }
 </style>
