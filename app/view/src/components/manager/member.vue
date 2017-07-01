@@ -215,7 +215,7 @@ export default {
             roleArray:[{ value: 0, key: '自定义角色' },{ value: 1, key: '销售' },{ value: 2, key: '采购' },{ value: 3, key: '超级管理员' }],
             roleStrArray:{
                 '000010':1,
-                '111110':2,
+                '111100':2,
                 '111111':3
             },
             allocParams: {
@@ -263,7 +263,7 @@ export default {
                     this.allocParams.supplierAuth = 1;
                     this.allocParams.valueAuth = 1;
                     this.allocParams.inventoryAuth = 1;
-                    this.allocParams.demandAuth = 1;
+                    this.allocParams.demandAuth = 0;
                     this.allocParams.adminAuth = 0;
                     break;
                 case 3:
