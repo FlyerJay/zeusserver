@@ -178,8 +178,8 @@
                 const per = Number(row.perAmount);
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.chartAmount);
-                row.chartWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
-                return (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
+                row.chartWeight = (((perimeter/3.14 - land) * land * long * 0.02466 * amount * per)/1000).toFixed(2);
+                return (((perimeter/3.14 - land) * land * long * 0.02466 * amount * per)/1000).toFixed(2);
             },
             purePriceFormatter(row,column){
                 const value = Number(row.value);
@@ -271,7 +271,7 @@
                 var long = Number(this.changeParams.row.long);
                 var per = Number(this.changeParams.row.perAmount);
                 var perimeter = 2 * height + 2 * width;
-                var weight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * this.changeParams.chartAmount * per)/1000).toFixed(2);
+                var weight = (((perimeter/3.14 - land) * land * long * 0.02466 * this.changeParams.chartAmount * per)/1000).toFixed(2);
                 this.changeParams.newPrice = (( this.changeParams.row.purePrice - this.changeParams.chartAdjust ) * weight ).toFixed(2);
             },
             submitChange(row) {
@@ -294,7 +294,7 @@
                             const per = Number(row.perAmount);
                             const perimeter = 2 * height + 2 * width;
                             const amount = Number(row.chartAmount);
-                            this.totalWeight = (((perimeter/3.14 - land) * land * 6 * 0.02466 * amount * per)/1000).toFixed(2);
+                            this.totalWeight = (((perimeter/3.14 - land) * land * long * 0.02466 * amount * per)/1000).toFixed(2);
                             this.totalAdjust = (Number(this.changeParams.chartAdjust) * Number(this.totalWeight)).toFixed(2);
                         }
                     })
