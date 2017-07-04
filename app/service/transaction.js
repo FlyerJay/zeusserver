@@ -132,14 +132,14 @@ module.exports = app => {
                     let line = options.line;
                     var memerry = {};
                     return Promise.all(line.map((v) => {
-                        if(memerry[v[0]] == 1){//导入去重
+                        if(memerry[`${v[0]}${v[1]}`] == 1){//导入去重
 
                         }else{
                             const specArr = v[0].split('*');
                             if(v[0].length > 16 || specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
-                                memerry[v[0]] = 1;
+                                memerry[`${v[0]}${v[1]}`] = 1;
                                 if(supplierId != 0 ){
                                     app.model.SupplierInventory.create({
                                         supplierId:supplierId,
@@ -226,14 +226,14 @@ module.exports = app => {
                     let line = options.line;
                     var memerry = {};
                     return Promise.all(line.map((v) => {
-                        if(memerry[v[0]] == 1){//导入去重
+                        if(memerry[`${v[0]}${v[1]}`] == 1){//导入去重
 
                         }else{
                             const specArr = v[0].split('*');
                             if(v[0].length > 16 || specArr.length != 3 || isNaN(specArr[0]) || isNaN(specArr[1]) || isNaN(specArr[2])){
                                 console.log(specArr);
                             }else{
-                                memerry[v[0]] = 1;
+                                memerry[`${v[0]}${v[1]}`] = 1;
                                 if(supplierId != 0 ){
                                     app.model.SupplierInventory.create({
                                         supplierId:supplierId,
