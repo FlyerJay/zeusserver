@@ -26,6 +26,8 @@
                 </el-table-column>
                 <el-table-column prop="spec" label="规格" width="">
                 </el-table-column>
+                <el-table-column prop="long" label="长度" width="">
+                </el-table-column>
                 <el-table-column prop="type" label="类别" width="">
                 </el-table-column>
                 <el-table-column prop="supplierName" label="供应商">
