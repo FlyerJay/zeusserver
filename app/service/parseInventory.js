@@ -17,6 +17,9 @@ module.exports = app => {
             return $9;
         }
         mergeInventory(options){
+            options.line.map(v => {
+                v[1] ? '' : v[1] = 6;
+            })
             var i = options.line.length - 1;
             var catchArray = {};
             for(; i >=0; i--){
