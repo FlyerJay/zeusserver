@@ -30,6 +30,8 @@
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
         <el-table-column prop="spec" label="规格" width="">
         </el-table-column>
+        <el-table-column prop="long" label="长度" width="">
+        </el-table-column>
         <el-table-column prop="lastUpdateTime" label="最新更新时间" width="">
         </el-table-column>
         <el-table-column prop="type" label="类别" width="">

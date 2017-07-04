@@ -39,6 +39,7 @@
     
         <el-table :data="inventory.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
             <el-table-column property="spec" label="规格"></el-table-column>
+            <el-table-column property="long" label="长度"></el-table-column>
             <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
             <el-table-column property="type" label="类别"></el-table-column>
             <el-table-column property="supplierName" label="供应商"></el-table-column>

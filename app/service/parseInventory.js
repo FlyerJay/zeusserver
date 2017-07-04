@@ -34,7 +34,7 @@ module.exports = app => {
             var newLine = [];
             var memorry = [];
             options.line.map(v => {
-                if(memorry[`${v[0]}*${v[1]}`] !== 1) {
+                if(memorry[`${v[0]}*${v[1]}`] !== 1 && v[1]) {
                     newLine.push(v)
                     memorry[`${v[0]}*${v[1]}`] = 1;
                 }
