@@ -185,6 +185,7 @@ module.exports = app => {
                     supplierId:inventory.supplierId,
                     chartAmount:options.chartAmount,
                     chartAdjust:options.chartAdjust,
+                    long:inventory.long,
                     createTime:new Date().getTime()
                 });
                 return {
