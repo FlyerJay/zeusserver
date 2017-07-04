@@ -32,6 +32,10 @@ module.exports = app => {
             allowNull:false,
             comment:"规格"
         },
+        long:{
+            type:INTEGER,
+            comment:"长度"
+        },
         supplierId:{
             type:INTEGER,
             allNull:false,
@@ -75,6 +79,7 @@ module.exports = app => {
                 si.supplierId = c.supplierId
                 AND si.type = c.type
                 AND si.spec = c.spec
+                AND si.long = c.long
                 LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type AND
@@ -104,6 +109,7 @@ module.exports = app => {
                 si.supplierId = c.supplierId
                 AND si.type = c.type
                 AND si.spec = c.spec
+                AND si.long = c.long
                 LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc) sv group by supplierId,type,spec) sv ON
                 si.spec = sv.spec AND
                 si.type = sv.type 
