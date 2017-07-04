@@ -30,6 +30,18 @@ module.exports = app => {
             }
             return options;
         }
+        removeRepeatData(options){
+            var newLine = [];
+            var memorry = [];
+            options.line.map(v => {
+                if(memorry[`${v[0]}*${v[1]}`] !== 1) {
+                    newLine.push(v)
+                    memorry[`${v[0]}*${v[1]}`] = 1;
+                }
+            })
+            options.line = newLine;
+            return options;
+        }
         getTableHead(options, keywords = ['规格', '壁厚']) { /*此方法主要是用来获取表格的头部信息，并初步判断表格头中是否有多列信息,用数组表示表头包含哪些关键字 */
             var i = 0;
             for (; i < options.length; i++) {
