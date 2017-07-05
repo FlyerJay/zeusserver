@@ -35,10 +35,17 @@ module.exports = app => {
         removeRepeatData(options){
             var newLine = [];
             var memorry = [];
+            var memorryPer = {};//记录单件支数
             options.line.map(v => {
                 if(memorry[`${v[0]}*${v[1]}`] !== 1 && v[1]) {
                     newLine.push(v)
                     memorry[`${v[0]}*${v[1]}`] = 1;
+                }
+                if(!v[3] && !memorryPer[`${v[0]}*${v[1]}`]) {//如果一个规格有多条库存数据，则找到他最正确的单件支数保存
+                    memorryPer[`${v[0]}*${v[1]}`] = newLine.length-1;
+                }
+                if(memorryPer[`${v[0]}*${v[1]}`] && v[3]){
+                    newLine[memorryPer[`${v[0]}*${v[1]}`]][3] = v[3];
                 }
             })
             options.line = newLine;
