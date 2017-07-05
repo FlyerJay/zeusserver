@@ -52,8 +52,8 @@ module.exports = app => {
                 var $$4 = parseInventory.requireColumn($$3,['规格','壁厚','长度','件数','支/件']);
                 var $$5 = parseInventory.mergeSpecAndLand($$4);
                 var $$6 = parseInventory.mergeData($$5);
-                var $$7 = parseInventory.mergeInventory($$6)
-                return $$7;
+                //var $$7 = parseInventory.mergeInventory($$6)
+                return $$6;
             }
             var $2 = parseInventory.dealRepeatHeadTable($1);
             var $3 = this.separateSpecAndPer($2);

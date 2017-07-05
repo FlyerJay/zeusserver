@@ -13,8 +13,7 @@ module.exports = app => {
             var $6 = this.requireColumn($5, ['规格', '壁厚', '长度', '件数', '支/件']); //从表格中取出需要保留的列，其他列都删除掉
             var $7 = this.mergeSpecAndLand($6);
             var $8 = this.mergeData($7);
-            var $9 = this.mergeInventory($8);
-            return $9;
+            return $8;
         }
         mergeInventory(options){
             options.line.map(v => {
