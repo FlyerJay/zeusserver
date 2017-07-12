@@ -54,7 +54,7 @@
             </el-table-column>
         </el-table>
         <div class="page-wrap">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchInvenParam.page" layout=" prev, pager, next" :page-size="30" :total="inventory.totalCount">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchInvenParam.page" layout=" prev, pager, next" :page-size="15" :total="inventory.totalCount">
             </el-pagination>
         </div>
         <el-dialog title="" v-model="dlgStockVisible">  

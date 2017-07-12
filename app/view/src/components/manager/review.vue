@@ -26,7 +26,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="verifyParams.page"
-            :page-size="30"
+            :page-size="15"
             layout=" prev, pager, next"
             :total="verify.totalCount">
           </el-pagination>

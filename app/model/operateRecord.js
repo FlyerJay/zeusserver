@@ -50,8 +50,8 @@ module.exports = app => {
                 }
                 const result = yield this.findAndCountAll({
                     order:"createTime desc",
-                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                    limit:options.pageSize?options.pageSize:30,
+                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                    limit:options.pageSize?options.pageSize:15,
                     where:{
                         comId:{
                             $eq:options.comId

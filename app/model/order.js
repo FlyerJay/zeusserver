@@ -72,8 +72,8 @@ module.exports = app => {
                     replacements:{
                         comId:options.comId,
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 }),
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
@@ -87,8 +87,8 @@ module.exports = app => {
                     replacements:{
                         comId:options.comId,
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 })]
                 var result = {}
@@ -103,7 +103,7 @@ module.exports = app => {
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
-                result.pageSize = options.pageSize?options.pageSize:30;
+                result.pageSize = options.pageSize?options.pageSize:15;
                 return {
                     code: 200,
                     data: result,
@@ -134,8 +134,8 @@ module.exports = app => {
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 }),
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
@@ -150,8 +150,8 @@ module.exports = app => {
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 })]
                 var result = {}
@@ -166,7 +166,7 @@ module.exports = app => {
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
-                result.pageSize = options.pageSize?options.pageSize:30;
+                result.pageSize = options.pageSize?options.pageSize:15;
                 return {
                     code: 200,
                     data: result,

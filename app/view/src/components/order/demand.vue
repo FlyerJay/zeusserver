@@ -47,7 +47,7 @@
             </el-table>
         </div>
         <div class="page-wrap">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="30" :total="demandInfo.totalCount">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="tiny">

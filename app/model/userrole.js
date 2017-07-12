@@ -123,8 +123,8 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const list = yield this.findAndCountAll({
-                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                    limit:options.pageSize?options.pageSize:30,
+                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                    limit:options.pageSize?options.pageSize:15,
                     where:{
                         comId:{
                             $eq:options.comId,
@@ -141,7 +141,7 @@ module.exports = app => {
                         totalCount:list.count,
                         row:list.rows,
                         page:options.page?options.page:1,
-                        pageSize:options.pageSize?options.pageSize:30,
+                        pageSize:options.pageSize?options.pageSize:15,
                     }
                 }
             }

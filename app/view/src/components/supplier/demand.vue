@@ -55,7 +55,7 @@
             @current-change="handleCurrentChange"
             :current-page.sync="searchDeParam.page"
             layout=" prev, pager, next"
-            :page-size="30"
+            :page-size="15"
             :total="demandInfo.totalCount"
           >
           </el-pagination>

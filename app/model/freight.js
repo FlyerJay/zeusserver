@@ -105,8 +105,8 @@ module.exports = app => {
                 ORDER BY lastUpdateTime DESC LIMIT :start,:offset`,{
                     replacements:{
                         comId:options.comId,
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM freight 
@@ -114,8 +114,8 @@ module.exports = app => {
                 ORDER BY lastUpdateTime DESC`,{
                     replacements:{
                         comId:options.comId,
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:30),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):30):(((options.page-0)+1)*(options.pageSize?options.pageSize:30)),
+                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:15),
+                        offset:!options.page?(options.pageSize?(options.pageSize-0):15):(((options.page-0)+1)*(options.pageSize?options.pageSize:15)),
                     }
                 })]
                 if(!$1[0] || $1[0].length ===0) return {
@@ -130,7 +130,7 @@ module.exports = app => {
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
-                result.pageSize = options.pageSize?options.pageSize:30;
+                result.pageSize = options.pageSize?options.pageSize:15;
                 return {
                     code:200,
                     data:result,

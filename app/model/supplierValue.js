@@ -82,8 +82,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 }),
                 app.model.query(`SELECT count(1) as count
@@ -103,8 +103,8 @@ module.exports = app => {
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {
@@ -119,7 +119,7 @@ module.exports = app => {
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
-                result.pageSize = options.pageSize?options.pageSize:30;
+                result.pageSize = options.pageSize?options.pageSize:15;
                 return {
                     code:200,
                     msg:"查询成功",

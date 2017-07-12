@@ -19,8 +19,8 @@ module.exports = app => {
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
-                        offset:options.pageSize?options.pageSize:30,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        offset:options.pageSize?options.pageSize:15,
                     }
                 })
             var tmpData = [];

@@ -34,7 +34,7 @@
                 @current-change="handleCurrentChange"
                 :current-page.sync="orderParams.page"
                 layout=" prev, pager, next"
-                :page-size="30"
+                :page-size="15"
                 :total="orderList.totalCount"
             >
             </el-pagination>

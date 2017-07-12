@@ -74,7 +74,7 @@
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="memberParams.page"
-            :page-size="30"
+            :page-size="15"
             layout=" prev, pager, next"
             :total="userRoleInfo.totalCount">
           </el-pagination>

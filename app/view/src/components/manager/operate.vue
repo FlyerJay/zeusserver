@@ -27,7 +27,7 @@
             <el-table-column prop="detail" label="操作明细"></el-table-column>
         </el-table>
         <div class="page-wrap">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="operateParams.page" :page-size="30" layout=" prev, pager, next" :total="operateInfo.totalCount">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="operateParams.page" :page-size="15" layout=" prev, pager, next" :total="operateInfo.totalCount">
             </el-pagination>
         </div>
     </div>
