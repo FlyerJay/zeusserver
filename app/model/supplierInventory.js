@@ -90,6 +90,7 @@ module.exports = app => {
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
+                and f.comId = s.comId
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
@@ -114,6 +115,7 @@ module.exports = app => {
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
+                and f.comId = s.comId
                 WHERE si.spec LIKE :spec
                 AND si.comId = :comId
                 ${typeCondition}
@@ -240,6 +242,7 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
+                    AND si.comId = :comId
                     ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec
                     LIMIT :start,:offset`,{
                         replacements:{
@@ -247,7 +250,8 @@ module.exports = app => {
                             type:options.type?options.type:'',
                             start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:30),
                             offset:options.pageSize?options.pageSize:30,
-                            address:options.address?options.address:''
+                            address:options.address?options.address:'',
+                            comId:options.comId,
                         }
                     }),
                     app.model.query(`SELECT count(1) as count
@@ -268,11 +272,13 @@ module.exports = app => {
                     AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
+                    AND si.comId = :comId
                     ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
                             type:options.type?options.type:'',
-                            address:options.address?options.address:''
+                            address:options.address?options.address:'',
+                            comId:options.comId,
                         }
                     })
                     ]

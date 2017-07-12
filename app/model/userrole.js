@@ -17,6 +17,8 @@ module.exports = app => {
         },
         comId: {
             type: STRING(2),
+            primaryKey: true,
+            allowNull:false,
             comment:"公司编号(关联公司信息)"
         },
         adminAuth: {

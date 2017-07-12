@@ -246,6 +246,31 @@ module.exports = app => {
                     code: 200,
                     msg: '删除数据成功'
                 }
+            },
+            * history(options){
+                if(!options.type) return {
+                    code:-1,
+                    msg:"请选择要类型"
+                }
+                if(!options.supplierId) return {
+                    code:-1,
+                    msg:"请选择供应商"
+                }
+                if(!options.spec) return {
+                    code:-1,
+                    msg:"请输入具体规格"
+                }
+                var res = yield app.model.query(`select * from supplier_value sv where supplierId = :supplierId
+                and type = :type 
+                and spec like :spec
+                and comId = :comId`,{
+                    replacements:{
+                        comId:options.comId,
+                        type:options.type,
+                        supplierId:options.supplierId,
+                        spec:`%${options.spec}%`
+                    }
+                })
             }
         }
     })
