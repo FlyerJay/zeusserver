@@ -129,7 +129,7 @@
       left: 50%;
       top: 50%;
       transform: translate3d(-50%,-50%,0);
-      padding: 20px 30px;
+      padding: 40px 30px;
       border-radius: 5px;
       z-index:3;
       box-shadow: 1px 1px 50px #000;
@@ -145,16 +145,17 @@
     .main-wrap .login-form .input {
       margin: 0 0 20px;
       width: 350px;
-      border: 1px solid #ddd;
+      border: 1px solid #eee;
       border-radius: 5px;
       padding-left: 8px;
       padding:15px 10px;
       outline:none;
+      font-size:16px;
     }
 
     input:-webkit-autofill {  
       -webkit-box-shadow: 0 0 0px 1000px white inset;  
-      border: 1px solid #ddd!important;  
+      border: 1px solid #eee!important;  
     }  
 
     .main-wrap .login-form .company {
@@ -163,15 +164,17 @@
       border-radius: 5px;
       padding:15px 10px;
       outline:none;
+      font-size:16px;
     }
 
     .login-btn {
       display: block;
       width: 368px;
       line-height: 2.5em;
-      margin: 20px auto;
+      margin-top:20px;
       background-color: #fccc00;
       color: #fff;
+      text-shadow: 1px 0px 0px #000;
       border-radius: 5px;
       text-align: center;
       text-decoration: none;
@@ -197,7 +200,7 @@
       width: 100%;
       box-sizing: border-box;
       padding:1% 15%;
-      background-color:rgba(0,0,0,0.6);
+      background-color:rgba(15,15,15,0.95);
       display: flex;
       flex-direction: row;
       justify-content: space-around;
@@ -218,7 +221,7 @@
       font-size:12px;
     }
     .contact-wrap .footer .content p:hover{
-      color:#ff9900;
+      color:#fccc00;
     }
     .contact-wrap .footer .content.title{
       align-items: center;
@@ -228,7 +231,7 @@
       margin-left:10px;
     }
     .contact-wrap .footer i.iconfont{
-      color:#ff9900;
+      color:#fccc00;
       font-size:30px;
     }
   </style>
@@ -250,9 +253,6 @@
       </div>
       <div class="login-form">
         <ul>
-          <li class="form-tit">
-            <p>用户登录</p>
-          </li>
           <li>
             <input type="text" placeholder="用户名" class="input userId">
           </li>
