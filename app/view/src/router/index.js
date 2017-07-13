@@ -5,6 +5,7 @@ import Info from '../components/supplier/info'
 import Price from '../components/supplier/price'
 import Stock from '../components/supplier/stock'
 import DemandPrice from '../components/supplier/demand'
+import priceChart from '../components/supplier/pricechart'
 
 //管理员后台
 import Manager from '../components/manager/manager'
@@ -69,6 +70,10 @@ export default new Router({
         {
           path: 'demand',
           component: DemandPrice
+        },
+        {
+          path: 'pricechart',
+          component: priceChart,
         }
       ]
     },

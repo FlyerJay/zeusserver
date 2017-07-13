@@ -154,6 +154,9 @@
                     this.loading = false;
                 });
             },
+            pickerOptions(){
+
+            },
             updateDemand(row) {
                 this.dlgDemandVisible = true;
                 this.demanUpdateParams.demandId = row.demandId;

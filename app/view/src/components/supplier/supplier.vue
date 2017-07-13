@@ -34,6 +34,10 @@
           {
             url: '/supplier/demand',
             name: '定制化需求报价'
+          },
+          {
+            url: '/supplier/pricechart',
+            name: '供应商价格走势',
           }
         ]
       }

@@ -584,6 +584,20 @@ export const getUserRole = ({ dispatch }, params) => {
   });
 }
 
+export const getPriceChart = ({ dispatch }, params) => {
+  return axios.get('/zues/api/cdata/value',{ params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //展示错误信息
 export const showErrorMessage = ({ dispatch }, msg) => {
   Message({

@@ -4,7 +4,9 @@
       <left-nav></left-nav>
     </div>
     <div class="main-right clearfix">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

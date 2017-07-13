@@ -260,10 +260,16 @@ module.exports = app => {
                     code:-1,
                     msg:"请输入具体规格"
                 }
-                var res = yield app.model.query(`select * from supplier_value sv where supplierId = :supplierId
-                and type = :type 
-                and spec like :spec
-                and comId = :comId`,{
+                var res = yield app.model.query(`SELECT sv.spec,sv.value,sv.lastUpdateTime as time,s.supplierName FROM supplier_value sv 
+                INNER JOIN supplier s 
+                ON s.supplierId = sv.supplierId
+                AND s.comId = sv.comId
+                WHERE sv.supplierId = :supplierId
+                AND sv.type = :type 
+                AND sv.spec LIKE :spec
+                AND sv.comId = :comId
+                GROUP BY sv.spec,sv.lastUpdateTime ORDER BY sv.lastupdateTime asc`
+                ,{
                     replacements:{
                         comId:options.comId,
                         type:options.type,
@@ -271,6 +277,10 @@ module.exports = app => {
                         spec:`%${options.spec}%`
                     }
                 })
+                return {
+                    code: 200,
+                    data: res[0],
+                }
             }
         }
     })
