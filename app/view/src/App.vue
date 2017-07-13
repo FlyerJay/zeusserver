@@ -4,9 +4,7 @@
             <top-nav></top-nav>
         </header>
         <main>
-            <keep-alive>
-                <router-view></router-view>
-            </keep-alive>
+            <router-view></router-view>
         </main>
     </div>
 </template>
