@@ -32,13 +32,13 @@
                 </el-table-column>
                 <el-table-column prop="supplierName" label="供应商">
                 </el-table-column>
-                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
+                <el-table-column prop="chartAmount" label="采购数量(件)">
                 </el-table-column>
                 <el-table-column prop="perAmount" label="单件支数"></el-table-column>
                 </el-table-column>
-                <el-table-column prop="chartAmount" label="采购数量(件)">
-                </el-table-column>
                 <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
+                </el-table-column>
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
                 </el-table-column>
                 <el-table-column prop="chartAdjust" label="采购议价(元/吨)">
                 </el-table-column>
