@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>奎鑫Zeus采销系统</title>
+  <link rel="stylesheet" href="../static/font/iconfont.css">
   <style>
     * {
       margin: 0;
@@ -19,19 +20,36 @@
     ul {
       list-style: none;
     }
+    .login-wrap{
+      display:-webkit-box;
+      display:-webkit-flex;
+      display:-ms-flexbox;
+      display:flex;
+      -webkit-box-orient:vertical;
+      -webkit-flex-direction:column;
+      -ms-flex-direction:column;
+      flex-direction:column;
+      width:100%;
+      height:100%;
+    }
 
     .top-nav {
       height: 40px;
       width: 100%;
-      background-color: #fff;
-      border-bottom: 1px solid #9a9ba0;
+      flex-grow: 0;
+      flex-shrink: 0;
+      -webkit-box-flex: 0;
+      position:absolute;
+      background-color:rgba(0,0,0,0);
+      top:0;
+      z-index:2;
+      color:#ddd;
     }
 
     .top-nav .tit-contain {
-      color: #696969;
-      width: 685px;
+      width: 95%;
       margin: 0 auto;
-      font-size: 15px;
+      font-size: 16px;
       text-align: center;
     }
 
@@ -54,7 +72,6 @@
       font-size: 13px;
       line-height: 41px;
       height: 40px;
-      color: #75787d;
     }
 
     .top-nav .tit-contain::after {
@@ -66,19 +83,38 @@
     }
 
     .main-wrap {
-      height: 520px;
+      height: 100%;
+      flex-grow: 1;
+      flex-shrink: 1;
+      -webkit-box-flex: 1;
       width: 100%;
+      position: relative;
+    }
+    .main-wrap .bg{
       background-image: url('../static/img/bg3.jpg');
-      background-size: 100% 100%;
-      position: relative
+      background-position:center;
+      position: absolute;
+      width:100%;
+      height:100%;
+      filter: blur(3px);
+      overflow: hidden;
+    }
+
+    .clearfix::after,.clearfix::before{
+      content:"";
+      display: table;
+      clear: both;
     }
 
     .main-wrap .desc {
       font-size: 30px;
       color: #fff;
+      text-shadow: 1px 1px 5px #000;
       position: absolute;
-      left: 350px;
-      top: 200px;
+      left: 50%;
+      top: 20%;
+      transform: translate3d(-50%,-50%,0);
+      z-index:2;
     }
 
     .main-wrap .desc .important {
@@ -88,48 +124,63 @@
     }
 
     .main-wrap .login-form {
-      background-color: #fff;
+      background-color:rgba(255,255,255,0.8);
       position: absolute;
-      right: 170px;
-      top: 80px;
-      padding: 20px 30px;
+      left: 50%;
+      top: 50%;
+      transform: translate3d(-50%,-50%,0);
+      padding: 40px 30px;
       border-radius: 5px;
+      z-index:3;
+      box-shadow: 1px 1px 50px #000;
     }
 
     .main-wrap .login-form .form-tit {
       font-size: 17px;
       color: #fccc00;
       margin-bottom: 15px;
+      text-shadow: 1px 1px 0px #444;
     }
 
     .main-wrap .login-form .input {
       margin: 0 0 20px;
-      width: 195px;
-      height: 30px;
-      border: 1px solid #cacaca;
-      border-radius: 0px;
+      width: 350px;
+      border: 1px solid #eee;
+      border-radius: 5px;
       padding-left: 8px;
+      padding:15px 10px;
+      outline:none;
+      font-size:16px;
     }
 
+    input:-webkit-autofill {  
+      -webkit-box-shadow: 0 0 0px 1000px white inset;  
+      border: 1px solid #eee!important;  
+    }  
+
     .main-wrap .login-form .company {
-      width: 205px;
+      width: 370px;
       margin-bottom: 0px;
-      border-radius: 0px;
+      border-radius: 5px;
+      padding:15px 10px;
+      outline:none;
+      font-size:16px;
     }
 
     .login-btn {
       display: block;
-      width: 208px;
-      height: 30px;
-      line-height: 30px;
-      margin: 20px auto;
+      width: 368px;
+      line-height: 2.5em;
+      margin-top:20px;
       background-color: #fccc00;
-      color: #3e4533;
+      color: #fff;
+      text-shadow: 1px 0px 0px #000;
       border-radius: 5px;
       text-align: center;
       text-decoration: none;
-      font-size: 17px;
+      font-size: 18px;
       cursor: pointer;
+      border:1px solid #ddd;
     }
 
     .login-btn:hover {
@@ -140,6 +191,48 @@
       font-size: 13px;
       margin-top: 15px;
       padding-left: 2px;
+    }
+
+    .contact-wrap{
+      height:auto;
+      position:absolute;
+      bottom:0;
+      width: 100%;
+      box-sizing: border-box;
+      padding:1% 15%;
+      background-color:rgba(15,15,15,0.95);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      color:#ddd;
+    }
+    .contact-wrap .footer{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .contact-wrap .footer .content{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .contact-wrap .footer .content p{
+      cursor: pointer;
+      font-size:12px;
+    }
+    .contact-wrap .footer .content p:hover{
+      color:#fccc00;
+    }
+    .contact-wrap .footer .content.title{
+      align-items: center;
+      font-size:12px;
+    }
+    .contact-wrap .footer .content + .content{
+      margin-left:10px;
+    }
+    .contact-wrap .footer i.iconfont{
+      color:#fccc00;
+      font-size:30px;
     }
   </style>
 </head>
@@ -154,12 +247,12 @@
         <span class="subtit">采销系统</span>
       </div>
     </div>
-    <div class="main-wrap">
+    <div class="main-wrap clearfix">
+      <div class="bg">
+
+      </div>
       <div class="login-form">
         <ul>
-          <li class="form-tit">
-            <p>用户登录</p>
-          </li>
           <li>
             <input type="text" placeholder="用户名" class="input userId">
           </li>
@@ -170,6 +263,12 @@
             <select name="" class="input company">
                 <option value="">请选择公司</option>
                 <option value="01">南京奎鑫</option>
+                <option value="02">武汉奎鑫</option>
+                <option value="03">西安奎鑫</option>
+                <option value="04">长春奎鑫</option>
+                <option value="05">沈阳奎鑫</option>
+                <option value="06">山东奎鑫</option>
+                <option value="07">南昌奎鑫</option>
             </select>
           </li>
           <li class="warn-txt"></li>
@@ -181,7 +280,34 @@
       <p class="desc">做<span class="important">领先的</span>钢铁贸易商</p>
     </div>
     <div class="contact-wrap">
-
+      <div class="footer">
+        <div class="content title">
+          <i class="iconfont icon-tel"></i>
+        </div>
+        <div class="content">
+          <p>58711629</p>
+          <p>58700476</p>
+        </div>
+        <div class="content">
+          <p>58798979</p>
+          <p>58700476</p>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="content title">
+          <i class="iconfont icon-qq"></i>
+        </div>
+        <div class="content"><p>暂无</p></div>
+      </div>
+      <div class="footer">
+        <div class="content title">
+          <i class="iconfont icon-cs"></i>
+        </div>
+        <div class="content">
+          <p><span>服务监督：</span>13390928886</p>
+          <p><span>受理时间：</span>8:00-18:00 </p>
+        </div>
+      </div>
     </div>
   </div>
 </body>

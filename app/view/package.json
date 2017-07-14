@@ -34,6 +34,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
     "cssnano": "^3.10.0",
+    "echarts": "^3.6.2",
     "es5-shim": "^4.5.8",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^6.2.1",
