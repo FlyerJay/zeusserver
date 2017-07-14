@@ -46,6 +46,10 @@ module.exports = app => {
             type:BIGINT(20),
             allowNull:false,
             comment:"创建时间"
+        },
+        comment:{
+            type:STRING(100),
+            comment:"备注",
         }
     },{
         freezeTabName:true,
@@ -125,7 +129,6 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                AND o.userId = :userId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 LIMIT :start,:offset
@@ -142,7 +145,6 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                AND o.userId = :userId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 `,{

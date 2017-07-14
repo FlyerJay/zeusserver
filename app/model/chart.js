@@ -57,6 +57,10 @@ module.exports = app => {
         createTime: {
             type: BIGINT(20),
             comment:"记录创建时间"
+        },
+        comment:{
+            type:STRING(100),
+            comment:"备注",
         }
     },{
         freezeTabName:true,
@@ -92,8 +96,7 @@ module.exports = app => {
                 LEFT JOIN freight f ON
                 f.address = s.address
                 AND f.comId = c.comId
-                WHERE c.userId = :userId AND
-                c.comId = :comId
+                WHERE c.comId = :comId
                 ORDER BY s.supplierName DESC, c.createTime DESC
                 LIMIT :start,:offset`,
                 {
@@ -122,8 +125,7 @@ module.exports = app => {
                 LEFT JOIN freight f ON
                 f.address = s.address
                 AND f.comId = c.comId
-                WHERE c.userId = :userId AND
-                c.comId = :comId
+                WHERE c.comId = :comId
                 ORDER BY c.createTime DESC`,
                 {
                     replacements:{
