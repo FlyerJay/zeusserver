@@ -42,6 +42,7 @@
               <el-table-column prop="unitPrice" label="单价"/>
               <el-table-column prop="Weight" label="重量"/>
               <el-table-column prop="orderDcrease" label="下浮"/>
+              <el-table-column prop="comment" label="备注"/>
           </el-table>
         </el-dialog>
     </div>
