@@ -75,6 +75,9 @@
           <el-form-item label="需求数量：">
             <el-input style="width:90%" v-model="cartParams.chartAmount" auto-complete="off"></el-input>
           </el-form-item>
+          <el-form-item label="备注：">
+            <el-input style="width:90%" v-model="cartParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="warning" @click="confirmTocart">确 定</el-button>
@@ -116,7 +119,8 @@
           userId: this.userInfo.userId,
           comId: this.userInfo.comId,
           chartAmount: '',
-          supplierInventoryId: ''
+          supplierInventoryId: '',
+          comment:'',
         },
         stockParams: {
           spec: '',

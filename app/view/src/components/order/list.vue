@@ -15,7 +15,7 @@
             <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column prop="orderNo" label="订单号" width="200"></el-table-column>
                 <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"></el-table-column>
-                <el-table-column prop="supplierCount" label="供应商"></el-table-column>
+                <el-table-column prop="supplierName" label="供应商" :formatter="nameFormat"></el-table-column>
                 <el-table-column prop="orderWeight" label="总吨位"></el-table-column>
                 <el-table-column prop="orderPrice" label="总价"></el-table-column>
                 <el-table-column prop="orderAdjust" label="下浮总额"></el-table-column>
@@ -51,6 +51,7 @@
                 <el-table-column prop="Weight" label="重量"></el-table-column>
                 <el-table-column prop="orderDcrease" label="下浮"></el-table-column>
                 <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮单价"></el-table-column>
+                <el-table-column prop="comment" label="备注"></el-table-column>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
@@ -116,6 +117,9 @@
             },
             dateFormat(row, column) {
                 return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
+            },
+            nameFormat(row, colum) {
+                return row.supplierName.replace(/黑管|热镀锌|镀锌带/g,'');
             },
             unitFormatter(row,colum){
                 return row.orderDcrease/row.Weight;

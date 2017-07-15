@@ -46,6 +46,8 @@
                 </el-table-column>
                 <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
                 </el-table-column>
+                <el-table-column prop="comment" label="备注">
+                </el-table-column>
                 <el-table-column label="操作" align="center" property="id" width="150px">
                     <template scope="scope">
                         <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
@@ -77,6 +79,9 @@
                 </el-form-item>
                 <el-form-item label="总价">
                     <el-input style="width:85%" v-model="changeParams.newPrice" :readonly="true" auto-complete="off" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input style="width:85%" v-model="changeParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -140,6 +145,7 @@
                     chartAdjust: 0,
                     newPrice: 0,
                     oldPrice: 0,
+                    comment: '',
                     row: {}
                 },
                 supplierInventoryIds: [],
@@ -242,6 +248,7 @@
                 this.changeParams.chartAdjust = row.chartAdjust;
                 this.changeParams.newPrice = row.totalPrice;
                 this.changeParams.oldPrice = row.totalPrice;
+                this.changeParams.comment = row.comment;
                 this.changeParams.row = row;
             },
             deleteChart(index,row) {
@@ -285,6 +292,7 @@
                     this.dialogVisible = false;
                     row.chartAmount = this.changeParams.chartAmount;
                     row.chartAdjust = this.changeParams.chartAdjust;
+                    row.comment = this.changeParams.comment;
                     this.supplierInventoryIds.map((v) => {
                         if(v.chartId === row.chartId){
                             this.totalPrice = (Number(this.totalPrice) + Number(this.changeParams.newPrice) - Number(this.changeParams.oldPrice)).toFixed(2);

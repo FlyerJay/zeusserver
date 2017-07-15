@@ -54,6 +54,10 @@ module.exports = app => {
             type:DOUBLE(10,2),
             comment:"订单下浮"
         },
+        comment: {
+            type:STRING(100),
+            comment:"备注"
+        }
     },{
         freezeTabName:true,
         underscored:true,

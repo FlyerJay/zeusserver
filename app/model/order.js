@@ -124,7 +124,8 @@ module.exports = app => {
                     msg:"请输入用户信息"
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
-                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount
+                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount,
+                (select s.supplierName from order_detail od left join supplier s on s.supplierId = od.supplierId where od.orderNo = o.orderNo limit 0,1) as supplierName
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
@@ -229,7 +230,8 @@ module.exports = app => {
                                 orderAmount:Number(v.chartAmount),
                                 unitPrice:Number(v.purePrice),
                                 Weight:Number(v.chartWeight),
-                                orderDcrease:Number(v.totalAdjust)
+                                orderDcrease:Number(v.totalAdjust),
+                                comment: v.comment,
                             },{transaction:t})
                             app.model.Chart.destroy({
                                 where:{
