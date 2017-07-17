@@ -55,9 +55,9 @@
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="140px">
           <template scope="scope">
-            <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning" v-if="scope.row.value">下单</el-button>
+            <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" v-if="scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
-            <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-else="scope.row.mark">标记</el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记</el-button>
           </template>
           </el-table-column>
         </el-table>

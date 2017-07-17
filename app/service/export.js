@@ -71,6 +71,31 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * orderPrint(options) {
+            const [$1,$2] = yield [app.model.query(`SELECT o.* FROM tb_order o WHERE o.orderNo = :orderNo`,{
+                replacements:{
+                    orderNo:options.orderNo,
+                }
+            }),
+            app.model.query(`select od.*,s.supplierName from order_detail od 
+                left join supplier s
+                on s.supplierId = od.supplierId
+                where od.orderNo = :orderNo`,{
+                    replacements:{
+                        orderNo:options.orderNo,
+                    }
+                })
+            ]
+
+            return {
+                code:200,
+                data:{
+                    order:$1[0][0],
+                    orderDetail:$2[0],
+                },
+                msg:"查询成功"
+            }
+        }
     }
     return Export;
 }

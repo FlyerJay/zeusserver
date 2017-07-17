@@ -52,6 +52,7 @@ module.exports = app => {
   app.get('/zues/api/order/detail','order.detail');
   app.post('/zues/api/order/add','order.add');
   app.post('/zues/api/order/remove','order.remove');
+  app.post('/zues/api/order/print','order.print');
 
   //管理员操作
   app.get('/zues/api/operate/list','manage.operateList');

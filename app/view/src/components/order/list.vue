@@ -21,9 +21,10 @@
                 <el-table-column prop="orderAdjust" label="下浮总额"></el-table-column>
                 <el-table-column prop="userId" label="下单人"></el-table-column>
                 <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"></el-table-column>
-                <el-table-column label="操作" align="left" width="160" property="id">
+                <el-table-column label="操作" align="left" width="200px" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
+                        <el-button :disabled="scope.row.validate == 0" size="small" @click="orderPrint(scope.index, scope.row)" type="success">打印</el-button>
                         <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="danger">删除</el-button>
                     </template>
                </el-table-column>
@@ -63,7 +64,8 @@
         loadOrderList,
         removeOrderList,
         loadOrderDetail,
-        exportOrderList 
+        exportOrderList,
+        printOrder,
     } from '../../vuex/action'
     
     export default {
@@ -72,6 +74,7 @@
                 loadOrderList,
                 removeOrderList,
                 loadOrderDetail,
+                printOrder,
             },
             getters: {
                 userInfo: ({
@@ -153,6 +156,15 @@
                     message: '已取消删除'
                   });          
                 });
+            },
+            orderPrint(index, row) {
+                var params = {
+                    orderNo:row.orderNo
+                }
+                this.printOrder(params)
+                .then(data=>{
+                    console.log(data);
+                })
             },
             loadList(){
                 this.loading = true
