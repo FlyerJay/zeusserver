@@ -28,11 +28,11 @@
     <div class="sea-title">厂家现货价格/库存表:<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span></div>
     <div class="tb-wrap">
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
-        <el-table-column prop="spec" label="规格" width="">
+        <el-table-column prop="spec" label="规格" width="140px">
         </el-table-column>
         <el-table-column prop="long" label="长度" width="">
         </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="最新更新时间" width="">
+        <el-table-column prop="lastUpdateTime" label="最新更新时间" width="110px">
         </el-table-column>
         <el-table-column prop="type" label="类别" width="">
         </el-table-column>
@@ -53,9 +53,11 @@
         </el-table-column>
         <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价" sortable>
         </el-table-column>
-        <el-table-column label="操作" align="center" property="id">
+        <el-table-column label="操作" align="center" property="id" width="140px">
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="warning" v-if="scope.row.value">下单</el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-else="scope.row.mark">标记</el-button>
           </template>
           </el-table-column>
         </el-table>
@@ -91,7 +93,8 @@
   import {
     loadStock, //现货查询
     addTocart, //加入购物车
-    loadOrdAddress //读取到岸目的地址
+    loadOrdAddress, //读取到岸目的地址
+    updateStock,
   } from '../../vuex/action'
   
   export default {
@@ -99,7 +102,8 @@
       actions: {
         loadStock,
         addTocart,
-        loadOrdAddress
+        loadOrdAddress,
+        updateStock
       },
       getters: {
         userInfo: ({
@@ -165,14 +169,18 @@
         return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2);
       },
       tableRowClassName(row,index){
-        if(row.inventoryAmount == '999' && row.lastUpdateTime < new Date().formatDate('yyyyMMdd')){
-          return 'empty-inventory expired-inventory';
-        }
+        var classString = [];
         if(row.inventoryAmount == '999'){
-          return 'empty-inventory';
+          classString.push('empty-inventory');
         }
-        if(row.lastUpdateTime < new Date().formatDate('yyyyMMdd'))
-          return 'expired-inventory';
+        if(row.lastUpdateTime < new Date().formatDate('yyyyMMdd')){
+          classString.push('expired-inventory');
+        }
+        if(row.mark){
+          classString.push('warning-inventory')
+        }
+
+        return classString.join(' ');
       },
       purePriceFormatter(row,column){
         const value = Number(row.value);
@@ -193,6 +201,31 @@
       enterNum(index, row) {
         this.dlgShopVisible = true;
         this.cartParams.supplierInventoryId = row.supplierInventoryId;
+      },
+      markNum(index, row) {
+        var params = {};
+        params.supplierInventoryId = row.supplierInventoryId;
+        if(row.mark){
+          params.mark = '';
+          this.updateStock(params)
+          .then(data => {
+            row.mark = '';
+            this.$message({
+              message: `清楚标记成功`,
+              type: 'success'
+            });
+          })
+        }else{
+          params.mark = 1;
+          this.updateStock(params)
+          .then(data => {
+            row.mark = 1;
+            this.$message({
+              message: `标记成功`,
+              type: 'success'
+            });
+          })
+        }
       },
       handleCurrentChange(val) {
         this.stockParams.page = val;
@@ -296,5 +329,20 @@
     top: 1px;
     bottom: 1px;
     left:0;
+  }
+  tr.warning-inventory td:not(:last-child) {
+    background-color:#F7BA2A;
+    background-clip: padding-box;
+    color:#fff;
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped.warning-inventory td:not(:last-child){
+    background-color:#F7BA2A;
+    background-clip: padding-box;
+    color:#fff;
+  }
+  .el-table .el-table__body tr.el-table__row.warning-inventory:hover td:not(:last-child){
+    background-color:#F7BA2A;
+    background-clip: padding-box;
+    color:#fff;
   }
 </style>
