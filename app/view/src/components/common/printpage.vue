@@ -3,16 +3,9 @@
         <slot></slot>
     </div>
 </template>
-<style lang="less">
-    .print-page{
-        height:600px;
-        width:800px;
-    }
-</style>
 <script>
     import 'jquery';
     import 'printthis';
-
     export default {
         data () {
             return {
@@ -23,7 +16,7 @@
                     printContainer: true,       // grab outer container as well as the contents of the selector
                     pageTitle: "",              // add title to print page
                     removeInline: false,        // remove all inline styles from print elements
-                    printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
+                    printDelay: 0,            // variable print delay; depending on complexity a higher value may be necessary
                     header: null,               // prefix to html
                     footer: null,               // postfix to html
                     base: false ,               // preserve the BASE tag, or accept a string for the URL

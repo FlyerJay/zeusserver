@@ -56,10 +56,16 @@
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
-        <printpage ref="printpage"></printpage>
+        <printpage ref="printpage">
+            <div class="print-content">这是我的打印效果</div>
+        </printpage>
      </div>
 </template>
-
+<style lang="less">
+    .print-content{
+        display:none;//打印时只读取内联样式，这个设置只是让页面忽略不展示打印页面
+    }
+</style>
 <script>
     import {
         loadOrderList,
