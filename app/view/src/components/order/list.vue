@@ -57,7 +57,27 @@
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
         <printpage ref="printpage">
-            <div class="print-content">这是我的打印效果</div>
+            <div class="print-content">
+                <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">南京奎鑫物资有限公司</div>
+                <table style="width:100%;border-top:1px solid #dfe6ec;border-left:1px solid #dfe6ec;margin-top:20px;">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">序号</th>
+                            <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">规格</th>
+                            <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">数量</th>
+                            <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in printParams.specs">
+                            <td style="width:20%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{index+1}}</td>
+                            <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.spec}}</td>
+                            <td style="width:20%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.orderAmount}}</td>
+                            <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.comment}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </printpage>
      </div>
 </template>
@@ -108,6 +128,10 @@
                 loading: true,
                 detailLoading: true,
                 detailDialogShow: false,
+                printParams: {
+                    specs: [],//发货单规格列表
+                    comInfo: {},//公司信息，需要填写
+                }
             }
         },
         methods: {
@@ -172,7 +196,8 @@
                     orderNo:row.orderNo
                 }
                 this.printOrder(params)
-                .then(data=>{
+                .then(data => {
+                    this.printParams.specs = data.orderDetail.slice();
                     this.$refs.printpage.print();
                 })
             },
