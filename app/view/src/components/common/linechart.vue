@@ -1,6 +1,5 @@
 <template>
     <div class="line-chart">
-
     </div>
 </template>
 <style lang="less">

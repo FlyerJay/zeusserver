@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="140px">
           <template scope="scope">
-            <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" v-if="scope.row.value">下单</el-button>
+            <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记</el-button>
           </template>
@@ -331,17 +331,17 @@
     left:0;
   }
   tr.warning-inventory td:not(:last-child) {
-    background-color:#F7BA2A;
+    background-color:#58B7FF;
     background-clip: padding-box;
     color:#fff;
   }
   .el-table--striped .el-table__body tr.el-table__row--striped.warning-inventory td:not(:last-child){
-    background-color:#F7BA2A;
+    background-color:#58B7FF;
     background-clip: padding-box;
     color:#fff;
   }
   .el-table .el-table__body tr.el-table__row.warning-inventory:hover td:not(:last-child){
-    background-color:#F7BA2A;
+    background-color:#58B7FF;
     background-clip: padding-box;
     color:#fff;
   }

@@ -56,6 +56,7 @@
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
         </el-dialog>
+        <printpage ref="printpage"></printpage>
      </div>
 </template>
 
@@ -66,8 +67,8 @@
         loadOrderDetail,
         exportOrderList,
         printOrder,
-    } from '../../vuex/action'
-    
+    } from '../../vuex/action';
+    import printpage from '../common/printpage';
     export default {
         vuex: {
             actions: {
@@ -87,6 +88,9 @@
                     order
                 }) => order.orderDetail
             },
+        },
+        components:{
+            printpage
         },
         data() {
             return {
@@ -163,7 +167,7 @@
                 }
                 this.printOrder(params)
                 .then(data=>{
-                    console.log(data);
+                    this.$refs.printpage.print();
                 })
             },
             loadList(){
