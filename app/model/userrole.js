@@ -21,6 +21,16 @@ module.exports = app => {
             allowNull:false,
             comment:"公司编号(关联公司信息)"
         },
+        queryAuth: {
+            type: INTEGER,
+            allowNull: false,
+            comment: '现货查询权限'
+        },
+        crossAuth: {
+            type: INTEGER,
+            allowNull: false,
+            comment: '跨分公司查看审核权限'
+        },
         adminAuth: {
             type: INTEGER,
             allowNull:false,
@@ -115,7 +125,7 @@ module.exports = app => {
                     }
                 })
                 const _role = result.dataValues;
-                return `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}`;;
+                return `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}`;;
             },
             * list(options){
                 if(!options.comId) return {

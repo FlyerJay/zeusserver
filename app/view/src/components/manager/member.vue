@@ -25,12 +25,18 @@
              <el-table :data="userRoleInfo.row" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
                 <el-table-column prop="userId" label="用户ID" width="160px">
                 </el-table-column>
+                <el-table-column label="查询" align="center" prop="queryAuth">
+                    <template scope="scope" align="center">
+                        <i v-if ="Boolean(scope.row.queryAuth)"  class="el-icon-check"></i>
+                        <i v-else class="el-icon-close"></i>
+                    </template>
+                </el-table-column>
                 <el-table-column label="采购" align="center" prop="orderAuth">
-                      <template scope="scope" align="center">
+                    <template scope="scope" align="center">
                         <i v-if ="Boolean(scope.row.orderAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
-                     </template>
-               </el-table-column>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="demandAuth" align="center" label="供应商设置">
                     <template scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.supplierAuth)"  class="el-icon-check"></i>
@@ -84,22 +90,25 @@
         <!--修改权限弹框-->
         <el-dialog title="修改权限" v-model="dlgChangeAuthVisible" size="tiny">
               <el-form v-model="authParams">
-                  <el-form-item label="下单权限:">
+                  <el-form-item label="查询:">
+                      <el-checkbox  v-model="authParams.queryAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <el-form-item label="采购:">
                       <el-checkbox  v-model="authParams.orderAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
-                  <el-form-item label="供应商目录及运费:">
+                  <el-form-item label="供应商设置:">
                       <el-checkbox  v-model="authParams.supplierAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
-                  <el-form-item label="供应商价格表：">
+                  <el-form-item label="价格表：">
                       <el-checkbox  v-model="authParams.valueAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
-                  <el-form-item label="供应商库存表：">
+                  <el-form-item label="库存表：">
                       <el-checkbox  v-model="authParams.inventoryAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
-                  <el-form-item label="定制需求权限：">
+                  <el-form-item label="定制需求：">
                       <el-checkbox  v-model="authParams.demandAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
-                  <el-form-item label="采购下单审核：">
+                  <el-form-item label="管理员：">
                       <el-checkbox  v-model="authParams.adminAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
               </el-form>
@@ -199,7 +208,8 @@ export default {
                 userId:'',
                 comId: this.userInfo.comId,
                 operator:'',
-                supplierAuth:''
+                supplierAuth:'',
+                queryAuth:'',
             },
             newUserParams: {
                 registerId: '',
@@ -212,11 +222,11 @@ export default {
             dlgAddUserVisible: false,
             dlgAllocationRole: false,
             roleValue: 0,
-            roleArray:[{ value: 0, key: '自定义角色' },{ value: 1, key: '销售' },{ value: 2, key: '采购' },{ value: 3, key: '超级管理员' }],
+            roleArray:[{ value: 0, key: '自定义角色' },{ value: 1, key: '销售' },{ value: 2, key: '采购' },{ value: 3, key: '管理员' }],
             roleStrArray:{
-                '000010':1,
-                '111100':2,
-                '111111':3
+                '00001000':1,
+                '11110010':2,
+                '11111110':3
             },
             allocParams: {
                 orderAuth:'',
@@ -227,7 +237,8 @@ export default {
                 userId:'',
                 comId: this.userInfo.comId,
                 operator:'',
-                supplierAuth:''
+                supplierAuth:'',
+                queryAuth:'',
             }
         }
     },
@@ -241,10 +252,11 @@ export default {
             this.authParams.demandAuth = Boolean(row.demandAuth);
             this.authParams.adminAuth = Boolean(row.adminAuth);
             this.authParams.supplierAuth = Boolean(row.supplierAuth);
+            this.authParams.queryAuth = Boolean(row.queryAuth);
         },
         allocRole(index,row){
             this.dlgAllocationRole = true;
-            const auth = `${row.orderAuth}${row.supplierAuth}${row.valueAuth}${row.inventoryAuth}${row.demandAuth}${row.adminAuth}`;
+            const auth = `${row.orderAuth}${row.supplierAuth}${row.valueAuth}${row.inventoryAuth}${row.demandAuth}${row.adminAuth}${row.queryAuth}${row.crossAuth}`;
             this.roleStrArray[auth] ? this.roleValue = this.roleStrArray[auth] : this.roleValue = 0;
             this.allocParams.operator = row.userId;
         },
@@ -257,6 +269,7 @@ export default {
                     this.allocParams.inventoryAuth = 0;
                     this.allocParams.demandAuth = 1;
                     this.allocParams.adminAuth = 0;
+                    this.allocParams.queryAuth = 0;
                     break;
                 case 2:
                     this.allocParams.orderAuth = 1;
@@ -265,6 +278,7 @@ export default {
                     this.allocParams.inventoryAuth = 1;
                     this.allocParams.demandAuth = 0;
                     this.allocParams.adminAuth = 0;
+                    this.allocParams.queryAuth = 1;
                     break;
                 case 3:
                     this.allocParams.orderAuth = 1;
@@ -273,6 +287,7 @@ export default {
                     this.allocParams.inventoryAuth = 1;
                     this.allocParams.demandAuth = 1;
                     this.allocParams.adminAuth = 1;
+                    this.allocParams.queryAuth = 1;
                     break;
             }
             this.updateload = true;
@@ -347,6 +362,7 @@ export default {
             upateParam.demandAuth = Number(this.authParams.demandAuth);
             upateParam.adminAuth = Number(this.authParams.adminAuth);
             upateParam.supplierAuth = Number(this.authParams.supplierAuth);
+            upateParam.queryAuth = Number(this.authParams.queryAuth);
             this.updateload = true;
             this.updateuserRole(upateParam)
             .then(rs => {
