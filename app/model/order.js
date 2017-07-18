@@ -67,7 +67,7 @@ module.exports = app => {
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
                 ORDER BY o.createTime DESC
@@ -83,7 +83,7 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
                 ORDER BY o.createTime DESC
@@ -333,12 +333,12 @@ module.exports = app => {
                                 $eq:options.orderNo,
                             }
                         }
-                    }).then(async ()=>{
+                    }).then(async (data)=>{
                         return await app.model.OperateRecord.create({
-                            userId:options.operator,
-                            comId:options.comId,
+                            userId:options.userId,
+                            comId:res.dataValues.comId,
                             type:'审核订单',
-                            detail:`审核通过了${options.orderNo}订单`,
+                            detail:`审核通过了${options.operator}的${options.orderNo}订单`,
                             createTime:+new Date()
                         },{transaction:t}).catch((err)=>{
                             console.log(err);
