@@ -56,11 +56,21 @@ module.exports = app => {
             type: STRING(10),
             allowNull: true,
             comment: "联系人名称",
+        },
+        email: {
+            type: STRING(30),
+            allowNull: true,
+            comment: "邮件"
+        },
+        finance: {
+            type: STRING(30),
+            allowNull: true,
+            comment: "财务"
         }
      }, {
         freezeTabName:true,
         underscored:true,
-		tableName:"company",
+		tableName:"address",
 		timestamps:false,
         classMethods:{
             * add(options) {
@@ -144,6 +154,34 @@ module.exports = app => {
                     code:200,
                     data:result,
                     msg:"查询成功"
+                }
+            },
+            * setDefault(options) {
+                if(!options.addressId) return {
+                    code: -1,
+                    msg: "请选择地址"
+                }
+                if(!options.addressType) return {
+                    code: -1,
+                    msg: "请选择地址类型"
+                }
+                yield app.model.query(`UPDATE address SET isDefault = 0 WHERE addressType = :addressType`,{
+                    replacements:{
+                        addressType:options.addressType
+                    }
+                })
+                const result = yield app.model.query(`UPDATE address SET isDefault = 1 WHERE addressId = :addressId`,{
+                    replacements:{
+                        addressId:options.addressId
+                    }
+                })
+                if(result) return {
+                    code: 200,
+                    msg: "设置默认地址成功"
+                }
+                return {
+                    code: -1,
+                    msg: "设置默认地址失败"
                 }
             },
             * defaultAddress(options) {

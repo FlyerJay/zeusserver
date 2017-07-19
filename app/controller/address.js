@@ -10,6 +10,10 @@ module.exports = app => {
         const ctx = this.ctx;
         ctx.body = yield ctx.model.Address.remove(ctx.request.body);
     }
+    * setdefault() {
+        const ctx = this.ctx;
+        ctx.body = yield ctx.model.Address.setDefault(ctx.request.body);
+    }
     * list() {
         const ctx = this.ctx;
         ctx.body = yield ctx.model.Address.list(ctx.query);

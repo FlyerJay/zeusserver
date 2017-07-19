@@ -50,7 +50,8 @@ module.exports = app => {
   app.get('/zues/api/address/list','address.list');
   app.get('/zues/api/address/default','address.defaultAddress');
   app.post('/zues/api/address/add','address.add');
-  app.post('/zues/api/addrsss/remove','address.remove');
+  app.post('/zues/api/address/remove','address.remove');
+   app.post('/zues/api/address/setdefault','address.setdefault');
   //下单
   app.get('/zues/api/order/list','order.list');
   app.get('/zues/api/order/detail','order.detail');
