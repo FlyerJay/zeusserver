@@ -59,7 +59,7 @@
         <printpage ref="printpage">
             <div class="print-content">
                 <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">南京奎鑫物资有限公司</div>
-                <table style="width:100%;border-top:1px solid #dfe6ec;border-left:1px solid #dfe6ec;margin-top:20px;">
+                <table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-top:1px solid #dfe6ec;border-left:1px solid #dfe6ec;margin-top:20px;">
                     <thead>
                         <tr>
                             <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">序号</th>
@@ -83,7 +83,7 @@
 </template>
 <style lang="less">
     .print-content{
-        display:none;//打印时只读取内联样式，这个设置只是让页面忽略不展示打印页面
+        //display:none;//打印时只读取内联样式，这个设置只是让页面忽略不展示打印页面
     }
 </style>
 <script>
