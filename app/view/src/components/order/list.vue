@@ -61,18 +61,24 @@
             v-model="printDlConfirmShow"
             size="tiny">
             <div class="dialog-content">
-                <el-input v-model="confirmParams.CAddress.address" :readonly="true" class="dialog-item">
-                    <template slot="prepend">收货地址</template>
+                <el-input v-model="confirmParams.CAddress.addressName" :readonly="true" class="dialog-item">
+                    <template slot="prepend">我方地址</template>
                     <el-button slot="append" style="box-sizing:border-box!import" @click="managerAddress(1)" type="success" icon="edit">管理</el-button>
                 </el-input>
-                <el-input v-model="confirmParams.BAddress.address" :readonly="true" class="dialog-item">
-                    <template slot="prepend">发货地址</template>
+                <el-input v-model="confirmParams.BAddress.addressName" :readonly="true" class="dialog-item">
+                    <template slot="prepend">敌方地址</template>
                     <el-button slot="append" style="box-sizing:border-box!import" @click="managerAddress(2)" type="success" icon="edit">管理</el-button>
                 </el-input>
-                <el-input v-model="confirmParams.plate" class="dialog-item">
-                    <template slot="prepend">货车车牌</template>
-                </el-input>
-                <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="orderPrint" :loading="printLoading">确认</el-button>
+                <div class="car-list dialog-item clearfix">
+                    <div class="car-item" v-for="(item,index) in confirmParams.carList">
+                        <span>{{item.plate}}</span>
+                        <span class="close"><i class="iconfont icon-close" @click="deleteCar(index)"></i></span>
+                    </div>
+                </div>
+                <div class="dialog-item add-car" @click="carAddShow">
+                    <span><i class="iconfont icon-rectadd"></i>添加货车</span>
+                </div>
+                <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="orderPrint" :loading="printLoading">信息无误&nbsp;&nbsp;去打印</el-button>
             </div>
         </el-dialog>
 
@@ -81,12 +87,12 @@
             size="tiny"
             @close="onAddressClose">
             <div class="address-content">
-                <div class="address-item" v-for="(item,index) in addressList.row">
+                <div class="address-item" v-for="(item,index) in addressList.row" @click="selectAddress(item)">
                     <div class="address-name">{{item.addressName}}</div>
                     <div class="address"><span class="default-address" v-if="item.isDefault == 1">[默认地址]</span><i class="iconfont icon-location"></i>{{item.address}}</div>
                     <aside>
                         <span v-if="item.isDefault == 0" class="set-default" @click="setDefaultAddress(item.addressId)">设置默认</span>
-                        <span class="delete" @click="deleteAddress(item.addressId)">删除地址</span>
+                        <span class="delete" @click.stop="deleteAddress(item.addressId)">删除地址</span>
                     </aside>
                 </div>
                 <div class="address-page">
@@ -115,7 +121,7 @@
                 <el-input v-model="addressParams.address" class="dialog-item" placeholder="必填，如果没有可以和地址名称一样">
                     <template slot="prepend">详细地址</template>
                 </el-input>
-                <el-input v-model="addressParams.linkMan" class="dialog-item">
+                <el-input v-model="addressParams.linkName" class="dialog-item">
                     <template slot="prepend">联系人</template>
                 </el-input>
                 <el-input v-model="addressParams.phone" class="dialog-item">
@@ -133,15 +139,61 @@
                 <el-button type="info" class="dialog-item float-right" @click="submitAddress">确定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog
+            v-model="carAddDlShow"
+            size="tiny"
+            class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="carParams.plate" placeholder="必填">
+                    <template slot="prepend">车牌号码</template>
+                </el-input>
+                <el-input v-model="carParams.phone" class="dialog-item" placeholder="必填">
+                    <template slot="prepend">电话号码</template>
+                </el-input>
+                <el-button type="info" class="dialog-item float-right" @click="submitCar">确定</el-button>
+            </div>
+        </el-dialog>
+
         <printpage ref="printpage">
-            <div class="print-content">
+            <div class="print-content" style="position:relative;height:100%;">
                 <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">南京奎鑫物资有限公司</div>
+                <table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-top:1px solid #888;border-left:1px solid #888;margin-top:20px;font-size:12px;">
+                    <tr>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">收件单位：{{confirmParams.BAddress.addressName}}</td>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">发件单位：{{confirmParams.CAddress.addressName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">收件人：{{confirmParams.BAddress.linkName}}</td>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">日期：{{new Date() | dateFilter}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">传真号码：{{confirmParams.BAddress.fax}}</td>
+                        <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">总页数：1/1</td>
+                    </tr>
+                </table>
+                <table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-top:1px solid #dfe6ec;border-left:1px solid #dfe6ec;margin-top:20px;" v-if="confirmParams.carList.length > 0">
+                    <caption style="text-align:left;margin-bottom:5px;font-size:14px;color:#888">兹：我公司委托下列车号来贵厂装货， 请予以发货！</caption>
+                    <thead>
+                        <tr>
+                            <th style="width:50%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">车号</th>
+                            <th style="width:50%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">手机</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in confirmParams.carList">
+                            <td style="width:50%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.plate}}</td>
+                            <td style="width:50%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.phone}}</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-top:1px solid #dfe6ec;border-left:1px solid #dfe6ec;margin-top:20px;">
+                    <caption style="text-align:left;margin-bottom:5px;font-size:12px;color:#888">规格如下：</caption>
                     <thead>
                         <tr>
                             <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">序号</th>
                             <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">规格</th>
-                            <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">数量</th>
+                            <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">数量（件）</th>
                             <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">备注</th>
                         </tr>
                     </thead>
@@ -154,6 +206,19 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="comment-container" style="margin-top:20px;font-family:'楷书'">
+                    <div class="comment" style="text-align:center">烦请提醒驾驶员盖好雨布，谢谢！</div>
+                    <div class="comment" style="text-align:center">请提醒驾驶员盖好雨布！谢谢</div>
+                    <div class="date" style="text-align:right">{{new Date() | dateFilter}}</div>
+                </div>
+                <div class="footer" style="position:absolute;bottom:0;width:100%;font-size:14px;color:#ccc">
+                    <hr>
+                    <div class="address" style="display:inline-block;width:99%" v-if="confirmParams.CAddress && confirmParams.CAddress.address">地址：{{confirmParams.CAddress.address}}</div>
+                    <div class="phone" style="display:inline-block;width:49%" v-if="confirmParams.CAddress && confirmParams.CAddress.phone">电话：{{confirmParams.CAddress.phone}}</div>
+                    <div class="fax" style="display:inline-block;width:49%" v-if="confirmParams.CAddress && confirmParams.CAddress.fax">传真：{{confirmParams.CAddress.fax}}</div>
+                    <div class="email" style="display:inline-block;width:49%" v-if="confirmParams.CAddress && confirmParams.CAddress.email">邮箱：{{confirmParams.CAddress.email}}</div>
+                    <div class="finance" style="display:inline-block;width:49%" v-if="confirmParams.CAddress && confirmParams.CAddress.finance">财务：{{confirmParams.CAddress.finance}}</div>
+                </div>
             </div>
         </printpage>
      </div>
@@ -174,6 +239,49 @@
             &.el-button{
                 width:100%;
             }
+            &.add-car{
+                font-size:16px;
+                line-height:2em;
+                border:2px dashed #D3DCE6;
+                padding:0px 10px;
+                margin-bottom:10px;
+                cursor:pointer;
+                .iconfont{
+                    font-size:18px;
+                    position:relative;
+                    top:1px;
+                    margin-right:5px;
+                }
+                &:hover{
+                    border:2px dashed #F7BA2A;
+                }
+            }
+            &.car-list{
+                .car-item{
+                    float:left;
+                    padding:5px 15px;
+                    background-color:#F9FAFC;
+                    border-radius:5px;
+                    color:#1D8CE0;
+                    position:relative;
+                    border:1px solid #58B7FF;
+                    margin-right:10px;
+                    margin-bottom:10px;
+                    .iconfont{
+                        font-size:14px;
+                        cursor:pointer;
+                        font-weight:bold;
+                        position:absolute;
+                        background-color:#58B7FF;
+                        border-radius:20px;
+                        padding:2px;
+                        color:#FFFFFF;
+                        right:0;
+                        top:0;
+                        transform:translate3d(30%,-30%,0);
+                    }
+                }
+            }
         }
     }
     .custom-dialog .el-dialog{
@@ -184,7 +292,7 @@
         margin-right:20px;
         overflow:hidden;
         .address-item{
-            border:1px dashed #D3DCE6;
+            border:2px dashed #D3DCE6;
             margin-bottom:5px;
             padding:5px 10px;
             cursor:pointer;
@@ -214,7 +322,7 @@
                 }
             }
             &:hover{
-                border:1px dashed #F7BA2A;
+                border:2px dashed #F7BA2A;
             }
         }
         .add-address{
@@ -301,6 +409,7 @@
                 printDlConfirmShow: false,
                 addressListDlShow: false,
                 addressAddDlShow: false,
+                carAddDlShow: false,
                 orderNo:'',
                 printParams: {
                     specs: [],//发货单规格列表
@@ -317,6 +426,10 @@
                     finance: '',
                     emainl: '',
                 },
+                carParams: {
+                    plate: '',
+                    phone: '',
+                },
                 addressQuery: {
                     addressType:'',
                     page:1,
@@ -328,10 +441,9 @@
                     BAddress: {
                         address: '',
                     },//发货地址
-                    plate: '',
+                    carList:[],
                 },
-                addressList: [
-                ],
+                addressList: [],
             }
         },
         methods: {
@@ -413,8 +525,8 @@
             managerAddress(type) {
                 this.addressQuery.addressType = type;
                 this.addressParams.addressType = type;
+                this.addressListDlShow = true;
                 this.getAddressList(this.addressQuery).then( data => {
-                    this.addressListDlShow = true;
                     this.addressList = data;
                 })
             },
@@ -462,6 +574,41 @@
             onAddressClose() {
                 this.addressQuery.page = 1;
             },
+            selectAddress(address) {
+                if(this.addressQuery.addressType == 1){
+                    this.confirmParams.CAddress = address;
+                }else{
+                    this.confirmParams.BAddress = address;
+                }
+                this.addressListDlShow = false;
+            },
+            carAddShow() {
+                this.carAddDlShow = true;
+            },
+            submitCar() {
+                if(!this.carParams.plate){
+                    this.$message({
+                        type: 'warning',
+                        message: '请填写车牌号!',
+                    })
+                    return false;
+                }
+                if(!this.carParams.phone){
+                    this.$message({
+                        type: 'warning',
+                        message: '请填写手机号!',
+                    })
+                    return false;
+                }
+                var car = {};
+                car.plate = this.carParams.plate;
+                car.phone = this.carParams.phone;
+                this.confirmParams.carList.push(car);
+                this.carAddDlShow = false;
+            },
+            deleteCar(index) {
+                this.confirmParams.carList.splice(index,1);
+            },
             orderPrint() {
                 var params = {
                     orderNo:this.orderNo
@@ -481,6 +628,11 @@
         },
         mounted: function() {
             this.loadList();
+        },
+        filters:{
+            dateFilter(val){
+                return val.formatDate('yyyy-MM-dd');
+            }
         }
     }
 </script>
