@@ -143,11 +143,11 @@
         const height = Number(specArr[0]);
         const width = Number(specArr[1]);
         const land = Number(specArr[2]);
-        const long = Number(row.long);
+        const long = Number(row.long) ? Number(row.long) : 6;
         const perimeter = 2 * height + 2 * width;
         const amount = Number(row.perAmount);
         const inventoryAmount = Number(row.inventoryAmount);
-        return ((perimeter / 3.14 - land) * land * 6 * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
+        return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
       },
       perWeightFormatter(row, column) {
         const specArr = row.spec.split('*');
