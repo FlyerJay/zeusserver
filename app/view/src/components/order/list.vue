@@ -24,7 +24,7 @@
                 <el-table-column label="操作" align="left" width="200px" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
-                        <el-button :disabled="scope.row.validate == 0" size="small" @click="confirmPrintInfo(scope.index, scope.row)" type="success">打印</el-button>
+                        <el-button size="small" @click="confirmPrintInfo(scope.index, scope.row)" type="success">打印</el-button>
                         <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="danger">删除</el-button>
                     </template>
                </el-table-column>
@@ -66,8 +66,11 @@
                     <el-button slot="append" style="box-sizing:border-box!import" @click="managerAddress(1)" type="success" icon="edit">管理</el-button>
                 </el-input>
                 <el-input v-model="confirmParams.BAddress.addressName" :readonly="true" class="dialog-item">
-                    <template slot="prepend">敌方地址</template>
+                    <template slot="prepend">对方地址</template>
                     <el-button slot="append" style="box-sizing:border-box!import" @click="managerAddress(2)" type="success" icon="edit">管理</el-button>
+                </el-input>
+                <el-input v-model="confirmParams.comment" class="dialog-item">
+                    <template slot="prepend">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</template>
                 </el-input>
                 <div class="car-list dialog-item clearfix">
                     <div class="car-item" v-for="(item,index) in confirmParams.carList">
@@ -157,7 +160,7 @@
 
         <printpage ref="printpage">
             <div class="print-content" style="position:relative;height:100%;">
-                <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">南京奎鑫物资有限公司</div>
+                <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">{{confirmParams.CAddress.addressName}}</div>
                 <table cellspacing="0" cellpadding="0" border="0" style="width:100%;border-top:1px solid #888;border-left:1px solid #888;margin-top:20px;font-size:12px;">
                     <tr>
                         <td style="padding:5px 10px;border-right:1px solid #888;border-bottom:1px solid #888">收件单位：{{confirmParams.BAddress.addressName}}</td>
@@ -191,24 +194,25 @@
                     <caption style="text-align:left;margin-bottom:5px;font-size:12px;color:#888">规格如下：</caption>
                     <thead>
                         <tr>
-                            <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">序号</th>
+                            <th style="width:10%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">序号</th>
                             <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">规格</th>
+                            <th style="width:10%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">类别</th>
                             <th style="width:20%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">数量（件）</th>
                             <th style="width:30%;padding:5px 0px;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">备注</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(item,index) in printParams.specs">
-                            <td style="width:20%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{index+1}}</td>
+                            <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{index+1}}</td>
                             <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.spec}}</td>
-                            <td style="width:20%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.orderAmount}}</td>
+                            <td style="width:15%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.type}}</td>
+                            <td style="width:15%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.orderAmount}}</td>
                             <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.comment}}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="comment-container" style="margin-top:20px;font-family:'楷书'">
-                    <div class="comment" style="text-align:center">烦请提醒驾驶员盖好雨布，谢谢！</div>
-                    <div class="comment" style="text-align:center">请提醒驾驶员盖好雨布！谢谢</div>
+                    <div class="comment" style="text-align:center">{{confirmParams.comment}}</div>
                     <div class="date" style="text-align:right">{{new Date() | dateFilter}}</div>
                 </div>
                 <div class="footer" style="position:absolute;bottom:0;width:100%;font-size:14px;color:#ccc">
@@ -442,6 +446,7 @@
                         address: '',
                     },//发货地址
                     carList:[],
+                    comment:'',
                 },
                 addressList: [],
             }
@@ -515,10 +520,18 @@
                 var params = {};
                 params.addressType = 1;
                 this.defaultAddress(params).then(data => {
-                    this.confirmParams.CAddress = data[0];
+                    if(data[0]){
+                        this.confirmParams.CAddress = data[0];
+                    }else{
+                        this.confirmParams.CAddress = {};
+                    }
                     params.addressType = 2;
                     this.defaultAddress(params).then(data => {
-                        this.confirmParams.BAddress = data[0];
+                        if(data[0]){
+                            this.confirmParams.BAddress = data[0];
+                        }else{
+                            this.confirmParams.BAddress = {};
+                        }
                     })
                 })
             },

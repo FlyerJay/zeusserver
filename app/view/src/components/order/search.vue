@@ -177,7 +177,11 @@
           classString.push('expired-inventory');
         }
         if(row.mark){
-          classString.push('warning-inventory')
+          if(row.mark == 2){
+            classString.push('error-inventory');
+          }else{
+            classString.push('warning-inventory')
+          }
         }
 
         return classString.join(' ');
@@ -331,17 +335,32 @@
     left:0;
   }
   tr.warning-inventory td:not(:last-child) {
-    background-color:#58B7FF;
+    background-color:#ff9900;
     background-clip: padding-box;
     color:#fff;
   }
   .el-table--striped .el-table__body tr.el-table__row--striped.warning-inventory td:not(:last-child){
-    background-color:#58B7FF;
+    background-color:#ff9900;
     background-clip: padding-box;
     color:#fff;
   }
   .el-table .el-table__body tr.el-table__row.warning-inventory:hover td:not(:last-child){
-    background-color:#58B7FF;
+    background-color:#ff9900;
+    background-clip: padding-box;
+    color:#fff;
+  }
+  tr.error-inventory td:not(:last-child) {
+    background-color:#ed3f14;
+    background-clip: padding-box;
+    color:#fff;
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped.error-inventory td:not(:last-child){
+    background-color:#ed3f14;
+    background-clip: padding-box;
+    color:#fff;
+  }
+  .el-table .el-table__body tr.el-table__row.error-inventory:hover td:not(:last-child){
+    background-color:#ed3f14;
     background-clip: padding-box;
     color:#fff;
   }

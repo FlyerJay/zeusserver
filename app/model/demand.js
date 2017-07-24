@@ -90,6 +90,12 @@ module.exports = app => {
             type:BIGINT(15),
             comment:"创建时间"
         },
+        state: {
+            type: INTEGER,
+            allowNull: false,
+            default: 0,
+            comment: "需求状态"
+        }
     },{
         freezeTabName:true,
         underscored:true,

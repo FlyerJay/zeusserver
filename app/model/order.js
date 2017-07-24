@@ -129,6 +129,7 @@ module.exports = app => {
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
+                AND ui.comId = o.comId
                 WHERE o.comId = :comId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
@@ -145,6 +146,7 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
+                AND ui.comId = o.comId
                 WHERE o.comId = :comId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
