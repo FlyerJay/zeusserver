@@ -142,6 +142,9 @@ export const loadStock = ({ dispatch }, params) => {
   return axios.get('/zues/api/product/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
+      response.data.data.row.map(v => {
+        v.markType = v.mark || 1;
+      })
       dispatch('UPDATE_ORDERFORM', 'stockInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {

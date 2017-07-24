@@ -53,11 +53,11 @@
         </el-table-column>
         <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价" sortable>
         </el-table-column>
-        <el-table-column label="操作" align="center" property="id" width="140px">
+        <el-table-column label="操作" align="center" property="id" width="180px">
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
-            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记</el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记<i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ff9900' : '#ed3f14'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i></el-button>
           </template>
           </el-table-column>
         </el-table>
@@ -221,9 +221,13 @@
           })
         }else{
           params.mark = 1;
+          if(row.markType == 2){
+            params.mark = 2;
+          }
+          let markup = row.markType;
           this.updateStock(params)
           .then(data => {
-            row.mark = 1;
+            row.mark = markup;
             this.$message({
               message: `标记成功`,
               type: 'success'
@@ -264,7 +268,16 @@
   }
 </script>
   
-<style>
+<style lang="less">
+  button{
+    .iconfont{
+      font-size:12px;
+      margin-left:5px;
+      &:hover{
+        text-shadow:1px 1px 5px #888;
+      }
+    }
+  }
   .sea-title {
     font-size: 20px;
     margin-bottom: 10px;
@@ -303,6 +316,7 @@
     top: 1px;
     bottom: 1px;
     left:0;
+    border-right:1px solid #fff;
   }
   tr.empty-inventory.expired-inventory td:nth-child(1):after{
     content:'';
@@ -313,6 +327,7 @@
     top: 1px;
     bottom: 50%;
     left:0;
+    border-right:1px solid #fff;
   }
   tr.empty-inventory.expired-inventory td:nth-child(1):before{
     content:'';
@@ -323,6 +338,7 @@
     top: 50%;
     bottom: 1px;
     left:0;
+    border-right:1px solid #fff;
   }
   tr.expired-inventory td:nth-child(1):after{
     content:'';
@@ -333,6 +349,7 @@
     top: 1px;
     bottom: 1px;
     left:0;
+    border-right:1px solid #fff;
   }
   tr.warning-inventory td:not(:last-child) {
     background-color:#ff9900;
