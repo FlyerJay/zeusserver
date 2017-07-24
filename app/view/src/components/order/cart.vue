@@ -182,7 +182,7 @@
                 const height = Number(specArr[0]);
                 const width = Number(specArr[1]);
                 const land = Number(specArr[2]);
-                const long = Number(row.long);
+                const long = Number(row.long) ? Number(row.long) : 6;
                 const per = Number(row.perAmount);
                 const perimeter = 2 * height + 2 * width;
                 const amount = Number(row.chartAmount);
@@ -300,7 +300,7 @@
                             const height = Number(specArr[0]);
                             const width = Number(specArr[1]);
                             const land = Number(specArr[2]);
-                            const long = Number(row.long);
+                            const long = Number(row.long) ? Number(row.long) : 6;
                             const per = Number(row.perAmount);
                             const perimeter = 2 * height + 2 * width;
                             const amount = Number(row.chartAmount);
