@@ -262,6 +262,7 @@
           <li>
             <select name="" class="input company">
                 <option value="">请选择公司</option>
+                <option value="00">奎鑫总公司</option>
                 <option value="01">南京奎鑫</option>
                 <option value="02">武汉奎鑫</option>
                 <option value="03">西安奎鑫</option>
@@ -330,7 +331,7 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            document.location.href = 'http://www.kxzeus.com';
+            document.location.href = 'http://127.0.0.1:8080';
           } else {
             $('.warn-txt').text(res.msg)
           }

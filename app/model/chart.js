@@ -57,6 +57,10 @@ module.exports = app => {
         createTime: {
             type: BIGINT(20),
             comment:"记录创建时间"
+        },
+        comment:{
+            type:STRING(100),
+            comment:"备注",
         }
     },{
         freezeTabName:true,
@@ -74,7 +78,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,si.spec,si.supplierId,si.long,si.type,si.perAmount,s.supplierName,c.supplierId,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,c.comment,si.spec,si.supplierId,si.long,si.type,si.perAmount,s.supplierName,c.supplierId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierId = c.supplierId
                 AND si.type = c.type
@@ -92,8 +96,7 @@ module.exports = app => {
                 LEFT JOIN freight f ON
                 f.address = s.address
                 AND f.comId = c.comId
-                WHERE c.userId = :userId AND
-                c.comId = :comId
+                WHERE c.comId = :comId
                 ORDER BY s.supplierName DESC, c.createTime DESC
                 LIMIT :start,:offset`,
                 {
@@ -122,8 +125,7 @@ module.exports = app => {
                 LEFT JOIN freight f ON
                 f.address = s.address
                 AND f.comId = c.comId
-                WHERE c.userId = :userId AND
-                c.comId = :comId
+                WHERE c.comId = :comId
                 ORDER BY c.createTime DESC`,
                 {
                     replacements:{
@@ -186,7 +188,8 @@ module.exports = app => {
                     chartAmount:options.chartAmount,
                     chartAdjust:options.chartAdjust,
                     long:inventory.long,
-                    createTime:new Date().getTime()
+                    createTime:new Date().getTime(),
+                    comment:options.comment || '',
                 });
                 return {
                     code:200,

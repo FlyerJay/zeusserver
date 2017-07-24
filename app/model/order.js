@@ -46,6 +46,10 @@ module.exports = app => {
             type:BIGINT(20),
             allowNull:false,
             comment:"创建时间"
+        },
+        comment:{
+            type:STRING(100),
+            comment:"备注",
         }
     },{
         freezeTabName:true,
@@ -63,7 +67,7 @@ module.exports = app => {
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
                 ORDER BY o.createTime DESC
@@ -79,7 +83,7 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
                 ORDER BY o.createTime DESC
@@ -120,12 +124,12 @@ module.exports = app => {
                     msg:"请输入用户信息"
                 }
                 const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
-                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount
+                (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount,
+                (select s.supplierName from order_detail od left join supplier s on s.supplierId = od.supplierId where od.orderNo = o.orderNo limit 0,1) as supplierName
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                AND o.userId = :userId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 LIMIT :start,:offset
@@ -142,7 +146,6 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 WHERE o.comId = :comId
-                AND o.userId = :userId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 `,{
@@ -227,7 +230,8 @@ module.exports = app => {
                                 orderAmount:Number(v.chartAmount),
                                 unitPrice:Number(v.purePrice),
                                 Weight:Number(v.chartWeight),
-                                orderDcrease:Number(v.totalAdjust)
+                                orderDcrease:Number(v.totalAdjust),
+                                comment: v.comment,
                             },{transaction:t})
                             app.model.Chart.destroy({
                                 where:{
@@ -329,12 +333,12 @@ module.exports = app => {
                                 $eq:options.orderNo,
                             }
                         }
-                    }).then(async ()=>{
+                    }).then(async (data)=>{
                         return await app.model.OperateRecord.create({
-                            userId:options.operator,
-                            comId:options.comId,
+                            userId:options.userId,
+                            comId:res.dataValues.comId,
                             type:'审核订单',
-                            detail:`审核通过了${options.orderNo}订单`,
+                            detail:`审核通过了${options.operator}的${options.orderNo}订单`,
                             createTime:+new Date()
                         },{transaction:t}).catch((err)=>{
                             console.log(err);

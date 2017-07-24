@@ -48,6 +48,9 @@ var styleLoaders = function(options) {
       loader: loader
     })
   }
+  output.push(//添加jquery全局loader
+    { test: require.resolve("jquery"), loader: "expose-loader?$!expose-loader?jQuery" }
+  )
   return output
 }
 

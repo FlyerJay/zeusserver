@@ -46,31 +46,33 @@ module.exports = app => {
   app.post('/zues/api/chart/addToChart','chart.addToChart');
   app.post('/zues/api/chart/remove','chart.remove');
   app.post('/zues/api/chart/update','chart.update');
-  
+  //地址
+  app.get('/zues/api/address/list','address.list');
+  app.get('/zues/api/address/default','address.defaultAddress');
+  app.post('/zues/api/address/add','address.add');
+  app.post('/zues/api/address/remove','address.remove');
+   app.post('/zues/api/address/setdefault','address.setdefault');
   //下单
   app.get('/zues/api/order/list','order.list');
   app.get('/zues/api/order/detail','order.detail');
   app.post('/zues/api/order/add','order.add');
   app.post('/zues/api/order/remove','order.remove');
-
+  app.post('/zues/api/order/print','order.print');
   //管理员操作
   app.get('/zues/api/operate/list','manage.operateList');
   app.get('/zues/api/userrole/list','manage.userRoleList');
   app.post('/zues/api/userrole/update','manage.updateUserRole');
   app.get('/zues/api/order/verifylist','manage.verifyList');
   app.post('/zues/api/order/verify','manage.orderVerify');
-  
   //定制化需求
   app.get('/zues/api/demand/list','demand.list');
   app.get('/zues/api/demand/price','demand.priceList');
   app.post('/zues/api/demand/add','demand.add');
   app.post('/zues/api/demand/update','demand.update');
   app.post('/zues/api/demand/remove','demand.remove');
-
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');
-
   //数据分析
   app.get('/zues/api/cdata/value','cdata.value');
 };
