@@ -57,7 +57,7 @@
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
-            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记<i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ff9900' : '#ed3f14'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i></el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记<i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ed3f14' : '#ff9900'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i></el-button>
           </template>
           </el-table-column>
         </el-table>
@@ -178,9 +178,9 @@
         }
         if(row.mark){
           if(row.mark == 2){
-            classString.push('error-inventory');
+            classString.push('warning-inventory');
           }else{
-            classString.push('warning-inventory')
+            classString.push('error-inventory')
           }
         }
 
@@ -352,33 +352,11 @@
     border-right:1px solid #fff;
   }
   tr.warning-inventory td:not(:last-child) {
-    background-color:#ff9900;
-    background-clip: padding-box;
-    color:#fff;
-  }
-  .el-table--striped .el-table__body tr.el-table__row--striped.warning-inventory td:not(:last-child){
-    background-color:#ff9900;
-    background-clip: padding-box;
-    color:#fff;
-  }
-  .el-table .el-table__body tr.el-table__row.warning-inventory:hover td:not(:last-child){
-    background-color:#ff9900;
-    background-clip: padding-box;
-    color:#fff;
+    color:#ff9900;
+    text-decoration:underline;
   }
   tr.error-inventory td:not(:last-child) {
-    background-color:#ed3f14;
-    background-clip: padding-box;
-    color:#fff;
-  }
-  .el-table--striped .el-table__body tr.el-table__row--striped.error-inventory td:not(:last-child){
-    background-color:#ed3f14;
-    background-clip: padding-box;
-    color:#fff;
-  }
-  .el-table .el-table__body tr.el-table__row.error-inventory:hover td:not(:last-child){
-    background-color:#ed3f14;
-    background-clip: padding-box;
-    color:#fff;
+    color:#ed3f14;
+    text-decoration:underline;
   }
 </style>
