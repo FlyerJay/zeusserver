@@ -192,7 +192,7 @@
             purePriceFormatter(row,column){
                 const value = Number(row.value);
                 const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
-                row.purePrice = value + freight;
+                row.purePrice = (row.value - row.benifit).toFixed(2);
                 return (row.value - row.benifit).toFixed(2);
             },
             adjustFormatter(row,column){

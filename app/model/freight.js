@@ -27,14 +27,14 @@ module.exports = app => {
             comment:"到岸目的地"
         },
         freight: {
-            type: STRING(11),
+            type: INTEGER,
             allowNull:false,
             comment:"运输费用"
         },
         lastUpdateTime: {
             type: BIGINT(20),
             comment:"记录上次更新时间"
-        }
+        },
     },{
         freezeTabName:true,
         underscored:true,

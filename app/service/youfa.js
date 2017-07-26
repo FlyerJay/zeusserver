@@ -52,7 +52,7 @@ module.exports = app => {
                 var $$4 = parseInventory.requireColumn($$3,['规格','壁厚','长度','件数','支/件']);
                 var $$5 = parseInventory.mergeSpecAndLand($$4);
                 var $$6 = parseInventory.mergeData($$5);
-                //var $$7 = parseInventory.mergeInventory($$6)
+                var $$7 = parseInventory.mergeInventory($$6)
                 return $$6;
             }
             var $2 = parseInventory.dealRepeatHeadTable($1);
@@ -208,13 +208,22 @@ module.exports = app => {
                 options[i].head = ['支/件','规格','件数','壁厚','长度'];
                 options[i].lines = options[i].lines.slice(1);
                 var newLine = [];
+                var newLine1 = [];
+                var newLine2 = [];
+                //这里假设了数据最多为3组;
                 //按照表头把列表的数据取出，如果mark有多个则拆分该行
                 options[i].lines.map( v => {
-                    mark.map(m =>{
-                        newLine.push(v.slice(m,m + 3));
+                    mark.map((m,index) =>{
+                        if(index == 0){
+                            newLine.push(v.slice(m,m + 3));
+                        }else if(index == 1){
+                            newLine1.push(v.slice(m,m + 3));
+                        }else if(index == 2){
+                            newLine2.push(v.slice(m,m + 3));
+                        }
                     })
                 })
-                options[i].lines = newLine.slice();//这里使用深拷贝，因为newLine后面还要继续用
+                options[i].lines = newLine.slice().concat(newLine1.slice().concat(newLine2.slice()));//这里使用深拷贝，因为newLine后面还要继续用
                 var preAmount = 0;
                 newLine = [];
                 options[i].lines.map( v => {//从v[0]中取出支/件，其结构为[(（] 16 支[/件] [）)]

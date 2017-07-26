@@ -47,6 +47,11 @@ module.exports = app => {
         material: {
             type:STRING(10),
             comment:"材质"
+        },
+        adjustValue: {
+            type: INTEGER,
+            default: 0,
+            comment: "调整价"
         }
     },{
         freezeTabName:true,
@@ -196,7 +201,7 @@ module.exports = app => {
                     msg:"缺少调整价格"
                 }
                 options.adjust = Number(options.adjust);
-                const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust} where
+                const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust},sv.adjustValue = ${options.adjust} where
                     sv.comId = :comId
                     AND sv.lastUpdateTime = :lastUpdateTime
                     AND sv.spec LIKE :spec

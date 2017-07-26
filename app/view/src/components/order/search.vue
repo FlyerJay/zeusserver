@@ -25,7 +25,7 @@
         <el-button type="warning" @click="searchStock" :loading="loading">厂家现货查询</el-button>
       </el-form-item>
     </el-form>
-    <div class="sea-title">厂家现货价格/库存表:<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span></div>
+    <div class="sea-title">厂家现货价格/库存表:<!--<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span>--></div>
     <div class="tb-wrap">
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
         <el-table-column prop="spec" label="规格" width="140px">
@@ -38,7 +38,12 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商">
         </el-table-column>
-        <el-table-column prop="value" class-name="value" sortable label="出厂价(元/吨)">
+        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="100px">
+          <template scope="scope">
+            <span class="value">{{scope.row.value}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
+          </template>
         </el-table-column>
         <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）">
         </el-table-column>
@@ -51,7 +56,12 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="purePrice" class-name="value" :formatter="purePriceFormatter" label="供应商开单价" sortable>
+        <el-table-column prop="purePrice" label="供应商开单价" sortable width="100px">
+          <template scope="scope">
+            <span class="value">{{scope.row.purePrice}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+          </template>
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="180px">
           <template scope="scope">
@@ -186,12 +196,6 @@
 
         return classString.join(' ');
       },
-      purePriceFormatter(row,column){
-        const value = Number(row.value);
-        const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
-        row.purePrice = value + freight;
-        return (row.value - row.benifit).toFixed(2);
-      },
       confirmTocart() {
         this.addTocart(this.cartParams)
           .then(rs => {
@@ -307,13 +311,15 @@
     bottom: 1px;
     left:0;
   }
-  tr.expired-value td.value{
+  tr.expired-value td .value{
     color:#ed3f14;
     text-decoration:underline;
+    font-weight:bold;
   }
-  tr.expired-inventory td.inventory{
+  tr.expired-inventory td .inventory{
     color:#ed3f14;
     text-decoration:underline;
+    font-weight:bold;
   }
   tr.warning-inventory td:not(:last-child) {
     color:#ff9900;

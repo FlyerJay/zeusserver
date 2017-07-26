@@ -13,31 +13,36 @@ module.exports = app => {
             type: INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull:false,
-            comment:"供应商编号",
+            allowNull: false,
+            comment: "供应商编号",
         },
         supplierName: {
             type: STRING(15),
-            allowNull:false,
-            comment:"供应商名称"
+            allowNull: false,
+            comment: "供应商名称"
         },
         comId: {
-            type:STRING(2),
-            allowNull:false,
-            comment:"公司编号"
+            type: STRING(2),
+            allowNull: false,
+            comment: "公司编号"
         },
         address: {
-            type:STRING(20),
-            allowNull:false,
-            comment:"供应商地址"
+            type: STRING(20),
+            allowNull: false,
+            comment: "供应商地址"
         },
         benifit: {
-            type:STRING(10),
-            comment:"优惠"
+            type: INTEGER,
+            comment: "优惠"
         },
         isDelete:{
-            type:STRING(1),
-            comment:"是否删除"
+            type: STRING(1),
+            comment: "是否删除"
+        },
+        benifitAdjust:{
+            type: INTEGER,
+            default: 0,
+            comment: "优惠浮动"
         }
     },{
         freezeTabName:true,
@@ -123,12 +128,22 @@ module.exports = app => {
                 var keys = '';
                 var values = '';
                 var value = '';
+                var lastBenifit = result.dataValues.benifit;
                 for(var props in options){
                     if(props == 'freight'){
                         yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address',{
                             replacements:{
                                 address:options.address?options.address:'',
-                                freight:options.freight+''
+                                freight:options.freight - 0
+                            }
+                        })
+                    }
+                    else if(props == 'benifit'){
+                        yield app.model.query(`UPDATE supplier SET benifit = :benifit,benifitAdjust = :benifitAdjust WHERE supplierId = :supplierId`,{
+                            replacements:{
+                                supplierId:options.supplierId,
+                                benifit: options.benifit - 0,
+                                benifitAdjust: options.benifit - lastBenifit,
                             }
                         })
                     }else if(props != 'row' && props != 'userId' && props != 'role'){

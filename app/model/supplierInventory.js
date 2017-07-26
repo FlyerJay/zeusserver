@@ -228,7 +228,7 @@ module.exports = app => {
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.mark,s.supplierId,s.supplierName,s.address,f.freight,s.benifit,sv.value,
-                    si.lastUpdateTime as inventoryTime, sv.lastUpdateTime as valueTime,
+                    si.lastUpdateTime as inventoryTime, sv.lastUpdateTime as valueTime,sv.adjustValue,s.benifitAdjust,(sv.value - s.benifit) as purePrice,
                     CASE WHEN sv.time <> '' AND sv.time > si.lastUpdateTime THEN sv.time ELSE si.lastUpdateTime END as lastUpdateTime
                     FROM supplier_inventory si
                     INNER JOIN supplier s
