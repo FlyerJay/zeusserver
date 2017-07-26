@@ -38,9 +38,9 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商">
         </el-table-column>
-        <el-table-column prop="value" sortable label="出厂价(元/吨)">
+        <el-table-column prop="value" class-name="value" sortable label="出厂价(元/吨)">
         </el-table-column>
-        <el-table-column prop="inventoryAmount" label="库存（件）">
+        <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）">
         </el-table-column>
         <el-table-column prop="perAmount" label="单件支数"></el-table-column>
         <el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter">
@@ -51,7 +51,7 @@
         </el-table-column>
         <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
         </el-table-column>
-        <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价" sortable>
+        <el-table-column prop="purePrice" class-name="value" :formatter="purePriceFormatter" label="供应商开单价" sortable>
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="180px">
           <template scope="scope">
@@ -170,11 +170,11 @@
       },
       tableRowClassName(row,index){
         var classString = [];
-        if(row.inventoryAmount == '999'){
-          classString.push('empty-inventory');
-        }
-        if(row.lastUpdateTime < new Date().formatDate('yyyyMMdd')){
+        if(row.inventoryTime < new Date().formatDate('yyyyMMdd')){
           classString.push('expired-inventory');
+        }
+        if(row.valueTime < new Date().formatDate('yyyyMMdd')){
+          classString.push('expired-value');
         }
         if(row.mark){
           if(row.mark == 2){
@@ -307,49 +307,13 @@
     bottom: 1px;
     left:0;
   }
-  tr.empty-inventory td:nth-child(1):after{
-    content:'';
-    display:block;
-    width:8px;
-    background-color:#F7BA2A;
-    position:absolute;
-    top: 1px;
-    bottom: 1px;
-    left:0;
-    border-right:1px solid #fff;
+  tr.expired-value td.value{
+    color:#ed3f14;
+    text-decoration:underline;
   }
-  tr.empty-inventory.expired-inventory td:nth-child(1):after{
-    content:'';
-    display:block;
-    width:8px;
-    background-color:#F7BA2A;
-    position:absolute;
-    top: 1px;
-    bottom: 50%;
-    left:0;
-    border-right:1px solid #fff;
-  }
-  tr.empty-inventory.expired-inventory td:nth-child(1):before{
-    content:'';
-    display:block;
-    width:8px;
-    background-color:#FF4949;
-    position:absolute;
-    top: 50%;
-    bottom: 1px;
-    left:0;
-    border-right:1px solid #fff;
-  }
-  tr.expired-inventory td:nth-child(1):after{
-    content:'';
-    display:block;
-    width:8px;
-    background-color:#FF4949;
-    position:absolute;
-    top: 1px;
-    bottom: 1px;
-    left:0;
-    border-right:1px solid #fff;
+  tr.expired-inventory td.inventory{
+    color:#ed3f14;
+    text-decoration:underline;
   }
   tr.warning-inventory td:not(:last-child) {
     color:#ff9900;
