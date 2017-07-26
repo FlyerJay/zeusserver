@@ -26,6 +26,10 @@ module.exports = app => {
             allowNull:false,
             comment:"规格"
         },
+        long:{
+            type:INTEGER,
+            comment:"长度"
+        },
         type:{
             type:STRING(10),
             allowNull:false,

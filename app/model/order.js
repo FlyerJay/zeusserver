@@ -234,6 +234,7 @@ module.exports = app => {
                                 Weight:Number(v.chartWeight),
                                 orderDcrease:Number(v.totalAdjust),
                                 comment: v.comment,
+                                long: v.long,
                             },{transaction:t})
                             app.model.Chart.destroy({
                                 where:{
