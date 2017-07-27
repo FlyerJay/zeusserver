@@ -643,6 +643,20 @@ export const getAddressList = ({ dispatch }, params) => {
   });
 }
 
+export const getCarList = ({ dispatch }, params) => {
+  return axios.get('/zues/api/car/list',{ params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 export const newAddress = ({ dispatch }, params) => {
   return axios.post('/zues/api/address/add',params)
   .then(function (response) {
@@ -657,8 +671,36 @@ export const newAddress = ({ dispatch }, params) => {
   });
 }
 
+export const newCar = ({ dispatch }, params) => {
+  return axios.post('/zues/api/car/add',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 export const removeAddress = ({ dispatch }, params) => {
   return axios.post('/zues/api/address/remove',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+export const removeCar = ({ dispatch }, params) => {
+  return axios.post('/zues/api/car/remove',params)
   .then(function (response) {
     if (response.data.code === 200) {
       return Promise.resolve(response.data.data);

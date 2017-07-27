@@ -187,9 +187,9 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                if(!options.supplierInventoryIds) return  {
+                if(!options.supplierInventoryIds || options.supplierInventoryIds.length < 1) return  {
                     code:-1,
-                    msg:"缺少货物信息"
+                    msg:"并没有选中商品"
                 }
                 const now = new Date();
                 const year = now.getFullYear();

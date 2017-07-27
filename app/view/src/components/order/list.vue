@@ -78,7 +78,7 @@
                         <span class="close"><i class="iconfont icon-close" @click="deleteCar(index)"></i></span>
                     </div>
                 </div>
-                <div class="dialog-item add-car" @click="carAddShow">
+                <div class="dialog-item add-car" @click="carListShow">
                     <span><i class="iconfont icon-rectadd"></i>添加货车</span>
                 </div>
                 <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="orderPrint" :loading="printLoading">信息无误&nbsp;&nbsp;去打印</el-button>
@@ -155,14 +155,52 @@
             size="tiny"
             class="custom-dialog">
             <div class="dialog-content">
-                <el-input v-model="carParams.plate" placeholder="必填">
+                <el-input v-model="carParams.linkName" placeholder="必填">
+                    <template slot="prepend">联系人</template>
+                </el-input>
+                <el-input v-model="carParams.plate" class="dialog-item" placeholder="必填">
                     <template slot="prepend">车牌号码</template>
                 </el-input>
                 <el-input v-model="carParams.phone" class="dialog-item" placeholder="必填">
                     <template slot="prepend">电话号码</template>
                 </el-input>
                 <el-button type="info" class="dialog-item float-right" @click="submitCar">确定</el-button>
-                <el-button type="success" class="dialog-item float-right" @click="submitCar">快速添加</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog
+            v-model="carListDlShow"
+            size="tiny"
+            @close="onCarClose">
+            <div class="address-content">
+                <div style="margin-bottom:15px;">
+                    <el-input placeholder="输入货车司机检索" v-model="carQuery.linkName">
+                        <template slot="append">
+                            <el-button type="success" icon="search" @click="searchCar">搜索</el-button>
+                        </template>
+                    </el-input>
+                </div>
+                <div class="address-item" v-for="(item,index) in carList.row" @click="selectCar(item)">
+                    <div class="address-name">{{item.linkName}}</div>
+                    <span class="address"><i class="iconfont icon-plate"></i>{{item.plate}}</span>
+                    <span class="address"><i class="iconfont icon-phone"></i>{{item.phone}}</span>
+                    <aside>
+                        <span class="delete" @click.stop="removeRemoteCar(item.carId)">删除车辆</span>
+                    </aside>
+                </div>
+                <div class="address-page">
+                    <el-pagination
+                        @current-change="handleCarPage"
+                        :current-page.sync="carQuery.page"
+                        layout=" prev, pager, next"
+                        :page-size="5"
+                        :total="carList.totalCount"
+                    >
+                    </el-pagination>
+                </div>
+                <div class="add-address address-item"  @click="showNewCar">
+                    <span><i class="iconfont icon-rectadd"></i>添加车辆</span>
+                </div>
             </div>
         </el-dialog>
 
@@ -379,6 +417,9 @@
         newAddress,
         removeAddress,
         setDefault,
+        getCarList,
+        newCar,
+        removeCar,
     } from '../../vuex/action';
     import printpage from '../common/printpage';
     export default {
@@ -393,6 +434,9 @@
                 newAddress,
                 removeAddress,
                 setDefault,
+                getCarList,
+                newCar,
+                removeCar,
             },
             getters: {
                 userInfo: ({
@@ -419,11 +463,12 @@
                 loading: true,
                 printLoading: false,
                 detailLoading: true,
-                detailDialogShow: false,
-                printDlConfirmShow: false,
-                addressListDlShow: false,
-                addressAddDlShow: false,
-                carAddDlShow: false,
+                detailDialogShow: false,//订单详细
+                printDlConfirmShow: false,//打印确认
+                addressListDlShow: false,//地址列表
+                addressAddDlShow: false,//添加地址
+                carAddDlShow: false,//车辆添加
+                carListDlShow: false,//车辆列表
                 orderNo:'',
                 printParams: {
                     specs: [],//发货单规格列表
@@ -443,11 +488,16 @@
                 carParams: {
                     plate: '',
                     phone: '',
+                    linkName: '',
                 },
                 addressQuery: {
                     addressType: '',
                     page: 1,
                     address: '',
+                },
+                carQuery: {
+                    linkName: '',
+                    page: 1,
                 },
                 confirmParams: {
                     CAddress: {
@@ -460,6 +510,7 @@
                     comment:'',
                 },
                 addressList: [],
+                carList: [],
             }
         },
         methods: {
@@ -471,6 +522,12 @@
                 this.addressQuery.page = val;
                 this.getAddressList(this.addressQuery).then( data => {
                     this.addressList = data;
+                })
+            },
+            handleCarPage(val) {
+                this.carQuery.page = val;
+                this.getCarList(this.carQuery).then( data => {
+                    this.carList = data;
                 })
             },
             searchOrder() {
@@ -504,7 +561,6 @@
             },
             enterNum(index, row) {
                 const orderNoArr = [row.orderNo].join(',');
-                 
                 this.$confirm('该订单将被删除, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
@@ -560,8 +616,17 @@
                     this.addressList = data;
                 })
             },
+            searchCar() {
+                this.carQuery.page = 1;
+                this.getCarList(this.carQuery).then( data => {
+                    this.carList = data;
+                })
+            },
             showNewAddress() {
                 this.addressAddDlShow = true;
+            },
+            showNewCar() {
+                this.carAddDlShow = true;
             },
             submitAddress() {
                 this.newAddress(this.addressParams)
@@ -589,6 +654,17 @@
                     }))
                 })
             },
+            removeRemoteCar(carId) {
+                this.carQuery.page = 1;
+                this.removeCar({carId:[carId].join(',')})
+                .then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除车辆成功!',
+                    },
+                    this.handleCarPage(1))
+                })
+            },
             setDefaultAddress(addressId) {
                 this.setDefault({addressId,addressType:this.addressQuery.addressType})
                 .then(() => {
@@ -605,6 +681,10 @@
                 this.addressQuery.page = 1;
                 this.addressQuery.address = '';
             },
+            onCarClose() {
+                this.carQuery.page = 1;
+                this.carQuery.address = '';
+            },
             selectAddress(address) {
                 if(this.addressQuery.addressType == 1){
                     this.confirmParams.CAddress = address;
@@ -613,10 +693,24 @@
                 }
                 this.addressListDlShow = false;
             },
-            carAddShow() {
-                this.carAddDlShow = true;
+            selectCar(car) {
+                this.confirmParams.carList.push(car);
+                this.carListDlShow = false;
+            },
+            carListShow() {
+                this.carListDlShow = true;
+                this.getCarList(this.carQuery).then( data => {
+                    this.carList = data;
+                })
             },
             submitCar() {
+                if(!this.carParams.linkName){
+                    this.$message({
+                        type: 'warning',
+                        message: '请填写联系人!',
+                    })
+                    return false;
+                }
                 if(!this.carParams.plate){
                     this.$message({
                         type: 'warning',
@@ -634,8 +728,17 @@
                 var car = {};
                 car.plate = this.carParams.plate;
                 car.phone = this.carParams.phone;
-                this.confirmParams.carList.push(car);
-                this.carAddDlShow = false;
+                car.linkName = this.carParams.linkName;
+                this.newCar(car).then(data => {
+                    this.$message(
+                        {
+                            type: 'warning',
+                            message: '添加车辆成功!',
+                        }
+                    )
+                    this.carAddDlShow = false;
+                    this.handleCarPage(1);
+                })
             },
             deleteCar(index) {
                 this.confirmParams.carList.splice(index,1);

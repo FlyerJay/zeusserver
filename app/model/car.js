@@ -101,7 +101,6 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) as count FROM address WHERE
                 linkName LIKE :linkName
                 AND comId = :comId
-                ORDER BY carId DESC
                 `,{
                     replacements:{
                         linkName: options.linkName ? `%${options.linkName}%` : `%%`,

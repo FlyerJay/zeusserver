@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1501056715021'); /* IE9*/
-  src: url('iconfont.eot?t=1501056715021#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1501056715021') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1501056715021') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1501056715021#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1501139095972'); /* IE9*/
+  src: url('iconfont.eot?t=1501139095972#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1501139095972') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1501139095972') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1501139095972#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -21,9 +21,13 @@
 
 .icon-tel:before { content: "\e600"; }
 
+.icon-plate:before { content: "\e61b"; }
+
 .icon-close:before { content: "\e607"; }
 
 .icon-qq:before { content: "\e62e"; }
+
+.icon-phone:before { content: "\e63e"; }
 
 .icon-rectadd:before { content: "\e8de"; }
 
