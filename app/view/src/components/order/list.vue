@@ -90,6 +90,13 @@
             size="tiny"
             @close="onAddressClose">
             <div class="address-content">
+                <div style="margin-bottom:15px;">
+                    <el-input placeholder="输入地址检索" v-model="addressQuery.address">
+                        <template slot="append">
+                            <el-button type="success" icon="search" @click="searchAddress">搜索</el-button>
+                        </template>
+                    </el-input>
+                </div>
                 <div class="address-item" v-for="(item,index) in addressList.row" @click="selectAddress(item)">
                     <div class="address-name">{{item.addressName}}</div>
                     <div class="address"><span class="default-address" v-if="item.isDefault == 1">[默认地址]</span><i class="iconfont icon-location"></i>{{item.address}}</div>
@@ -437,8 +444,9 @@
                     phone: '',
                 },
                 addressQuery: {
-                    addressType:'',
-                    page:1,
+                    addressType: '',
+                    page: 1,
+                    address: '',
                 },
                 confirmParams: {
                     CAddress: {
@@ -545,6 +553,12 @@
                     this.addressList = data;
                 })
             },
+            searchAddress() {
+                this.addressQuery.page = 1;
+                this.getAddressList(this.addressQuery).then( data => {
+                    this.addressList = data;
+                })
+            },
             showNewAddress() {
                 this.addressAddDlShow = true;
             },
@@ -588,6 +602,7 @@
             },
             onAddressClose() {
                 this.addressQuery.page = 1;
+                this.addressQuery.address = '';
             },
             selectAddress(address) {
                 if(this.addressQuery.addressType == 1){

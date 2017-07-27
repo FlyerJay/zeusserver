@@ -118,23 +118,27 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT * FROM address WHERE
                 comId = :comId
                 AND (addressType = :addressType OR :addressType = '')
+                AND addressName LIKE :address
                 ORDER BY isDefault DESC, addressId ASC
                 LIMIT :start,:offset
                 `,{
                     replacements:{
                         comId: options.comId || '',
                         addressType: options.addressType || '',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:5),
-                        offset:options.pageSize?options.pageSize:5,
+                        start: !options.page ? 0 : (options.page - 1) * (options.pageSize?options.pageSize:5),
+                        offset: options.pageSize ? options.pageSize:5,
+                        address: options.address ? `%${options.address}%` : `%%`
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM address WHERE
                 comId = :comId
                 AND (addressType = :addressType OR :addressType = '')
+                AND addressName LIKE :address
                 `,{
                     replacements:{
                         comId: options.comId || '',
-                        addressType: options.addressType || ''
+                        addressType: options.addressType || '',
+                        address: options.address ? `%${options.address}%` : `%%`
                     }
                 })]
                 if(!$1[0] || $1[0].length ===0) return {

@@ -41,8 +41,8 @@
         <el-table-column prop="value" sortable label="出厂价(元/吨)" width="100px">
           <template scope="scope">
             <span class="value">{{scope.row.value}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
           </template>
         </el-table-column>
         <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）">
@@ -59,8 +59,8 @@
         <el-table-column prop="purePrice" label="供应商开单价" sortable width="100px">
           <template scope="scope">
             <span class="value">{{scope.row.purePrice}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="180px">
@@ -316,17 +316,27 @@
     text-decoration:underline;
     font-weight:bold;
   }
-  tr.expired-inventory td .inventory{
+  tr.expired-inventory td.inventory{
     color:#ed3f14;
     text-decoration:underline;
     font-weight:bold;
   }
   tr.warning-inventory td:not(:last-child) {
     color:#ff9900;
-    text-decoration:underline;
+    .iconfont{
+      text-decoration:none;
+      &:before{
+        text-decoration:none;
+      }
+    }
   }
   tr.error-inventory td:not(:last-child) {
     color:#ed3f14;
-    text-decoration:underline;
+    .iconfont{
+      text-decoration:none;
+      &:before{
+        text-decoration:none;
+      }
+    }
   }
 </style>
