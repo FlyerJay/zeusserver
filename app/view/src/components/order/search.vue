@@ -352,5 +352,19 @@ export default {
       }
     }
   }
+  .tbhead-wrap {
+    .el-checkbox-group {
+      &:after {
+        content:"";
+        display: table;
+        clear: both;
+      }
+      label.el-checkbox {
+        float: left;
+        width: 96px;
+        margin: 0 48px 8px;
+      }
+    }
+  }
 
 </style>
