@@ -25,38 +25,42 @@
         <el-button type="warning" @click="searchStock" :loading="loading">厂家现货查询</el-button>
       </el-form-item>
     </el-form>
-    <div class="sea-title">厂家现货价格/库存表:<!--<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span>--></div>
+    <div class="sea-title">
+        厂家现货价格/库存表:
+        <el-button type="warning" @click="dlgTbheadVisible = true" style="float:right" size="small">自定义表头</el-button>
+      <!--<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span>-->
+    </div>
     <div class="tb-wrap">
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
-        <el-table-column prop="spec" label="规格" width="140px">
+        <el-table-column prop="spec" label="规格" width="140px" v-if="checkedTBhead.indexOf('规格') > -1">
         </el-table-column>
-        <el-table-column prop="long" label="长度" width="">
+        <el-table-column prop="long" label="长度" width="" v-if="checkedTBhead.indexOf('长度') > -1">
         </el-table-column>
-        <el-table-column prop="lastUpdateTime" label="最新更新时间" width="110px">
+        <el-table-column prop="lastUpdateTime" label="更新时间" width="110px" v-if="checkedTBhead.indexOf('更新时间') > -1">
         </el-table-column>
-        <el-table-column prop="type" label="类别" width="">
+        <el-table-column prop="type" label="类别" width="" v-if="checkedTBhead.indexOf('类别') > -1">
         </el-table-column>
-        <el-table-column prop="supplierName" label="供应商">
+        <el-table-column prop="supplierName" label="供应商" v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
-        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="100px">
+        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="100px" v-if="checkedTBhead.indexOf('出厂价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.value}}</span>
             <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
             <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.adjustValue)}}</span></i>
           </template>
         </el-table-column>
-        <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）">
+        <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）" v-if="checkedTBhead.indexOf('库存') > -1">
         </el-table-column>
-        <el-table-column prop="perAmount" label="单件支数"></el-table-column>
-        <el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter">
+        <el-table-column prop="perAmount" label="单件支数" v-if="checkedTBhead.indexOf('单件支数') > -1"></el-table-column>
+        <el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter" v-if="checkedTBhead.indexOf('单支重量') > -1">
         </el-table-column>
-        <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter">
+        <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter" v-if="checkedTBhead.indexOf('库存重量') > -1">
         </el-table-column>
-        <el-table-column prop="freight" label="运费（元）">
+        <el-table-column prop="freight" label="运费(元)" v-if="checkedTBhead.indexOf('运费') > -1">
         </el-table-column>
-        <el-table-column prop="benifit" label="厂家政策优惠（元/吨）">
+        <el-table-column prop="benifit" label="厂家优惠(元/吨)" v-if="checkedTBhead.indexOf('厂家优惠') > -1">
         </el-table-column>
-        <el-table-column prop="purePrice" label="供应商开单价" sortable width="100px">
+        <el-table-column prop="purePrice" label="供应商开单价" sortable width="100px" v-if="checkedTBhead.indexOf('供应商开单价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.purePrice}}</span>
             <i class="iconfont icon-down" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:10px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
@@ -67,155 +71,164 @@
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
-            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记<i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ed3f14' : '#ff9900'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i></el-button>
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记
+              <i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ed3f14' : '#ff9900'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i>
+            </el-button>
           </template>
-          </el-table-column>
-        </el-table>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="page-wrap">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="stockParams.page" layout=" prev, pager, next" :page-size="15" :total="stockInfo.totalCount">
+      </el-pagination>
+    </div>
+    <el-dialog title="" v-model="dlgShopVisible" size="tiny">
+      <el-form :model="cartParams" label-width="90px" label-position="left">
+        <el-form-item label="需求数量：">
+          <el-input style="width:90%" v-model="cartParams.chartAmount" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <el-input style="width:90%" v-model="cartParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="confirmTocart">确 定</el-button>
+        <el-button @click="dlgShopVisible = false">取 消</el-button>
       </div>
-      <div class="page-wrap">
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page.sync="stockParams.page"
-            layout=" prev, pager, next"
-            :page-size="15"
-            :total="stockInfo.totalCount"
-          >
-          </el-pagination>
+    </el-dialog>
+    <el-dialog title="" v-model="dlgTbheadVisible" size="tiny">
+      <div class="tbhead-wrap">
+      <el-checkbox-group v-model="checkedTBhead">
+        <el-checkbox v-for="head in TBheads" :label="head" :key="head">{{head}}</el-checkbox>
+      </el-checkbox-group>
       </div>
-      <el-dialog title="" v-model="dlgShopVisible" size="tiny">
-        <el-form :model="cartParams" label-width="90px" label-position="left">
-          <el-form-item label="需求数量：">
-            <el-input style="width:90%" v-model="cartParams.chartAmount" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="备注：">
-            <el-input style="width:90%" v-model="cartParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="warning" @click="confirmTocart">确 定</el-button>
-          <el-button @click="dlgShopVisible = false">取 消</el-button>
-        </div>
-     </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import {
-    loadStock, //现货查询
-    addTocart, //加入购物车
-    loadOrdAddress, //读取到岸目的地址
-    updateStock,
-  } from '../../vuex/action'
-  
-  export default {
-    vuex: {
-      actions: {
-        loadStock,
-        addTocart,
-        loadOrdAddress,
-        updateStock
-      },
-      getters: {
-        userInfo: ({
+import {
+  loadStock, //现货查询
+  addTocart, //加入购物车
+  loadOrdAddress, //读取到岸目的地址
+  updateStock,
+} from '../../vuex/action'
+
+export default {
+  vuex: {
+    actions: {
+      loadStock,
+      addTocart,
+      loadOrdAddress,
+      updateStock
+    },
+    getters: {
+      userInfo: ({
           common
         }) => common.userInfo,
-        stockInfo: ({
+      stockInfo: ({
           order
         }) => order.stockInfo,
-        ordAddress: ({
+      ordAddress: ({
           order
         }) => order.ordAddress
-      }
+    }
+  },
+  data() {
+    return {
+      cartParams: {
+        userId: this.userInfo.userId,
+        comId: this.userInfo.comId,
+        chartAmount: '',
+        supplierInventoryId: '',
+        comment: '',
+      },
+      stockParams: {
+        spec: '',
+        material: '',
+        type: '',
+        address: '',
+        page: 1,
+        comId: this.userInfo.comId
+      },
+      dlgShopVisible: false,
+      dlgTbheadVisible: false,
+      loading: true,
+      checkedTBhead: ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'单件支数',	'运费',	'厂家优惠',	'供应商开单价',	'操作'],
+      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'单件支数',	'单支重量',	'库存重量',	'运费',	'厂家优惠',	'供应商开单价',	'操作']
+    }
+  },
+  methods: {
+    filterTag(value, row) {
+      return row.tag === value;
     },
-    data() {
-      return {
-        cartParams: {
-          userId: this.userInfo.userId,
-          comId: this.userInfo.comId,
-          chartAmount: '',
-          supplierInventoryId: '',
-          comment:'',
-        },
-        stockParams: {
-          spec: '',
-          material: '',
-          type: '',
-          address: '',
-          page: 1,
-          comId: this.userInfo.comId
-        },
-        dlgShopVisible: false,
-        loading: true,
-      }
+    searchStock() {
+      this.loading = true;
+      this.loadStock(this.stockParams)
+        .then(() => {
+          this.loading = false;
+        });
     },
-    methods: {
-      searchStock() {
-        this.loading = true;
-        this.loadStock(this.stockParams)
-          .then(() => {
-            this.loading = false;
-          });
-      },
-      weightFormatter(row, column) {
-        const specArr = row.spec.split('*');
-        const height = Number(specArr[0]);
-        const width = Number(specArr[1]);
-        const land = Number(specArr[2]);
-        const long = Number(row.long) ? Number(row.long) : 6;
-        const perimeter = 2 * height + 2 * width;
-        const amount = Number(row.perAmount);
-        const inventoryAmount = Number(row.inventoryAmount);
-        return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
-      },
-      perWeightFormatter(row, column) {
-        const specArr = row.spec.split('*');
-        const height = Number(specArr[0]);
-        const width = Number(specArr[1]);
-        const land = Number(specArr[2]);
-        const long = Number(row.long) ? Number(row.long) : 6;
-        const perimeter = 2 * height + 2 * width;
-        const amount = Number(row.perAmount);
-        const inventoryAmount = Number(row.inventoryAmount);
-        return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2);
-      },
-      tableRowClassName(row,index){
-        var classString = [];
-        if(row.inventoryTime < new Date().formatDate('yyyyMMdd')){
-          classString.push('expired-inventory');
+    weightFormatter(row, column) {
+      const specArr = row.spec.split('*');
+      const height = Number(specArr[0]);
+      const width = Number(specArr[1]);
+      const land = Number(specArr[2]);
+      const long = Number(row.long) ? Number(row.long) : 6;
+      const perimeter = 2 * height + 2 * width;
+      const amount = Number(row.perAmount);
+      const inventoryAmount = Number(row.inventoryAmount);
+      return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
+    },
+    perWeightFormatter(row, column) {
+      const specArr = row.spec.split('*');
+      const height = Number(specArr[0]);
+      const width = Number(specArr[1]);
+      const land = Number(specArr[2]);
+      const long = Number(row.long) ? Number(row.long) : 6;
+      const perimeter = 2 * height + 2 * width;
+      const amount = Number(row.perAmount);
+      const inventoryAmount = Number(row.inventoryAmount);
+      return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2);
+    },
+    tableRowClassName(row, index) {
+      var classString = [];
+      if (row.inventoryTime < new Date().formatDate('yyyyMMdd')) {
+        classString.push('expired-inventory');
+      }
+      if (row.valueTime < new Date().formatDate('yyyyMMdd')) {
+        classString.push('expired-value');
+      }
+      if (row.mark) {
+        if (row.mark == 2) {
+          classString.push('warning-inventory');
+        } else {
+          classString.push('error-inventory')
         }
-        if(row.valueTime < new Date().formatDate('yyyyMMdd')){
-          classString.push('expired-value');
-        }
-        if(row.mark){
-          if(row.mark == 2){
-            classString.push('warning-inventory');
-          }else{
-            classString.push('error-inventory')
-          }
-        }
+      }
 
-        return classString.join(' ');
-      },
-      confirmTocart() {
-        this.addTocart(this.cartParams)
-          .then(rs => {
-            this.$message({
-              message: `成功添加到购物车`,
-              type: 'success'
-            });
-            this.dlgShopVisible = false;
+      return classString.join(' ');
+    },
+    confirmTocart() {
+      this.addTocart(this.cartParams)
+        .then(rs => {
+          this.$message({
+            message: `成功添加到购物车`,
+            type: 'success'
           });
-      },
-      enterNum(index, row) {
-        this.dlgShopVisible = true;
-        this.cartParams.supplierInventoryId = row.supplierInventoryId;
-      },
-      markNum(index, row) {
-        var params = {};
-        params.supplierInventoryId = row.supplierInventoryId;
-        if(row.mark){
-          params.mark = '';
-          this.updateStock(params)
+          this.dlgShopVisible = false;
+        });
+    },
+    enterNum(index, row) {
+      this.dlgShopVisible = true;
+      this.cartParams.supplierInventoryId = row.supplierInventoryId;
+    },
+    markNum(index, row) {
+      var params = {};
+      params.supplierInventoryId = row.supplierInventoryId;
+      if (row.mark) {
+        params.mark = '';
+        this.updateStock(params)
           .then(data => {
             row.mark = '';
             this.$message({
@@ -223,13 +236,13 @@
               type: 'success'
             });
           })
-        }else{
-          params.mark = 1;
-          if(row.markType == 2){
-            params.mark = 2;
-          }
-          let markup = row.markType;
-          this.updateStock(params)
+      } else {
+        params.mark = 1;
+        if (row.markType == 2) {
+          params.mark = 2;
+        }
+        let markup = row.markType;
+        this.updateStock(params)
           .then(data => {
             row.mark = markup;
             this.$message({
@@ -237,48 +250,48 @@
               type: 'success'
             });
           })
-        }
-      },
-      handleCurrentChange(val) {
-        this.stockParams.page = val;
-        this.loading = true;
-        this.loadStock(this.stockParams)
-          .then(() => {
-            this.loading = false;
-        });
       }
     },
-    filters:{
-      companyFilter(val){
-        const company = {
-          '01':'南京奎鑫',
-          '02':'武汉奎鑫',
-          '03':'西安奎鑫',
-          '04':'长春奎鑫',
-          '05':'沈阳奎鑫',
-          '06':'山东奎鑫',
-          '07':'南昌奎鑫',
-        }
-        return company[val];
-      }
-    },
-    mounted: function() {
+    handleCurrentChange(val) {
+      this.stockParams.page = val;
+      this.loading = true;
       this.loadStock(this.stockParams)
         .then(() => {
           this.loading = false;
         });
-      this.loadOrdAddress();
     }
+  },
+  filters: {
+    companyFilter(val) {
+      const company = {
+        '01': '南京奎鑫',
+        '02': '武汉奎鑫',
+        '03': '西安奎鑫',
+        '04': '长春奎鑫',
+        '05': '沈阳奎鑫',
+        '06': '山东奎鑫',
+        '07': '南昌奎鑫',
+      }
+      return company[val];
+    }
+  },
+  mounted: function () {
+    this.loadStock(this.stockParams)
+      .then(() => {
+        this.loading = false;
+      });
+    this.loadOrdAddress();
   }
+}
 </script>
   
 <style lang="less">
-  button{
-    .iconfont{
-      font-size:12px;
-      margin-left:5px;
-      &:hover{
-        text-shadow:1px 1px 5px #888;
+  button {
+    .iconfont {
+      font-size: 12px;
+      margin-left: 5px;
+      &:hover {
+        text-shadow: 1px 1px 5px #888;
       }
     }
   }
@@ -339,4 +352,5 @@
       }
     }
   }
+
 </style>
