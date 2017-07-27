@@ -162,6 +162,7 @@
                     <template slot="prepend">电话号码</template>
                 </el-input>
                 <el-button type="info" class="dialog-item float-right" @click="submitCar">确定</el-button>
+                <el-button type="success" class="dialog-item float-right" @click="submitCar">快速添加</el-button>
             </div>
         </el-dialog>
 

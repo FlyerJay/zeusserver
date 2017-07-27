@@ -51,7 +51,11 @@ module.exports = app => {
   app.get('/zues/api/address/default','address.defaultAddress');
   app.post('/zues/api/address/add','address.add');
   app.post('/zues/api/address/remove','address.remove');
-   app.post('/zues/api/address/setdefault','address.setdefault');
+  app.post('/zues/api/address/setdefault','address.setdefault');
+  //车辆
+  app.get('/zues/api/car/list','car.list');
+  app.post('/zues/api/car/add','car.add');
+  app.post('/zues/api/car/remove','car.remove');
   //下单
   app.get('/zues/api/order/list','order.list');
   app.get('/zues/api/order/detail','order.detail');
