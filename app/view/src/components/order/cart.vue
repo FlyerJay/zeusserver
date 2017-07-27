@@ -46,6 +46,8 @@
                 </el-table-column>
                 <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
                 </el-table-column>
+                <el-table-column prop="userId" label="用户Id">
+                </el-table-column>
                 <el-table-column prop="comment" label="备注">
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id" width="150px">
