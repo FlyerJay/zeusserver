@@ -182,8 +182,8 @@
                 </div>
                 <div class="address-item" v-for="(item,index) in carList.row" @click="selectCar(item)">
                     <div class="address-name">{{item.linkName}}</div>
-                    <span class="address"><i class="iconfont icon-plate"></i>{{item.plate}}</span>
-                    <span class="address"><i class="iconfont icon-phone"></i>{{item.phone}}</span>
+                    <span class="plate"><i class="iconfont icon-plate"></i>{{item.plate}}</span>
+                    <span class="phone"><i class="iconfont icon-phone"></i>{{item.phone}}</span>
                     <aside>
                         <span class="delete" @click.stop="removeRemoteCar(item.carId)">删除车辆</span>
                     </aside>
@@ -359,6 +359,19 @@
                 .default-address{
                     color:#FF4949;
                 }
+            }
+            .plate{
+                color:#1F2D3D;
+                font-size:14px;
+                line-height:2em;
+                font-weight:bold;
+            }
+            .phone{
+                color:#99A9BF;
+                font-size:12px;
+                line-height:2em;
+                margin-left:10px;
+                font-weight:bold;
             }
             aside{
                 font-size:12px;
