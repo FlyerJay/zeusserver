@@ -16,9 +16,9 @@
         <div class="title">定制货品列表</div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column prop="spec" label="规格" width="">
+                <el-table-column prop="spec" label="规格" width="140px">
                 </el-table-column>
-                <el-table-column prop="createTime" label="最新更新时间(按采购)" width="" :formatter="dateFormat">
+                <el-table-column prop="createTime" label="最新更新" width="160px" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="type" label="类别" width="">
                 </el-table-column>
