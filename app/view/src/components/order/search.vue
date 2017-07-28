@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column prop="type" label="类别" width="80px" v-if="checkedTBhead.indexOf('类别') > -1">
         </el-table-column>
-        <el-table-column prop="supplierName" label="供应商" width="100px" v-if="checkedTBhead.indexOf('供应商') > -1">
+        <el-table-column prop="supplierName" label="供应商"  v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
         <el-table-column prop="purePrice" label="开单价" sortable width="110px" v-if="checkedTBhead.indexOf('开单价') > -1">
           <template scope="scope">
