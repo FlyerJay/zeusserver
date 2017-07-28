@@ -200,14 +200,14 @@
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
                 row.totalAdjust = adjust.toFixed(2);
-                return adjust.toFixed(0);
+                return adjust.toFixed(2);
             },
             totalPriceFormatter(row,column){
                 const price = Number(row.purePrice);
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
                 const totoalPice = price?price*row.chartWeight-adjust:0;
                 row.totalPrice = totoalPice.toFixed(2);
-                return totoalPice.toFixed(0);
+                return totoalPice.toFixed(2);
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
@@ -321,7 +321,7 @@
         },
         filters:{
             priceFilter:function(v){
-                return '￥' + Number(v).toFixed(0);
+                return '￥' + Number(v).toFixed(2);
             }
         }
     }

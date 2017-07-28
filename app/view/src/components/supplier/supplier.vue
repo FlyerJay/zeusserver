@@ -21,7 +21,7 @@
       return {
         topMenuData: [{
             url: '/supplier/info',
-            name: '供应商信息'
+            name: '供应商'
           },
           {
             url: '/supplier/price',
@@ -35,10 +35,10 @@
             url: '/supplier/demand',
             name: '需求报价'
           },
-          {
-            url: '/supplier/pricechart',
-            name: '价格走势',
-          }
+          // {
+          //   url: '/supplier/pricechart',
+          //   name: '价格走势',
+          // }
         ]
       }
     },
