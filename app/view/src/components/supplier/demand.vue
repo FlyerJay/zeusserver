@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column prop="createTime" label="最新更新" width="160px" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="type" label="类别">
+                <el-table-column prop="type" label="类别" width="80px">
                 </el-table-column>
                 <el-table-column prop="demandAmount" label="需求数量">
                 </el-table-column>

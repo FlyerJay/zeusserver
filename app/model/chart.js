@@ -103,8 +103,8 @@ module.exports = app => {
                     replacements:{
                         userId:options.userId?options.userId:'',
                         comId:options.comId?options.comId:'',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                        offset:options.pageSize?options.pageSize:15,
+                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:100),
+                        offset:options.pageSize?options.pageSize:100,
                     }
                 }),
                 app.model.query(`SELECT count(1) AS count FROM chart c
@@ -131,8 +131,6 @@ module.exports = app => {
                     replacements:{
                         userId:options.userId?options.userId:'',
                         comId:options.comId?options.comId:'',
-                        start:!options.page?0:options.page*(options.pageSize?options.pageSize:15),
-                        offset:!options.page?(options.pageSize?(options.pageSize-0):15):(((options.page-0)+1)*(options.pageSize?options.pageSize:15)),
                     }
                 })]
                 if(!$1[0] || $1[0].length === 0) return {
@@ -146,7 +144,7 @@ module.exports = app => {
                 result.row = $1[0];
                 result.totalCount = $2[0][0].count;
                 result.page = options.page?options.page:0;
-                result.pageSize = options.pageSize?options.pageSize:15;
+                result.pageSize = options.pageSize?options.pageSize:100;
                 return {
                     code:200,
                     msg:"查询成功",

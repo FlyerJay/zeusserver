@@ -24,17 +24,17 @@
                     v-loading.body="loading">
                 <el-table-column type="selection" width="">
                 </el-table-column>
-                <el-table-column prop="spec" label="规格" width="160px">
+                <el-table-column prop="spec" label="规格" width="140px">
                 </el-table-column>
-                <el-table-column prop="long" label="长度" width="80px">
+                <el-table-column prop="long" label="长度" width="70px">
                 </el-table-column>
-                <el-table-column prop="type" label="类别" width="100px">
+                <el-table-column prop="type" label="类别" width="80px">
                 </el-table-column>
                 <el-table-column prop="supplierName" label="供应商" width="120px">
                 </el-table-column>
-                <el-table-column prop="chartAmount" label="数量">
+                <el-table-column prop="chartAmount" label="数量" width="80px">
                 </el-table-column>
-                <el-table-column prop="perAmount" label="包装"></el-table-column>
+                <el-table-column prop="perAmount" label="包装" width="80px"></el-table-column>
                 </el-table-column>
                 <el-table-column prop="chartWeight" :formatter="weightFormatter" label="吨位">
                 </el-table-column>
@@ -63,7 +63,7 @@
                 @current-change="handleCurrentChange"
                 :current-page.sync="listParams.page"
                 layout=" prev, pager, next"
-                :page-size="15"
+                :page-size="100"
                 :total="cartList.totalCount"
             >
             </el-pagination>
