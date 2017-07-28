@@ -155,8 +155,8 @@
             size="tiny"
             class="custom-dialog">
             <div class="dialog-content">
-                <el-input v-model="carParams.linkName" placeholder="必填">
-                    <template slot="prepend">联系人</template>
+                <el-input v-model="carParams.linkName" placeholder="必填，司机的名字或其他用以区分的名称">
+                    <template slot="prepend">货车名称</template>
                 </el-input>
                 <el-input v-model="carParams.plate" class="dialog-item" placeholder="必填">
                     <template slot="prepend">车牌号码</template>
@@ -174,7 +174,7 @@
             @close="onCarClose">
             <div class="address-content">
                 <div style="margin-bottom:15px;">
-                    <el-input placeholder="输入货车司机检索" v-model="carQuery.linkName">
+                    <el-input placeholder="输入名称进行检索" v-model="carQuery.linkName">
                         <template slot="append">
                             <el-button type="success" icon="search" @click="searchCar">搜索</el-button>
                         </template>
