@@ -42,11 +42,11 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商" v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
-        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="100px" v-if="checkedTBhead.indexOf('出厂价') > -1">
+        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="110px" v-if="checkedTBhead.indexOf('出厂价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.value}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:5px">{{Math.abs(scope.row.adjustValue)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:5px">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
           </template>
         </el-table-column>
         <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）" v-if="checkedTBhead.indexOf('库存') > -1">
@@ -58,13 +58,18 @@
         </el-table-column>
         <el-table-column prop="freight" label="运费(元)" v-if="checkedTBhead.indexOf('运费') > -1">
         </el-table-column>
-        <el-table-column prop="benifit" label="厂家优惠(元/吨)" v-if="checkedTBhead.indexOf('厂家优惠') > -1">
+        <el-table-column prop="benifit" label="厂家优惠(元/吨)" v-if="checkedTBhead.indexOf('厂家优惠') > -1" width="110px">
+          <template scope="scope">
+            <span>{{scope.row.benifit}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+          </template>
         </el-table-column>
-        <el-table-column prop="purePrice" label="供应商开单价" sortable width="100px" v-if="checkedTBhead.indexOf('供应商开单价') > -1">
+        <el-table-column prop="purePrice" label="供应商开单价" sortable width="110px" v-if="checkedTBhead.indexOf('供应商开单价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.purePrice}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;position:absolute;right:15px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-down" v-if="scope.row.priceAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.priceAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" property="id" width="180px">
