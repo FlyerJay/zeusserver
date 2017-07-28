@@ -32,47 +32,47 @@
     </div>
     <div class="tb-wrap">
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
-        <el-table-column prop="spec" label="规格" width="140px" v-if="checkedTBhead.indexOf('规格') > -1">
+        <el-table-column prop="spec" label="规格" width="180px" v-if="checkedTBhead.indexOf('规格') > -1">
         </el-table-column>
-        <el-table-column prop="long" label="长度" width="" v-if="checkedTBhead.indexOf('长度') > -1">
+        <el-table-column prop="long" label="长度" width="80px" v-if="checkedTBhead.indexOf('长度') > -1">
         </el-table-column>
         <el-table-column prop="lastUpdateTime" label="更新时间" width="110px" v-if="checkedTBhead.indexOf('更新时间') > -1">
         </el-table-column>
-        <el-table-column prop="type" label="类别" width="" v-if="checkedTBhead.indexOf('类别') > -1">
+        <el-table-column prop="type" label="类别" width="100px" v-if="checkedTBhead.indexOf('类别') > -1">
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商" v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
-        <el-table-column prop="value" sortable label="出厂价(元/吨)" width="110px" v-if="checkedTBhead.indexOf('出厂价') > -1">
-          <template scope="scope">
-            <span class="value">{{scope.row.value}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
-          </template>
-        </el-table-column>
-        <el-table-column prop="inventoryAmount" class-name="inventory" label="库存（件）" v-if="checkedTBhead.indexOf('库存') > -1">
-        </el-table-column>
-        <el-table-column prop="perAmount" label="单件支数" v-if="checkedTBhead.indexOf('单件支数') > -1"></el-table-column>
-        <el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter" v-if="checkedTBhead.indexOf('单支重量') > -1">
-        </el-table-column>
-        <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter" v-if="checkedTBhead.indexOf('库存重量') > -1">
-        </el-table-column>
-        <el-table-column prop="freight" label="运费(元)" v-if="checkedTBhead.indexOf('运费') > -1">
-        </el-table-column>
-        <el-table-column prop="benifit" label="厂家优惠(元/吨)" v-if="checkedTBhead.indexOf('厂家优惠') > -1" width="110px">
-          <template scope="scope">
-            <span>{{scope.row.benifit}}</span>
-            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
-            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
-          </template>
-        </el-table-column>
-        <el-table-column prop="purePrice" label="供应商开单价" sortable width="110px" v-if="checkedTBhead.indexOf('供应商开单价') > -1">
+        <el-table-column prop="purePrice" label="开单价" sortable width="110px" v-if="checkedTBhead.indexOf('供应商开单价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.purePrice}}</span>
             <i class="iconfont icon-down" v-if="scope.row.priceAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
             <i class="iconfont icon-up" v-if="scope.row.priceAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" property="id" width="180px">
+        <el-table-column prop="inventoryAmount" class-name="inventory" label="库存" v-if="checkedTBhead.indexOf('库存') > -1">
+        </el-table-column>
+        <el-table-column prop="perAmount" label="包装" v-if="checkedTBhead.indexOf('包装') > -1"></el-table-column>
+        <!--<el-table-column prop="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter" v-if="checkedTBhead.indexOf('单支重量') > -1">
+        </el-table-column>
+        <el-table-column prop="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter" v-if="checkedTBhead.indexOf('库存重量') > -1">
+        </el-table-column>-->
+        <el-table-column prop="freight" label="运费" v-if="checkedTBhead.indexOf('运费') > -1">
+        </el-table-column>
+        <el-table-column prop="value" sortable label="出厂价" width="110px" v-if="checkedTBhead.indexOf('出厂价') > -1">
+          <template scope="scope">
+            <span class="value">{{scope.row.value}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.adjustValue < 0" style="color:#13CE66;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.adjustValue > 0" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.adjustValue)}}</span></i>
+          </template>
+        </el-table-column>
+        <el-table-column prop="benifit" label="厂家优惠" v-if="checkedTBhead.indexOf('厂家优惠') > -1" width="110px">
+          <template scope="scope">
+            <span>{{scope.row.benifit}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.benifitAdjust > 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.benifitAdjust < 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;bottom:5px">{{Math.abs(scope.row.benifitAdjust)}}</span></i>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" property="id" width="240px">
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
@@ -159,8 +159,8 @@ export default {
       dlgShopVisible: false,
       dlgTbheadVisible: false,
       loading: true,
-      checkedTBhead: ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'单件支数',	'运费',	'厂家优惠',	'供应商开单价',	'操作'],
-      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'单件支数',	'单支重量',	'库存重量',	'运费',	'厂家优惠',	'供应商开单价',	'操作']
+      checkedTBhead: ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作'],
+      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
     }
   },
   methods: {

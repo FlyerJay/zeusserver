@@ -44,14 +44,14 @@
             v-model="detailDialogShow"
             size="small">
             <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
-                <el-table-column prop="spec" label="规格"></el-table-column>
+                <el-table-column prop="spec" label="规格" width="140px"></el-table-column>
                 <el-table-column prop="type" label="类型"></el-table-column>
-                <el-table-column prop="supplierName" label="供应商"></el-table-column>
-                <el-table-column prop="orderAmount" label="数量(件)"></el-table-column>
+                <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
+                <el-table-column prop="orderAmount" label="数量"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价"></el-table-column>
                 <el-table-column prop="Weight" label="重量"></el-table-column>
                 <el-table-column prop="orderDcrease" label="下浮"></el-table-column>
-                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮单价"></el-table-column>
+                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮"></el-table-column>
                 <el-table-column prop="comment" label="备注"></el-table-column>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>

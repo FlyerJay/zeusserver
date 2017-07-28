@@ -46,7 +46,7 @@
       .tit {
         float: left;
         color: #f3f5f1;
-        margin: -4px 0 0 19px;
+        margin: 4px 0 0 10px;
         font-size: 17px;
       }
     }

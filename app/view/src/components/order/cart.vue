@@ -24,27 +24,27 @@
                     v-loading.body="loading">
                 <el-table-column type="selection" width="">
                 </el-table-column>
-                <el-table-column prop="spec" label="规格" width="">
+                <el-table-column prop="spec" label="规格" width="160px">
                 </el-table-column>
-                <el-table-column prop="long" label="长度" width="">
+                <el-table-column prop="long" label="长度" width="80px">
                 </el-table-column>
-                <el-table-column prop="type" label="类别" width="">
+                <el-table-column prop="type" label="类别" width="100px">
                 </el-table-column>
-                <el-table-column prop="supplierName" label="供应商">
+                <el-table-column prop="supplierName" label="供应商" width="120px">
                 </el-table-column>
-                <el-table-column prop="chartAmount" label="采购数量(件)">
+                <el-table-column prop="chartAmount" label="数量">
                 </el-table-column>
-                <el-table-column prop="perAmount" label="单件支数"></el-table-column>
+                <el-table-column prop="perAmount" label="包装"></el-table-column>
                 </el-table-column>
-                <el-table-column prop="chartWeight" :formatter="weightFormatter" label="采购吨位(吨)">
+                <el-table-column prop="chartWeight" :formatter="weightFormatter" label="吨位">
                 </el-table-column>
-                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="供应商开单价">
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="开单价">
                 </el-table-column>
-                <el-table-column prop="chartAdjust" label="采购议价(元/吨)">
+                <el-table-column prop="chartAdjust" label="采购议价" width="100px">
                 </el-table-column>
-                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额(元)">
+                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额" width="100px">
                 </el-table-column>
-                <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额">
+                <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额" width="100px">
                 </el-table-column>
                 <el-table-column prop="userId" label="用户Id">
                 </el-table-column>
@@ -195,19 +195,19 @@
                 const value = Number(row.value);
                 const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
                 row.purePrice = (row.value - row.benifit).toFixed(2);
-                return (row.value - row.benifit).toFixed(2);
+                return (row.value - row.benifit).toFixed(0);
             },
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
                 row.totalAdjust = adjust.toFixed(2);
-                return adjust.toFixed(2);
+                return adjust.toFixed(0);
             },
             totalPriceFormatter(row,column){
                 const price = Number(row.purePrice);
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
                 const totoalPice = price?price*row.chartWeight-adjust:0;
                 row.totalPrice = totoalPice.toFixed(2);
-                return totoalPice.toFixed(2);
+                return totoalPice.toFixed(0);
             },
             handleSelectionChange(val) {
                 this.supplierInventoryIds = val;
@@ -321,7 +321,7 @@
         },
         filters:{
             priceFilter:function(v){
-                return '￥' + Number(v).toFixed(2);
+                return '￥' + Number(v).toFixed(0);
             }
         }
     }

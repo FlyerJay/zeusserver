@@ -114,7 +114,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        padding-left: 190px;
+        padding-left: 120px;
         background: #2b3b4b;
         width: 100%;
         z-index: 100;
@@ -124,7 +124,7 @@
         background-color: #e9ecf1;
         padding-top: 1px;
         .main-left {
-            width: 190px;
+            width: 120px;
             height: 100%;
             z-index: 101;
             background-color: #33485b;
@@ -137,7 +137,7 @@
         .main-right {
             background-color: #fff;
             padding: 25px 25px;
-            margin: 66px 16px 25px 217px;
+            margin: 60px 16px 25px 137px;
             border: 1px solid #e7e7e9;
             border-radius: 5px;
         }

@@ -19,7 +19,7 @@
       return {
         topMenuData: [{
             url: '/order/search',
-            name: '厂家现货查询'
+            name: '现货查询'
           },
           {
             url: '/order/cart',

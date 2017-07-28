@@ -25,19 +25,19 @@
           },
           {
             url: '/supplier/price',
-            name: '供应商价格表'
+            name: '价格表'
           },
           {
             url: '/supplier/stock',
-            name: '供应商库存'
+            name: '库存表'
           },
           {
             url: '/supplier/demand',
-            name: '定制化需求报价'
+            name: '需求报价'
           },
           {
             url: '/supplier/pricechart',
-            name: '供应商价格走势',
+            name: '价格走势',
           }
         ]
       }
