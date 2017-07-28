@@ -20,6 +20,20 @@
                 <el-button type="warning" @click="addToCharts">添加</el-button>
             </el-form-item>
         </el-form>
+
+        <el-table :data="price.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
+            <el-table-column property="spec" label="规格"></el-table-column>
+            <el-table-column property="lastUpdateTime" label="最新更新时间"></el-table-column>
+            <el-table-column property="type" label="类别"></el-table-column>
+            <el-table-column property="supplierName" label="供应商"></el-table-column>
+            <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
+            <el-table-column label="操作" align="center" v-if="valueAuth">
+                <template scope="scope">
+                            <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning">修改</el-button>
+                        </template>
+            </el-table-column>
+        </el-table>
+
         <linechart
             ref="lineChart"
         />
@@ -48,6 +62,10 @@
                     spec: '',
                     supplierId: '',
                     type:'',
+                },
+                loading:false,
+                price:{
+                    row:[],
                 },
                 suppliers:[
                     {
