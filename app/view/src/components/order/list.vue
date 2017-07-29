@@ -203,7 +203,6 @@
                 </div>
             </div>
         </el-dialog>
-
         <printpage ref="printpage">
             <div class="print-content" style="position:relative;height:100%;">
                 <div class="title" style="text-align:center;font-size:24px;letter-spacing:30px">{{confirmParams.CAddress.addressName}}</div>
@@ -263,7 +262,7 @@
                     <div class="comment" style="text-align:center">{{confirmParams.comment}}</div>
                     <div class="date" style="text-align:right">{{new Date() | dateFilter}}</div>
                 </div>
-                <div class="footer" style="position:absolute;bottom:0;width:100%;font-size:14px;color:#ccc">
+                <div class="footer" style="position:absolute;bottom:0px;width:100%;font-size:14px;color:#ccc">
                     <hr>
                     <div class="address" style="display:inline-block;width:99%" v-if="confirmParams.CAddress && confirmParams.CAddress.address">地址：{{confirmParams.CAddress.address}}</div>
                     <div class="phone" style="display:inline-block;width:49%" v-if="confirmParams.CAddress && confirmParams.CAddress.phone">电话：{{confirmParams.CAddress.phone}}</div>
@@ -277,7 +276,7 @@
 </template>
 <style lang="less">
     .print-content{
-        display:none;//打印时只读取内联样式，这个设置只是让页面忽略不展示打印页面
+        display:none;
     }
     .dialog-content{
         margin-left:20px;
