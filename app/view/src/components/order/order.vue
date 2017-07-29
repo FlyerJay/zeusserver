@@ -19,17 +19,21 @@
       return {
         topMenuData: [{
             url: '/order/search',
+            icon: 'icon-good',
             name: '现货查询'
           },
           {
             url: '/order/cart',
+            icon: 'icon-cart',
             name: '购物车'
           },
           {
             url: '/order/list',
+            icon: 'icon-order',
             name: '订单列表'
           },{
             url: '/order/demand',
+            icon: 'icon-demand',
             name:'定制化需求'
           }
         ]

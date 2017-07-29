@@ -7,7 +7,7 @@
       </a>
     </div>
     <el-menu default-active="" class="el-menu-vertical-demo" :router="true">
-      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index"  :class="[ $route.path === menu.url ? 'active' : '' ]">{{menu.name}}</el-menu-item>
+      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index"  :class="[ $route.path === menu.url ? 'active' : '' ]"><i class="iconfont" :class="menu.icon"></i>{{menu.name}}</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -55,6 +55,9 @@
         color: #f3f5f1;
         cursor: pointer;
         border-bottom: 1px solid #374c5f;
+        .iconfont{
+          margin-right:3px;
+        }
         &:hover {
           background-color: #253340;
           color: #f3f5f1;

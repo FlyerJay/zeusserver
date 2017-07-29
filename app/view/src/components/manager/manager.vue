@@ -22,14 +22,17 @@
       return {
         topMenuData: [{
             url: '/manager/review',
+            icon: 'icon-review',
             name: '下单审核'
           },
           {
             url: '/manager/member',
+            icon: 'icon-member',
             name: '成员列表'
           },
           {
             url: '/manager/operate',
+            icon: 'icon-history',
             name: '操作记录'
           }
         ]

@@ -21,24 +21,29 @@
       return {
         topMenuData: [{
             url: '/supplier/info',
+            icon: 'icon-supplier',
             name: '供应商'
           },
           {
             url: '/supplier/price',
+            icon: 'icon-price',
             name: '价格表'
           },
           {
             url: '/supplier/stock',
+            icon: 'icon-inventory',
             name: '库存表'
           },
           {
             url: '/supplier/demand',
+            icon: 'icon-baojia',
             name: '需求报价'
           },
-          // {
-          //   url: '/supplier/pricechart',
-          //   name: '价格走势',
-          // }
+          {
+            url: '/supplier/pricechart',
+            icon: 'icon-trend',
+            name: '价格走势',
+          }
         ]
       }
     },

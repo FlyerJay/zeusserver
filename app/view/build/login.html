@@ -269,6 +269,7 @@
                 <option value="05">沈阳奎鑫</option>
                 <option value="06">山东奎鑫</option>
                 <option value="07">南昌奎鑫</option>
+                <option value="00">奎鑫总公司</option>
             </select>
           </li>
           <li class="warn-txt"></li>
@@ -330,7 +331,7 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            document.location.href = 'http://115.29.150.218/view/';
+            document.location.href = 'http://www.kxzeus.com/';
           } else {
             $('.warn-txt').text(res.msg)
           }

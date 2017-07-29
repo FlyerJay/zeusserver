@@ -16,7 +16,7 @@
                     printContainer: true,       // grab outer container as well as the contents of the selector
                     pageTitle: "",              // add title to print page
                     removeInline: false,        // remove all inline styles from print elements
-                    printDelay: 0,            // variable print delay; depending on complexity a higher value may be necessary
+                    printDelay: 333,            // variable print delay; depending on complexity a higher value may be necessary
                     header: null,               // prefix to html
                     footer: null,               // postfix to html
                     base: false ,               // preserve the BASE tag, or accept a string for the URL
