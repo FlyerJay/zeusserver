@@ -1,20 +1,23 @@
 <template>
     <div> 
-          <div style="margin-top: 20px">
-            <el-form style="margin-top:20px">
-                <!--<el-form-item label="库存紧张">
-                    <el-tag  color="red">  </el-tag>
-                </el-form-item>-->
-                <el-form-item label="已选商品(含运费):">
-                    <span>{{totalPrice | priceFilter}}</span>
-                    <span>（采购吨位：{{totalWeight}}）</span>
-                    <el-button @click="submitOrder()" type="warning">提交</el-button>
-                </el-form-item>
-            </el-form>
+            <div style="margin-top: 20px">
+                <el-form style="margin-top:20px">
+                    <!--<el-form-item label="库存紧张">
+                        <el-tag  color="red">  </el-tag>
+                    </el-form-item>-->
+                    <el-form-item label="已选商品(含运费):">
+                        <span>{{totalPrice | priceFilter}}</span>
+                        <span>（采购吨位：{{totalWeight}}）</span>
+                        <el-button @click="submitOrder()" type="warning">提交</el-button>
+                    </el-form-item>
+                </el-form>
             
-          </div>
-          <div class="tb-wrap">
-            <el-table
+            </div> 
+            <div class="sea-title clearfix">
+                <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
+            </div>
+            <div class="tb-wrap">
+                <el-table
                     ref="multipleTable"
                     :data="cartList.row"
                     border
@@ -24,33 +27,33 @@
                     v-loading.body="loading">
                 <el-table-column type="selection" width="">
                 </el-table-column>
-                <el-table-column prop="spec" label="规格" width="140px">
+                <el-table-column prop="spec" label="规格" width="140px" v-if="checkedTBhead.indexOf('规格') > -1">
                 </el-table-column>
-                <el-table-column prop="long" label="长度" width="70px">
+                <el-table-column prop="long" label="长度" width="70px" v-if="checkedTBhead.indexOf('长度') > -1">
                 </el-table-column>
-                <el-table-column prop="type" label="类别" width="80px">
+                <el-table-column prop="type" label="类别" width="80px" v-if="checkedTBhead.indexOf('类别') > -1">
                 </el-table-column>
-                <el-table-column prop="supplierName" label="供应商" width="120px">
+                <el-table-column prop="supplierName" label="供应商" width="120px" v-if="checkedTBhead.indexOf('供应商') > -1">
                 </el-table-column>
-                <el-table-column prop="chartAmount" label="数量" width="80px">
+                <el-table-column prop="chartAmount" label="数量" width="80px" v-if="checkedTBhead.indexOf('数量') > -1">
                 </el-table-column>
-                <el-table-column prop="perAmount" label="包装" width="80px"></el-table-column>
+                <el-table-column prop="perAmount" label="包装" width="80px" v-if="checkedTBhead.indexOf('包装') > -1"></el-table-column>
                 </el-table-column>
-                <el-table-column prop="chartWeight" :formatter="weightFormatter" label="吨位">
+                <el-table-column prop="chartWeight" :formatter="weightFormatter" label="吨位" v-if="checkedTBhead.indexOf('包装') > -1">
                 </el-table-column>
-                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="开单价">
+                <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="开单价" v-if="checkedTBhead.indexOf('开单价') > -1">
                 </el-table-column>
-                <el-table-column prop="chartAdjust" label="采购议价" width="100px">
+                <el-table-column prop="chartAdjust" label="采购议价" width="100px" v-if="checkedTBhead.indexOf('采购议价') > -1">
                 </el-table-column>
-                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额" width="100px">
+                <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额" width="100px" v-if="checkedTBhead.indexOf('议价总额') > -1">
                 </el-table-column>
-                <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额" width="100px">
+                <el-table-column prop="totalPrice" :formatter="totalPriceFormatter" label="金额" width="100px" v-if="checkedTBhead.indexOf('金额') > -1">
                 </el-table-column>
-                <el-table-column prop="userId" label="用户Id">
+                <el-table-column prop="userId" label="用户Id" v-if="checkedTBhead.indexOf('用户Id') > -1">
                 </el-table-column>
-                <el-table-column prop="comment" label="备注">
+                <el-table-column prop="comment" label="备注" v-if="checkedTBhead.indexOf('备注') > -1">
                 </el-table-column>
-                <el-table-column label="操作" align="center" property="id" width="150px">
+                <el-table-column label="操作" align="center" property="id" width="150px" v-if="checkedTBhead.indexOf('操作') > -1">
                     <template scope="scope">
                         <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
                         <el-button size="small" @click="deleteChart(scope.index,scope.row)" type="danger">删除</el-button>
@@ -89,6 +92,13 @@
             <div slot="footer" class="dialog-footer">
                 <el-button type="warning" @click="submitChange(changeParams.row)">确 定</el-button>
                 <el-button @click="dialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="" v-model="dlgTbheadVisible" size="tiny">
+            <div class="tbhead-wrap">
+            <el-checkbox-group v-model="checkedTBhead">
+                <el-checkbox v-for="head in TBheads" :label="head" :key="head">{{head}}</el-checkbox>
+            </el-checkbox-group>
             </div>
         </el-dialog>
   </div>
@@ -151,6 +161,9 @@
                     row: {}
                 },
                 supplierInventoryIds: [],
+                dlgTbheadVisible: false,
+                checkedTBhead: ['规格', '长度',	'类别', '供应商', '数量', '包装', '吨位', '开单价', '采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
+                TBheads: ['规格',	'长度', '类别',	'供应商', '数量', '包装', '吨位', '开单价',	'采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
                 dialogVisible: false,
                 loading: true,
                 totalPrice: 0,
@@ -326,5 +339,9 @@
         }
     }
 </script>
-<style type="text/css">
+<style lang="less" scoped>
+    .sea-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 </style>

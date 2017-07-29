@@ -27,8 +27,8 @@
     </el-form>
     <div class="sea-title">
         厂家现货价格/库存表:
-        <el-button type="warning" @click="dlgTbheadVisible = true" style="float:right" size="small">自定义表头</el-button>
-      <!--<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span>-->
+        <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
+        <!--<span class="warn-txt"><span class="red-mark">标记表示库存超期</span><span class="yellow-mark">标记表示虚拟库存</span></span>-->
     </div>
     <div class="tb-wrap">
       <el-table :data="stockInfo.row" :row-class-name="tableRowClassName" stripe style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
