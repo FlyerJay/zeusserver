@@ -67,6 +67,7 @@ module.exports = app => {
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
+                AND ui.comId = o.comId
                 WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
@@ -83,6 +84,7 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) AS count FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
+                AND ui.comId = o.comId
                 WHERE (o.comId = :comId OR :comId = 00)
                 AND orderNo LIKE :orderNo
                 AND validate = 0
