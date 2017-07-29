@@ -11,7 +11,7 @@
             return {
                 option:{
                     debug: false,               // show the iframe for debugging
-                    importCSS: true,            // import page CSS
+                    importCSS: false,            // import page CSS
                     importStyle: false,         // import style tags
                     printContainer: true,       // grab outer container as well as the contents of the selector
                     removeInline: false,        // remove all inline styles from print elements
