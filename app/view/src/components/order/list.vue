@@ -278,66 +278,6 @@
     .print-content{
         display:none;
     }
-    .dialog-content{
-        margin-left:20px;
-        margin-right:20px;
-        overflow:hidden;
-        .dialog-item{
-            margin-top:20px;
-            &.float-right{
-                float:right;
-            }
-            &.el-button{
-                width:100%;
-            }
-            &.add-car{
-                font-size:16px;
-                line-height:2em;
-                border:2px dashed #D3DCE6;
-                padding:0px 10px;
-                margin-bottom:10px;
-                cursor:pointer;
-                .iconfont{
-                    font-size:18px;
-                    position:relative;
-                    top:1px;
-                    margin-right:5px;
-                }
-                &:hover{
-                    border:2px dashed #F7BA2A;
-                }
-            }
-            &.car-list{
-                .car-item{
-                    float:left;
-                    padding:5px 15px;
-                    background-color:#F9FAFC;
-                    border-radius:5px;
-                    color:#1D8CE0;
-                    position:relative;
-                    border:1px solid #58B7FF;
-                    margin-right:10px;
-                    margin-bottom:10px;
-                    .iconfont{
-                        font-size:14px;
-                        cursor:pointer;
-                        font-weight:bold;
-                        position:absolute;
-                        background-color:#58B7FF;
-                        border-radius:20px;
-                        padding:2px;
-                        color:#FFFFFF;
-                        right:0;
-                        top:0;
-                        transform:translate3d(30%,-30%,0);
-                    }
-                }
-            }
-        }
-    }
-    .custom-dialog .el-dialog{
-        width:26%;
-    }
     .address-content{
         margin-left:20px;
         margin-right:20px;

@@ -1,30 +1,29 @@
 <template>
     <div> 
-            <div style="margin-top: 20px">
-                <el-form style="margin-top:20px">
-                    <!--<el-form-item label="库存紧张">
-                        <el-tag  color="red">  </el-tag>
-                    </el-form-item>-->
-                    <el-form-item label="已选商品(含运费):">
-                        <span>{{totalPrice | priceFilter}}</span>
-                        <span>（采购吨位：{{totalWeight}}）</span>
-                        <el-button @click="submitOrder()" type="warning">提交</el-button>
-                    </el-form-item>
-                </el-form>
-            
-            </div> 
-            <div class="sea-title clearfix">
-                <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
-            </div>
-            <div class="tb-wrap">
-                <el-table
-                    ref="multipleTable"
-                    :data="cartList.row"
-                    border
-                    tooltip-effect="dark"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange"
-                    v-loading.body="loading">
+        <div style="margin-top: 20px">
+            <el-form style="margin-top:20px">
+                <!--<el-form-item label="库存紧张">
+                    <el-tag  color="red">  </el-tag>
+                </el-form-item>-->
+                <el-form-item label="已选商品(含运费):">
+                    <span>{{totalPrice | priceFilter}}</span>
+                    <span>（采购吨位：{{totalWeight}}）</span>
+                    <el-button @click="submitOrder()" type="warning">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </div> 
+        <div class="sea-title clearfix">
+            <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
+        </div>
+        <div class="tb-wrap">
+            <el-table
+                ref="multipleTable"
+                :data="cartList.row"
+                border
+                tooltip-effect="dark"
+                style="width: 100%"
+                @selection-change="handleSelectionChange"
+                v-loading.body="loading">
                 <el-table-column type="selection" width="">
                 </el-table-column>
                 <el-table-column prop="spec" label="规格" width="140px" v-if="checkedTBhead.indexOf('规格') > -1">
@@ -101,7 +100,7 @@
             </el-checkbox-group>
             </div>
         </el-dialog>
-  </div>
+    </div>
 </template>
 <style lang="less">
     .zues-dialog{

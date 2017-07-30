@@ -87,18 +87,14 @@
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="stockParams.page" layout=" prev, pager, next" :page-size="15" :total="stockInfo.totalCount">
       </el-pagination>
     </div>
-    <el-dialog title="" v-model="dlgShopVisible" size="tiny">
-      <el-form :model="cartParams" label-width="90px" label-position="left">
-        <el-form-item label="需求数量：">
-          <el-input style="width:90%" v-model="cartParams.chartAmount" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input style="width:90%" v-model="cartParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="warning" @click="confirmTocart">确 定</el-button>
-        <el-button @click="dlgShopVisible = false">取 消</el-button>
+    <el-dialog title="" v-model="dlgShopVisible" size="tiny" class="custom-dialog">
+      <div class="dialog-content">
+        <el-input v-model="cartParams.chartAmount" placeholder="必填" auto-complete="off">
+          <template slot="prepend">数量</template>
+        </el-input>
+        <el-input class="dialog-item" placeholder="填写备注" v-model="cartParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
+        <el-button type="info" class="dialog-item float-right" @click="confirmTocart">确 定</el-button>
+        <el-button @click="dlgShopVisible = false" class="dialog-item float-right">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog title="" v-model="dlgTbheadVisible" size="tiny">

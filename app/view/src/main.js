@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import '../static/js/utils'
 import 'element-ui/lib/theme-default/index.css'
 import '../static/font/iconfont.css'
+import '../static/font/base.less'
 
 Vue.config.productionTip = false
 
