@@ -60,24 +60,22 @@
           >
           </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
-            <el-form :model="demandParams" label-width="100px" label-position="left">
-                <el-form-item label="工期：" :required="true">
-                    <el-input style="width:85%" v-model="demanUpdateParams.timeConsume" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="出厂价：" :required="true">
-                    <el-input style="width:85%" type="number" @input="computePrice" v-model="demanUpdateParams.factoryPrice" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="运费：" :required="true">
-                    <el-input style="width:85%" type="number" @input="computePrice" v-model="demanUpdateParams.freight" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="总成本：" :required="true">
-                    <el-input style="width:85%" type="number" :readonly="true" v-model="demanUpdateParams.totalPrice" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button  type="warning" @click="submitUpdate">提 交</el-button>
-                <el-button  type="warning" @click="dlgDemandVisible = false">取 消</el-button>
+        <el-dialog title="" v-model="dlgDemandVisible" size="tiny" class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="demanUpdateParams.timeConsume" auto-complete="off">
+                    <template slot="prepend">工期</template>
+                </el-input>
+                <el-input type="number" @input="computePrice" v-model="demanUpdateParams.factoryPrice" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">出厂价</template>
+                </el-input>
+                <el-input type="number" @input="computePrice" v-model="demanUpdateParams.freight" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">运费</template>
+                </el-input>
+                <el-input type="number" :readonly="true" v-model="demanUpdateParams.totalPrice" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">总成本</template>
+                </el-input>
+                <el-button  type="info" @click="submitUpdate" class="dialog-item float-right">提 交</el-button>
+                <el-button  type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
        </el-dialog>
   </div>

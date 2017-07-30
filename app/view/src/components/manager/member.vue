@@ -67,7 +67,7 @@
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column label="操作" width='250px' align="center" property="id" v-if="adminAuthority">
+                <el-table-column label="操作" width='280px' align="center" property="id" v-if="adminAuthority">
                     <template scope="scope">
                         <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
                         <el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>

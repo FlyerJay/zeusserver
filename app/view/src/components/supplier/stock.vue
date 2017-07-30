@@ -44,7 +44,7 @@
             <el-table-column property="type" label="类别"></el-table-column>
             <el-table-column property="supplierName" label="供应商"></el-table-column>
             <el-table-column property="inventoryAmount" label="库存数量(件)"></el-table-column>
-            <el-table-column property="perAmount" label="单件支数"></el-table-column>
+            <el-table-column property="perAmount" label="包装"></el-table-column>
             <el-table-column property="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter"></el-table-column>
             <el-table-column property="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter"></el-table-column>
             <el-table-column label="操作" align="center">
@@ -57,15 +57,13 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchInvenParam.page" layout=" prev, pager, next" :page-size="15" :total="inventory.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgStockVisible">  
-            <el-form :model="newStockParam" label-width="120px" label-position="left">
-                <el-form-item label="修改后的库存数为：">
-                <el-input style="width:90%" v-model="newStockParam.inventoryAmount" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="warning" @click="confirmChangeStock(newStockParam.row)">确 定</el-button>
-                <el-button @click="dlgStockVisible = false">取 消</el-button>
+        <el-dialog title="" v-model="dlgStockVisible" class="custom-dialog">  
+            <div class="dialog-content">
+                <el-input v-model="newStockParam.inventoryAmount" auto-complete="off" type="number">
+                    <template slot="prepend">库存数量</template>
+                </el-input>
+                <el-button type="info" @click="confirmChangeStock(newStockParam.row)" class="dialog-item float-right">确 定</el-button>
+                <el-button type="warning" @click="dlgStockVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
     </div>

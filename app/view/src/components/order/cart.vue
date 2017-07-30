@@ -73,25 +73,22 @@
         <el-dialog
             v-model="dialogVisible"
             size="tiny"
-            custom-class="zues-dialog">
-            <el-form :model="changeParams" label-width="80px" label-position="left">
-                <el-form-item label="采购数量" >
-                    <el-input style="width:85%" @input="computePrice"  v-model="changeParams.chartAmount" auto-complete="off" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="采购议价">
-                    <el-input style="width:85%" @input="computePrice" v-model="changeParams.chartAdjust" auto-complete="off" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="总价">
-                    <el-input style="width:85%" v-model="changeParams.newPrice" :readonly="true" auto-complete="off" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="备注">
-                    <el-input style="width:85%" v-model="changeParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="warning" @click="submitChange(changeParams.row)">确 定</el-button>
-                <el-button @click="dialogVisible = false">取 消</el-button>
-            </div>
+            class="custom-dialog">
+                <div class="dialog-content">
+                    <el-input @input="computePrice"  v-model="changeParams.chartAmount" auto-complete="off" type="number">
+                        <template slot="prepend">采购数量</template>
+                    </el-input>
+                    <el-input class="dialog-item" @input="computePrice" v-model="changeParams.chartAdjust" auto-complete="off" type="number">
+                        <template slot="prepend">采购议价</template>
+                    </el-input>
+                    <el-input class="dialog-item" v-model="changeParams.newPrice" :readonly="true" auto-complete="off" type="number">
+                        <template slot="prepend">总价</template>
+                    </el-input>
+                    <el-input class="dialog-item" placeholder="填写备注" v-model="changeParams.comment" :maxlength="100" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off">
+                    </el-input>
+                    <el-button type="info" @click="submitChange(changeParams.row)" class="dialog-item float-right">确 定</el-button>
+                    <el-button type="warning" @click="dialogVisible = false" class="dialog-item float-right">取 消</el-button>
+                </div>
         </el-dialog>
         <el-dialog title="" v-model="dlgTbheadVisible" size="tiny">
             <div class="tbhead-wrap">
@@ -103,9 +100,6 @@
     </div>
 </template>
 <style lang="less">
-    .zues-dialog{
-        width:300px!important;
-    }
 </style>
 <script>
     import {

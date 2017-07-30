@@ -50,86 +50,86 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgDemandVisible" size="tiny">
-            <el-form :model="demandParams" label-width="100px" label-position="left">
-                <el-form-item label="规格：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.spec" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="类别：" :required="true">
-                    <el-select v-model="demandParams.type" placeholder="请选择">
-                        <el-option v-for="item in typeArray" :key="item" :label="item" :value="item">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="需求数量(支)：" :required="true">
-                    <el-input style="width:85%" v-model="demandcount" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="需求吨位：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.demandWeight" auto-complete="off"></el-input>
-                    <span class="sub-txt">（重量默认按6m计算）</span>
-                </el-form-item>
-                <el-form-item label="目的地：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.destination" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="客户：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.customerName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话：" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.customerPhone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="备注" :required="true">
-                    <el-input style="width:85%" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="warning" @click="submitDdemand">提 交</el-button>
-                <el-button type="warning" @click="dlgDemandVisible = false">取 消</el-button>
+        <el-dialog title="" v-model="dlgDemandVisible" size="tiny" class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="demandParams.spec" auto-complete="off">
+                    <template slot="prepend">规格</template>
+                </el-input>
+                <div class="select-control clearfix dialog-item">
+                    <el-row :gutter="0">
+                    <el-col :span="5"><div class="select-prepend">类别</div></el-col>
+                    <el-col :span="19">
+                        <el-select v-model="demandParams.type" width="220px" placeholder="请选择">
+                            <el-option v-for="item in typeArray" :key="item" :label="item" :value="item">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    </el-row>
+                </div>
+                <el-input v-model="demandcount" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">需求数量</template>
+                </el-input>
+                <el-input v-model="demandParams.demandWeight" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">需求吨位</template>
+                </el-input>
+                <span class="sub-txt">（重量默认按6m计算）</span>
+                <el-input v-model="demandParams.destination" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">目的地</template>
+                </el-input>
+                <el-input v-model="demandParams.customerName" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">客户</template>
+                </el-input>
+                <el-input v-model="demandParams.customerPhone" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">电话号码</template>
+                </el-input>
+                <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
+                <el-button type="info" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
+                <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="" v-model="dlDemandView" size="tiny">
-            <el-form :model="demandDatas" label-width="80px" label-position="left">
-                <el-form-item label="规格：">
-                    <el-input style="width:85%" v-model="demandDatas.spec" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="类别：">
-                    <el-input style="width:85%" v-model="demandDatas.type" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="需求数量(支)：">
-                    <el-input style="width:85%" v-model="demandDatas.demandAmount" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="需求吨位：">
-                    <el-input style="width:85%" v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="目的地：">
-                    <el-input style="width:85%" v-model="demandDatas.destination" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="客户：">
-                    <el-input style="width:85%" v-model="demandDatas.customerName" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话：">
-                    <el-input style="width:85%" v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="备注" :required="true">
-                    <el-input style="width:85%" v-model="demandDatas.comment" :readonly="true" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
+        <el-dialog title="" v-model="dlDemandView" size="tiny" class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="demandDatas.spec" :readonly="true" auto-complete="off">
+                    <template slot="prepend">规格</template>
+                </el-input>
+                <el-input v-model="demandDatas.type" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">类别</template>
+                </el-input>
+                <el-input v-model="demandDatas.demandAmount" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">需求数量</template>
+                </el-input>
+                <el-input v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">需求吨位</template>
+                </el-input>
+                <el-input v-model="demandDatas.destination" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">目的地</template>
+                </el-input>
+                <el-input v-model="demandDatas.customerName" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">客户</template>
+                </el-input>
+                <el-input v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off" class="dialog-item">
+                    <template slot="prepend">客户</template>
+                </el-input>
+                <el-input placeholder="备注" v-model="demandDatas.comment" :readonly="true" class="dialog-item" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
+            </div>
         </el-dialog>
     
-        <el-dialog title="" v-model="dlFeedback" size="tiny">
-            <el-form :model="demandDatas" label-width="115px" label-position="left">
-                <el-form-item label="成交结果：">
-                    <el-select v-model="FeedbackParams.dealStatus" placeholder="请选择">
-                        <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="原因：">
-                    <el-input style="width:85%" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="warning" @click="submitFeedback">提 交</el-button>
-                <el-button type="warning" @click="dlFeedback = false">取 消</el-button>
+        <el-dialog title="" v-model="dlFeedback" size="tiny" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="select-control clearfix dialog-item">
+                    <el-row :gutter="0">
+                    <el-col :span="7"><div class="select-prepend">成交结果</div></el-col>
+                    <el-col :span="17">
+                        <el-select v-model="FeedbackParams.dealStatus" placeholder="请选择">
+                            <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    </el-row>
+                </div>
+                <el-input placeholder="请填写原因" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off" class="dialog-item" ></el-input>
+                <el-button type="info" @click="submitFeedback" class="dialog-item float-right">提 交</el-button>
+                <el-button type="warning" @click="dlFeedback = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -173,7 +173,8 @@ export default {
                 customerPhone: '',
                 timeConsume: 0,
                 comment: '',
-                demandAmount: 0
+                demandAmount: 0,
+                state: 0,
             },
             FeedbackParams: {
                 demandId: '',

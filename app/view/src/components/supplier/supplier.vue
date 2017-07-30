@@ -39,11 +39,11 @@
             icon: 'icon-baojia',
             name: '需求报价'
           },
-          {
-            url: '/supplier/pricechart',
-            icon: 'icon-trend',
-            name: '价格走势',
-          }
+          // {
+          //   url: '/supplier/pricechart',
+          //   icon: 'icon-trend',
+          //   name: '价格走势',
+          // }
         ]
       }
     },

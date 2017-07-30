@@ -57,82 +57,83 @@
     </el-tabs>
      
     <!--供应商信息录入dlg--> 
-    <el-dialog title="" v-model="dlgSupVisible">
-      <el-form :model="newSupParam" label-width="110px" label-position="left">
-        <el-form-item label="供应商名称：" :required="true">
-          <el-input  style="width:90%" v-model="newSupParam.supplierName" auto-complete="off" ></el-input>
-        </el-form-item>
-        <el-form-item label="所在地：" :required="true">
-          <el-select v-model="newSupParam.address" placeholder="请选择活动区域" >
-            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="运费：" :required="true">
-          <el-input style="width:90%" v-model="newSupParam.freight" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="政策下浮：" :required="true">
-          <el-input style="width:90%" v-model="newSupParam.benifit" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="warning" @click="addSup">确 定</el-button>
-        <el-button @click="dlgSupVisible = false">取 消</el-button>
+    <el-dialog title="" v-model="dlgSupVisible" class="custom-dialog">
+      <div class="dialog-content">
+        <el-input v-model="newSupParam.supplierName" auto-complete="off" >
+          <template slot="prepend">供应商名称</template>
+        </el-input>
+        <div class="select-control clearfix dialog-item">
+          <el-row :gutter="0">
+          <el-col :span="5"><div class="select-prepend">所在地</div></el-col>
+          <el-col :span="19">
+              <el-select v-model="newSupParam.address" placeholder="请选择活动区域" >
+                <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
+              </el-select>
+          </el-col>
+          </el-row>
+        </div>
+        <el-input v-model="newSupParam.freight" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">运费</template>
+        </el-input>
+        <el-input v-model="newSupParam.benifit" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">政策下浮</template>
+        </el-input>
+        <el-button type="info" @click="addSup" class="dialog-item float-right">确 定</el-button>
+        <el-button type="warning" @click="dlgSupVisible = false" class="dialog-item float-right">取 消</el-button>
       </div>
     </el-dialog>
-
     <!--运费信息录入dlg-->
-    <el-dialog title="" v-model="fredlgAddshow" >
-      <el-form :model="freParam" label-width="80px" label-position="left" >
-        <el-form-item label="所在地：">
-          <el-input style="width:90%" v-model="freParam.address" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="运费：">
-          <el-input style="width:90%" v-model="freParam.freight" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="warning" @click="addFre()">确 定</el-button>
-        <el-button @click="fredlgAddshow = false">取 消</el-button>
+    <el-dialog title="" v-model="fredlgAddshow" class="custom-dialog">
+      <div class="dialog-content">
+        <el-input v-model="freParam.address" auto-complete="off">
+          <template slot="prepend">所在地</template>  
+        </el-input>
+        <el-input v-model="freParam.freight" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">运费</template>
+        </el-input>
+        <el-button type="info" @click="addFre()" class="dialog-item float-right">确 定</el-button>
+        <el-button type="warning" @click="fredlgAddshow = false" class="dialog-item float-right">取 消</el-button>
       </div>
     </el-dialog>
 
     <!--修改运费信息对话框-->
-    <el-dialog title="" v-model="fredlgChangeshow">
-      <el-form :model="changeFreParam" label-width="80px" label-position="left">
-        <el-form-item label="所在地：">
-          <el-input style="width:90%" v-model="changeFreParam.address" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="运费：">
-          <el-input style="width:90%" v-model="changeFreParam.freight" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="warning" @click="changeFre()">确 定</el-button>
-        <el-button @click="fredlgChangeshow = false">取 消</el-button>
+    <el-dialog title="" v-model="fredlgChangeshow" class="custom-dialog">
+      <div class="dialog-content">
+        <el-input v-model="changeFreParam.address" auto-complete="off">
+          <template slot="prepend">所在地</template>
+        </el-input>
+        <el-input v-model="changeFreParam.freight" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">运费</template>
+        </el-input>
+        <el-button type="info" @click="changeFre()" class="dialog-item float-right">确 定</el-button>
+        <el-button type="warning" @click="fredlgChangeshow = false" class="dialog-item float-right">取 消</el-button>
       </div>
     </el-dialog>
 
     <!--修改供应商信息-->
-    <el-dialog title="" v-model="dlgChangeSupVisible">
-      <el-form :model="changeSupParam" label-width="110px" label-position="left">
-        <el-form-item label="供应商名称：">
-          <el-input style="width:90%" v-model="changeSupParam.supplierName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="所在地：">
-          <el-select v-model="changeSupParam.address" placeholder="请选择活动区域">
-            <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="运费：">
-          <el-input style="width:90%" v-model="changeSupParam.freight" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="政策下浮：" >
-          <el-input style="width:90%" v-model="changeSupParam.benifit" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="warning" @click="changeSup(changeSupParam.row)">确 定</el-button>
-        <el-button @click="dlgChangeSupVisible = false">取 消</el-button>
+    <el-dialog title="" v-model="dlgChangeSupVisible" class="custom-dialog">
+      <div class="dialog-content">
+        <el-input v-model="changeSupParam.supplierName" auto-complete="off">
+          <template slot="prepend">供应商名称</template>
+        </el-input>
+        <div class="select-control clearfix dialog-item">
+          <el-row :gutter="0">
+          <el-col :span="5"><div class="select-prepend">所在地</div></el-col>
+          <el-col :span="19">
+              <el-select v-model="changeSupParam.address" placeholder="请选择活动区域">
+                <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
+              </el-select>
+          </el-col>
+          </el-row>
+        </div>
+        <el-input v-model="changeSupParam.freight" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">运费</template>
+        </el-input>
+        <el-input v-model="changeSupParam.benifit" auto-complete="off" type="number" class="dialog-item">
+          <template slot="prepend">政策下浮</template>
+        </el-input>
+        <el-button type="info" @click="changeSup(changeSupParam.row)" class="dialog-item float-right">确 定</el-button>
+        <el-button type="warning" @click="dlgChangeSupVisible = false" class="dialog-item float-right">取 消</el-button>
       </div>
     </el-dialog>
   </div>

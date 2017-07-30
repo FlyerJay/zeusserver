@@ -15,7 +15,7 @@
     	     	<el-table-column prop="orderPrice" label="总价"></el-table-column>
     	     	<el-table-column prop="orderAdjust" label="采购下浮总额"></el-table-column>
     	     	<el-table-column prop="userId" label="下单人"></el-table-column>
-    	     	<el-table-column label="操作" width="140px">
+    	     	<el-table-column label="操作" width="160px">
     	     		<template scope="scope">
                 <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
     	     			<el-button size="small" @click="review(scope.index, scope.row)" type="warning">审核</el-button>
