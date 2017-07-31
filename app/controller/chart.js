@@ -4,7 +4,15 @@ module.exports = app => {
   class ChartController extends app.Controller {
     * list() {//查询购物车列表
       const ctx = this.ctx;
-      ctx.body = yield ctx.model.Chart.getList(ctx.query);
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(6) === '0' && userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Chart.getList(ctx.query);
+      }
     }
     * addToChart() {//添加到购物车
       const ctx = this.ctx;

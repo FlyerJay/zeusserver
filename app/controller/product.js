@@ -5,7 +5,7 @@ module.exports = app => {
     * list() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(2) === '0'){
+      if(userRole.charAt(2) === '0' && userRole.charAt(6) === '0'){
         ctx.body = {
           code:-1,
           msg:"抱歉，没有权限进行该操作"
