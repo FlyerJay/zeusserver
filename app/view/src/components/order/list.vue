@@ -155,13 +155,13 @@
             size="tiny"
             class="custom-dialog">
             <div class="dialog-content">
-                <el-input v-model="carParams.plate" class="dialog-item" placeholder="必填">
+                <el-input v-model="carParams.plate" placeholder="必填">
                     <template slot="prepend">车牌号码</template>
                 </el-input>
                 <el-input v-model="carParams.phone" class="dialog-item" placeholder="必填">
                     <template slot="prepend">电话号码</template>
                 </el-input>
-                <el-input v-model="carParams.linkName" placeholder="可不填">
+                <el-input v-model="carParams.linkName" class="dialog-item" placeholder="可不填">
                     <template slot="prepend">货车名称</template>
                 </el-input>
                 <el-button type="info" class="dialog-item float-right" @click="submitCar">确定</el-button>
