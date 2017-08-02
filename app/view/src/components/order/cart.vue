@@ -14,6 +14,7 @@
         </div> 
         <div class="sea-title clearfix">
             <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
+            <el-button type="success" @click="dlgAdjustVisible = true" style="float:right;margin-right:10px" size="small"><i class="iconfont icon-custom">&nbsp;</i>采购议价统一下浮</el-button>
         </div>
         <div class="tb-wrap">
             <el-table
@@ -97,6 +98,15 @@
             </el-checkbox-group>
             </div>
         </el-dialog>
+        <el-dialog title="" v-model="dlgAdjustVisible" size="tiny">
+            <div class="dialog-content">
+                <el-input v-model="adjustnum" type="text" auto-complete="off">
+                    <template slot="prepend">下浮金额</template>
+                </el-input>
+                <el-button type="info" class="dialog-item float-right" @click="confirmAdjust">确 定</el-button>
+                <el-button type="warning" @click="dlgAdjustVisible = false" class="dialog-item float-right">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <style lang="less">
@@ -158,6 +168,8 @@
                 checkedTBhead: ['规格', '长度',	'类别', '供应商', '数量', '包装', '吨位', '开单价', '采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
                 TBheads: ['规格',	'长度', '类别',	'供应商', '数量', '包装', '吨位', '开单价',	'采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
                 dialogVisible: false,
+                dlgAdjustVisible: false,
+                adjustnum: 0,
                 loading: true,
                 totalPrice: 0,
                 totalWeight: 0,
@@ -258,6 +270,13 @@
                 this.changeParams.oldPrice = row.totalPrice;
                 this.changeParams.comment = row.comment;
                 this.changeParams.row = row;
+            },
+            confirmAdjust() {
+                const self = this;
+                self.cartList.row.map((v)=>{
+                    v.chartAdjust = v.chartAdjust - self.adjustnum
+                });
+                self.dlgAdjustVisible = false;
             },
             deleteChart(index,row) {
                 console.log(row);
