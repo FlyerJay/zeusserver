@@ -39,7 +39,7 @@ module.exports = app => {
         },
         address: {
             type: STRING(50),
-            allowNull: false,
+            allowNull: true,
             comment:"准确地址"
         },
         phone: {
@@ -81,10 +81,6 @@ module.exports = app => {
                 if(!options.addressName) return {
                     code: -1,
                     msg: "请填写地址名称"
-                }
-                if(!options.address) return {
-                    code: -1,
-                    msg: "请填写详细地址",
                 }
 
                 yield this.create(options);

@@ -4,8 +4,8 @@
 </template>
 <style lang="less">
     .line-chart{
-        height:600px;
-        width:800px;
+        width:100%;
+        min-height:400px;
     }
 </style>
 <script>

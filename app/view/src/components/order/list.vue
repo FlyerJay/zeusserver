@@ -128,7 +128,7 @@
                 <el-input v-model="addressParams.addressName" placeholder="必填，可以是公司名称，收件人名称">
                     <template slot="prepend">地址名称</template>
                 </el-input>
-                <el-input v-model="addressParams.address" class="dialog-item" placeholder="必填，如果没有可以和地址名称一样">
+                <el-input v-model="addressParams.address" class="dialog-item" placeholder="">
                     <template slot="prepend">详细地址</template>
                 </el-input>
                 <el-input v-model="addressParams.linkName" class="dialog-item">
@@ -155,14 +155,14 @@
             size="tiny"
             class="custom-dialog">
             <div class="dialog-content">
-                <el-input v-model="carParams.linkName" placeholder="必填，司机的名字或其他用以区分的名称">
-                    <template slot="prepend">货车名称</template>
-                </el-input>
                 <el-input v-model="carParams.plate" class="dialog-item" placeholder="必填">
                     <template slot="prepend">车牌号码</template>
                 </el-input>
                 <el-input v-model="carParams.phone" class="dialog-item" placeholder="必填">
                     <template slot="prepend">电话号码</template>
+                </el-input>
+                <el-input v-model="carParams.linkName" placeholder="可不填">
+                    <template slot="prepend">货车名称</template>
                 </el-input>
                 <el-button type="info" class="dialog-item float-right" @click="submitCar">确定</el-button>
             </div>
@@ -174,7 +174,7 @@
             @close="onCarClose">
             <div class="address-content">
                 <div style="margin-bottom:15px;">
-                    <el-input placeholder="输入名称进行检索" v-model="carQuery.linkName">
+                    <el-input placeholder="输入车牌进行检索" v-model="carQuery.plate">
                         <template slot="append">
                             <el-button type="success" icon="search" @click="searchCar">搜索</el-button>
                         </template>
@@ -251,15 +251,15 @@
                         <tr v-for="(item,index) in printParams.specs">
                             <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{index+1}}</td>
                             <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.spec}}</td>
-                            <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.long}}</td>
-                            <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.type}}</td>
+                            <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.long}}米</td>
+                            <td style="font-size:10px;width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.type}}</td>
                             <td style="width:15%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.orderAmount}}</td>
                             <td style="width:25%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.comment}}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="comment-container" style="margin-top:20px;font-family:'楷书'">
-                    <div class="comment" style="text-align:center">{{confirmParams.comment}}</div>
+                    <div class="comment" style="text-align:center;font-size:18px;font-weight:bold">{{confirmParams.comment}}</div>
                     <div class="date" style="text-align:right">{{new Date() | dateFilter}}</div>
                 </div>
                 <div class="footer" style="position:absolute;bottom:0px;width:100%;font-size:14px;color:#ccc">
@@ -448,7 +448,7 @@
                     address: '',
                 },
                 carQuery: {
-                    linkName: '',
+                    plate: '',
                     page: 1,
                 },
                 confirmParams: {
@@ -635,7 +635,7 @@
             },
             onCarClose() {
                 this.carQuery.page = 1;
-                this.carQuery.address = '';
+                this.carQuery.plate = '';
             },
             selectAddress(address) {
                 if(this.addressQuery.addressType == 1){
@@ -656,13 +656,6 @@
                 })
             },
             submitCar() {
-                if(!this.carParams.linkName){
-                    this.$message({
-                        type: 'warning',
-                        message: '请填写联系人!',
-                    })
-                    return false;
-                }
                 if(!this.carParams.plate){
                     this.$message({
                         type: 'warning',

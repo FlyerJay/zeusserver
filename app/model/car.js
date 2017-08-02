@@ -22,7 +22,7 @@ module.exports = app => {
         },
         linkName: {
             type: STRING(10),
-            allowNull:false,
+            allowNull:true,
             comment:"联系人",
         },
         plate: {
@@ -44,10 +44,6 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * add(options) {
-                if(!options.linkName) return {
-                    code: -1,
-                    msg: "请填写联系人"
-                }
                 if(!options.plate) return {
                     code: -1,
                     msg: "请填写车牌号"
@@ -86,7 +82,7 @@ module.exports = app => {
             },
             * list(options) {
                 const [$1,$2] = yield [app.model.query(`SELECT * FROM car WHERE
-                linkName LIKE :linkName
+                plate LIKE :plate
                 AND comId = :comId
                 ORDER BY carId DESC
                 LIMIT :start,:offset
@@ -94,16 +90,16 @@ module.exports = app => {
                     replacements:{
                         start: !options.page ? 0 : (options.page - 1) * (options.pageSize?options.pageSize:5),
                         offset: options.pageSize ? options.pageSize:5,
-                        linkName: options.linkName ? `%${options.linkName}%` : `%%`,
+                        plate: options.plate ? `%${options.plate}%` : `%%`,
                         comId: options.comId
                     }
                 }),
-                app.model.query(`SELECT count(1) as count FROM address WHERE
-                linkName LIKE :linkName
+                app.model.query(`SELECT count(1) as count FROM car WHERE
+                plate LIKE :plate
                 AND comId = :comId
                 `,{
                     replacements:{
-                        linkName: options.linkName ? `%${options.linkName}%` : `%%`,
+                        plate: options.plate ? `%${options.plate}%` : `%%`,
                         comId: options.comId
                     }
                 })]
