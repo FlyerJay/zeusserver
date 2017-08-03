@@ -61,6 +61,10 @@ module.exports = app => {
         comment: {
             type:STRING(100),
             comment:"备注"
+        },
+        minPrice: {
+            type:INTEGER,
+            comment:"最低价格"
         }
     },{
         freezeTabName:true,

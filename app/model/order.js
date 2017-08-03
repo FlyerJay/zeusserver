@@ -237,6 +237,7 @@ module.exports = app => {
                                 orderDcrease:Number(v.totalAdjust),
                                 comment: v.comment,
                                 long: v.long,
+                                minPrice: v.minPrice,
                             },{transaction:t})
                             app.model.Chart.destroy({
                                 where:{

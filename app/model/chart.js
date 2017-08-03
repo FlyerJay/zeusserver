@@ -61,6 +61,10 @@ module.exports = app => {
         comment:{
             type:STRING(100),
             comment:"备注",
+        },
+        minPrice:{
+            type:INTEGER,
+            comment:"最低价格",
         }
     },{
         freezeTabName:true,
@@ -78,7 +82,7 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const result = {};
-                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,c.comment,si.spec,si.supplierId,si.long,si.type,si.perAmount,s.supplierName,c.supplierId,c.userId,f.freight,s.benifit,sv.value FROM chart c
+                const [$1,$2] = yield [app.model.query(`SELECT c.chartId,c.chartAmount,c.chartAdjust,c.comment,c.minPrice,si.spec,si.supplierId,si.long,si.type,si.perAmount,s.supplierName,c.supplierId,c.userId,f.freight,s.benifit,sv.value FROM chart c
                 LEFT JOIN supplier_inventory si ON
                 si.supplierId = c.supplierId
                 AND si.type = c.type
@@ -177,6 +181,33 @@ module.exports = app => {
                         }
                     }
                 })
+                const $2 = yield app.model.query(`SELECT (sv.value - s.benifit) as value FROM (SELECT * FROM (SELECT * FROM  supplier_value ORDER BY lastUpdateTime DESC LIMIT 0,100000000) sv GROUP BY supplierId,type,spec) sv
+                    INNER JOIN supplier_inventory si 
+                    ON si.supplierInventoryId = :supplierInventoryId
+                    AND si.spec = sv.spec 
+                    AND si.comId = sv.comId
+                    AND si.type = sv.type
+                    INNER JOIN supplier s
+                    ON s.supplierId = sv.supplierId
+                    AND s.comId = sv.comId
+                    AND s.isDelete = 'N'
+                    INNER JOIN supplier_inventory sii 
+                    ON sii.supplierId = sv.supplierId 
+                    AND sii.spec = sv.spec 
+                    AND sii.type = sv.type 
+                    AND sii.comId = sv.comId
+                    WHERE sv.comId = :comId
+                    AND (sv.value > 0 AND sv.value <> '')
+                    ORDER BY value ASC
+                    LIMIT 0,1`,
+                    {
+                        replacements:{
+                            supplierInventoryId: options.supplierInventoryId,
+                            comId: options.comId
+                        }
+                    }
+                )
+                const minPrice = $2[0][0].value;
                 const result = yield this.create({
                     userId:options.userId,
                     comId:options.comId,
@@ -188,6 +219,7 @@ module.exports = app => {
                     long:inventory.long,
                     createTime:new Date().getTime(),
                     comment:options.comment || '',
+                    minPrice:minPrice
                 });
                 return {
                     code:200,

@@ -98,7 +98,7 @@
             </el-checkbox-group>
             </div>
         </el-dialog>
-        <el-dialog title="" v-model="dlgAdjustVisible" size="tiny">
+        <el-dialog title="" v-model="dlgAdjustVisible" size="tiny" class="custom-dialog">
             <div class="dialog-content">
                 <el-input v-model="adjustnum" type="text" auto-complete="off">
                     <template slot="prepend">下浮金额</template>
