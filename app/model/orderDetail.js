@@ -65,6 +65,14 @@ module.exports = app => {
         minPrice: {
             type:INTEGER,
             comment:"最低价格"
+        },
+        minSupplier:{
+            type:STRING(20),
+            comment:"供应商名字",
+        },
+        minInventory:{
+            type:INTEGER,
+            comment:"最小库存",
         }
     },{
         freezeTabName:true,

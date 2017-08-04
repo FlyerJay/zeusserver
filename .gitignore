@@ -3,9 +3,9 @@ npm-debug.log
 node_modules/
 coverage/
 .idea/
-./config
+config/
 run/
 .DS_Store
 *.swp
-.app/view/build
+app/view/build/
 
