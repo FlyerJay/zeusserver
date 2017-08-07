@@ -155,7 +155,7 @@ export default {
       dlgShopVisible: false,
       dlgTbheadVisible: false,
       loading: true,
-      checkedTBhead: ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作'],
+      checkedTBhead: [],
       TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
     }
   },
@@ -276,7 +276,18 @@ export default {
       return company[val];
     }
   },
+  watch: {
+    checkedTBhead(val) {
+      window.localStorage.setItem('tbhead', this.checkedTBhead)
+    }
+  },
   mounted: function () {
+    var headarr = window.localStorage.getItem('tbhead');
+    if(!headarr.length) {
+      this.checkedTBhead = ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
+    } else {
+      this.checkedTBhead = headarr
+    }
     this.loadStock(this.stockParams)
       .then(() => {
         this.loading = false;

@@ -8,13 +8,13 @@
                 <el-form-item label="已选商品(含运费):">
                     <span>{{totalPrice | priceFilter}}</span>
                     <span>（采购吨位：{{totalWeight}}）</span>
+                    <el-button type="warning" @click="dlgAdjustVisible = true" style="margin-right:10px">采购议价下浮</el-button>
                     <el-button @click="submitOrder()" type="warning">提交</el-button>
                 </el-form-item>
             </el-form>
         </div> 
         <div class="sea-title clearfix">
             <el-button type="success" @click="dlgTbheadVisible = true" style="float:right" size="small"><i class="iconfont icon-custom">&nbsp;</i>自定义表头</el-button>
-            <el-button type="success" @click="dlgAdjustVisible = true" style="float:right;margin-right:10px" size="small"><i class="iconfont icon-custom">&nbsp;</i>采购议价统一下浮</el-button>
         </div>
         <div class="tb-wrap">
             <el-table
@@ -273,8 +273,8 @@
             },
             confirmAdjust() {
                 const self = this;
-                self.cartList.row.map((v)=>{
-                    v.chartAdjust = v.chartAdjust - self.adjustnum
+                self.supplierInventoryIds.map((v)=>{
+                    v.chartAdjust = -self.adjustnum
                 });
                 self.dlgAdjustVisible = false;
             },
