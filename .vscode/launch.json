@@ -25,7 +25,7 @@
         "runtimeExecutable": "npm.cmd"
       },
       "runtimeArgs": [
-        "run", "dev", "--", "--debug"
+        "run", "dev"
       ],
       "port": 5858
     },
@@ -33,12 +33,14 @@
       "name": "Attach Agent",
       "type": "node",
       "request": "attach",
+      "protocol": "inspector",
       "port": 5856
     },
     {
       "name": "Attach Worker",
       "type": "node",
       "request": "attach",
+      "protocol": "inspector",
       "restart": true,
       "port": 10086
     }

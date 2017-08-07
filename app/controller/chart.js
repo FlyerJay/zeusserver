@@ -17,6 +17,7 @@ module.exports = app => {
     * addToChart() {//添加到购物车
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
+      const comId = ctx.cookies.get('comId');
       if(userRole.charAt(5) === '0'){
         ctx.body = {
           code:-1,
@@ -25,7 +26,7 @@ module.exports = app => {
       }else{
         var res = yield ctx.model.Chart.add(ctx.request.body);
         if(res.code == 200){
-          ctx.app.io.emit('update',{demand:{
+          ctx.app.io.in(`${comId}`).emit('update',{demand:{
             submit:0
           }});
         }

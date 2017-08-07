@@ -5,6 +5,8 @@ module.exports = app => {
   //     await app.model.sync();
   // });
   app.io.route('info',app.io.controllers.info);
+  app.io.route('demand',app.io.controllers.demand);
+  app.io.of('/demand',app.io.controllers.demand);
   app.all('*',app.middlewares.user())
   app.get('/zues/api/', 'home.index');
   //文件上传

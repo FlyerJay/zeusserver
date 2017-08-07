@@ -26,7 +26,7 @@ module.exports = appInfo => {
           connectionMiddleware:[],
           packetMiddleware:[],
         },
-        '/update':{
+        '/demand':{
           connectionMiddleware:[],
           packetMiddleware:[],
         }
