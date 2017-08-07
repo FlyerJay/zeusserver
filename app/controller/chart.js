@@ -23,7 +23,13 @@ module.exports = app => {
           msg:"抱歉，没有权限进行该操作"
         }
       }else{
-        ctx.body = yield ctx.model.Chart.add(ctx.request.body);
+        var res = yield ctx.model.Chart.add(ctx.request.body);
+        if(res.code == 200){
+          ctx.app.io.emit('update',{demand:{
+            submit:0
+          }});
+        }
+        ctx.body = res;
       }
     }
     * remove() {//从购物车中删除

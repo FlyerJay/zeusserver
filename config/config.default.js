@@ -20,6 +20,18 @@ module.exports = appInfo => {
       username: 'zues',
       password: 'zues@Kx002',
     },
+    io:{//socket.io配置
+      namespace:{
+        '/':{
+          connectionMiddleware:[],
+          packetMiddleware:[],
+        },
+        '/update':{
+          connectionMiddleware:[],
+          packetMiddleware:[],
+        }
+      }
+    },
     proxyworker:{
       port: 10086,
     },

@@ -16,6 +16,7 @@
     "element-ui": "^1.2.9",
     "jquery": "^2.1.4",
     "printthis": "^0.1.5",
+    "socket.io-client": "^2.0.3",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1",
     "vuex": "^1.0.1"

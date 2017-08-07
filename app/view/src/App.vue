@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import topNav from './components/common/topnav'
+    import topNav from './components/common/topnav';
     import {
         updateForm,
     } from './vuex/action'
@@ -46,6 +46,7 @@
                 var userId = this.getCookie('userId');
                 var comId = this.getCookie('comId');
                 var userRole = this.getCookie('userRole');
+                this.socket.emit('info',info);
                 var info = {
                     userId: userId,
                     comId: comId,

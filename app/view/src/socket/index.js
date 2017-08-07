@@ -1,0 +1,1 @@
+export default require('socket.io-client')('http://127.0.0.1:7001');
