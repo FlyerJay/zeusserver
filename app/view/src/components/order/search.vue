@@ -286,7 +286,7 @@ export default {
     if(!headarr) {
       this.checkedTBhead = ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
     } else {
-      this.checkedTBhead = headarr
+      this.checkedTBhead = headarr.split(',');
     }
     this.loadStock(this.stockParams)
       .then(() => {
