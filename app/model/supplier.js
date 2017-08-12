@@ -131,10 +131,11 @@ module.exports = app => {
                 var lastBenifit = result.dataValues.benifit;
                 for(var props in options){
                     if(props == 'freight'){
-                        yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address',{
+                        yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address AND comId = :comId',{
                             replacements:{
-                                address:options.address?options.address:'',
-                                freight:options.freight - 0
+                                address: options.address?options.address:'',
+                                freight: options.freight - 0,
+                                comId: options.comId,
                             }
                         })
                     }
