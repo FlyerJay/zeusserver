@@ -9,30 +9,15 @@ module.exports = app => {
     const { STRING, INTEGER, DOUBLE, BIGINT } = app.Sequelize;
 
     return app.model.define('Demand',{
-        demandId: {
-            type: INTEGER,
+        demandNo:{
+            type: STRING(20),
+            allowNull: false,
             primaryKey: true,
-            allowNull:false,
-            autoIncrement: true,
-            comment:"定制需求主键"
+            comment: "需求编号",
         },
         comId: {
             type: STRING(2),
             comment:"公司编号(关联公司信息)"
-        },
-        spec: {
-            type: STRING(20),
-            allowNull:false,
-            comment:"规格"
-        },
-        type: {
-            type:STRING(10),
-            allowNull:false,
-            comment:"类型",
-        },
-        material: {
-            type: STRING(10),
-            comment:"材质"
         },
         demandWeight: {
             type: INTEGER,
@@ -46,13 +31,9 @@ module.exports = app => {
             type: STRING(20),
             comment:"业务员"
         },
-        factoryPrice:{
-            type: DOUBLE(10,2),
-            comment:"出厂价"
-        },
-        freight:{
+        totalFreight:{
             type:DOUBLE(10,2),
-            comment:"运费"
+            comment:"总运费"
         },
         customerName:{
             type:STRING(20),
@@ -70,10 +51,6 @@ module.exports = app => {
             type:DOUBLE(10,2),
             comment:"总成本"
         },
-        dealStatus:{
-            type:INTEGER,
-            comment:"成交状态:0:未成交;1:成交成功;2:成交失败"
-        },
         dealReason:{
             type:STRING(100),
             comment:"状态说明"
@@ -90,6 +67,10 @@ module.exports = app => {
             type:BIGINT(15),
             comment:"创建时间"
         },
+        priceTime: {
+            type:BIGINT(15),
+            comment:"报价时间"
+        },
         state: {
             type: INTEGER,
             allowNull: false,
@@ -102,39 +83,83 @@ module.exports = app => {
 		tableName:"demand",
 		timestamps:false,
         classMethods:{
+            * countDemand(options){
+                const submit = yield this.count({
+                    where: {
+                        state: 0,
+                        comId: options.comId,
+                    }
+                })
+                const price = yield this.count({
+                    where: {
+                        state: 1,
+                        comId: options.comId,
+                    }
+                })
+                const unDeal = yield this.count({
+                    where: {
+                        state: 2,
+                        comId: options.comId,
+                    }
+                })
+                const deal = yield this.count({
+                    where: {
+                        state: 3,
+                        comId: options.comId,
+                    }
+                })
+                app.io.in(`${comId}`).emit('update',{demand:{
+                    submit,price,unDeal,deal
+                }});
+            },
             * add(options){
-                if(!options.comId) return {
-                    code:-1,
-                    msg:"缺少公司信息"
-                };
-                if(!options.spec) return {
-                    code:-1,
-                    msg:"缺少规格"
+                if(!options.demandDetails) return {
+                    code: -1,
+                    msg: "请补充需求明细"
                 }
-                if(!options.type) return {
-                    code:-1,
-                    msg:"缺少类型"
-                }
-                if(!options.userId) return {
-                    code:-1,
-                    msg:"缺少业务员"
-                }
-                const data = yield this.create(Object.assign(options,{dealStatus:0,createTime:+new Date()}));
-                return {
-                    code:200,
-                    data:data,
-                    msg:"添加定制化需求成功"
-                }
+                var self = this;
+                const randomNo = `D${options.comId}${new Date().getTime()}`;
+                return app.model.transaction(async (t)=>{
+                    return await self.create(Object.assign(options,{
+                        state: 0,
+                        demandNo: randomNo,
+                        createTime: +new Date(),
+                    },{transaction:t}).then((res)=>{
+                        var demandDetails = options.demandDetails;
+                        return Promise.all(demandDetails.map((v)=>{
+                            app.model.demandDetail.create({
+                                demandNo: randomNo,
+                                spec: v.spec,
+                                type:v.type,
+                                demandAmount:Number(v.demandAmount),
+                                factoryPrice:Number(v.factoryPrice),
+                                demandWeight:Number(v.demandWeight),
+                                freight: Number(v.freight),
+                            },{transaction:t})
+                        }));
+                    }));
+                }).then((res)=>{
+                    this.countDemand(options);
+                    return {
+                        code:200,
+                        msg:"需求提交成功"
+                    }
+                }).catch((err)=>{
+                    return {
+                        code:-1,
+                        msg:"需求提交失败"
+                    }
+                })
             },
             * update(options){
-                if(!options.demandId) return {
+                if(!options.demandNo) return {
                     code:-1,
                     msg:"缺少查询主键"
                 }
                 const result = yield this.findOne({
                     where:{
                         demandId:{
-                            $eq:options.demandId
+                            $eq:options.demandNo
                         }
                     }
                 })
@@ -143,6 +168,7 @@ module.exports = app => {
                     result[arr] = options[arr];
                 }
                 const data = yield result.save();
+                this.countDemand(options);
                 return {
                     code:200,
                     msg:"更新数据成功",
@@ -150,14 +176,14 @@ module.exports = app => {
                 }
             },
             * remove(options){
-                if(!options.demandId) return {
+                if(!options.demandNo) return {
                     code:-1,
                     msg:"缺少查询主键"
                 }
                 yield this.destroy({
                     where:{
                         demandId:{
-                            $in:options.demandId.split(',')
+                            $in:options.demandNo.split(',')
                         }
                     }
                 })
@@ -167,10 +193,6 @@ module.exports = app => {
                 }
             },
             * list(options){
-                if(!options.comId) return {
-                    code:-1,
-                    msg:"缺少公司信息"
-                }
                 const list = yield this.findAndCountAll({
                     offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
                     limit:options.pageSize?options.pageSize:15,
@@ -178,15 +200,17 @@ module.exports = app => {
                         comId:{
                             $eq:options.comId
                         },
-                        spec:{
-                            $like:options.spec?`%${options.spec}%`:'%%'
-                        },
                         createTime:{
                             $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
                         },
                         userId:{
                             $eq:options.userId,
-                        }
+                        },
+                        state: (function(){
+                            return options.state ? {
+                                $eq: options.state
+                            } : '';
+                        })()
                     }
                 })
                 return {
@@ -212,12 +236,14 @@ module.exports = app => {
                         comId:{
                             $eq:options.comId
                         },
-                        spec:{
-                            $like:options.spec?`%${options.spec}%`:'%%'
-                        },
                         createTime:{
                             $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
                         },
+                        state: (function(){
+                            return options.state ? {
+                                $eq: options.state
+                            } : '';
+                        })()
                     }
                 })
                 return {

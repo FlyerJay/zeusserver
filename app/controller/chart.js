@@ -25,11 +25,6 @@ module.exports = app => {
         }
       }else{
         var res = yield ctx.model.Chart.add(ctx.request.body);
-        if(res.code == 200){
-          ctx.app.io.in(`${comId}`).emit('update',{demand:{
-            submit:0
-          }});
-        }
         ctx.body = res;
       }
     }

@@ -16,10 +16,10 @@ module.exports = app => {
             allowNull:false,
             comment:"需求明细Id",
         },
-        demandId: {
-            type: INTEGER,
-            allowNull:false,
-            comment:"需求ID，与需求表作关联"
+        demandNo: {
+            type: STRING(20),
+            allowNull: false,
+            comment: "需求编号",
         },
         spec: {
             type: STRING(16),
@@ -39,12 +39,21 @@ module.exports = app => {
         perAmount: {
             type:INTEGER,
             allowNull:false,
+            default: 0,
             comment:"单件支数"
         },
         demandWeight: {
             type: STRING(20),
             allowNull: true,
             comment:"需求重量"
+        },
+        factoryPrice: {
+            type: INTEGER(11),
+            comment: "出厂价",
+        },
+        freight: {
+            type: INTEGER(11),
+            comment: "运费",
         },
         comment: {
             type: STRING(50),
