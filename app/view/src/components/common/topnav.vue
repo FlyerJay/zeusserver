@@ -2,6 +2,9 @@
   <div class="h-contain clearfix">
     <ul class="nav clearfix">
       <li class="nav-item">
+        <a href="#/demand/manage" :class="[ mainRoute === 'demand' ? 'active' : '' ]">需求管理</a>
+      </li>
+      <li class="nav-item">
         <a href="#/order/search" :class="[ mainRoute === 'order' ? 'active' : '' ]">宙斯报价系统</a>
       </li>
       <li class="nav-item">

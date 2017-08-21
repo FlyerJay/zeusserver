@@ -1,4 +1,9 @@
 import Router from 'vue-router'
+
+//需求管理
+import DemandIndex from '../components/demand/index'
+import DemandManage from '../components/demand/manage'
+
 //供应商
 import Supplier from '../components/supplier/supplier'
 import Info from '../components/supplier/info'
@@ -12,6 +17,7 @@ import Manager from '../components/manager/manager'
 import Member from '../components/manager/member'
 import Operate from '../components/manager/operate'
 import Review from '../components/manager/review'
+
 //订单
 import Order from '../components/order/order'
 import List from '../components/order/list'
@@ -24,8 +30,19 @@ Vue.use(Router)
 export default new Router({
   routes: [{
       path: '/',
-      redirect: '/order',
-      component: Order
+      redirect: '/demand',
+      component: DemandIndex
+    },
+    {
+      path: '/demand',
+      name: 'demand',
+      component: DemandIndex,
+      redirect: '/demand/manage',
+      children: [{
+          path: 'manage',
+          component: DemandManage
+        }
+      ]
     },
     {
       path: '/order',
