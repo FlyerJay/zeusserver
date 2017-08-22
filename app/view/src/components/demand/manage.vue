@@ -27,7 +27,7 @@
         </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column prop="userId" la bel="用户ID">
+                <el-table-column prop="userId" label="用户ID">
                 </el-table-column>
                 <el-table-column prop="userId" label="客户名称">
                 </el-table-column>
