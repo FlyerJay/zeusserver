@@ -133,9 +133,9 @@ module.exports = app => {
                                 type:v.type,
                                 demandAmount:Number(v.demandAmount),
                                 perAmount: Number(v.perAmount) || 100,
-                                factoryPrice:Number(v.factoryPrice) || '',
-                                demandWeight:Number(v.demandWeight) || '',
-                                freight: Number(v.freight) || '',
+                                factoryPrice:Number(v.factoryPrice) || 0,
+                                demandWeight:Number(v.demandWeight) || 0,
+                                freight: Number(v.freight) || 0,
                             },{transaction:t})
                         }));
                     });
