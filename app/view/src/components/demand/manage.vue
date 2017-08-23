@@ -31,26 +31,26 @@
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column prop="userId" label="用户ID">
                 </el-table-column>
-                <el-table-column prop="userId" label="客户名称">
+                <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="userId" label="需求提交时间">
+                <el-table-column prop="createTime" label="需求提交时间">
                 </el-table-column>
-                <el-table-column prop="userId" label="采购报价时间">
+                <el-table-column prop="priceTime" label="采购报价时间">
                 </el-table-column>
-                <el-table-column prop="userId" label="电话">
+                <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
-                <el-table-column prop="userId" label="备注">
+                <el-table-column prop="comment" label="备注">
                 </el-table-column>
-                <el-table-column label="需求明细" align="center" property="id">
+                <el-table-column label="需求明细" align="center" property="destination">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="userId" label="工期">
                 </el-table-column>
-                <el-table-column prop="userId" label="总重量">
+                <el-table-column prop="demandWeight" label="总重量">
                 </el-table-column>
-                <el-table-column prop="dealStatus" :formatter="statusFormatter" label="成交结果">
+                <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
@@ -65,22 +65,22 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg">
+        <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg" @close="closeAdddlg">
             <div class="dialog-content">
                 <ul class="despec-ul">
-                    <li v-for="item in dearr" :key="item"><span>{{item.spec}} ;</span><span>{{item.type}} ;</span><span>{{item.demandAmount}}支 ;</span><span>{{item.demandWeight}}T</span></li>
+                    <li v-for="item in dearr"><span>{{item.spec}};</span><span>{{item.type}};</span><span>{{item.demandAmount}}支;</span><span>{{item.demandWeight}}T</span></li>
                 </ul>
                 <div class="clearfix">
                     <el-input v-model="demandParams.spec" auto-complete="off">
                         <template slot="prepend">规格</template>
                     </el-input>
                     <div class="select-control clearfix dialog-item">
-                        <el-row :gutter="0">
-                        <el-col :span="5"><div class="select-prepend">类别</div></el-col>
-                        <el-col :span="19">
-                            <el-select v-model="demandParams.type" width="220px" placeholder="请选择">
-                                <el-option v-for="item in typeArray" :key="item" :label="item" :value="item">
-                                </el-option>
+                        <el-col :span="7"><div class="select-prepend">类别</div></el-col>
+                        <el-col :span="17">
+                            <el-select v-model="demandParams.type" placeholder="请选择">
+                                <el-option value="黑管">黑管</el-option>
+                                <el-option value="镀锌带">镀锌带</el-option>
+                                <el-option value="热镀锌">热镀锌</el-option>
                             </el-select>
                         </el-col>
                         </el-row>
@@ -110,30 +110,14 @@
                 <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog">
+        <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
-                <el-input v-model="demandDatas.spec" :readonly="true" auto-complete="off">
-                    <template slot="prepend">规格</template>
-                </el-input>
-                <el-input v-model="demandDatas.type" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">类别</template>
-                </el-input>
-                <el-input v-model="demandDatas.demandAmount" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">需求数量</template>
-                </el-input>
-                <el-input v-model="demandDatas.demandWeight" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">需求吨位</template>
-                </el-input>
-                <el-input v-model="demandDatas.destination" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">目的地</template>
-                </el-input>
-                <el-input v-model="demandDatas.customerName" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">客户</template>
-                </el-input>
-                <el-input v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">电话</template>
-                </el-input>
-                <el-input placeholder="备注" v-model="demandDatas.comment" :readonly="true" class="dialog-item" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
+                <el-table :data="demandDetail" border style="width: 100%">
+                    <el-table-column label="规格" prop='spec'></el-table-column>
+                    <el-table-column label="类型" prop='type'></el-table-column>
+                    <el-table-column label="数量" prop='demandAmount'></el-table-column>
+                    <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                </el-table>
             </div>
         </el-dialog>
     
@@ -162,7 +146,8 @@
 import {
     loadDemandList,
     addToDemandList,
-    upDateDemandList
+    upDateDemandList,
+    demandDetailList
 } from '../../vuex/action'
 
 export default {
@@ -170,7 +155,8 @@ export default {
         actions: {
             loadDemandList,
             addToDemandList,
-            upDateDemandList
+            upDateDemandList,
+            demandDetailList
         },
         getters: {
             userInfo: ({
@@ -178,7 +164,10 @@ export default {
                 }) => common.userInfo,
             demandInfo: ({
                     order
-                }) => order.demandInfo
+                }) => order.demandInfo,
+            demandDetail: ({
+                    order
+                }) => order.demandDetail
         }
     },
     data() {
@@ -195,17 +184,6 @@ export default {
                 demandId: '',
                 dealStatus: 0,
                 dealReason: '',
-            },
-            demandDatas: {
-                spec: '',
-                type: '',
-                charAddress: '',
-                demandWeight: '',
-                destination: '',
-                customerName: '',
-                customerPhone: '',
-                timeConsume: 0,
-                comment: '',
             },
             searchDeParam: {
                 userId: '',
@@ -238,15 +216,28 @@ export default {
         },
         statusFormatter(row, column) {
             const status = {
-                '0': '未成交',
-                '1': '交易成功',
-                '2': '交易失败'
+                '0': '未报价需求',
+                '1': '待反馈',
+                '2': '未成交',
+                '3': '已成交'
             }
-            return status[row.dealStatus];
+            return status[row.state];
+        },
+        closeAdddlg() {
+            this.demandParams.demandDetails = [];
+            this.demandParams.spec = '';
+            this.demandParams.type = '';
+            this.demandParams.demandAmount = '';
+            this.demandParams.demandWeight = '';
+            this.dearr = [];
         },
         viewDetail(row) {
-            this.demandDatas = row;
             this.dlDemandView = true;
+            const param = {demandNo: row.demandNo};
+            this.demandDetailList(param)
+                .then(() => {
+                    
+                })
         },
         dealFeedback(row) {
             this.dlFeedback = true;
@@ -272,8 +263,13 @@ export default {
         },
         addSpec() {
             var self = this;
-            debugger
-            if(!self.demandParams.spec || !self.demandParams.demandAmount || !self.demandParams.type || !self.demandParams.demandWeight) return
+            if(!self.demandParams.spec || !self.demandParams.demandAmount || !self.demandParams.type || !self.demandParams.demandWeight) {
+                this.$message({
+                    message: `请填写规格明细`,
+                    type: 'warning'
+                });
+                return;
+            }
             var specObj = {
                 spec: self.demandParams.spec,
                 demandAmount: self.demandParams.demandAmount,
@@ -287,13 +283,22 @@ export default {
             this.searchDemand();
         },
         submitDdemand() {
+            if(!this.demandParams.demandDetails.length) {
+                this.$message({
+                    message: `请添加规格`,
+                    type: 'warning'
+                })
+            }
             this.addToDemandList(this.demandParams)
                 .then(rs => {
                     this.$message({
                         message: `信息录入成功`,
                         type: 'success'
                     })
-                    this.loadDemandList(this.searchDeParam);
+                    this.loadDemandList(this.searchDeParam)
+                        .then(() => {
+                            this.loading = false;
+                        });
                     this.dlgDemandVisible = false;
                 })
         },
@@ -382,7 +387,7 @@ export default {
         .demand-dlg {
             width: 800px;
             .select-control {
-                width: 200px;
+                width: 150px;
                 float: left;
                 margin: 0px 10px 10px 0px;
                 .el-input_inner {
@@ -391,9 +396,20 @@ export default {
             }
             .el-input__inner {
                 width: 100px;
+                padding-right: 0px;
             }
         }
+
+        .detailview {
+            width: 900px;
+            .el-input-group {
+                float: inherit;
+                width: 100%;
+            }
+        }
+
     }
+  
 
 
 }
