@@ -233,6 +233,23 @@ module.exports = app => {
                     }
                 }
             },
+            * detail(options){
+                if(!options.demandNo) return {
+                    code:-1,
+                    msg:'缺少需求编号',
+                }
+                const res = yield app.model.DemandDetail.findAll({
+                    where:{
+                        demandNo:{
+                            $eq:options.demandNo,
+                        }
+                    }
+                })
+                return {
+                    code:200,
+                    data:res[0],
+                }
+            },
             * priceList(options){//定制化需求报价
                 if(!options.comId) return {
                     code:-1,

@@ -6,6 +6,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Demand.list(ctx.query);
     };
+    * detail() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Demand.detail(ctx.query);
+    };
     * priceList() {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Demand.priceList(ctx.query);
