@@ -108,9 +108,12 @@ module.exports = app => {
                         comId: options.comId,
                     }
                 })
-                return yield app.io.in(`${options.comId}`).emit('update',{demand:{
-                    submit,price,unDeal,deal
-                }});
+                return new Promise((res,rej)=>{
+                    app.io.in(`${options.comId}`).emit('update',{demand:{
+                        submit,price,unDeal,deal
+                    }});
+                    res(true);
+                })
             },
             * add(options){
                 if(!options.demandDetails) return {
@@ -118,7 +121,7 @@ module.exports = app => {
                     msg: "请补充需求明细"
                 }
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
-                return app.model.transaction(async (t)=>{
+                const isSuccess = app.model.transaction(async (t)=>{
                     return await this.create(
                         Object.assign(options,{
                         state: 0,
@@ -139,19 +142,23 @@ module.exports = app => {
                             },{transaction:t})
                         }));
                     });
-                }).then(async (res)=>{
-                    var aa = await this.countDemand(options);
-                    if(aa) return {
-                        code:200,
-                        msg:"需求提交成功"
-                    }
+                }).then((res)=>{
+                    return true;
                 }).catch((err)=>{
-                    console.log(err);
-                    return {
-                        code:-1,
-                        msg:"需求提交失败"
-                    }
+                    return false
                 })
+                if(isSuccess){
+                    yield this.countDemand(options);
+                    return {
+                        code:200,
+                        msg:"提交成功"
+                    }
+                }else{
+                    return {
+                        code: -1,
+                        msg: "提交失败",
+                    }
+                }
             },
             * update(options){
                 if(!options.demandNo) return {
@@ -170,7 +177,7 @@ module.exports = app => {
                     result[arr] = options[arr];
                 }
                 const data = yield result.save();
-                this.countDemand(options);
+                yield this.countDemand(options);
                 return {
                     code:200,
                     msg:"更新数据成功",
