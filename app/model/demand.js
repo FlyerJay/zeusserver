@@ -117,14 +117,14 @@ module.exports = app => {
                     code: -1,
                     msg: "请补充需求明细"
                 }
-                var self = this;
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
                 return app.model.transaction(async (t)=>{
-                    return await self.create(Object.assign(options,{
+                    return await app.model.Demand.create(
+                        Object.assign(options,{
                         state: 0,
                         demandNo: randomNo,
-                        createTime: +new Date(),
-                    },{transaction:t}).then((res)=>{
+                        createTime: +new Date()
+                    }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
                             app.model.demandDetail.create({
@@ -137,7 +137,7 @@ module.exports = app => {
                                 freight: Number(v.freight) || '',
                             },{transaction:t})
                         }));
-                    }));
+                    });
                 }).then((res)=>{
                     this.countDemand(options);
                     return {
@@ -145,6 +145,7 @@ module.exports = app => {
                         msg:"需求提交成功"
                     }
                 }).catch((err)=>{
+                    console.log(err);
                     return {
                         code:-1,
                         msg:"需求提交失败"
