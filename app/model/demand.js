@@ -119,7 +119,7 @@ module.exports = app => {
                 }
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
                 return app.model.transaction(async (t)=>{
-                    return await app.model.Demand.create(
+                    return await this.create(
                         Object.assign(options,{
                         state: 0,
                         demandNo: randomNo,
@@ -127,11 +127,12 @@ module.exports = app => {
                     }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
-                            app.model.demandDetail.create({
+                            app.model.DemandDetail.create({
                                 demandNo: randomNo,
                                 spec: v.spec,
                                 type:v.type,
                                 demandAmount:Number(v.demandAmount),
+                                perAmount: Number(v.perAmount) || 100,
                                 factoryPrice:Number(v.factoryPrice) || '',
                                 demandWeight:Number(v.demandWeight) || '',
                                 freight: Number(v.freight) || '',
