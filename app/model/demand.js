@@ -132,9 +132,9 @@ module.exports = app => {
                                 spec: v.spec,
                                 type:v.type,
                                 demandAmount:Number(v.demandAmount),
-                                factoryPrice:Number(v.factoryPrice),
-                                demandWeight:Number(v.demandWeight),
-                                freight: Number(v.freight),
+                                factoryPrice:Number(v.factoryPrice) || '',
+                                demandWeight:Number(v.demandWeight) || '',
+                                freight: Number(v.freight) || '',
                             },{transaction:t})
                         }));
                     }));

@@ -51,6 +51,10 @@ module.exports = app => {
             type: INTEGER(11),
             comment: "出厂价",
         },
+        feedbackPrice: {
+            type: INTEGER(11),
+            comment: "需求报价"
+        },
         freight: {
             type: INTEGER(11),
             comment: "运费",
