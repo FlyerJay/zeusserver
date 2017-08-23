@@ -108,7 +108,7 @@ module.exports = app => {
                         comId: options.comId,
                     }
                 })
-                app.io.in(`${comId}`).emit('update',{demand:{
+                return yield app.io.in(`${options.comId}`).emit('update',{demand:{
                     submit,price,unDeal,deal
                 }});
             },
@@ -131,7 +131,7 @@ module.exports = app => {
                                 demandNo: randomNo,
                                 spec: v.spec,
                                 type:v.type,
-                                demandAmount:Number(v.demandAmount),
+                                demandAmount:Number(v.demandAmount) || 0,
                                 perAmount: Number(v.perAmount) || 100,
                                 factoryPrice:Number(v.factoryPrice) || 0,
                                 demandWeight:Number(v.demandWeight) || 0,
@@ -139,9 +139,9 @@ module.exports = app => {
                             },{transaction:t})
                         }));
                     });
-                }).then((res)=>{
-                    this.countDemand(options);
-                    return {
+                }).then(async (res)=>{
+                    var aa = await this.countDemand(options);
+                    if(aa) return {
                         code:200,
                         msg:"需求提交成功"
                     }
