@@ -67,8 +67,8 @@
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg">
             <div class="dialog-content">
-                <ul>
-                    <li v-for="item in dearr">{{item.spec}};{{item.type}};{{item.demandcount}};{{item.demandWeight}}</li>
+                <ul class="despec-ul">
+                    <li v-for="item in dearr" :key="item"><span>{{item.spec}} ;</span><span>{{item.type}} ;</span><span>{{item.demandAmount}}支 ;</span><span>{{item.demandWeight}}T</span></li>
                 </ul>
                 <div class="clearfix">
                     <el-input v-model="demandParams.spec" auto-complete="off">
@@ -85,7 +85,7 @@
                         </el-col>
                         </el-row>
                     </div>
-                    <el-input v-model="demandParams.demandcount" auto-complete="off">
+                    <el-input v-model="demandParams.demandAmount" auto-complete="off">
                         <template slot="prepend">数量</template>
                     </el-input>
                     <el-input v-model="demandParams.demandWeight" auto-complete="off">
@@ -102,7 +102,7 @@
                         <template slot="prepend">客户</template>
                     </el-input>
                     <el-input v-model="demandParams.customerPhone" auto-complete="off">
-                        <template slot="prepend">电话号码</template>
+                        <template slot="prepend">电话</template>
                     </el-input>
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
                 </div>
@@ -131,7 +131,7 @@
                     <template slot="prepend">客户</template>
                 </el-input>
                 <el-input v-model="demandDatas.customerPhone" :readonly="true" auto-complete="off" class="dialog-item">
-                    <template slot="prepend">客户</template>
+                    <template slot="prepend">电话</template>
                 </el-input>
                 <el-input placeholder="备注" v-model="demandDatas.comment" :readonly="true" class="dialog-item" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off"></el-input>
             </div>
@@ -185,20 +185,11 @@ export default {
         return {
             activeName: '0',
             demandParams: {
-                spec: '',
-                type: '',
-                material: '',
-                charAddress: '',
-                charTel: '',
-                demandListId: '',
-                demandWeight: '',
                 destination: '',
                 customerName: '',
                 customerPhone: '',
-                timeConsume: 0,
                 comment: '',
-                demandAmount: 0,
-                state: 0,
+                demandDetails: []
             },
             FeedbackParams: {
                 demandId: '',
@@ -281,20 +272,21 @@ export default {
         },
         addSpec() {
             var self = this;
-            if(!self.demandParams.spec || !self.demandParams.demandcount || !self.demandParams.type || !self.demandParams.demandWeight) return
+            debugger
+            if(!self.demandParams.spec || !self.demandParams.demandAmount || !self.demandParams.type || !self.demandParams.demandWeight) return
             var specObj = {
                 spec: self.demandParams.spec,
-                demandcount: self.demandParams.demandcount,
+                demandAmount: self.demandParams.demandAmount,
                 type: self.demandParams.type,
                 demandWeight: self.demandParams.demandWeight
             }
+            self.demandParams.demandDetails.push(specObj);
             self.dearr.push(specObj)
         },
         switchTab() {
             this.searchDemand();
         },
         submitDdemand() {
-            this.demandParams.demandAmount = this.demandcount;
             this.addToDemandList(this.demandParams)
                 .then(rs => {
                     this.$message({
@@ -337,18 +329,30 @@ export default {
         demandAuth() {
             return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
         }
-    },
-    watch: {
-        demandcount(val) {
-            this.weightFormatter(this.demandParams.spec, Number(val))
-        }
+        // demandAmount() {
+        //     return this.demandParams.demandAmount
+        // }
     }
+    // watch: {
+    //     demandAmount(val) {
+    //         this.weightFormatter(this.demandParams.spec, Number(val))
+    //     }
+    // }
 }
 </script>
 <style lang="less">
 
 .demand-wrap {
-
+    .despec-ul {
+        li {
+            margin-bottom: 10px;
+        }
+        span {
+            display: inline-block;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+    }
     .title {
         margin: 10px 0px;
         font-size: 20px;
