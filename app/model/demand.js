@@ -247,7 +247,7 @@ module.exports = app => {
                 })
                 return {
                     code:200,
-                    data:res[0],
+                    data:res || [],
                 }
             },
             * priceList(options){//定制化需求报价
