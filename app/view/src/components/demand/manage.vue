@@ -33,9 +33,9 @@
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="createTime" label="需求提交时间">
+                <el-table-column prop="createTime" label="需求提交时间" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="采购报价时间">
+                <el-table-column prop="priceTime" label="采购报价时间" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
@@ -67,34 +67,39 @@
         </div>
         <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg" @close="closeAdddlg">
             <div class="dialog-content">
-                <ul class="despec-ul">
-                    <li v-for="item in dearr"><span>{{item.spec}};</span><span>{{item.type}};</span><span>{{item.demandAmount}}支;</span><span>{{item.demandWeight}}T</span></li>
-                </ul>
-                <div class="clearfix">
-                    <el-input v-model="demandParams.spec" auto-complete="off">
-                        <template slot="prepend">规格</template>
-                    </el-input>
-                    <div class="select-control clearfix dialog-item">
-                        <el-col :span="7"><div class="select-prepend">类别</div></el-col>
-                        <el-col :span="17">
-                            <el-select v-model="demandParams.type" placeholder="请选择">
-                                <el-option value="黑管">黑管</el-option>
-                                <el-option value="镀锌带">镀锌带</el-option>
-                                <el-option value="热镀锌">热镀锌</el-option>
-                            </el-select>
-                        </el-col>
-                        </el-row>
+                <div class="spec-wrap">
+                    <el-table :data="dearr" border style="width: 100%">
+                        <el-table-column label="规格" prop='spec'></el-table-column>
+                        <el-table-column label="类型" prop='type'></el-table-column>
+                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    </el-table>
+                    <div class="clearfix" style="margin-top:10px;">
+                        <el-input v-model="demandParams.spec" auto-complete="off">
+                            <template slot="prepend">规格</template>
+                        </el-input>
+                        <div class="select-control clearfix dialog-item">
+                            <el-col :span="7"><div class="select-prepend">类别</div></el-col>
+                            <el-col :span="17">
+                                <el-select v-model="demandParams.type" placeholder="请选择">
+                                    <el-option value="黑管">黑管</el-option>
+                                    <el-option value="镀锌带">镀锌带</el-option>
+                                    <el-option value="热镀锌">热镀锌</el-option>
+                                </el-select>
+                            </el-col>
+                            </el-row>
+                        </div>
+                        <el-input v-model="demandParams.demandAmount" auto-complete="off">
+                            <template slot="prepend">数量</template>
+                        </el-input>
+                        <el-input v-model="demandParams.demandWeight" auto-complete="off">
+                            <template slot="prepend">重量</template>
+                        </el-input>
+                        <el-button type="warning" @click="addSpec" style="margin-bottom: 10px;float: left">添加规格</el-button>
                     </div>
-                    <el-input v-model="demandParams.demandAmount" auto-complete="off">
-                        <template slot="prepend">数量</template>
-                    </el-input>
-                    <el-input v-model="demandParams.demandWeight" auto-complete="off">
-                        <template slot="prepend">重量</template>
-                    </el-input>
                 </div>
-                <el-button type="warning" @click="addSpec" style="margin-bottom: 10px;di">添加其他规格</el-button>
                 <!-- <span class="sub-txt">（重量默认按6m计算）</span> -->
-                <div class="clearfix">
+                <div class="clearfix" style="margin-top: 16px;">
                     <el-input v-model="demandParams.destination" auto-complete="off">
                         <template slot="prepend">目的地</template>
                     </el-input>
@@ -127,7 +132,7 @@
                     <el-row :gutter="0">
                     <el-col :span="7"><div class="select-prepend">成交结果</div></el-col>
                     <el-col :span="17">
-                        <el-select v-model="FeedbackParams.dealStatus" placeholder="请选择">
+                        <el-select v-model="FeedbackParams.state" placeholder="请选择">
                             <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
                             </el-option>
                         </el-select>
@@ -177,12 +182,13 @@ export default {
                 destination: '',
                 customerName: '',
                 customerPhone: '',
+                type: '',
                 comment: '',
                 demandDetails: []
             },
             FeedbackParams: {
-                demandId: '',
-                dealStatus: 0,
+                demandNo: '',
+                state: 0,
                 dealReason: '',
             },
             searchDeParam: {
@@ -192,7 +198,6 @@ export default {
                 state: 0,
                 page: 1,
             },
-            typeArray: ['黑管', '热镀锌', '镀锌带'],
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
@@ -206,13 +211,10 @@ export default {
         handleCurrentChange(val) {
             this.searchDeParam.page = val;
             this.loading = true;
-            this.loadStock(this.searchDeParam)
+            this.loadDemandList(this.searchDeParam)
                 .then(() => {
                     this.loading = false;
                 });
-        },
-        dateFormat(row, column) {
-            return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
         },
         statusFormatter(row, column) {
             const status = {
@@ -236,12 +238,18 @@ export default {
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {
-                    
                 })
+        },
+        dateFormat(row, column) {
+            if(!row[column.property]) {
+                return '';
+            } else {
+                return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
+            }
         },
         dealFeedback(row) {
             this.dlFeedback = true;
-            this.FeedbackParams.demandId = row.demandId;
+            this.FeedbackParams.demandNo = row.demandNo;
         },
         submitFeedback() {
             this.upDateDemandList(this.FeedbackParams)
@@ -277,7 +285,11 @@ export default {
                 demandWeight: self.demandParams.demandWeight
             }
             self.demandParams.demandDetails.push(specObj);
-            self.dearr.push(specObj)
+            self.dearr.push(specObj);
+            this.demandParams.spec = '';
+            this.demandParams.type = '';
+            this.demandParams.demandAmount = '';
+            this.demandParams.demandWeight = '';
         },
         switchTab() {
             this.searchDemand();
@@ -326,7 +338,7 @@ export default {
     },
     mounted: function () {
         this.loading = true;
-        this.loadDemandList(this.params).then(() => {
+        this.loadDemandList(this.searchDeParam).then(() => {
             this.loading = false;
         })
     },
@@ -337,12 +349,18 @@ export default {
         // demandAmount() {
         //     return this.demandParams.demandAmount
         // }
+    },
+    watch: {
+        demandParams: {
+            handler: function (val, oldVal) { 
+                console.log(oldVal.demandAmount)
+             },
+            deep: true
+        },
+        ['demandParams.demandAmount'](val) {
+            this.weightFormatter(this.demandParams.spec, Number(val))
+        }
     }
-    // watch: {
-    //     demandAmount(val) {
-    //         this.weightFormatter(this.demandParams.spec, Number(val))
-    //     }
-    // }
 }
 </script>
 <style lang="less">
@@ -384,8 +402,13 @@ export default {
         margin-bottom: 10px;
     }
     .custom-dialog {
+        .spec-wrap {
+            border: 1px solid #eaeefb;
+            padding: 15px;
+            box-shadow: 1px 1px 1px 1px #e5e7ef;
+        }
         .demand-dlg {
-            width: 800px;
+            width: 840px;
             .select-control {
                 width: 150px;
                 float: left;
@@ -395,7 +418,7 @@ export default {
                 }
             }
             .el-input__inner {
-                width: 100px;
+                width: 98px;
                 padding-right: 0px;
             }
         }
