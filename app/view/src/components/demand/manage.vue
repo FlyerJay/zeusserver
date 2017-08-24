@@ -75,13 +75,13 @@
                         <el-table-column label="重量" prop='demandWeight'></el-table-column>
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
-                        <el-input v-model="demandParams.spec" auto-complete="off">
+                        <el-input v-model="specParams.spec" auto-complete="off">
                             <template slot="prepend">规格</template>
                         </el-input>
                         <div class="select-control clearfix dialog-item">
                             <el-col :span="7"><div class="select-prepend">类别</div></el-col>
                             <el-col :span="17">
-                                <el-select v-model="demandParams.type" placeholder="请选择">
+                                <el-select v-model="specParams.type" placeholder="请选择">
                                     <el-option value="黑管">黑管</el-option>
                                     <el-option value="镀锌带">镀锌带</el-option>
                                     <el-option value="热镀锌">热镀锌</el-option>
@@ -89,10 +89,10 @@
                             </el-col>
                             </el-row>
                         </div>
-                        <el-input v-model="demandParams.demandAmount" auto-complete="off">
+                        <el-input v-model="specParams.demandAmount" auto-complete="off">
                             <template slot="prepend">数量</template>
                         </el-input>
-                        <el-input v-model="demandParams.demandWeight" auto-complete="off">
+                        <el-input v-model="specParams.demandWeight" auto-complete="off">
                             <template slot="prepend">重量</template>
                         </el-input>
                         <el-button type="warning" @click="addSpec" style="margin-bottom: 10px;float: left">添加规格</el-button>
@@ -125,25 +125,6 @@
                 </el-table>
             </div>
         </el-dialog>
-    
-        <el-dialog title="" v-model="dlFeedback" size="tiny" class="custom-dialog">
-            <div class="dialog-content">
-                <div class="select-control clearfix dialog-item">
-                    <el-row :gutter="0">
-                    <el-col :span="7"><div class="select-prepend">成交结果</div></el-col>
-                    <el-col :span="17">
-                        <el-select v-model="FeedbackParams.state" placeholder="请选择">
-                            <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    </el-row>
-                </div>
-                <el-input placeholder="请填写原因" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off" class="dialog-item" ></el-input>
-                <el-button type="info" @click="submitFeedback" class="dialog-item float-right">提 交</el-button>
-                <el-button type="warning" @click="dlFeedback = false" class="dialog-item float-right">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -151,7 +132,6 @@
 import {
     loadDemandList,
     addToDemandList,
-    upDateDemandList,
     demandDetailList
 } from '../../vuex/action'
 
@@ -160,7 +140,6 @@ export default {
         actions: {
             loadDemandList,
             addToDemandList,
-            upDateDemandList,
             demandDetailList
         },
         getters: {
@@ -178,6 +157,12 @@ export default {
     data() {
         return {
             activeName: '0',
+            specParams: {
+                spec: '',
+                type: '',
+                demandAmount: '',
+                demandWeight: ''
+            },
             demandParams: {
                 destination: '',
                 customerName: '',
@@ -185,11 +170,6 @@ export default {
                 type: '',
                 comment: '',
                 demandDetails: []
-            },
-            FeedbackParams: {
-                demandNo: '',
-                state: 0,
-                dealReason: '',
             },
             searchDeParam: {
                 userId: '',
@@ -201,9 +181,7 @@ export default {
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
-            dlFeedback: false,
             loading: true,
-            demandcount: 0,
             dearr: []
         }
     },
@@ -226,11 +204,10 @@ export default {
             return status[row.state];
         },
         closeAdddlg() {
-            this.demandParams.demandDetails = [];
-            this.demandParams.spec = '';
-            this.demandParams.type = '';
-            this.demandParams.demandAmount = '';
-            this.demandParams.demandWeight = '';
+            this.specParams.spec = '';
+            this.specParams.type = '';
+            this.specParams.demandAmount = '';
+            this.specParams.demandWeight = '';
             this.dearr = [];
         },
         viewDetail(row) {
@@ -247,31 +224,13 @@ export default {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
         },
-        dealFeedback(row) {
-            this.dlFeedback = true;
-            this.FeedbackParams.demandNo = row.demandNo;
-        },
-        submitFeedback() {
-            this.upDateDemandList(this.FeedbackParams)
-                .then(() => {
-                    this.dlFeedback = false;
-                    this.$message({
-                        message: `报价已提交`,
-                        type: 'success'
-                    })
-                    this.loading = true;
-                    this.loadDemandList(this.params).then(() => {
-                        this.loading = false;
-                    })
-                })
-        },
         enterNum(index, row) {
             this.dlgDemandVisible = true;
             this.demandParams.demandListId = row.demandListId;
         },
         addSpec() {
             var self = this;
-            if(!self.demandParams.spec || !self.demandParams.demandAmount || !self.demandParams.type || !self.demandParams.demandWeight) {
+            if(!self.specParams.spec || !self.specParams.demandAmount || !self.specParams.type || !self.specParams.demandWeight) {
                 this.$message({
                     message: `请填写规格明细`,
                     type: 'warning'
@@ -279,17 +238,17 @@ export default {
                 return;
             }
             var specObj = {
-                spec: self.demandParams.spec,
-                demandAmount: self.demandParams.demandAmount,
-                type: self.demandParams.type,
-                demandWeight: self.demandParams.demandWeight
+                spec: self.specParams.spec,
+                demandAmount: self.specParams.demandAmount,
+                type: self.specParams.type,
+                demandWeight: self.specParams.demandWeight
             }
             self.demandParams.demandDetails.push(specObj);
             self.dearr.push(specObj);
-            this.demandParams.spec = '';
-            this.demandParams.type = '';
-            this.demandParams.demandAmount = '';
-            this.demandParams.demandWeight = '';
+            this.specParams.spec = '';
+            this.specParams.type = '';
+            this.specParams.demandAmount = '';
+            this.specParams.demandWeight = '';
         },
         switchTab() {
             this.searchDemand();
@@ -333,7 +292,7 @@ export default {
             const land = Number(specArr[2]);
             const long = 6;
             const perimeter = 2 * height + 2 * width;
-            this.demandParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
+            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
         }
     },
     mounted: function () {
@@ -346,25 +305,15 @@ export default {
         demandAuth() {
             return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
         }
-        // demandAmount() {
-        //     return this.demandParams.demandAmount
-        // }
     },
     watch: {
-        demandParams: {
-            handler: function (val, oldVal) { 
-                console.log(oldVal.demandAmount)
-             },
-            deep: true
-        },
-        ['demandParams.demandAmount'](val) {
-            this.weightFormatter(this.demandParams.spec, Number(val))
+        ['specParams.demandAmount'](val) {
+            this.weightFormatter(this.specParams.spec, Number(val))
         }
     }
 }
 </script>
 <style lang="less">
-
 .demand-wrap {
     .despec-ul {
         li {
@@ -436,6 +385,4 @@ export default {
 
 
 }
-
-
 </style>

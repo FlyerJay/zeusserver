@@ -17,7 +17,6 @@
         </el-form>
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
-            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true" v-if="demandAuth">需求上传</el-button>
         </div>
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
@@ -65,56 +64,6 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg" @close="closeAdddlg">
-            <div class="dialog-content">
-                <div class="spec-wrap">
-                    <el-table :data="dearr" border style="width: 100%">
-                        <el-table-column label="规格" prop='spec'></el-table-column>
-                        <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
-                    </el-table>
-                    <div class="clearfix" style="margin-top:10px;">
-                        <el-input v-model="demandParams.spec" auto-complete="off">
-                            <template slot="prepend">规格</template>
-                        </el-input>
-                        <div class="select-control clearfix dialog-item">
-                            <el-col :span="7"><div class="select-prepend">类别</div></el-col>
-                            <el-col :span="17">
-                                <el-select v-model="demandParams.type" placeholder="请选择">
-                                    <el-option value="黑管">黑管</el-option>
-                                    <el-option value="镀锌带">镀锌带</el-option>
-                                    <el-option value="热镀锌">热镀锌</el-option>
-                                </el-select>
-                            </el-col>
-                            </el-row>
-                        </div>
-                        <el-input v-model="demandParams.demandAmount" auto-complete="off">
-                            <template slot="prepend">数量</template>
-                        </el-input>
-                        <el-input v-model="demandParams.demandWeight" auto-complete="off">
-                            <template slot="prepend">重量</template>
-                        </el-input>
-                        <el-button type="warning" @click="addSpec" style="margin-bottom: 10px;float: left">添加规格</el-button>
-                    </div>
-                </div>
-                <!-- <span class="sub-txt">（重量默认按6m计算）</span> -->
-                <div class="clearfix" style="margin-top: 16px;">
-                    <el-input v-model="demandParams.destination" auto-complete="off">
-                        <template slot="prepend">目的地</template>
-                    </el-input>
-                    <el-input v-model="demandParams.customerName" auto-complete="off">
-                        <template slot="prepend">客户</template>
-                    </el-input>
-                    <el-input v-model="demandParams.customerPhone" auto-complete="off">
-                        <template slot="prepend">电话</template>
-                    </el-input>
-                    <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
-                </div>
-                <el-button type="info" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
-                <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
-            </div>
-        </el-dialog>
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
                 <el-table :data="demandDetail" border style="width: 100%">
@@ -122,7 +71,19 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    <el-table-column label="报价" width="350px;">
+                        <template scope="scope">
+                            <el-input auto-complete="off" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
+                                <template slot="prepend">出厂价</template>
+                            </el-input>
+                            <el-input auto-complete="off" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                                <template slot="prepend">运费</template>
+                            </el-input>
+                        </template>
+                    </el-table-column>
                 </el-table>
+                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length">提 交</el-button>
+                <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length">取 消</el-button>
             </div>
         </el-dialog>
     
@@ -150,18 +111,18 @@
 <script>
 import {
     loadDemandList,
-    addToDemandList,
     upDateDemandList,
-    demandDetailList
+    demandDetailList,
+    loadDemandPriceList
 } from '../../vuex/action'
 
 export default {
     vuex: {
         actions: {
             loadDemandList,
-            addToDemandList,
             upDateDemandList,
-            demandDetailList
+            demandDetailList,
+            loadDemandPriceList
         },
         getters: {
             userInfo: ({
@@ -198,13 +159,15 @@ export default {
                 state: 0,
                 page: 1,
             },
+            priceParam: {
+
+            },
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
             dlFeedback: false,
             loading: true,
-            demandcount: 0,
-            dearr: []
+            demandcount: 0
         }
     },
     methods: {
@@ -224,14 +187,6 @@ export default {
                 '3': '已成交'
             }
             return status[row.state];
-        },
-        closeAdddlg() {
-            this.demandParams.demandDetails = [];
-            this.demandParams.spec = '';
-            this.demandParams.type = '';
-            this.demandParams.demandAmount = '';
-            this.demandParams.demandWeight = '';
-            this.dearr = [];
         },
         viewDetail(row) {
             this.dlDemandView = true;
@@ -269,50 +224,8 @@ export default {
             this.dlgDemandVisible = true;
             this.demandParams.demandListId = row.demandListId;
         },
-        addSpec() {
-            var self = this;
-            if(!self.demandParams.spec || !self.demandParams.demandAmount || !self.demandParams.type || !self.demandParams.demandWeight) {
-                this.$message({
-                    message: `请填写规格明细`,
-                    type: 'warning'
-                });
-                return;
-            }
-            var specObj = {
-                spec: self.demandParams.spec,
-                demandAmount: self.demandParams.demandAmount,
-                type: self.demandParams.type,
-                demandWeight: self.demandParams.demandWeight
-            }
-            self.demandParams.demandDetails.push(specObj);
-            self.dearr.push(specObj);
-            this.demandParams.spec = '';
-            this.demandParams.type = '';
-            this.demandParams.demandAmount = '';
-            this.demandParams.demandWeight = '';
-        },
         switchTab() {
             this.searchDemand();
-        },
-        submitDdemand() {
-            if(!this.demandParams.demandDetails.length) {
-                this.$message({
-                    message: `请添加规格`,
-                    type: 'warning'
-                })
-            }
-            this.addToDemandList(this.demandParams)
-                .then(rs => {
-                    this.$message({
-                        message: `信息录入成功`,
-                        type: 'success'
-                    })
-                    this.loadDemandList(this.searchDeParam)
-                        .then(() => {
-                            this.loading = false;
-                        });
-                    this.dlgDemandVisible = false;
-                })
         },
         searchDemand() {
             this.loading = true;
@@ -321,6 +234,11 @@ export default {
             this.loadDemandList(this.searchDeParam)
                 .then(() => {
                     this.loading = false;
+                });
+        },
+        submitPrice() {
+            this.loadDemandPriceList()
+                .then(() => {
                 });
         },
         weightFormatter(spec, demandcount) {
@@ -333,7 +251,7 @@ export default {
             const land = Number(specArr[2]);
             const long = 6;
             const perimeter = 2 * height + 2 * width;
-            this.demandParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
+            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
         }
     },
     mounted: function () {
@@ -346,25 +264,10 @@ export default {
         demandAuth() {
             return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
         }
-        // demandAmount() {
-        //     return this.demandParams.demandAmount
-        // }
-    },
-    watch: {
-        demandParams: {
-            handler: function (val, oldVal) { 
-                console.log(oldVal.demandAmount)
-             },
-            deep: true
-        },
-        ['demandParams.demandAmount'](val) {
-            this.weightFormatter(this.demandParams.spec, Number(val))
-        }
     }
 }
 </script>
 <style lang="less">
-
 .demand-wrap {
     .despec-ul {
         li {
@@ -432,5 +335,8 @@ export default {
         }
 
     }
+  
+
+
 }
 </style>
