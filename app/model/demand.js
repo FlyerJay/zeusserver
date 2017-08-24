@@ -250,6 +250,54 @@ module.exports = app => {
                     data:res || [],
                 }
             },
+            * price(options){
+                if(!options.demandNo) return {
+                    code: -1,
+                    msg: '缺少需求编号'
+                }
+                if(!options.demandPrices || options.length <= 0) return {
+                    code: -1,
+                    msg: '缺少报价信息'
+                } 
+                const isSuccess = app.model.transaction(async (t) => {
+                    return await this.update(
+                        {
+                            state: 1,
+                        },{
+                        where:{
+                            demandNo:{
+                                $eq: options.demandNo
+                            }
+                        },
+                        transaction: t,
+                    }).then( res => {
+                        return Promise.all(options.demandPrices.map( v => {
+                            app.model.DemandDetail.update({
+                                feedbackPrice:v.feedbackPrice,
+                            },{
+                                where:{
+                                    demandDetailId:{
+                                        $eq: v.demandDetailId
+                                    }
+                                },
+                                transaction: t,
+                            })
+                        }))
+                    })
+                }).then(res => {
+                    return true;
+                }).catch(err => {
+                    return false;
+                })
+                if(isSuccess) return {
+                    code: 200,
+                    msg: '报价成功'
+                }
+                return {
+                    code: -1,
+                    msg: '报价出错'
+                }
+            },
             * priceList(options){//定制化需求报价
                 if(!options.comId) return {
                     code:-1,

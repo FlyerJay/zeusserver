@@ -73,10 +73,11 @@ module.exports = app => {
   app.post('/zues/api/order/verify','manage.orderVerify');
   //定制化需求
   app.get('/zues/api/demand/list','demand.list');
-   app.get('/zues/api/demand/detail','demand.detail');
+  app.get('/zues/api/demand/detail','demand.detail');
   app.get('/zues/api/demand/price','demand.priceList');
   app.post('/zues/api/demand/add','demand.add');
   app.post('/zues/api/demand/update','demand.update');
+  app.post('/zues/api/demand/price','demand.price');  
   app.post('/zues/api/demand/remove','demand.remove');
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
