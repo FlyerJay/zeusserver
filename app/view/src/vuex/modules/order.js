@@ -2,6 +2,7 @@ const state = {
   stockInfo: {},//库存表单
   cartList: {},
   demandInfo: {},
+  demandDetail: [],
   orderList: [],
   ordAddress: [],  //到岸目的地
   orderDetail: [],

@@ -466,8 +466,8 @@ export const loadDemandPriceList = ({ dispatch }, params) => {
 export const addToDemandList = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/add', params)
   .then(function (response) {
+    debugger
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'demandList', response.data.data.row)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);
@@ -484,6 +484,22 @@ export const upDateDemandList = ({ dispatch }, params) => {
   .then(function (response) {
     if (response.data.code === 200) {
       dispatch('UPDATE_ORDERFORM','demandList', response.data.data.row)
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      showErrorMessage({ dispatch },response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error) {
+    return Promise.reject();
+  })
+}
+
+//定制化需求明细
+export const demandDetailList = ({ dispatch }, params) => {
+  return axios.get('/zues/api/demand/detail',{ params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM','demandDetail', response.data.data)
       return Promise.resolve();
     }else if (response.data.code === -1) {
       showErrorMessage({ dispatch },response.data.msg);
