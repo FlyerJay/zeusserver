@@ -9,7 +9,6 @@ import Supplier from '../components/supplier/supplier'
 import Info from '../components/supplier/info'
 import Price from '../components/supplier/price'
 import Stock from '../components/supplier/stock'
-import DemandPrice from '../components/supplier/demand'
 import priceChart from '../components/supplier/pricechart'
 
 //管理员后台
@@ -83,10 +82,6 @@ export default new Router({
         {
           path: 'stock',
           component: Stock
-        },
-        {
-          path: 'demand',
-          component: DemandPrice
         },
         {
           path: 'pricechart',

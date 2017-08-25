@@ -466,7 +466,6 @@ export const loadDemandPriceList = ({ dispatch }, params) => {
 export const addToDemandList = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/add', params)
   .then(function (response) {
-    debugger
     if (response.data.code === 200) {
       return Promise.resolve();
     } else if (response.data.code === -1) {
