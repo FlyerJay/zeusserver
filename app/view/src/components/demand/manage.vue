@@ -125,6 +125,25 @@
                 </el-table>
             </div>
         </el-dialog>
+            
+        <el-dialog title="" v-model="dlFeedback" size="tiny" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="select-control clearfix dialog-item">
+                    <el-row :gutter="0">
+                    <el-col :span="7"><div class="select-prepend">成交结果</div></el-col>
+                    <el-col :span="17">
+                        <el-select v-model="FeedbackParams.state" placeholder="请选择">
+                            <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    </el-row>
+                </div>
+                <el-input placeholder="请填写原因" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off" class="dialog-item" ></el-input>
+                <el-button type="info" @click="submitFeedback" class="dialog-item float-right">提 交</el-button>
+                <el-button type="warning" @click="dlFeedback = false" class="dialog-item float-right">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -132,6 +151,7 @@
 import {
     loadDemandList,
     addToDemandList,
+    upDateDemandList,
     demandDetailList
 } from '../../vuex/action'
 
@@ -140,6 +160,7 @@ export default {
         actions: {
             loadDemandList,
             addToDemandList,
+            upDateDemandList,
             demandDetailList
         },
         getters: {
@@ -162,6 +183,11 @@ export default {
                 type: '',
                 demandAmount: '',
                 demandWeight: ''
+            },
+            FeedbackParams: {
+                demandNo: '',
+                state: 0,
+                dealReason: '',
             },
             demandParams: {
                 destination: '',
@@ -215,6 +241,24 @@ export default {
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {
+                })
+        },
+        dealFeedback(row) {
+            this.dlFeedback = true;
+            this.FeedbackParams.demandNo = row.demandNo;
+        },
+        submitFeedback() {
+            this.upDateDemandList(this.FeedbackParams)
+                .then(() => {
+                    this.dlFeedback = false;
+                    this.$message({
+                        message: `报价已提交`,
+                        type: 'success'
+                    })
+                    this.loading = true;
+                    this.loadDemandList(this.params).then(() => {
+                        this.loading = false;
+                    })
                 })
         },
         dateFormat(row, column) {

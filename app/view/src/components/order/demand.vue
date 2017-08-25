@@ -53,11 +53,11 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id">
+                <!-- <el-table-column label="交易反馈" align="center" property="id">
                     <template scope="scope">
                         <el-button size="small" @click="dealFeedback(scope.row)" :disabled="scope.row.totalPrice == 0 || !scope.row.totalPrice" type="warning">填写</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
         </div>
         <div class="page-wrap">
@@ -86,32 +86,13 @@
                 <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length">取 消</el-button>
             </div>
         </el-dialog>
-    
-        <el-dialog title="" v-model="dlFeedback" size="tiny" class="custom-dialog">
-            <div class="dialog-content">
-                <div class="select-control clearfix dialog-item">
-                    <el-row :gutter="0">
-                    <el-col :span="7"><div class="select-prepend">成交结果</div></el-col>
-                    <el-col :span="17">
-                        <el-select v-model="FeedbackParams.state" placeholder="请选择">
-                            <el-option v-for="item in dealStatusArray" :key="item.key" :label="item.key" :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    </el-row>
-                </div>
-                <el-input placeholder="请填写原因" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off" class="dialog-item" ></el-input>
-                <el-button type="info" @click="submitFeedback" class="dialog-item float-right">提 交</el-button>
-                <el-button type="warning" @click="dlFeedback = false" class="dialog-item float-right">取 消</el-button>
-            </div>
-        </el-dialog>
+
     </div>
 </template>
 
 <script>
 import {
     loadDemandList,
-    upDateDemandList,
     demandDetailList,
     loadDemandPriceList
 } from '../../vuex/action'
@@ -120,7 +101,6 @@ export default {
     vuex: {
         actions: {
             loadDemandList,
-            upDateDemandList,
             demandDetailList,
             loadDemandPriceList
         },
@@ -146,11 +126,6 @@ export default {
                 type: '',
                 comment: '',
                 demandDetails: []
-            },
-            FeedbackParams: {
-                demandNo: '',
-                state: 0,
-                dealReason: '',
             },
             searchDeParam: {
                 userId: '',
@@ -201,24 +176,6 @@ export default {
             } else {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
-        },
-        dealFeedback(row) {
-            this.dlFeedback = true;
-            this.FeedbackParams.demandNo = row.demandNo;
-        },
-        submitFeedback() {
-            this.upDateDemandList(this.FeedbackParams)
-                .then(() => {
-                    this.dlFeedback = false;
-                    this.$message({
-                        message: `报价已提交`,
-                        type: 'success'
-                    })
-                    this.loading = true;
-                    this.loadDemandList(this.params).then(() => {
-                        this.loading = false;
-                    })
-                })
         },
         enterNum(index, row) {
             this.dlgDemandVisible = true;
