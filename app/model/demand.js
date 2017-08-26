@@ -279,7 +279,7 @@ module.exports = app => {
                     return false;
                 })
                 if(isSuccess) {
-                    var end = yield app.model.query(`
+                    yield app.model.query(`
                         UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume
                         WHERE demandNo = :demandNo
                     `,{
@@ -289,6 +289,7 @@ module.exports = app => {
                             timeConsume: options.timeConsume || 0,
                         }
                     })
+                    yield this.countDemand(options);
                     return {
                         code: 200,
                         msg: '报价成功'
