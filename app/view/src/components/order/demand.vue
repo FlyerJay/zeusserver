@@ -73,10 +73,10 @@
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
                     <el-table-column label="报价" width="350px;">
                         <template scope="scope">
-                            <el-input auto-complete="off" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
                                 <template slot="prepend">出厂价</template>
                             </el-input>
-                            <el-input auto-complete="off" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
                                 <template slot="prepend">运费</template>
                             </el-input>
                         </template>
@@ -194,7 +194,12 @@ export default {
                 });
         },
         submitPrice() {
-            this.loadDemandPriceList()
+            var params = {
+                demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                demandPrices:this.demandDetail,
+            }
+            console.log(params);
+            this.loadDemandPriceList(params)
                 .then(() => {
                 });
         },
