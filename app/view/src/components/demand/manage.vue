@@ -75,40 +75,61 @@
                         <el-table-column label="重量" prop='demandWeight'></el-table-column>
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
-                        <el-input v-model="specParams.spec" auto-complete="off">
-                            <template slot="prepend">规格</template>
-                        </el-input>
-                        <div class="select-control clearfix dialog-item">
-                            <el-col :span="7"><div class="select-prepend">类别</div></el-col>
-                            <el-col :span="17">
-                                <el-select v-model="specParams.type" placeholder="请选择">
-                                    <el-option value="黑管">黑管</el-option>
-                                    <el-option value="镀锌带">镀锌带</el-option>
-                                    <el-option value="热镀锌">热镀锌</el-option>
-                                </el-select>
+                        <el-row :gutter='10'>
+                            <el-col :span='7'>
+                                <el-input v-model="specParams.spec" auto-complete="off">
+                                    <template slot="prepend">规格</template>
+                                </el-input>
                             </el-col>
-                            </el-row>
-                        </div>
-                        <el-input v-model="specParams.demandAmount" auto-complete="off">
-                            <template slot="prepend">数量</template>
-                        </el-input>
-                        <el-input v-model="specParams.demandWeight" auto-complete="off">
-                            <template slot="prepend">重量</template>
-                        </el-input>
-                        <el-button type="warning" @click="addSpec" style="margin-bottom: 10px;float: left">添加规格</el-button>
+                            <el-col :span='6'>
+                                <div class="select-control">
+                                    <el-row>
+                                        <el-col :span="7"><div class="select-prepend">类别</div></el-col>
+                                        <el-col :span="17">
+                                            <el-select v-model="specParams.type" placeholder="请选择">
+                                                <el-option value="黑管">黑管</el-option>
+                                                <el-option value="镀锌带">镀锌带</el-option>
+                                                <el-option value="热镀锌">热镀锌</el-option>
+                                            </el-select>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-col>
+                            <el-col :span='4'>
+                                <el-input v-model="specParams.demandAmount" auto-complete="off">
+                                    <template slot="prepend">数量</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='4'>
+                                <el-input v-model="specParams.demandWeight" auto-complete="off">
+                                    <template slot="prepend">重量</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='3'>
+                                <el-button type="warning" style="width:100%" @click="addSpec">添加规格</el-button>
+                            </el-col>
+                        </el-row>
                     </div>
                 </div>
                 <!-- <span class="sub-txt">（重量默认按6m计算）</span> -->
                 <div class="clearfix" style="margin-top: 16px;">
-                    <el-input v-model="demandParams.destination" auto-complete="off">
-                        <template slot="prepend">目的地</template>
-                    </el-input>
-                    <el-input v-model="demandParams.customerName" auto-complete="off">
-                        <template slot="prepend">客户</template>
-                    </el-input>
-                    <el-input v-model="demandParams.customerPhone" auto-complete="off">
-                        <template slot="prepend">电话</template>
-                    </el-input>
+                    <el-row :gutter='8'>
+                        <el-col :span='8'>
+                            <el-input v-model="demandParams.destination" auto-complete="off">
+                                <template slot="prepend">目的地</template>
+                            </el-input>
+                        </el-col>
+                        <el-col :span='8'>
+                            <el-input v-model="demandParams.customerName" auto-complete="off">
+                                <template slot="prepend">客户</template>
+                            </el-input>
+                        </el-col>
+                        <el-col :span='8'>
+                            <el-input v-model="demandParams.customerPhone" auto-complete="off">
+                                <template slot="prepend">电话</template>
+                            </el-input>
+                        </el-col>
+                    </el-row>
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
                 </div>
                 <el-button type="info" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
@@ -387,13 +408,6 @@ export default {
     .el-form-item {
         margin-bottom: 0px;
     }
-
-    .el-input-group {
-        float: left;
-        width: 18%;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
     .custom-dialog {
         .spec-wrap {
             border: 1px solid #eaeefb;
@@ -402,20 +416,12 @@ export default {
         }
         .demand-dlg {
             width: 840px;
-            .select-control {
-                width: 150px;
-                float: left;
-                margin: 0px 10px 10px 0px;
-                .el-input_inner {
-                  padding-right: 0;
-                }
-            }
-            .el-input__inner {
-                width: 98px;
-                padding-right: 0px;
+            .select-control{
+                width:100%;
+                float:left;
+                margin:0;
             }
         }
-
         .detailview {
             width: 900px;
             .el-input-group {

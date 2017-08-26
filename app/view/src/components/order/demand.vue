@@ -254,13 +254,6 @@ export default {
     .el-form-item {
         margin-bottom: 0px;
     }
-
-    .el-input-group {
-        float: left;
-        width: 18%;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
     .custom-dialog {
         .spec-wrap {
             border: 1px solid #eaeefb;
@@ -269,18 +262,6 @@ export default {
         }
         .demand-dlg {
             width: 840px;
-            .select-control {
-                width: 150px;
-                float: left;
-                margin: 0px 10px 10px 0px;
-                .el-input_inner {
-                  padding-right: 0;
-                }
-            }
-            .el-input__inner {
-                width: 98px;
-                padding-right: 0px;
-            }
         }
 
         .detailview {
