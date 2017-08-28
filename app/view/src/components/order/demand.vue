@@ -73,10 +73,10 @@
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
                     <el-table-column label="报价" width="350px;">
                         <template scope="scope">
-                            <el-input auto-complete="off" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
                                 <template slot="prepend">出厂价</template>
                             </el-input>
-                            <el-input auto-complete="off" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
                                 <template slot="prepend">运费</template>
                             </el-input>
                         </template>
@@ -200,7 +200,12 @@ export default {
                 });
         },
         submitPrice() {
-            this.loadDemandPriceList()
+            var params = {
+                demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                demandPrices:this.demandDetail,
+            }
+            console.log(params);
+            this.loadDemandPriceList(params)
                 .then(() => {
                 });
         },
@@ -260,13 +265,6 @@ export default {
     .el-form-item {
         margin-bottom: 0px;
     }
-
-    .el-input-group {
-        float: left;
-        width: 18%;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
     .custom-dialog {
         .spec-wrap {
             border: 1px solid #eaeefb;
@@ -275,18 +273,6 @@ export default {
         }
         .demand-dlg {
             width: 840px;
-            .select-control {
-                width: 150px;
-                float: left;
-                margin: 0px 10px 10px 0px;
-                .el-input_inner {
-                  padding-right: 0;
-                }
-            }
-            .el-input__inner {
-                width: 98px;
-                padding-right: 0px;
-            }
         }
 
         .detailview {

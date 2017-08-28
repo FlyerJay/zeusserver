@@ -259,39 +259,41 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少报价信息'
                 } 
-                const isSuccess = app.model.transaction(async (t) => {
-                    return await this.update(
-                        {
-                            state: 1,
+                const isSuccess = yield app.model.transaction(async (t) => {
+                    return Promise.all(options.demandPrices.map( v => {
+                        app.model.DemandDetail.update({
+                            factoryPrice: v.factoryPrice || 0,
+                            freight: v.freight || 0
                         },{
-                        where:{
-                            demandNo:{
-                                $eq: options.demandNo
-                            }
-                        },
-                        transaction: t,
-                    }).then( res => {
-                        return Promise.all(options.demandPrices.map( v => {
-                            app.model.DemandDetail.update({
-                                feedbackPrice:v.feedbackPrice,
-                            },{
-                                where:{
-                                    demandDetailId:{
-                                        $eq: v.demandDetailId
-                                    }
-                                },
-                                transaction: t,
-                            })
-                        }))
-                    })
-                }).then(res => {
+                            where:{
+                                demandDetailId:{
+                                    $eq: v.demandDetailId
+                                }
+                            },
+                            transaction: t,
+                        })
+                    }))
+                }).then((res) => {
                     return true;
                 }).catch(err => {
                     return false;
                 })
-                if(isSuccess) return {
-                    code: 200,
-                    msg: '报价成功'
+                if(isSuccess) {
+                    yield app.model.query(`
+                        UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume
+                        WHERE demandNo = :demandNo
+                    `,{
+                        replacements:{
+                            priceTime: +new Date(),
+                            demandNo: options.demandNo,
+                            timeConsume: options.timeConsume || 0,
+                        }
+                    })
+                    yield this.countDemand(options);
+                    return {
+                        code: 200,
+                        msg: '报价成功'
+                    }
                 }
                 return {
                     code: -1,

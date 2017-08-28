@@ -447,10 +447,9 @@ export const loadDemandList = ({ dispatch }, params) => {
 
 //定制化需求报价查询
 export const loadDemandPriceList = ({ dispatch }, params) => {
-  return axios.get('/zues/api/demand/price', { params })
+  return axios.post('/zues/api/demand/price', params)
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'demandInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);
