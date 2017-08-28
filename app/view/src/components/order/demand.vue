@@ -134,16 +134,6 @@ export default {
                 state: 0,
                 page: 1,
             },
-            priceParam: {
-                detailPrice:[
-                    {
-                        demandDetail: [],
-                        feedbackPrice: ''
-                    }
-                ],
-                totalPrice: '',
-                demandNo: ''
-            },
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
@@ -183,10 +173,6 @@ export default {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
         },
-        enterNum(index, row) {
-            this.dlgDemandVisible = true;
-            this.demandParams.demandListId = row.demandListId;
-        },
         switchTab() {
             this.searchDemand();
         },
@@ -204,7 +190,6 @@ export default {
                 demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
                 demandPrices:this.demandDetail,
             }
-            console.log(params);
             this.loadDemandPriceList(params)
                 .then(() => {
                 });

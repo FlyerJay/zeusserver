@@ -73,6 +73,11 @@
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="操作" align="center">
+                            <template scope="scope">
+                                <el-button size="small" @click="deleteSpec(scope.$index)" type="warning">删除</el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
                         <el-row :gutter='10'>
@@ -132,7 +137,7 @@
                     </el-row>
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
                 </div>
-                <el-button type="info" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
+                <el-button type="info" @keyup.enter.native="submitDdemand"  @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
                 <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
@@ -143,6 +148,7 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    <el-table-column label="备注" prop='comment'></el-table-column>
                 </el-table>
             </div>
         </el-dialog>
@@ -242,6 +248,10 @@ export default {
                     this.loading = false;
                 });
         },
+        deleteSpec(index) {
+            this.dearr.splice(index, 1);
+            this.demandParams.demandDetails.splice(index, 1);
+        },
         statusFormatter(row, column) {
             const status = {
                 '0': '未报价需求',
@@ -290,10 +300,6 @@ export default {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
         },
-        enterNum(index, row) {
-            this.dlgDemandVisible = true;
-            this.demandParams.demandListId = row.demandListId;
-        },
         addSpec() {
             var self = this;
             if(!self.specParams.spec || !self.specParams.demandAmount || !self.specParams.type || !self.specParams.demandWeight) {
@@ -324,20 +330,28 @@ export default {
                 this.$message({
                     message: `请添加规格`,
                     type: 'warning'
-                })
+                });
+                return;
             }
-            this.addToDemandList(this.demandParams)
-                .then(rs => {
-                    this.$message({
-                        message: `信息录入成功`,
-                        type: 'success'
+            this.$confirm('确认提交?','确认',{
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.addToDemandList(this.demandParams)
+                    .then(rs => {
+                        this.$message({
+                            message: `信息录入成功`,
+                            type: 'success'
+                        })
+                        this.loadDemandList(this.searchDeParam)
+                            .then(() => {
+                                this.loading = false;
+                            });
+                        this.dlgDemandVisible = false;
                     })
-                    this.loadDemandList(this.searchDeParam)
-                        .then(() => {
-                            this.loading = false;
-                        });
-                    this.dlgDemandVisible = false;
-                })
+            });
+        
         },
         searchDemand() {
             this.loading = true;
