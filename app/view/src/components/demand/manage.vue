@@ -207,6 +207,7 @@ export default {
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
+            dlFeedback: false,
             loading: true,
             dearr: []
         }
