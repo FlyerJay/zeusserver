@@ -222,7 +222,7 @@ module.exports = app => {
                 }
                 yield this.destroy({
                     where:{
-                        demandId:{
+                        demandNo:{
                             $in:options.demandNo.split(',')
                         }
                     }
