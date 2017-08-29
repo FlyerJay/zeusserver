@@ -460,6 +460,21 @@ export const loadDemandPriceList = ({ dispatch }, params) => {
   });
 }
 
+//删除需求
+export const removeDemandList = ({ dispatch }, params) => {
+  return axios.post('/zues/api/demand/remove', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 
 //添加的定制需求
 export const addToDemandList = ({ dispatch }, params) => {

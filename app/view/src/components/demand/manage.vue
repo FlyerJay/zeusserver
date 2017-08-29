@@ -67,6 +67,11 @@
                         <el-button size="small" @click="dealFeedback(scope.row)" :disabled="scope.row.totalPrice == 0 || !scope.row.totalPrice" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
+                <el-table-column label="操作" align="center" v-if="activeName != 3">
+                    <template scope="scope">
+                        <el-button size="small" @click="removeDemand(scope.row)" type="danger">删除</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <div class="page-wrap">
@@ -184,7 +189,8 @@ import {
     loadDemandList,
     addToDemandList,
     upDateDemandList,
-    demandDetailList
+    demandDetailList,
+    removeDemandList
 } from '../../vuex/action'
 
 export default {
@@ -193,7 +199,8 @@ export default {
             loadDemandList,
             addToDemandList,
             upDateDemandList,
-            demandDetailList
+            demandDetailList,
+            removeDemandList
         },
         getters: {
             userInfo: ({
@@ -369,6 +376,25 @@ export default {
                 .then(() => {
                     this.loading = false;
                 });
+        },
+        removeDemand(row) {
+            const self = this;
+            this.$confirm('确认删除?','确认',{
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const params = {
+                  demandNo: row.demandNo
+                };
+                self.removeDemandList(params).then(rs => {
+                    this.searchDemand();
+                    this.$message({
+                        message: `删除成功`,
+                        type: 'success'
+                    });
+                });
+            });
         },
         weightFormatter(spec, demandcount) {
             if (!spec) {
