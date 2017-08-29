@@ -19,7 +19,9 @@ socket.on('res',( mes ) => {
 })
 var userRole = getCookie('userRole');
 const isDemandAuth = userRole.charAt(4) == '1';
+const isOrderAuth = userRole.charAt(5) == '1';
 socket.on('update',( {demand} ) => {//接收需求变更通知
+  console.log(`有新消息送达${demand}`);
   var demandAmount = localStorage.getItem('demandAmount');
   if(demandAmount){
     demandAmount = JSON.parse(demandAmount);
@@ -40,7 +42,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             },0)
           }(newDemand,item)
         }
-        if(item == 'price' && isDemandAuth){
+        if(item == 'price' && isOrderAuth){
           !function(newDemand,item){
             setTimeout(()=>{
               Vue.prototype.$notify.info({
