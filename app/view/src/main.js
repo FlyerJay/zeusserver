@@ -26,14 +26,11 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
   if(demandAmount){
     demandAmount = JSON.parse(demandAmount);
     var newDemand = {};
-    console.log('3'+ JSON.stringify(demandAmount));
     for(var item in demand){
       if(demand[item] <= demandAmount[item]) {
         demandAmount[item] = demand[item] || demandAmount[item];
-        console.log(demandAmount[item],demand[item],item);
         newDemand[item] = 0;
       }else{ 
-        console.log(demandAmount[item],demand[item],item);
         newDemand[item] = demand[item] - demandAmount[item];
         demandAmount[item] = demandAmount[item];
         if(item == 'submit' && isDemandAuth){
@@ -78,11 +75,9 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
         }
       }
     }
-    console.log('2'+JSON.stringify(demandAmount));
     localStorage.setItem('demandAmount',JSON.stringify(demandAmount));
     store.dispatch('UPDATE_DEMAND',newDemand);
   }else{
-    console.log('1'+JSON.stringify(demand));
     localStorage.setItem('demandAmount',JSON.stringify(demand));
   }
 })
