@@ -51,7 +51,7 @@ module.exports = app => {
           ctx.body = yield ctx.model.Demand.update(ctx.request.body);
         }
       }else{
-        if(userRole.charAt(5) === '0'){
+        if(userRole.charAt(4) === '0'){
           ctx.body = {
             code:-1,
             msg:"抱歉，没有权限进行该操作"

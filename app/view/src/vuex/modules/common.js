@@ -5,14 +5,18 @@ const state = {
     userId: '',
     userRole: ''
   },
-  mainRoute: ''
+  mainRoute: '',
+  demand: {},
 }
 
 
 const mutations = {
   UPDATE_FORM(state, key, val) {
     state[key] = val
-  }
+  },
+  UPDATE_DEMAND(state, params){
+    state.demand = params;
+  },
 }
 
 export default {
