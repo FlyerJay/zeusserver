@@ -20,10 +20,18 @@
         </div>
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
-                <el-tab-pane label="未报价需求" name="0"></el-tab-pane>
-                <el-tab-pane label="待反馈需求" name="1"></el-tab-pane>
-                <el-tab-pane label="未成交需求" name="2"></el-tab-pane>
-                <el-tab-pane label="成交需求" name="3"></el-tab-pane>
+                <el-tab-pane label="未报价需求" name="0">
+                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.submit > 0" class="mark" :value="demand.submit" /></span>
+                </el-tab-pane>
+                <el-tab-pane label="待反馈需求" name="1">
+                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
+                </el-tab-pane>
+                <el-tab-pane label="未成交需求" name="2">
+                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
+                </el-tab-pane>
+                <el-tab-pane label="成交需求" name="3">
+                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
+                </el-tab-pane>
             </el-tabs>
         </div>
         <div class="tb-wrap">
@@ -118,7 +126,10 @@ export default {
                 }) => order.demandInfo,
             demandDetail: ({
                     order
-                }) => order.demandDetail
+                }) => order.demandDetail,
+            demand: ({
+                    common
+                }) => common.demand
         }
     },
     data() {

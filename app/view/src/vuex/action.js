@@ -430,11 +430,39 @@ export const updateFre = ({ dispatch }, params) => {
 }
 
 //加载定制需求表
-export const loadDemandList = ({ dispatch }, params) => {
+export const loadDemandList = (store, params) => {
   return axios.get('/zues/api/demand/list', { params })
   .then(function (response) {
     if (response.data.code === 200) {
-      dispatch('UPDATE_ORDERFORM', 'demandInfo', response.data.data)
+      var demandAmount = localStorage.getItem('demandAmount');
+      if(demandAmount){
+        demandAmount = JSON.parse(demandAmount);
+        console.log(params.state);
+        switch(params.state){
+          case 0:
+            var submit = store._modules.common.state.demand.submit;
+            demandAmount.submit += submit;
+            store._modules.common.state.demand.submit = 0;
+            break;
+          case '1':
+            var price = store._modules.common.state.demand.price;
+            demandAmount.price += price;
+            store._modules.common.state.demand.price = 0;
+            break;
+          case '2':
+            var unDeal = store._modules.common.state.demand.unDeal;
+            demandAmount.unDeal += unDeal;
+            store._modules.common.state.demand.unDeal = 0;
+            break;
+          case '3':
+            var deal = store._modules.common.state.demand.deal;
+            demandAmount.deal += deal;
+            store._modules.common.state.demand.deal = 0;
+            break;
+        }
+        localStorage.setItem('demandAmount',JSON.stringify(demandAmount));
+      }
+      store.dispatch('UPDATE_ORDERFORM', 'demandInfo', response.data.data)
       return Promise.resolve();
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);
