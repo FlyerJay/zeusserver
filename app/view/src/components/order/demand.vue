@@ -55,6 +55,7 @@
                 </el-table-column>
                 <el-table-column prop="timeConsume" label="工期">
                 </el-table-column>
+                <el-table-column label="目的地" prop='destination'></el-table-column>
                 <el-table-column prop="demandWeight" label="总重量">
                 </el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
@@ -70,12 +71,11 @@
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
                 <el-table :data="demandDetail" border style="width: 100%">
-                    <el-table-column label="规格" prop='spec'></el-table-column>
+                    <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
-                    <el-table-column label="目的地" prop='destination'></el-table-column>
-                    <el-table-column label="报价" width="350px;">
+                    <el-table-column label="报价" width="310px;">
                         <template scope="scope">
                             <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
                                 <template slot="prepend">出厂价</template>
@@ -85,9 +85,9 @@
                             </el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="工期">
+                    <el-table-column label="工期" width="150px">
                         <template scope="scope">
-                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                            <el-input auto-complete="off" type="text" v-model="timeConsume" placeholder="" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 <template slot="prepend">工期</template>
                             </el-input>
                         </template>
@@ -135,14 +135,7 @@ export default {
     data() {
         return {
             activeName: '0',
-            demandParams: {
-                destination: '',
-                customerName: '',
-                customerPhone: '',
-                type: '',
-                comment: '',
-                demandDetails: []
-            },
+            timeConsume: '',
             searchDeParam: {
                 userId: '',
                 createTime: '',
@@ -180,6 +173,7 @@ export default {
             this.dlDemandView = true;
             const param = {demandNo: row.demandNo};
             this.updreason = row.dealReason;
+            this.timeConsume = row.timeConsume;
             this.demandDetailList(param)
         },
         dateFormat(row, column) {
@@ -207,6 +201,7 @@ export default {
                 var params = {
                     demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
                     demandPrices:this.demandDetail,
+                    timeConsume: this.timeConsume
                 }
                 this.loadDemandPriceList(params).then(rs => {
                     self.$message({
@@ -219,7 +214,8 @@ export default {
                 var upparams = {
                    state: this.activeName,
                    demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                   dealReason: this.updreason
+                   dealReason: this.updreason,
+                   timeConsume: this.timeConsume
                 }
                 this.upDateDemandList(upparams).then(rs => {
                     self.$message({

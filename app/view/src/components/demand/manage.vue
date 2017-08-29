@@ -158,7 +158,7 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
-                    <el-table-column label="备注" prop='comment'></el-table-column>
+                    <!-- <el-table-column label="备注" prop='comment'></el-table-column> -->
                 </el-table>
             </div>
         </el-dialog>
@@ -295,17 +295,16 @@ export default {
             this.FeedbackParams.demandNo = row.demandNo;
         },
         submitFeedback() {
+            const self = this;
             this.upDateDemandList(this.FeedbackParams)
                 .then(() => {
-                    this.dlFeedback = false;
-                    this.$message({
+                    self.dlFeedback = false;
+                    self.$message({
                         message: `反馈已提交`,
                         type: 'success'
                     })
-                    this.loading = true;
-                    this.loadDemandList(this.params).then(() => {
-                        this.loading = false;
-                    })
+                    self.loading = true;
+                    self.searchDemand();
                 })
         },
         dateFormat(row, column) {
