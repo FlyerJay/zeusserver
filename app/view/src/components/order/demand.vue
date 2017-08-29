@@ -82,6 +82,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-input auto-complete="off" type="text" v-model="demandDetail.timeConsume" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                    <template slot="prepend">工期</template>
+                </el-input>
                 <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length">提 交</el-button>
                 <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length">取 消</el-button>
             </div>
@@ -94,7 +97,8 @@
 import {
     loadDemandList,
     demandDetailList,
-    loadDemandPriceList
+    loadDemandPriceList,
+    upDateDemandList
 } from '../../vuex/action'
 
 export default {
@@ -102,7 +106,8 @@ export default {
         actions: {
             loadDemandList,
             demandDetailList,
-            loadDemandPriceList
+            loadDemandPriceList,
+            upDateDemandList
         },
         getters: {
             userInfo: ({
@@ -138,6 +143,7 @@ export default {
             dlgDemandVisible: false,
             dlDemandView: false,
             loading: true,
+            updreason: '',
             demandcount: 0
         }
     },
@@ -162,9 +168,8 @@ export default {
         viewDetail(row) {
             this.dlDemandView = true;
             const param = {demandNo: row.demandNo};
+            this.updreason = row.dealReason;
             this.demandDetailList(param)
-                .then(() => {
-                })
         },
         dateFormat(row, column) {
             if(!row[column.property]) {
@@ -186,13 +191,21 @@ export default {
                 });
         },
         submitPrice() {
-            var params = {
-                demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                demandPrices:this.demandDetail,
+            if (this.activeName < 2) {
+                var params = {
+                    demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                    demandPrices:this.demandDetail,
+                }
+                this.loadDemandPriceList(params)
+            } else {
+                var upparams = {
+                   state: this.activeName,
+                   demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                   dealReason: this.updreason
+                }
+                this.upDateDemandList(upparams)
             }
-            this.loadDemandPriceList(params)
-                .then(() => {
-                });
+           
         },
         weightFormatter(spec, demandcount) {
             if (!spec) {

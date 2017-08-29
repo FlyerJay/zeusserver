@@ -54,7 +54,7 @@
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="userId" label="工期">
+                <el-table-column prop="timeConsume" label="工期">
                 </el-table-column>
                 <el-table-column prop="demandWeight" label="总重量">
                 </el-table-column>
@@ -99,11 +99,8 @@
                                     <el-row>
                                         <el-col :span="7"><div class="select-prepend">类别</div></el-col>
                                         <el-col :span="17">
-                                            <el-select v-model="specParams.type" placeholder="请选择">
-                                                <el-option value="黑管">黑管</el-option>
-                                                <el-option value="镀锌带">镀锌带</el-option>
-                                                <el-option value="热镀锌">热镀锌</el-option>
-                                            </el-select>
+                                            <el-input v-model="specParams.type" placeholder="请填写">
+                                            </el-input>
                                         </el-col>
                                     </el-row>
                                 </div>
@@ -381,7 +378,7 @@ export default {
             const height = Number(specArr[0]);
             const width = Number(specArr[1]);
             const land = Number(specArr[2]);
-            const long = 6;
+            const long = Number(specArr[3]) ? Number(specArr[3]) : 6;
             const perimeter = 2 * height + 2 * width;
             this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
         }
