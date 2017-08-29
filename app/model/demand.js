@@ -232,7 +232,7 @@ module.exports = app => {
                     msg:"删除成功"
                 }
             },
-            * list(options){
+            * priceList(options){
                 const list = yield this.findAndCountAll({
                     offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
                     limit:options.pageSize?options.pageSize:15,
@@ -331,7 +331,7 @@ module.exports = app => {
                     msg: '报价出错'
                 }
             },
-            * priceList(options){//定制化需求报价
+            * list(options){//定制化需求报价
                 if(!options.comId) return {
                     code:-1,
                     msg:"缺少公司信息"
