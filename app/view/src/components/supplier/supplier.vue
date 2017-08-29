@@ -15,39 +15,68 @@
     vuex: {
       actions: {
         updateForm
+      },
+      getters: {
+        userInfo: ({
+            common
+        }) => common.userInfo
       }
     },
     data() {
       return {
         topMenuData: [{
-            url: '/supplier/info',
-            icon: 'icon-supplier',
-            name: '供应商'
-          },
-          {
-            url: '/supplier/price',
-            icon: 'icon-price',
-            name: '价格表'
-          },
-          {
-            url: '/supplier/stock',
-            icon: 'icon-inventory',
-            name: '库存表'
-          },
-          {
-            url: '/supplier/demand',
-            icon: 'icon-baojia',
-            name: '需求报价'
-          },
-          {
-            url: '/supplier/pricechart',
-            icon: 'icon-trend',
-            name: '价格走势',
-          }
-        ]
+          url: '/supplier/info',
+          icon: 'icon-supplier',
+          name: '供应商'
+        }, 
+        {
+          url: '/supplier/price',
+          icon: 'icon-price',
+          name: '价格表'
+        },
+        {
+          url: '/supplier/stock',
+          icon: 'icon-inventory',
+          name: '库存表'
+        }, {
+          url: '/supplier/pricechart',
+          icon: 'icon-trend',
+          name: '价格走势',
+        }]
       }
     },
     mounted: function() {
+      if (this.userInfo.userRole) {
+        this.topMenuData = [];
+        if(parseInt(this.userInfo.userRole.charAt(3))) {
+          const item = {
+              url: '/supplier/info',
+              icon: 'icon-supplier',
+              name: '供应商'
+          };
+          this.topMenuData.push(item)
+        }
+        if(parseInt(this.userInfo.userRole.charAt(6))) {
+          const itemArr = [{
+              url: '/supplier/price',
+              icon: 'icon-price',
+              name: '价格表'
+            },
+            {
+              url: '/supplier/stock',
+              icon: 'icon-inventory',
+              name: '库存表'
+            }
+          ];
+          this.topMenuData = this.topMenuData.concat(itemArr)
+        }
+        const priceItem = {
+            url: '/supplier/pricechart',
+            icon: 'icon-trend',
+            name: '价格走势',
+        };
+        this.topMenuData.push(priceItem);
+      }
       this.updateForm('topMenuData', this.topMenuData)
     },
     beforeRouteEnter(to, from, next) {
@@ -57,7 +86,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  
-</style>

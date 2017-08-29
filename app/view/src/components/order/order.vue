@@ -13,11 +13,17 @@
     vuex: {
       actions: {
         updateForm
+      },
+      getters: {
+        userInfo: ({
+            common
+        }) => common.userInfo
       }
     },
     data() {
       return {
-        topMenuData: [{
+        topMenuData: [
+          {
             url: '/order/search',
             icon: 'icon-good',
             name: '现货查询'
@@ -31,15 +37,47 @@
             url: '/order/list',
             icon: 'icon-order',
             name: '订单列表'
-          },{
+          },
+          {
             url: '/order/demand',
             icon: 'icon-demand',
-            name:'定制化需求'
+            name:'需求报价'
           }
         ]
       }
     },
     mounted: function() {
+      if (this.userInfo.userRole) {
+        this.topMenuData = [];
+        if (parseInt(this.userInfo.userRole.charAt(6))) {
+          const item = {
+            url: '/order/search',
+            icon: 'icon-good',
+            name: '现货查询'
+          };
+          this.topMenuData.push(item)
+        }
+        if (parseInt(this.userInfo.userRole.charAt(5))) {
+          const itemArr = [{
+            url: '/order/cart',
+            icon: 'icon-cart',
+            name: '购物车'
+          },
+          {
+            url: '/order/list',
+            icon: 'icon-order',
+            name: '订单列表'
+          },
+          {
+            url: '/order/demand',
+            icon: 'icon-demand',
+            name: '需求报价'
+          }
+          ];
+          this.topMenuData = this.topMenuData.concat(itemArr)
+        }
+      }
+
       this.updateForm('topMenuData', this.topMenuData)
     },
     components: {

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="h-contain clearfix">
     <ul class="nav clearfix">
-      <li class="nav-item">
+      <li class="nav-item" v-if="userInfo.userRole.charAt(4)">
         <a href="#/demand/manage" :class="[ mainRoute === 'demand' ? 'active' : '' ]">需求管理</a>
       </li>
       <li class="nav-item">
@@ -10,7 +10,7 @@
       <li class="nav-item">
         <a href="#/supplier/info" :class="[ mainRoute === 'supplier' ? 'active' : '' ]">供应商录入</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="userInfo.userRole.charAt(0)">
         <a href="#/manager/review" :class="[ mainRoute === 'manager' ? 'active' : '' ]">管理员后台</a>
       </li>
       <li class="user-wrap">

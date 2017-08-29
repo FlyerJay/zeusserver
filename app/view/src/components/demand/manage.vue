@@ -415,11 +415,6 @@ export default {
             this.loading = false;
         })
     },
-    computed: {
-        demandAuth() {
-            return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
-        }
-    },
     watch: {
         ['specParams.demandAmount'](val) {
             this.weightFormatter(this.specParams.spec, Number(val))

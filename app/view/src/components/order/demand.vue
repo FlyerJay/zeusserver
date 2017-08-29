@@ -236,11 +236,6 @@ export default {
         this.loadDemandList(this.searchDeParam).then(() => {
             this.loading = false;
         })
-    },
-    computed: {
-        demandAuth() {
-            return Boolean(parseInt(this.userInfo.userRole.charAt(4)));
-        }
     }
 }
 </script>
