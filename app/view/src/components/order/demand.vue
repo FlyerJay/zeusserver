@@ -79,6 +79,7 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    <el-table-column label="目的地" prop='destination'></el-table-column>
                     <el-table-column label="报价" width="350px;">
                         <template scope="scope">
                             <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
