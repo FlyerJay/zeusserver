@@ -24,13 +24,13 @@
                     <span slot='label'>未报价需求<el-badge v-if="demand && demand.submit > 0" class="mark" :value="demand.submit" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="待反馈需求" name="1">
-                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
+                    <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="未成交需求" name="2">
-                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
+                    <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="成交需求" name="3">
-                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
+                    <span slot='label'>成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -53,7 +53,7 @@
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="userId" label="工期">
+                <el-table-column prop="timeConsume" label="工期">
                 </el-table-column>
                 <el-table-column prop="demandWeight" label="总重量">
                 </el-table-column>
@@ -61,11 +61,6 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
-                <!-- <el-table-column label="交易反馈" align="center" property="id">
-                    <template scope="scope">
-                        <el-button size="small" @click="dealFeedback(scope.row)" :disabled="scope.row.totalPrice == 0 || !scope.row.totalPrice" type="warning">填写</el-button>
-                    </template>
-                </el-table-column> -->
             </el-table>
         </div>
         <div class="page-wrap">
@@ -90,10 +85,14 @@
                             </el-input>
                         </template>
                     </el-table-column>
+                    <el-table-column label="工期">
+                        <template scope="scope">
+                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                                <template slot="prepend">工期</template>
+                            </el-input>
+                        </template>
+                    </el-table-column>
                 </el-table>
-                <el-input auto-complete="off" type="text" v-model="demandDetail.timeConsume" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
-                    <template slot="prepend">工期</template>
-                </el-input>
                 <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length">提 交</el-button>
                 <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length">取 消</el-button>
             </div>
@@ -203,21 +202,33 @@ export default {
                 });
         },
         submitPrice() {
+            const self = this;
             if (this.activeName < 2) {
                 var params = {
                     demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
                     demandPrices:this.demandDetail,
                 }
-                this.loadDemandPriceList(params)
+                this.loadDemandPriceList(params).then(rs => {
+                    self.$message({
+                        message: `报价成功`,
+                        type: 'success'
+                    });
+                    self.loadDemandList(self.searchDeParam)
+                })
             } else {
                 var upparams = {
                    state: this.activeName,
                    demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
                    dealReason: this.updreason
                 }
-                this.upDateDemandList(upparams)
+                this.upDateDemandList(upparams).then(rs => {
+                    self.$message({
+                        message: `报价成功`,
+                        type: 'success'
+                    });
+                    self.loadDemandList(self.searchDeParam)
+                })
             }
-           
         },
         weightFormatter(spec, demandcount) {
             if (!spec) {
