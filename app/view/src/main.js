@@ -31,18 +31,44 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
       }else{ 
         newDemand[item] = demand[item] - demandAmount[item];
         if(item == 'submit' && isDemandAuth){
-          Vue.prototype.$notify.info({
-            title: '新需求',
-            message: `有${newDemand[item]}条新提交的需求`,
-          });
+          !function(newDemand,item){
+            setTimeout(()=>{
+              Vue.prototype.$notify.info({
+                title: '新需求',
+                message: `有${newDemand[item]}条新提交的需求`,
+              });
+            },0)
+          }(newDemand,item)
         }
         if(item == 'price' && isDemandAuth){
-          if(item == 'submit'){
-            Vue.prototype.$notify.info({
-              title: '需求报价',
-              message: `有${newDemand[item]}条需求报价`,
-            });
-          }
+          !function(newDemand,item){
+            setTimeout(()=>{
+              Vue.prototype.$notify.info({
+                title: '需求报价',
+                message: `有${newDemand[item]}条需求报价`,
+              });
+            },0)
+          }(newDemand,item)
+        }
+        if(item == 'unDeal' && isDemandAuth){
+          !function(newDemand,item){
+            setTimeout(()=>{
+              Vue.prototype.$notify.info({
+                title: '需求交易结果',
+                message: `有${newDemand[item]}条去求交易失败`,
+              });
+            },0)
+          }(newDemand,item)
+        }
+        if(item == 'deal' && isDemandAuth){
+          !function(newDemand,item){
+            setTimeout(()=>{
+              Vue.prototype.$notify.info({
+                title: '需求交易结果',
+                message: `有${newDemand[item]}条交易成功`,
+              });
+            },0)
+          }(newDemand,item)
         }
       }
     }
