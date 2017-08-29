@@ -22,16 +22,16 @@
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
                 <el-tab-pane name="0">
-                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.submit > 0" class="mark" :value="demand.submit" /></span>
+                    <span slot='label'>未报价需求</span>
                 </el-tab-pane>
                 <el-tab-pane name="1">
-                    <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
+                    <span slot='label'>待反馈需求</span>
                 </el-tab-pane>
                 <el-tab-pane name="2">
-                    <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
+                    <span slot='label'>未成交需求</span>
                 </el-tab-pane>
                 <el-tab-pane label="成交需求" name="3">
-                    <span slot='label'>成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
+                    <span slot='label'>成交需求</span>
                 </el-tab-pane>
             </el-tabs>
         </div>
