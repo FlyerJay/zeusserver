@@ -18,20 +18,24 @@ socket.on('res',( mes ) => {
   console.log(mes);
 })
 var userRole = getCookie('userRole');
-const isDemandAuth = userRole.charAt(4) == '1';
-const isOrderAuth = userRole.charAt(5) == '1';
+const isDemandAuth = userRole && userRole.charAt(4) == '1';
+const isOrderAuth = userRole && userRole.charAt(5) == '1';
 socket.on('update',( {demand} ) => {//接收需求变更通知
-  console.log(`有新消息送达${demand}`);
+  console.log(`有新消息送达${JSON.stringify(demand)}`);
   var demandAmount = localStorage.getItem('demandAmount');
   if(demandAmount){
     demandAmount = JSON.parse(demandAmount);
     var newDemand = {};
+    console.log('3'+ JSON.stringify(demandAmount));
     for(var item in demand){
       if(demand[item] <= demandAmount[item]) {
-        demandAmount[item] = demand[item] ;
+        demandAmount[item] = demand[item] || demandAmount[item];
+        console.log(demandAmount[item],demand[item],item);
         newDemand[item] = 0;
       }else{ 
+        console.log(demandAmount[item],demand[item],item);
         newDemand[item] = demand[item] - demandAmount[item];
+        demandAmount[item] = demandAmount[item];
         if(item == 'submit' && isDemandAuth){
           !function(newDemand,item){
             setTimeout(()=>{
@@ -74,9 +78,11 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
         }
       }
     }
+    console.log('2'+JSON.stringify(demandAmount));
     localStorage.setItem('demandAmount',JSON.stringify(demandAmount));
     store.dispatch('UPDATE_DEMAND',newDemand);
   }else{
+    console.log('1'+JSON.stringify(demand));
     localStorage.setItem('demandAmount',JSON.stringify(demand));
   }
 })

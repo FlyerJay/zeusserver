@@ -198,7 +198,7 @@ module.exports = app => {
                 }
                 const result = yield this.findOne({
                     where:{
-                        demandId:{
+                        demandNo:{
                             $eq:options.demandNo
                         }
                     }
