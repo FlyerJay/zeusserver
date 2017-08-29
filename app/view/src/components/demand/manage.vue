@@ -62,9 +62,9 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id">
+                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1">
                     <template scope="scope">
-                        <el-button size="small" @click="dealFeedback(scope.row)" :disabled="scope.row.totalPrice == 0 || !scope.row.totalPrice" type="warning">填写</el-button>
+                        <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center" v-if="activeName != 3">
@@ -228,7 +228,7 @@ export default {
             },
             FeedbackParams: {
                 demandNo: '',
-                state: 0,
+                state: '',
                 dealReason: '',
             },
             demandParams: {
@@ -246,7 +246,7 @@ export default {
                 state: 0,
                 page: 1,
             },
-            dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
+            dealStatusArray: [{ value: 3, key: '交易成功' }, { value: 2, key: '交易失败' }],
             dlgDemandVisible: false,
             dlDemandView: false,
             dlFeedback: false,
@@ -299,7 +299,7 @@ export default {
                 .then(() => {
                     this.dlFeedback = false;
                     this.$message({
-                        message: `报价已提交`,
+                        message: `反馈已提交`,
                         type: 'success'
                     })
                     this.loading = true;
