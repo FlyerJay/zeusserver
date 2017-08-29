@@ -83,6 +83,37 @@ module.exports = app => {
 		tableName:"demand",
 		timestamps:false,
         classMethods:{
+            * justConutDemand(options){
+                const submit = yield this.count({
+                    where: {
+                        state: 0,
+                        comId: options.comId,
+                    }
+                })
+                const price = yield this.count({
+                    where: {
+                        state: 1,
+                        comId: options.comId,
+                    }
+                })
+                const unDeal = yield this.count({
+                    where: {
+                        state: 2,
+                        comId: options.comId,
+                    }
+                })
+                const deal = yield this.count({
+                    where: {
+                        state: 3,
+                        comId: options.comId,
+                    }
+                })
+                return {
+                    demand:{
+                        submit,price,unDeal,deal
+                    }
+                }
+            },
             * countDemand(options){
                 const submit = yield this.count({
                     where: {
