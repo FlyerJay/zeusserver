@@ -439,7 +439,7 @@ export const loadDemandList = (store, params) => {
         demandAmount = JSON.parse(demandAmount);
         console.log(params.state);
         switch(params.state){
-          case 0:
+          case '0':
             var submit = store._modules.common.state.demand.submit;
             demandAmount.submit += submit;
             store._modules.common.state.demand.submit = 0;
