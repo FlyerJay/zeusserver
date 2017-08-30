@@ -84,7 +84,7 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * justConutDemand(options){
-                const submit = yield this.count({
+                var submit = yield this.count({
                     where: {
                         state: 0,
                         comId: options.comId,
@@ -114,8 +114,8 @@ module.exports = app => {
                     }
                 }
             },
-            * countDemand(options){
-                const submit = yield this.count({
+            * countDemand(options,num){
+                var submit = yield this.count({
                     where: {
                         state: 0,
                         comId: options.comId,
@@ -139,6 +139,7 @@ module.exports = app => {
                         comId: options.comId,
                     }
                 })
+                num ? submit += 1 : '';
                 return new Promise((res,rej)=>{
                     app.io.in(`${options.comId}`).emit('update',{demand:{
                         submit,price,unDeal,deal
@@ -179,7 +180,7 @@ module.exports = app => {
                     return false
                 })
                 if(isSuccess){
-                    yield this.countDemand(options);
+                    yield this.countDemand(options,1);
                     return {
                         code:200,
                         msg:"提交成功"

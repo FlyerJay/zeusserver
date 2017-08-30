@@ -82,6 +82,7 @@ module.exports = app => {
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');
+  app.get('/zues/api/export/demandexport/*','export.demandExport');
   //数据分析
   app.get('/zues/api/cdata/value','cdata.value');
 };

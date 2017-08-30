@@ -25,7 +25,7 @@
                     <span slot='label'>未报价需求</span>
                 </el-tab-pane>
                 <el-tab-pane name="1">
-                    <span slot='label'>待反馈需求</span>
+                    <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
                 <el-tab-pane name="2">
                     <span slot='label'>未成交需求</span>
@@ -160,6 +160,7 @@
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
                     <!-- <el-table-column label="备注" prop='comment'></el-table-column> -->
                 </el-table>
+                <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
             </div>
         </el-dialog>
             
@@ -251,7 +252,8 @@ export default {
             dlDemandView: false,
             dlFeedback: false,
             loading: true,
-            dearr: []
+            dearr: [],
+            currentDemand: '',
         }
     },
     methods: {
@@ -285,6 +287,7 @@ export default {
         },
         viewDetail(row) {
             this.dlDemandView = true;
+            this.currentDemand = row.demandNo;
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {
@@ -406,6 +409,9 @@ export default {
             const long = Number(specArr[3]) ? Number(specArr[3]) : 6;
             const perimeter = 2 * height + 2 * width;
             this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
+        },
+        exportDemand(){
+            window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`);
         }
     },
     mounted: function () {

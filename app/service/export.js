@@ -71,6 +71,57 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * demandExport(options){
+            if(!options.demandNo) return {
+                code: -1,
+                msg: '缺少需求编号'
+            }
+            const baseInfo = yield app.model.query(`select * from demand where demandNo = :demandNo`,{
+                replacements:{
+                    demandNo: options.demandNo,
+                }
+            })
+            const list = yield app.model.query(`select * from demand_detail where demandNo = :demandNo`,{
+                replacements:{
+                    demandNo: options.demandNo
+                }
+            })
+            var states = {
+                '0':'未报价',
+                '1':'未反馈',
+                '2':'成交失败',
+                '3':'成交成功'
+            }
+            var tmpData = [];
+            tmpData.push(
+                [
+                    '客户名称',
+                    baseInfo[0][0].customerName,
+                    '客户电话',
+                    baseInfo[0][0].customerPhone,
+                    '目的地',
+                    baseInfo[0][0].destination,
+                    '状态',
+                    states[
+                        baseInfo[0][0].state + ''
+                    ]
+                ]
+            )
+            tmpData.push([]);
+            tmpData.push(['规格','类型','需求数量','需求重量','单价','运费']);
+            list[0].map(v => {
+                const spec = v['spec'];
+                const type = v['type'];
+                const demandAmount = v['demandAmount'];
+                const demandWeight = v['demandWeight'];
+                const factoryPrice = v['factoryPrice'];
+                const freight = v['freight'];
+                var lineData = [spec,type,demandAmount,demandWeight,factoryPrice,freight];
+                tmpData.push(lineData);
+            })
+            var buffer = xlsx.build([{name: "需求详情", data: tmpData}])
+            return buffer;
+        }
         * orderPrint(options) {
             const [$1,$2] = yield [app.model.query(`SELECT o.* FROM tb_order o WHERE o.orderNo = :orderNo`,{
                 replacements:{
