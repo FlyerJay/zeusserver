@@ -75,26 +75,27 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    <el-table-column label="备注" prop='comment'></el-table-column>
                     <el-table-column label="报价" width="310px;">
                         <template scope="scope">
-                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" placeholder="" style="width: 49%;float:left;margin: 5px 5px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" :disabled="activeName > 1"  style="width: 49%;float:left;margin: 5px 5px 5px">
                                 <template slot="prepend">出厂价</template>
                             </el-input>
-                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" placeholder="" style="width: 47%;float:left;margin: 5px 0px 5px">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" :disabled="activeName > 1" style="width: 47%;float:left;margin: 5px 0px 5px">
                                 <template slot="prepend">运费</template>
                             </el-input>
                         </template>
                     </el-table-column>
                     <el-table-column label="工期" width="150px">
                         <template scope="scope">
-                            <el-input auto-complete="off" type="text" v-model="timeConsume" placeholder="" style="width: 100%;float:left;margin: 5px 0px 5px">
+                            <el-input auto-complete="off" type="text" v-model="timeConsume" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 <template slot="prepend">工期</template>
                             </el-input>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length">提 交</el-button>
-                <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length">取 消</el-button>
+                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
+                <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
             </div>
         </el-dialog>
 
@@ -208,7 +209,8 @@ export default {
                         message: `报价成功`,
                         type: 'success'
                     });
-                    self.loadDemandList(self.searchDeParam)
+                    self.loadDemandList(self.searchDeParam);
+                    self.dlDemandView =false;
                 })
             } else {
                 var upparams = {
@@ -222,7 +224,8 @@ export default {
                         message: `报价成功`,
                         type: 'success'
                     });
-                    self.loadDemandList(self.searchDeParam)
+                    self.loadDemandList(self.searchDeParam);
+                    self.dlDemandView =false;
                 })
             }
         },
@@ -288,7 +291,7 @@ export default {
         }
 
         .detailview {
-            width: 900px;
+            width: 965px;
             .el-input-group {
                 float: inherit;
                 width: 100%;
