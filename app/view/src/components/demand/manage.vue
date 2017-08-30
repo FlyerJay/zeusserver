@@ -67,7 +67,7 @@
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" v-if="activeName != 3">
+                <el-table-column label="操作" align="center" v-if="activeName == 0">
                     <template scope="scope">
                         <el-button size="small" @click="removeDemand(scope.row)" type="danger">删除</el-button>
                     </template>
@@ -158,7 +158,23 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
-                    <!-- <el-table-column label="备注" prop='comment'></el-table-column> -->
+                    <el-table-column label="报价" width="310px;" v-if="activeName > 0">
+                        <template scope="scope">
+                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
+                                <template slot="prepend">出厂价</template>
+                            </el-input>
+                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" :disabled="true" style="width: 47%;float:left;margin: 5px 0px 5px">
+                                <template slot="prepend">运费</template>
+                            </el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="工期" width="150px" v-if="activeName > 0">
+                        <template scope="scope">
+                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                <template slot="prepend">工期</template>
+                            </el-input>
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
             </div>

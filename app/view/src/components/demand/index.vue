@@ -23,7 +23,7 @@ export default {
       topMenuData: [{
         url: '/demand/manage',
         icon: 'icon-review',
-        name: '带货/直发需求'
+        name: '带货/直发'
       }]
     }
   },
