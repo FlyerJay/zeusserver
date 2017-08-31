@@ -37,13 +37,14 @@
         </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
+                <el-table-column type="index" width="50"></el-table-column>
                 <el-table-column prop="userId" label="用户ID">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="createTime" label="需求提交时间" :formatter="dateFormat">
+                <el-table-column prop="createTime" label="提交时间" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="采购报价时间" :formatter="dateFormat">
+                <el-table-column prop="priceTime" label="报价时间" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
