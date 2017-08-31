@@ -235,7 +235,7 @@ module.exports = app => {
                     comment: options.comment || '',
                     minPrice: minPrice,
                     minSupplier: minSupplier || '',
-                    minInventory: minInventory || '',
+                    minInventory: minInventory || 0,
                 });
                 return {
                     code:200,
