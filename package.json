@@ -34,7 +34,7 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --sticky",
+    "start": "egg-scripts start --sticky --daemon --port=7001",
     "dev": "egg-bin dev --sticky",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
