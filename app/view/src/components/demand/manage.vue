@@ -37,26 +37,29 @@
         </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column prop="userId" label="用户ID">
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="userId" label="销售">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="createTime" label="需求提交时间" :formatter="dateFormat">
+                <el-table-column prop="createTime" label="提交时间" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="采购报价时间" :formatter="dateFormat">
+                <el-table-column prop="priceTime" label="报价时间" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
-                <el-table-column prop="comment" label="备注">
+                <!-- <el-table-column prop="comment" label="备注"> -->
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="timeConsume" label="工期">
+                <!-- <el-table-column prop="timeConsume" label="工期">
                 </el-table-column>
                 <el-table-column prop="demandWeight" label="总重量">
+                </el-table-column> -->
+                <el-table-column prop="state" :formatter="statusFormatter" label="采购">
                 </el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
                 </el-table-column>
@@ -85,7 +88,7 @@
                         <el-table-column label="规格" prop='spec'></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="总重量" prop='demandWeight'></el-table-column>
                         <el-table-column label="操作" align="center">
                             <template scope="scope">
                                 <el-button size="small" @click="deleteSpec(scope.$index)" type="warning">删除</el-button>
@@ -158,22 +161,14 @@
                     <el-table-column label="类型" prop='type'></el-table-column>
                     <el-table-column label="数量" prop='demandAmount'></el-table-column>
                     <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                    <el-table-column label="目的地" prop='destination'></el-table-column>
                     <el-table-column label="报价" width="310px;" v-if="activeName > 0">
-                        <template scope="scope">
-                            <el-input auto-complete="off" type="number" v-model="scope.row.factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
-                                <template slot="prepend">出厂价</template>
-                            </el-input>
-                            <el-input auto-complete="off" type="number" v-model="scope.row.freight" :disabled="true" style="width: 47%;float:left;margin: 5px 0px 5px">
-                                <template slot="prepend">运费</template>
-                            </el-input>
-                        </template>
+                        <el-input auto-complete="off" type="text" v-model="factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
+                        </el-input>
                     </el-table-column>
-                    <el-table-column label="工期" width="150px" v-if="activeName > 0">
-                        <template scope="scope">
-                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
-                                <template slot="prepend">工期</template>
-                            </el-input>
-                        </template>
+                    <el-table-column label="备注" width="150px" v-if="activeName > 0">
+                        <el-input auto-complete="off" type="text" v-model="comment" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
+                        </el-input>
                     </el-table-column>
                 </el-table>
                 <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
