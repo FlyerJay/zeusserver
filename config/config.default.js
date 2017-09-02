@@ -25,14 +25,6 @@ module.exports = appInfo => {
         '/':{
           connectionMiddleware:[],
           packetMiddleware:[],
-        },
-        '/info':{
-          connectionMiddleware:[],
-          packetMiddleware:[],
-        },
-        '/demand':{
-          connectionMiddleware:[],
-          packetMiddleware:[],
         }
       }
     },
