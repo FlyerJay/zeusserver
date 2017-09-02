@@ -238,7 +238,7 @@ module.exports = app => {
                                 comment: v.comment,
                                 long: v.long,
                                 minPrice: v.minPrice,
-                                minInventory: v.minInventory,
+                                minInventory: v.minInventory || 0,
                                 minSupplier: v.minSupplier,
                             },{transaction:t})
                             app.model.Chart.destroy({

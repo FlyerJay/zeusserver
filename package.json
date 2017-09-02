@@ -35,9 +35,9 @@
   },
   "scripts": {
     "start": "egg-scripts start --sticky --daemon --port=7001",
+    "test": "egg-scripts start --sticky --port=7001",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev --sticky",
-    "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",

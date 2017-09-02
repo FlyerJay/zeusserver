@@ -219,9 +219,33 @@ module.exports = app => {
                         }
                     }
                 )
-                const minPrice = $2[0][0].value;
-                const minSupplier = $2[0][0].supplierName;
-                const minInventory = $2[0][0].inventoryAmount;
+                var minPrice,minSupplier,minInventory;
+                if($2[0][0]){
+                    minPrice = $2[0][0].value;
+                    minSupplier = $2[0][0].supplierName;
+                    minInventory = $2[0][0].inventoryAmount;
+                }else{
+                    var $3 = yield app.model.query(`
+                        SELECT si.inventoryAmount,s.supplierName,sv.value FROM supplier_inventory si
+                            LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv ON
+                            si.spec = sv.spec AND
+                            si.type = sv.type 
+                            AND si.supplierId = sv.supplierId
+                            AND si.comId = si.comId
+                            LEFT JOIN supplier s ON
+                            s.supplierId = si.supplierId
+                            AND s.comId = si.comId
+                            AND s.isDelete = 'N'
+                            WHERE si.supplierInventoryId = :Id
+                    `,{
+                        replacements:{
+                            Id: options.supplierInventoryId
+                        }
+                    })
+                    minPrice = $3[0][0].value;
+                    minSupplier = $3[0][0].supplierName;
+                    minInventory = $3[0][0].inventoryAmount;
+                }
                 const result = yield this.create({
                     userId:options.userId,
                     comId:options.comId,
@@ -235,7 +259,7 @@ module.exports = app => {
                     comment: options.comment || '',
                     minPrice: minPrice,
                     minSupplier: minSupplier || '',
-                    minInventory: minInventory || '',
+                    minInventory: minInventory || 0,
                 });
                 return {
                     code:200,
