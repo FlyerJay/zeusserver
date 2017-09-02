@@ -140,6 +140,7 @@ module.exports = app => {
                     }
                 })
                 num ? submit += 1 : '';
+                console.log(app.io);
                 return new Promise((res,rej)=>{
                     app.io.in(`${options.comId}`).emit('update',{demand:{
                         submit,price,unDeal,deal
