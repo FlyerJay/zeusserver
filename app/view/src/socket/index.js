@@ -1,1 +1,1 @@
-export var socket = require('socket.io-client')('http://www.kxzeus.com/info');
+export var socket = require('socket.io-client')('http://www.kxzeus.com');
