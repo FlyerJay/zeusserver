@@ -181,7 +181,7 @@ module.exports = app => {
                     return false
                 })
                 if(isSuccess){
-                    yield this.countDemand(options,1);
+                    //yield this.countDemand(options,1);
                     return {
                         code:200,
                         msg:"提交成功"
@@ -210,7 +210,7 @@ module.exports = app => {
                     result[arr] = options[arr];
                 }
                 const data = yield result.save();
-                yield this.countDemand(options);
+                //yield this.countDemand(options);
                 return {
                     code:200,
                     msg:"更新数据成功",
@@ -322,7 +322,7 @@ module.exports = app => {
                             timeConsume: options.timeConsume || 0,
                         }
                     })
-                    yield this.countDemand(options);
+                    //yield this.countDemand(options);
                     return {
                         code: 200,
                         msg: '报价成功'

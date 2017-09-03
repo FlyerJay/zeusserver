@@ -536,10 +536,13 @@ export const upDateDemandList = ({ dispatch }, params) => {
 }
 
 //定制化需求明细
-export const demandDetailList = ({ dispatch }, params) => {
+export const demandDetailList = ({ dispatch }, params,destination) => {
   return axios.get('/zues/api/demand/detail',{ params })
   .then(function (response) {
     if (response.data.code === 200) {
+      response.data.data.forEach( v => {
+        v.destination = destination;
+      })
       dispatch('UPDATE_ORDERFORM','demandDetail', response.data.data)
       return Promise.resolve();
     }else if (response.data.code === -1) {

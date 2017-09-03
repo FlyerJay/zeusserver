@@ -166,7 +166,7 @@ export default {
             const param = {demandNo: row.demandNo};
             this.updreason = row.dealReason;
             this.timeConsume = row.timeConsume;
-            this.demandDetailList(param)
+            this.demandDetailList(param,row.destination);
         },
         dateFormat(row, column) {
             if(!row[column.property]) {

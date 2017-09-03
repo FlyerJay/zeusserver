@@ -71,6 +71,16 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * demandList(options){
+            const list = yield app.model.query(`SELECT * FROM demand d`);
+            var tmpData = [];
+            tmpData.push([]);
+            list[0].map((v) => {
+                tmpData.push(v);
+            })
+            var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
+            return buffer;
+        }
         * demandExport(options){
             if(!options.demandNo) return {
                 code: -1,
