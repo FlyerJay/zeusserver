@@ -308,7 +308,8 @@ module.exports = app => {
                     return Promise.all(options.demandPrices.map( v => {
                         app.model.DemandDetail.update({
                             factoryPrice: v.factoryPrice || 0,
-                            freight: v.freight || 0
+                            freight: v.freight || 0,
+                            comment: v.comment,
                         },{
                             where:{
                                 demandDetailId:{
