@@ -20,7 +20,7 @@ module.exports = app => {
             comment:"公司编号(关联公司信息)"
         },
         demandWeight: {
-            type: INTEGER,
+            type: DOUBLE(11,2),
             comment:"需求吨位"
         },
         demandAmount: {
@@ -29,7 +29,11 @@ module.exports = app => {
         },
         userId: {
             type: STRING(20),
-            comment:"业务员"
+            comment: "业务员"
+        },
+        priceUser: {
+            type: STRING(20),
+            comment: "采购人"
         },
         totalFreight:{
             type:DOUBLE(10,2),
@@ -153,13 +157,18 @@ module.exports = app => {
                     code: -1,
                     msg: "请补充需求明细"
                 }
+                var demandWeight = 0;
+                options.demandDetails.forEach( v => {
+                    demandWeight += (v.demandWeight - 0);
+                });
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
                 const isSuccess = app.model.transaction(async (t)=>{
                     return await this.create(
                         Object.assign(options,{
                         state: 0,
                         demandNo: randomNo,
-                        createTime: +new Date()
+                        createTime: +new Date(),
+                        demandWeight
                     }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
@@ -181,7 +190,7 @@ module.exports = app => {
                     return false
                 })
                 if(isSuccess){
-                    yield this.countDemand(options,1);
+                    //yield this.countDemand(options,1);
                     return {
                         code:200,
                         msg:"提交成功"
@@ -210,7 +219,7 @@ module.exports = app => {
                     result[arr] = options[arr];
                 }
                 const data = yield result.save();
-                yield this.countDemand(options);
+                //yield this.countDemand(options);
                 return {
                     code:200,
                     msg:"更新数据成功",
@@ -223,6 +232,13 @@ module.exports = app => {
                     msg:"缺少查询主键"
                 }
                 yield this.destroy({
+                    where:{
+                        demandNo:{
+                            $in:options.demandNo.split(',')
+                        }
+                    }
+                })
+                yield app.model.DemandDetail.destroy({
                     where:{
                         demandNo:{
                             $in:options.demandNo.split(',')
@@ -296,7 +312,8 @@ module.exports = app => {
                     return Promise.all(options.demandPrices.map( v => {
                         app.model.DemandDetail.update({
                             factoryPrice: v.factoryPrice || 0,
-                            freight: v.freight || 0
+                            freight: v.freight || 0,
+                            comment: v.comment,
                         },{
                             where:{
                                 demandDetailId:{
@@ -313,16 +330,18 @@ module.exports = app => {
                 })
                 if(isSuccess) {
                     yield app.model.query(`
-                        UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume
+                        UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume,
+                        priceUser = :priceUser
                         WHERE demandNo = :demandNo
                     `,{
                         replacements:{
                             priceTime: +new Date(),
                             demandNo: options.demandNo,
                             timeConsume: options.timeConsume || 0,
+                            priceUser: options.userId
                         }
                     })
-                    yield this.countDemand(options);
+                    //yield this.countDemand(options);
                     return {
                         code: 200,
                         msg: '报价成功'

@@ -7,7 +7,10 @@
       </a>
     </div>
     <el-menu default-active="" class="el-menu-vertical-demo" :router="true">
-      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index"  :class="[ $route.path === menu.url ? 'active' : '' ]"><i class="iconfont" :class="menu.icon"></i>{{menu.name}}</el-menu-item>
+      <el-menu-item :index="menu.url" v-for="(menu, index) in topMenuData" :key="index"  :class="[ $route.path === menu.url ? 'active' : '' ]">
+        <i class="iconfont" :class="menu.icon"></i>{{menu.name}}
+        <el-badge v-if="menu.name == '需求报价' || menu.name == '带货/直发'" :value="badge" />
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -21,10 +24,18 @@
       getters: {
         topMenuData: ({
           common
-        }) => common.topMenuData
+        }) => common.topMenuData,
+        demand: ({
+                    common
+        }) => common.demand
       },
       actions: {
         updateForm
+      },
+    },
+    computed:{
+      badge(val){
+        return this.demand.submit + this.demand.price + this.demand.deal + this.demand.unDeal;
       }
     }
   }

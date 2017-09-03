@@ -71,6 +71,33 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * demandList(options){
+            const list = yield app.model.query(`SELECT * FROM demand d where comId = :comId`,{
+                replacements:{
+                    comId: options.comId,
+                }
+            });
+            var tmpData = [];
+            tmpData.push(['需求编号','用户ID','状态','总重量','客户名称','目的地','客户电话','创建时间','报价时间','备注']);
+            list[0].map((v) => {
+                const totalFreight = v['totalFreight'] || 0;
+                const customerName = v['customerName'] || '';
+                const demandWeight = v['demandWeight'] || 0;
+                const customerPhone = v['customerPhone'] || '';
+                const createTime = new Date(v['createTime']).toLocaleString();
+                const priceTime = new Date(v['priceTime']).toLocaleString();
+                const states = {
+                    '0':'未报价',
+                    '1':'待反馈',
+                    '2':'未成交',
+                    '3':'已成交'
+                }
+                const state = states[v['state']];
+                tmpData.push([v['demandNo'],v['userId'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,v['comment']]);
+            })
+            var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
+            return buffer;
+        }
         * demandExport(options){
             if(!options.demandNo) return {
                 code: -1,

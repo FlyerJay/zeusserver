@@ -47,7 +47,6 @@
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
-                </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
