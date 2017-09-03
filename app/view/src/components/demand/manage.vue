@@ -2,7 +2,7 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.userId" placeholder="销售"></el-input>
+                <el-input v-model="searchDeParam.userId" placeholder="输入销售名称"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -92,34 +92,32 @@
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
                         <el-row :gutter='10'>
-                            <el-col :span='7'>
-                                <el-input v-model="specParams.spec" auto-complete="off" placeholder="(例：12*13*14*6)">
+                            <el-col :span='6'>
+                                <el-input v-model="specParams.spec" auto-complete="off" placeholder="例:50*50*3.0*6">
                                     <template slot="prepend">规格</template>
                                 </el-input>
                             </el-col>
-                            <el-col :span='6'>
+                            <el-col :span='4'>
                                 <div class="select-control">
                                     <el-row>
-                                        <el-col :span="7"><div class="select-prepend">类别</div></el-col>
-                                        <el-col :span="17">
-                                            <el-input v-model="specParams.type" placeholder="(例：黑管)">
+                                        <el-col :span="9"><div class="select-prepend">类别</div></el-col>
+                                        <el-col :span="15">
+                                            <el-input v-model="specParams.type" placeholder="">
                                             </el-input>
                                         </el-col>
                                     </el-row>
                                 </div>
                             </el-col>
-                            <el-col :span='4'>
+                            <el-col :span='5'>
                                 <el-input v-model="specParams.demandAmount" auto-complete="off">
                                     <template slot="prepend">数量</template>
+                                    <template slot="append">支</template>
                                 </el-input>
-                                <!-- <el-select v-model="unit">
-                                    <el-option label="支" value="1"></el-option>
-                                    <el-option label="件" value="2"></el-option>
-                                </el-select> -->
                             </el-col>
-                            <el-col :span='4'>
+                            <el-col :span='6'>
                                 <el-input v-model="specParams.demandWeight" auto-complete="off">
                                     <template slot="prepend">重量</template>
+                                    <template slot="append">吨</template>
                                 </el-input>
                             </el-col>
                             <el-col :span='3'>
@@ -161,8 +159,8 @@
                     <el-table :data="demandDetail" border style="width: 100%">
                         <el-table-column label="规格" prop='spec'></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
                         <el-table-column label="报价" width="310px;" v-if="activeName > 0">
                             <el-input auto-complete="off" type="text" v-model="factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
                             </el-input>
@@ -184,6 +182,7 @@
                             <el-col :span='12'>
                                 <el-input v-model="allweight" auto-complete="off" :disabled="true">
                                     <template slot="prepend">总重量</template>
+                                    <template slot="append">吨</template>
                                 </el-input>
                             </el-col>
                         </el-row>

@@ -2,7 +2,7 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.userId" placeholder="销售"></el-input>
+                <el-input v-model="searchDeParam.userId" placeholder="输入销售名称"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -70,8 +70,8 @@
                     <el-table :data="demandDetail" border style="width: 100%">
                         <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
                         <el-table-column label="报价" width="200px;">
                             <template scope="scope" label="报价">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
@@ -95,6 +95,7 @@
                             <el-col :span='12'>
                                 <el-input v-model="allweight" auto-complete="off" :disabled="true">
                                     <template slot="prepend">总重量</template>
+                                    <template slot="append">吨</template>
                                 </el-input>
                             </el-col>
                         </el-row>
