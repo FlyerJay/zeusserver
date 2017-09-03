@@ -18,6 +18,7 @@
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
             <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">需求上传</el-button>
+            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="exportDemandList">导出需求</el-button>
         </div>
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
@@ -423,6 +424,10 @@ export default {
         },
         exportDemand(){
             window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`);
+        },
+        exportDemandList(){
+            var date = new Date().formatDate('yyyyMMdd');
+            window.open(`/zues/api/export/demandlist/需求列表${date}.xls`);
         }
     },
     mounted: function () {

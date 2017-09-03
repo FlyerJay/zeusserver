@@ -41,7 +41,7 @@
           {
             url: '/order/demand',
             icon: 'icon-demand',
-            name:'需求报价'
+            name:'需求报价',
           }
         ]
       }
