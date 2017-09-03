@@ -92,8 +92,8 @@
                         </el-table-column>
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
-                        <el-row :gutter='10'>
-                            <el-col :span='6'>
+                        <el-row :gutter='11'>
+                            <el-col :span='7'>
                                 <el-input v-model="specParams.spec" auto-complete="off" placeholder="例:50*50*3.0*6">
                                     <template slot="prepend">规格</template>
                                 </el-input>
@@ -101,8 +101,8 @@
                             <el-col :span='4'>
                                 <div class="select-control">
                                     <el-row>
-                                        <el-col :span="9"><div class="select-prepend">类别</div></el-col>
-                                        <el-col :span="15">
+                                        <el-col :span="10"><div class="select-prepend">类别</div></el-col>
+                                        <el-col :span="14">
                                             <el-input v-model="specParams.type" placeholder="">
                                             </el-input>
                                         </el-col>
@@ -115,7 +115,7 @@
                                     <template slot="append">支</template>
                                 </el-input>
                             </el-col>
-                            <el-col :span='6'>
+                            <el-col :span='5'>
                                 <el-input v-model="specParams.demandWeight" auto-complete="off">
                                     <template slot="prepend">重量</template>
                                     <template slot="append">吨</template>
