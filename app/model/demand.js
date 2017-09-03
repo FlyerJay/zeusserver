@@ -29,7 +29,11 @@ module.exports = app => {
         },
         userId: {
             type: STRING(20),
-            comment:"业务员"
+            comment: "业务员"
+        },
+        priceUser: {
+            type: STRING(20),
+            comment: "采购人"
         },
         totalFreight:{
             type:DOUBLE(10,2),
@@ -326,13 +330,15 @@ module.exports = app => {
                 })
                 if(isSuccess) {
                     yield app.model.query(`
-                        UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume
+                        UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume,
+                        priceUser = :priceUser
                         WHERE demandNo = :demandNo
                     `,{
                         replacements:{
                             priceTime: +new Date(),
                             demandNo: options.demandNo,
                             timeConsume: options.timeConsume || 0,
+                            priceUser: options.userId
                         }
                     })
                     //yield this.countDemand(options);
