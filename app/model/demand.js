@@ -20,7 +20,7 @@ module.exports = app => {
             comment:"公司编号(关联公司信息)"
         },
         demandWeight: {
-            type: INTEGER,
+            type: DOUBLE(11,2),
             comment:"需求吨位"
         },
         demandAmount: {
@@ -153,13 +153,18 @@ module.exports = app => {
                     code: -1,
                     msg: "请补充需求明细"
                 }
+                var demandWeight = 0;
+                options.demandDetails.forEach( v => {
+                    demandWeight += (v.demandWeight - 0);
+                });
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
                 const isSuccess = app.model.transaction(async (t)=>{
                     return await this.create(
                         Object.assign(options,{
                         state: 0,
                         demandNo: randomNo,
-                        createTime: +new Date()
+                        createTime: +new Date(),
+                        demandWeight
                     }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
@@ -223,6 +228,13 @@ module.exports = app => {
                     msg:"缺少查询主键"
                 }
                 yield this.destroy({
+                    where:{
+                        demandNo:{
+                            $in:options.demandNo.split(',')
+                        }
+                    }
+                })
+                yield app.model.DemandDetail.destroy({
                     where:{
                         demandNo:{
                             $in:options.demandNo.split(',')

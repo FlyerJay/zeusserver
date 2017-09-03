@@ -18,7 +18,7 @@
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
             <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">需求上传</el-button>
-            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="exportDemandList">导出需求</el-button>
+            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">导出需求</el-button>
         </div>
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
@@ -57,9 +57,9 @@
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="timeConsume" label="工期">
-                </el-table-column>
-                <el-table-column prop="demandWeight" label="总重量">
                 </el-table-column> -->
+                <el-table-column prop="demandWeight" label="总重量">
+                </el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="采购">
                 </el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
@@ -427,7 +427,7 @@ export default {
         },
         exportDemandList(){
             var date = new Date().formatDate('yyyyMMdd');
-            window.open(`/zues/api/export/demandlist/需求列表${date}.xls`);
+            window.open(`/zues/api/export/demandlist/需求列表.xls`);
         }
     },
     mounted: function () {
