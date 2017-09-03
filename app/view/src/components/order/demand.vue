@@ -1,8 +1,8 @@
 <template>
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
-            <el-form-item label="用户ID：">
-                <el-input v-model="searchDeParam.userId" placeholder="输入ID"></el-input>
+            <el-form-item label="销售：">
+                <el-input v-model="searchDeParam.userId" placeholder="销售"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -52,9 +52,7 @@
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="demandWeight" label="总重量">
-                </el-table-column>
-                <el-table-column prop="state" :formatter="statusFormatter" label="采购"></el-table-column>
+                <el-table-column prop="priceUser" label="采购"></el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
@@ -67,25 +65,49 @@
         </div>
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
-                <el-table :data="demandDetail" border style="width: 100%">
-                    <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
-                    <el-table-column label="类型" prop='type'></el-table-column>
-                    <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                    <el-table-column label="总重量" prop='demandWeight'></el-table-column>
-                    <el-table-column label="目的地" prop='destination'></el-table-column>
-                    <el-table-column label="报价" width="200px;">
-                        <template scope="scope" label="报价">
-                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
-                            </el-input>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="备注" width="150px">
-                        <template scope="scope">
-                            <el-input auto-complete="off" type="text" v-model="scope.row.timeConsume" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
-                            </el-input>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <div class="spec-wrap">
+                    <el-table :data="demandDetail" border style="width: 100%">
+                        <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
+                        <el-table-column label="类型" prop='type'></el-table-column>
+                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="报价" width="200px;">
+                            <template scope="scope" label="报价">
+                                <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                </el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" width="150px">
+                            <template scope="scope">
+                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                </el-input>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="destination" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">目的地</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-input v-model="allweight" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">总重量</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row>
+                            <el-col :span='24'>
+                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">备注</template>
+                                </el-input>
+                            </el-col>    
+                        </el-row>    
+                    </div>
+                </div>    
                 <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
                 <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
             </div>
@@ -139,6 +161,9 @@ export default {
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
+            comment: '',
+            destination: '',
+            allweight: 0,
             loading: true,
             updreason: '',
             demandcount: 0
@@ -165,9 +190,19 @@ export default {
         viewDetail(row) {
             this.dlDemandView = true;
             const param = {demandNo: row.demandNo};
-            this.updreason = row.dealReason;
-            this.timeConsume = row.timeConsume;
-            this.demandDetailList(param,row.destination);
+            const self = this;
+            this.demandDetailList(param)
+                .then(() => {
+                    self.updreason = row.dealReason;
+                    self.destination = row.destination;
+                    self.comment = row.comment;
+                    var w = 0;
+                    self.demandDetail.map((v) => {
+                        w =  w + Number(v.demandWeight);
+                    })
+                    self.allweight = w
+                })
+           
         },
         dateFormat(row, column) {
             if(!row[column.property]) {
@@ -220,18 +255,6 @@ export default {
                     self.dlDemandView =false;
                 })
             }
-        },
-        weightFormatter(spec, demandcount) {
-            if (!spec) {
-                return 0
-            }
-            const specArr = spec.split('*');
-            const height = Number(specArr[0]);
-            const width = Number(specArr[1]);
-            const land = Number(specArr[2]);
-            const long = 6;
-            const perimeter = 2 * height + 2 * width;
-            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
         }
     },
     mounted: function () {

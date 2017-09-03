@@ -1,8 +1,8 @@
 <template>
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
-            <el-form-item label="用户ID：">
-                <el-input v-model="searchDeParam.userId" placeholder="输入ID"></el-input>
+            <el-form-item label="销售：">
+                <el-input v-model="searchDeParam.userId" placeholder="销售"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -49,18 +49,13 @@
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
-                <!-- <el-table-column prop="comment" label="备注"> -->
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
-                <!-- <el-table-column prop="timeConsume" label="工期">
-                </el-table-column> -->
-                <el-table-column prop="demandWeight" label="总重量">
-                </el-table-column>
-                <el-table-column prop="state" :formatter="statusFormatter" label="采购">
+                <el-table-column prop="priceUser" label="采购">
                 </el-table-column>
                 <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
                 </el-table-column>
@@ -99,7 +94,7 @@
                     <div class="clearfix" style="margin-top:10px;">
                         <el-row :gutter='10'>
                             <el-col :span='7'>
-                                <el-input v-model="specParams.spec" auto-complete="off">
+                                <el-input v-model="specParams.spec" auto-complete="off" placeholder="(例：12*13*14*6)">
                                     <template slot="prepend">规格</template>
                                 </el-input>
                             </el-col>
@@ -108,7 +103,7 @@
                                     <el-row>
                                         <el-col :span="7"><div class="select-prepend">类别</div></el-col>
                                         <el-col :span="17">
-                                            <el-input v-model="specParams.type" placeholder="请填写">
+                                            <el-input v-model="specParams.type" placeholder="(例：黑管)">
                                             </el-input>
                                         </el-col>
                                     </el-row>
@@ -118,6 +113,10 @@
                                 <el-input v-model="specParams.demandAmount" auto-complete="off">
                                     <template slot="prepend">数量</template>
                                 </el-input>
+                                <!-- <el-select v-model="unit">
+                                    <el-option label="支" value="1"></el-option>
+                                    <el-option label="件" value="2"></el-option>
+                                </el-select> -->
                             </el-col>
                             <el-col :span='4'>
                                 <el-input v-model="specParams.demandWeight" auto-complete="off">
@@ -128,9 +127,11 @@
                                 <el-button type="warning" style="width:100%" @click="addSpec">添加规格</el-button>
                             </el-col>
                         </el-row>
+                        <div>
+                            <span class="sub-txt"></span>
+                        </div>
                     </div>
                 </div>
-                <!-- <span class="sub-txt">（重量默认按6m计算）</span> -->
                 <div class="clearfix" style="margin-top: 16px;">
                     <el-row :gutter='8'>
                         <el-col :span='8'>
@@ -156,22 +157,48 @@
             </div>
         </el-dialog>
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
-            <div class="dialog-content">
-                <el-table :data="demandDetail" border style="width: 100%">
-                    <el-table-column label="规格" prop='spec'></el-table-column>
-                    <el-table-column label="类型" prop='type'></el-table-column>
-                    <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                    <el-table-column label="重量" prop='demandWeight'></el-table-column>
-                    <el-table-column label="目的地" prop='destination'></el-table-column>
-                    <el-table-column label="报价" width="310px;" v-if="activeName > 0">
-                        <el-input auto-complete="off" type="text" v-model="factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
-                        </el-input>
-                    </el-table-column>
-                    <el-table-column label="备注" width="150px" v-if="activeName > 0">
-                        <el-input auto-complete="off" type="text" v-model="comment" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
-                        </el-input>
-                    </el-table-column>
-                </el-table>
+            <div class="dialog-content clearfix">
+                <div class="spec-wrap">
+                    <el-table :data="demandDetail" border style="width: 100%">
+                        <el-table-column label="规格" prop='spec'></el-table-column>
+                        <el-table-column label="类型" prop='type'></el-table-column>
+                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="报价" width="310px;" v-if="activeName > 0">
+                            <el-input auto-complete="off" type="text" v-model="factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
+                            </el-input>
+                        </el-table-column>
+                        <el-table-column label="备注" width="150px" v-if="activeName > 0">
+                            <template :scope="scope">
+                                <el-input auto-complete="off" type="text" v-model="scope.comment" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                </el-input>
+                            </template>    
+                        </el-table-column>
+                    </el-table>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">目的地</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-input v-model="allweight" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">总重量</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row>
+                            <el-col :span='24'>
+                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                    <template slot="prepend">备注</template>
+                                </el-input>
+                            </el-col>    
+                        </el-row>    
+                    </div>
+                </div>
                 <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
             </div>
         </el-dialog>
@@ -259,6 +286,9 @@ export default {
                 state: 0,
                 page: 1,
             },
+            comment: '',
+            destination: '',
+            allweight: 0,
             dealStatusArray: [{ value: 3, key: '交易成功' }, { value: 2, key: '交易失败' }],
             dlgDemandVisible: false,
             dlDemandView: false,
@@ -266,6 +296,7 @@ export default {
             loading: true,
             dearr: [],
             currentDemand: '',
+            unit: 1
         }
     },
     methods: {
@@ -301,8 +332,16 @@ export default {
             this.dlDemandView = true;
             this.currentDemand = row.demandNo;
             const param = {demandNo: row.demandNo};
+            const self = this;
             this.demandDetailList(param)
                 .then(() => {
+                    self.comment = row.comment;
+                    self.destination = row.destination;
+                    var w = 0;
+                    self.demandDetail.map((v) => {
+                        w =  w + Number(v.demandWeight);
+                    })
+                    self.allweight = w
                 })
         },
         dealFeedback(row) {
@@ -420,7 +459,7 @@ export default {
             const land = Number(specArr[2]);
             const long = Number(specArr[3]) ? Number(specArr[3]) : 6;
             const perimeter = 2 * height + 2 * width;
-            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * 6 * 0.02466 * demandcount / 1000).toFixed(2);
+            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * long * 0.02466 * demandcount / 1000).toFixed(2);
         },
         exportDemand(){
             window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`);
