@@ -71,15 +71,26 @@
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
-                        <el-table-column label="报价" width="200px;">
-                            <template scope="scope" label="报价">
-                                <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
-                                </el-input>
+                        <el-table-column label="报价" width="280px;">
+                            <template scope="scope">
+                                <el-row :gutter='5'>
+                                    <el-col :span='12'>
+                                        <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
+                                            <template slot="prepend">出厂价</template>
+                                        </el-input>
+                                    </el-col>
+                                    <el-col :span='2'><span style="display:inline-block;margin-top:3px">+</span></el-col>
+                                    <el-col :span='10'>
+                                        <el-input auto-complete="off" type="text" v-model="scope.row.freight" :readonly="activeName > 1">
+                                            <template slot="prepend">运费</template>
+                                        </el-input>
+                                    </el-col>    
+                                </el-row>        
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" width="150px">
                             <template scope="scope">
-                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :disabled="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 </el-input>
                             </template>
                         </el-table-column>
@@ -87,12 +98,12 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="destination" auto-complete="off" :disabled="true">
+                                <el-input v-model="destination" auto-complete="off" :readonly="true">
                                     <template slot="prepend">目的地</template>
                                 </el-input>
                             </el-col>
                             <el-col :span='12'>
-                                <el-input v-model="allweight" auto-complete="off" :disabled="true">
+                                <el-input v-model="allweight" auto-complete="off" :readonly="true">
                                     <template slot="prepend">总重量</template>
                                     <template slot="append">吨</template>
                                 </el-input>
@@ -102,7 +113,7 @@
                     <div style="margin-top:15px;">
                         <el-row>
                             <el-col :span='24'>
-                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true">
                                     <template slot="prepend">备注</template>
                                 </el-input>
                             </el-col>    
@@ -223,6 +234,10 @@ export default {
                 .then(() => {
                     this.loading = false;
                 });
+        },
+        zeroFormat(row, column) {
+            debugger
+            return row[column.property] == 0 ? '' : row[column.property];
         },
         submitPrice() {
             const self = this;

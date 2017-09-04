@@ -18,7 +18,7 @@
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
             <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">需求上传</el-button>
-            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">导出需求</el-button>
+            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="exportDemandList">导出需求</el-button>
         </div>
         <div class="tab-wrap">
             <el-tabs v-model="activeName" @tab-click="switchTab">
@@ -162,13 +162,26 @@
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
-                        <el-table-column label="报价" width="310px;" v-if="activeName > 0">
-                            <el-input auto-complete="off" type="text" v-model="factoryPrice" :disabled="true"  style="width: 49%;float:left;margin: 5px 5px 5px">
-                            </el-input>
+                        <el-table-column label="报价" width="280px;" v-if="activeName > 0">
+                            <template scope="scope">
+                                <el-row :gutter='5'>
+                                        <el-col :span='12'>
+                                            <el-input auto-complete="off" type="text" placeholder="出厂价" v-model="scope.row.factoryPrice" :readonly="true">
+                                                <template slot="prepend">出厂价</template>
+                                            </el-input>
+                                        </el-col>
+                                        <el-col :span='2'><span style="display:inline-block;margin-top:3px">+</span></el-col>
+                                        <el-col :span='10'>
+                                            <el-input auto-complete="off" type="text" placeholder="运费" v-model="scope.row.freight" :readonly="true">
+                                                <template slot="prepend">运费</template>
+                                            </el-input>
+                                        </el-col>    
+                                </el-row>  
+                            </template>    
                         </el-table-column>
                         <el-table-column label="备注" width="150px" v-if="activeName > 0">
-                            <template :scope="scope">
-                                <el-input auto-complete="off" type="text" v-model="scope.comment" :disabled="true" style="width: 100%;float:left;margin: 5px 0px 5px">
+                            <template scope="scope">
+                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="true" style="width: 100%;float:left;margin: 5px 0px 5px;">
                                 </el-input>
                             </template>    
                         </el-table-column>
@@ -176,12 +189,12 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                <el-input v-model="destination" auto-complete="off" :readonly="true">
                                     <template slot="prepend">目的地</template>
                                 </el-input>
                             </el-col>
                             <el-col :span='12'>
-                                <el-input v-model="allweight" auto-complete="off" :disabled="true">
+                                <el-input v-model="allweight" auto-complete="off" :readonly="true">
                                     <template slot="prepend">总重量</template>
                                     <template slot="append">吨</template>
                                 </el-input>
@@ -191,7 +204,7 @@
                     <div style="margin-top:15px;">
                         <el-row>
                             <el-col :span='24'>
-                                <el-input v-model="comment" auto-complete="off" :disabled="true">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true">
                                     <template slot="prepend">备注</template>
                                 </el-input>
                             </el-col>    
