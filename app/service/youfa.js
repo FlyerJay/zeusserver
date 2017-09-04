@@ -332,7 +332,7 @@ module.exports = app => {
                 var lines = options[i].lines;
                 var newLine = [];
                 lines.map((v) => {
-                    if(v[0].indexOf('钢') == -1)
+                    if(v[0].indexOf('钢') == -1 && v[0].indexOf('焊管') == -1 && v[0])
                         newLine.push(v);
                 })
                 newLine.map((v) => {
