@@ -358,8 +358,9 @@ module.exports = app => {
                     msg:"缺少公司信息"
                 }
                 const list = yield this.findAndCountAll({
-                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                    limit:options.pageSize?options.pageSize:15,
+                    offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                    limit: options.pageSize?options.pageSize:15,
+                    order: 'createTime DESC',
                     where:{
                         comId:{
                             $eq:options.comId
