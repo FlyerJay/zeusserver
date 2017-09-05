@@ -427,6 +427,7 @@ export default {
             }).then(() => {
                 this.addToDemandList(this.demandParams)
                     .then(rs => {
+                        this.demandParams.demandDetails = [];
                         this.$message({
                             message: `信息录入成功`,
                             type: 'success'
