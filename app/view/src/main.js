@@ -18,7 +18,7 @@ socket.on('res',( mes ) => {
   console.log(mes);
 })
 var userRole = getCookie('userRole');
-const isDemandAuth = userRole && userRole.charAt(4) == '1';
+const isDemandAuth = userRole && userRole.charAt(5) == '1';
 var isStorage = localStorage.getItem('demandAmount');
 if(!isStorage){
   localStorage.setItem('demandAmount',JSON.stringify({
@@ -28,7 +28,7 @@ if(!isStorage){
     unDeal: 0
   }));
 }
-const isOrderAuth = userRole && userRole.charAt(5) == '1';
+const isOrderAuth = userRole && userRole.charAt(4) == '1';
 socket.on('update',( {demand} ) => {//接收需求变更通知
   console.log(`有新消息送达${JSON.stringify(demand)}`);
   var demandAmount = localStorage.getItem('demandAmount');
