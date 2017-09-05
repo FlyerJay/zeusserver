@@ -42,7 +42,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
       }else{ 
         newDemand[item] = demand[item] - demandAmount[item];
         demandAmount[item] = demandAmount[item];
-        if(item == 'submit' && isDemandAuth){
+        if(item == 'submit' && isOrderAuth){
           !function(newDemand,item){
             setTimeout(()=>{
               Vue.prototype.$notify.info({
@@ -52,7 +52,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             },0)
           }(newDemand,item)
         }
-        if(item == 'price' && isOrderAuth){
+        if(item == 'price' && isDemandAuth){
           !function(newDemand,item){
             setTimeout(()=>{
               Vue.prototype.$notify.info({
@@ -62,7 +62,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             },0)
           }(newDemand,item)
         }
-        if(item == 'unDeal' && isDemandAuth){
+        if(item == 'unDeal' && isOrderAuth){
           !function(newDemand,item){
             setTimeout(()=>{
               Vue.prototype.$notify.info({
@@ -72,7 +72,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             },0)
           }(newDemand,item)
         }
-        if(item == 'deal' && isDemandAuth){
+        if(item == 'deal' && isOrderAuth){
           !function(newDemand,item){
             setTimeout(()=>{
               Vue.prototype.$notify.info({
@@ -85,12 +85,12 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
       }
     }
     if(!isOrderAuth) {
-      demandAmount.price = 0;
+      newDemand.submit = 0;
+      newDemand.deal = 0;
+      newDemand.unDeal = 0;
     }
     if(!demandAmount) {
-      demandAmount.submit = 0;
-      demandAmount.deal = 0;
-      demandAmount.unDeal = 0;
+      newDemand.price = 0;
     }
     localStorage.setItem('demandAmount',JSON.stringify(demandAmount));
     store.dispatch('UPDATE_DEMAND',newDemand);
