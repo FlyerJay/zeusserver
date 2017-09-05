@@ -364,6 +364,9 @@ module.exports = app => {
                         comId:{
                             $eq:options.comId
                         },
+                        userId: {
+                            $like: options.demandUser ? `${options.demandUser}` : '%%'
+                        },
                         createTime:{
                             $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
                         },
@@ -371,7 +374,10 @@ module.exports = app => {
                             return options.state ? {
                                 $eq: options.state
                             } : '';
-                        })()
+                        })(),
+                        customerName:{
+                            $like:options.customName ? `%${options.customName}%` : '%%'
+                        }
                     }
                 })
                 return {
