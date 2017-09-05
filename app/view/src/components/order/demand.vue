@@ -213,9 +213,9 @@ export default {
                     this.comment = row.comment;
                     var w = 0;
                     this.demandDetail.map((v) => {
-                        w =  w + Number(v.demandWeight);
+                        w =  w + Number(Number(v.demandWeight).toFixed(2));
                     })
-                    this.allweight = w
+                    this.allweight = w.toFixed(2)
                 })
            
         },

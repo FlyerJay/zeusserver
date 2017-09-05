@@ -88,7 +88,7 @@
                         <el-table-column label="规格" prop='spec'></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
-                        <el-table-column label="总重量" prop='demandWeight'></el-table-column>
+                        <el-table-column label="重量" prop='demandWeight'></el-table-column>
                         <el-table-column label="操作" align="center">
                             <template scope="scope">
                                 <el-button size="small" @click="deleteSpec(scope.$index)" type="warning">删除</el-button>
@@ -354,9 +354,9 @@ export default {
                     this.destination = row.destination;
                     var w = 0;
                     this.demandDetail.map((v) => {
-                        w =  w + Number(v.demandWeight);
+                        w =  w + Number(Number(v.demandWeight).toFixed(2));
                     })
-                    this.allweight = w
+                    this.allweight = w.toFixed(2)
                 })
         },
         dealFeedback(row) {
