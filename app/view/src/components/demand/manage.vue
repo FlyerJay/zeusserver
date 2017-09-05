@@ -2,7 +2,7 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.userId" placeholder="输入销售名称"></el-input>
+                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -38,7 +38,11 @@
         </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column type="index"></el-table-column>
+                <el-table-column width='60px' label="#">
+                    <template scope="scope">
+                        {{scope.$index + (searchDeParam.page - 1) * 15 + 1}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="userId" label="销售">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
@@ -292,7 +296,7 @@ export default {
                 demandDetails: []
             },
             searchDeParam: {
-                userId: '',
+                demandUser: '',
                 createTime: '',
                 customName: '',
                 state: 0,
@@ -344,16 +348,15 @@ export default {
             this.dlDemandView = true;
             this.currentDemand = row.demandNo;
             const param = {demandNo: row.demandNo};
-            const self = this;
             this.demandDetailList(param)
                 .then(() => {
-                    self.comment = row.comment;
-                    self.destination = row.destination;
+                    this.comment = row.comment;
+                    this.destination = row.destination;
                     var w = 0;
-                    self.demandDetail.map((v) => {
+                    this.demandDetail.map((v) => {
                         w =  w + Number(v.demandWeight);
                     })
-                    self.allweight = w
+                    this.allweight = w
                 })
         },
         dealFeedback(row) {
@@ -361,17 +364,22 @@ export default {
             this.FeedbackParams.demandNo = row.demandNo;
         },
         submitFeedback() {
-            const self = this;
-            this.upDateDemandList(this.FeedbackParams)
-                .then(() => {
-                    self.dlFeedback = false;
-                    self.$message({
-                        message: `反馈已提交`,
-                        type: 'success'
+            this.$confirm('确认提交?','确认',{
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.upDateDemandList(this.FeedbackParams)
+                    .then(() => {
+                        this.dlFeedback = false;
+                        this.$message({
+                            message: `反馈已提交`,
+                            type: 'success'
+                        })
+                        this.loading = true;
+                        this.searchDemand();
                     })
-                    self.loading = true;
-                    self.searchDemand();
-                })
+            })    
         },
         dateFormat(row, column) {
             if(!row[column.property]) {
@@ -381,8 +389,7 @@ export default {
             }
         },
         addSpec() {
-            var self = this;
-            if(!self.specParams.spec || !self.specParams.demandAmount || !self.specParams.type || !self.specParams.demandWeight) {
+            if(!this.specParams.spec || !this.specParams.demandAmount || !this.specParams.type || !this.specParams.demandWeight) {
                 this.$message({
                     message: `请填写规格明细`,
                     type: 'warning'
@@ -390,13 +397,13 @@ export default {
                 return;
             }
             var specObj = {
-                spec: self.specParams.spec,
-                demandAmount: self.specParams.demandAmount,
-                type: self.specParams.type,
-                demandWeight: self.specParams.demandWeight
+                spec: this.specParams.spec,
+                demandAmount: this.specParams.demandAmount,
+                type: this.specParams.type,
+                demandWeight: this.specParams.demandWeight
             }
-            self.demandParams.demandDetails.push(specObj);
-            self.dearr.push(specObj);
+            this.demandParams.demandDetails.push(specObj);
+            this.dearr.push(specObj);
             this.specParams.spec = '';
             this.specParams.type = '';
             this.specParams.demandAmount = '';
@@ -435,7 +442,7 @@ export default {
         },
         searchDemand() {
             this.loading = true;
-            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd') : '';
+            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
             this.searchDeParam.state = this.activeName;
             this.loadDemandList(this.searchDeParam)
                 .then(() => {
@@ -443,7 +450,6 @@ export default {
                 });
         },
         removeDemand(row) {
-            const self = this;
             this.$confirm('确认删除?','确认',{
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -452,7 +458,7 @@ export default {
                 const params = {
                   demandNo: row.demandNo
                 };
-                self.removeDemandList(params).then(rs => {
+                this.removeDemandList(params).then(rs => {
                     this.searchDemand();
                     this.$message({
                         message: `删除成功`,

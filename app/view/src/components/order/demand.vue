@@ -2,7 +2,7 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.userId" placeholder="输入销售名称"></el-input>
+                <el-input v-model="searchDeParam.searchDeParam" placeholder="输入销售名称"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -36,7 +36,11 @@
         </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
-                <el-table-column type="index"></el-table-column>
+                <el-table-column width='60px' label="#">
+                    <template scope="scope">
+                        {{scope.$index + (searchDeParam.page - 1) * 15 + 1}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="userId" label="销售">
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
@@ -164,7 +168,7 @@ export default {
             activeName: '0',
             timeConsume: '',
             searchDeParam: {
-                userId: '',
+                demandUser: '',
                 createTime: '',
                 customName: '',
                 state: 0,
@@ -202,17 +206,16 @@ export default {
         viewDetail(row) {
             this.dlDemandView = true;
             const param = {demandNo: row.demandNo};
-            const self = this;
             this.demandDetailList(param)
                 .then(() => {
-                    self.updreason = row.dealReason;
-                    self.destination = row.destination;
-                    self.comment = row.comment;
+                    this.updreason = row.dealReason;
+                    this.destination = row.destination;
+                    this.comment = row.comment;
                     var w = 0;
-                    self.demandDetail.map((v) => {
+                    this.demandDetail.map((v) => {
                         w =  w + Number(v.demandWeight);
                     })
-                    self.allweight = w
+                    this.allweight = w
                 })
            
         },
@@ -228,49 +231,51 @@ export default {
         },
         searchDemand() {
             this.loading = true;
-            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd') : '';
+            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
             this.searchDeParam.state = this.activeName;
             this.loadDemandList(this.searchDeParam)
                 .then(() => {
                     this.loading = false;
                 });
         },
-        zeroFormat(row, column) {
-            debugger
-            return row[column.property] == 0 ? '' : row[column.property];
-        },
         submitPrice() {
-            const self = this;
-            if (this.activeName < 2) {
-                var params = {
-                    demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                    demandPrices:this.demandDetail,
-                    timeConsume: this.timeConsume
+            this.$confirm('确认提交?', '确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then((v) => {
+                if (this.activeName < 2) {
+                    var params = {
+                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                        demandPrices: this.demandDetail,
+                        timeConsume: this.timeConsume
+                    }
+                    this.loadDemandPriceList(params).then(rs => {
+                        this.$message({
+                            message: `报价成功`,
+                            type: 'success'
+                        });
+                        this.loadDemandList(this.searchDeParam);
+                        this.dlDemandView = false;
+                    })
+                } else {
+                    var upparams = {
+                        state: this.activeName,
+                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                        dealReason: this.updreason,
+                        timeConsume: this.timeConsume
+                    }
+                    this.upDateDemandList(upparams).then(rs => {
+                        this.$message({
+                            message: `报价成功`,
+                            type: 'success'
+                        });
+                        this.loadDemandList(this.searchDeParam);
+                        this.dlDemandView = false;
+                    })
                 }
-                this.loadDemandPriceList(params).then(rs => {
-                    self.$message({
-                        message: `报价成功`,
-                        type: 'success'
-                    });
-                    self.loadDemandList(self.searchDeParam);
-                    self.dlDemandView =false;
-                })
-            } else {
-                var upparams = {
-                   state: this.activeName,
-                   demandNo:this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                   dealReason: this.updreason,
-                   timeConsume: this.timeConsume
-                }
-                this.upDateDemandList(upparams).then(rs => {
-                    self.$message({
-                        message: `报价成功`,
-                        type: 'success'
-                    });
-                    self.loadDemandList(self.searchDeParam);
-                    self.dlDemandView =false;
-                })
-            }
+            })
+
         }
     },
     mounted: function () {
