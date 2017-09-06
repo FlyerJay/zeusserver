@@ -369,7 +369,7 @@ module.exports = app => {
                             $like: options.demandUser ? `${options.demandUser}` : '%%'
                         },
                         createTime:{
-                            $between:[options.searchTime?new Date(options.searchTime).getTime() - 2.88e7:0,options.searchTime?new Date(options.searchTime).getTime() + 5.86e7:99999999999999999]
+                            $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.createTime?new Date(options.createTime).getTime() + 5.86e7:99999999999999999]
                         },
                         state: (function(){
                             return options.state ? {
