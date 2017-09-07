@@ -372,6 +372,9 @@ export default {
                 this.upDateDemandList(this.FeedbackParams)
                     .then(() => {
                         this.dlFeedback = false;
+                        this.FeedbackParams.demandNo = '';
+                        this.FeedbackParams.state = '';
+                        this.FeedbackParams.dealReason = '';
                         this.$message({
                             message: `反馈已提交`,
                             type: 'success'
@@ -431,6 +434,7 @@ export default {
                         this.demandParams.destination = '';
                         this.demandParams.customerName = '';
                         this.demandParams.comment = '';
+                        this.demandParams.customerPhone = '';
                         this.$message({
                             message: `信息录入成功`,
                             type: 'success'
