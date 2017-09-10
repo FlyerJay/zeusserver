@@ -577,10 +577,10 @@ export default {
         },
         onCustomerClose(){
             this.customerQuery.page = 1;
+            this.customerQuery.customerName = "";
         },
         searchCustomer(){
             this.flushCustomerList(this.customerQuery);
-            this.customerQuery.customerName = "";
         },
         handlCustonerPage(val){
             this.customerQuery.page = val;
