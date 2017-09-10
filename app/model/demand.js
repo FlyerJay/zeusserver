@@ -319,8 +319,9 @@ module.exports = app => {
             },
             * priceList(options){
                 const list = yield this.findAndCountAll({
-                    offset:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                    limit:options.pageSize?options.pageSize:15,
+                    offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                    limit: options.pageSize?options.pageSize:15,
+                    order: 'priceTime DESC , createTime DESC',
                     where:{
                         comId:{
                             $eq:options.comId
@@ -427,7 +428,7 @@ module.exports = app => {
                 const list = yield this.findAndCountAll({
                     offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
                     limit: options.pageSize?options.pageSize:15,
-                    order: 'createTime DESC',
+                    order: 'priceTime DESC , createTime DESC',
                     where:{
                         comId:{
                             $eq:options.comId
