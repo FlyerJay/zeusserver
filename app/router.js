@@ -79,6 +79,7 @@ module.exports = app => {
   app.get('/zues/api/demand/detail','demand.detail');
   app.get('/zues/api/demand/price','demand.priceList');
   app.post('/zues/api/demand/add','demand.add');
+  app.post('/zues/api/demand/submitudapte','demand.submitUdapte');
   app.post('/zues/api/demand/update','demand.update');
   app.post('/zues/api/demand/price','demand.price');  
   app.post('/zues/api/demand/remove','demand.remove');

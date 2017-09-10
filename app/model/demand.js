@@ -152,6 +152,73 @@ module.exports = app => {
                     res(true);
                 })
             },
+            * submitUpdate(options) {
+                if(!options.demandNo) return {
+                    code: -1,
+                    msg: "请选择要修改的记录",
+                }
+                if(!options.demandDetails) return {
+                    code: -1,
+                    msg: "请补充需求明细"
+                }
+                yield this.destroy({
+                    where:{
+                        demandNo:{
+                            $in:options.demandNo.split(',')
+                        }
+                    }
+                })
+                yield app.model.DemandDetail.destroy({
+                    where:{
+                        demandNo:{
+                            $in:options.demandNo.split(',')
+                        }
+                    }
+                })
+                var demandWeight = 0;
+                options.demandDetails.forEach( v => {
+                    demandWeight += (v.demandWeight - 0);
+                });
+                const randomNo = `D${options.comId}${new Date().getTime()}`;
+                const isSuccess = app.model.transaction(async (t)=>{
+                    return await this.create(
+                        Object.assign(options,{
+                        state: 0,
+                        demandNo: randomNo,
+                        createTime: +new Date(),
+                        demandWeight
+                    }),{transaction:t}).then((res)=>{
+                        var demandDetails = options.demandDetails;
+                        return Promise.all(demandDetails.map((v)=>{
+                            app.model.DemandDetail.create({
+                                demandNo: randomNo,
+                                spec: v.spec,
+                                type:v.type,
+                                demandAmount:Number(v.demandAmount) || 0,
+                                perAmount: Number(v.perAmount) || 100,
+                                factoryPrice:Number(v.factoryPrice) || 0,
+                                demandWeight:Number(v.demandWeight) || 0,
+                                freight: Number(v.freight) || 0,
+                            },{transaction:t})
+                        }));
+                    });
+                }).then((res)=>{
+                    return true;
+                }).catch((err)=>{
+                    return false
+                })
+                if(isSuccess){
+                    return {
+                        code:200,
+                        msg:"提交成功"
+                    }
+                }else{
+                    return {
+                        code: -1,
+                        msg: "提交失败",
+                    }
+                }
+            },
             * add(options){
                 if(!options.demandDetails) return {
                     code: -1,
