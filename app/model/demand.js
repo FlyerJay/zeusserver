@@ -67,6 +67,10 @@ module.exports = app => {
             type:STRING(100),
             comment:"备注"
         },
+        priceComment:{
+            type: STRING(100),
+            comment: "报价备注"
+        },
         createTime:{
             type:BIGINT(15),
             comment:"创建时间"
@@ -382,6 +386,7 @@ module.exports = app => {
                             factoryPrice: v.factoryPrice || 0,
                             freight: v.freight || 0,
                             comment: v.comment,
+                            priceComment: v.priceComment || '',
                         },{
                             where:{
                                 demandDetailId:{
