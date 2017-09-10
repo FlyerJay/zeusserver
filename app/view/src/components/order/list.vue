@@ -50,8 +50,8 @@
                 <el-table-column prop="orderAmount" label="数量"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价"></el-table-column>
                 <el-table-column prop="Weight" label="重量"></el-table-column>
-                <el-table-column prop="orderDcrease" label="下浮"></el-table-column>
-                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="下浮"></el-table-column>
+                <el-table-column prop="orderDcrease" label="总下浮"></el-table-column>
+                <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="单位下浮"></el-table-column>
                 <el-table-column prop="comment" label="备注"></el-table-column>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
@@ -502,7 +502,7 @@
                 return row.supplierName.replace(/黑管|热镀锌|镀锌带/g,'');
             },
             unitFormatter(row,colum){
-                return row.orderDcrease/row.Weight;
+                return Nmuber(row.orderDcrease/row.Weight).toFixed(2);
             },
             viewDetail(index,row) {
                 this.detailDialogShow = true;

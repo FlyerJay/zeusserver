@@ -255,6 +255,11 @@ export default {
                             message: `报价成功`,
                             type: 'success'
                         });
+                        this.timeConsume = '';
+                        this.demandDetail.map(v => {
+                            v.freight = '';
+                            v.factoryPrice = '';
+                        });
                         this.loadDemandList(this.searchDeParam);
                         this.dlDemandView = false;
                     })
@@ -270,6 +275,11 @@ export default {
                             message: `报价成功`,
                             type: 'success'
                         });
+                        this.timeConsume = '';
+                        this.demandDetail.map(v => {
+                            v.freight = '';
+                            v.factoryPrice = '';
+                        })
                         this.loadDemandList(this.searchDeParam);
                         this.dlDemandView = false;
                     })
