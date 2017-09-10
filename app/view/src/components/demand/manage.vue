@@ -174,10 +174,10 @@
                     </el-input>
                 </div>
                 <div class="customer-item" v-for="(item,index) in customerList.row" @click="selectCustomer(item)">
-                    <div class="distination">{{item.distination}}</div>
-                    <div class="customer-name"><i class="iconfont icon-location"></i>{{item.customerName}}<span cla></span></div>
+                    <div class="customer-name">{{item.customerName}}</div>
+                    <div class="destination">{{item.destination}}<span class="customer-phone">{{item.customerPhone}}</span></div>
                     <aside>
-                        <span class="delete" @click.stop="deleteCustomer(item.customerId)">删除地址</span>
+                        <span class="delete" @click.stop="deleteCustomer(item.customerId)">删除</span>
                     </aside>
                 </div>
                 <div class="customer-page">
@@ -193,6 +193,23 @@
                 <div class="add-customer customer-item"  @click="showNewCustomer">
                     <span><i class="iconfont icon-rectadd"></i>添加地址</span>
                 </div>
+            </div>
+        </el-dialog>
+        <el-dialog
+            v-model="customerAddDlShow"
+            size="tiny"
+            class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="customerParams.customerName" placeholder="必填">
+                    <template slot="prepend">客户名称</template>
+                </el-input>
+                <el-input v-model="customerParams.customerPhone" class="dialog-item" placeholder="必填">
+                    <template slot="prepend">客户电话</template>
+                </el-input>
+                <el-input v-model="customerParams.destination" class="dialog-item" placeholder="可不填">
+                    <template slot="prepend">目&nbsp;的&nbsp;地</template>
+                </el-input>
+                <el-button type="info" class="dialog-item float-right" @click="submitCustomer">确定</el-button>
             </div>
         </el-dialog>
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
@@ -283,7 +300,10 @@ import {
     addToDemandList,
     upDateDemandList,
     demandDetailList,
-    removeDemandList
+    removeDemandList,
+    getCustomerList,
+    newCustomer,
+    removeCustomer
 } from '../../vuex/action'
 
 export default {
@@ -293,7 +313,10 @@ export default {
             addToDemandList,
             upDateDemandList,
             demandDetailList,
-            removeDemandList
+            removeDemandList,
+            getCustomerList,
+            newCustomer,
+            removeCustomer
         },
         getters: {
             userInfo: ({
@@ -355,6 +378,12 @@ export default {
                 customerName: '',
             },
             customerList: [],
+            customerAddDlShow: false,//客户电话框
+            customerParams: {
+                customerName: '',
+                customerPhone: '',
+                destination: '',
+            }
         }
     },
     methods: {
@@ -538,18 +567,47 @@ export default {
         },
         editCostomer(){
             this.customerListDlShow = true;
+            this.flushCustomerList();
+        },
+        flushCustomerList(data={}){
+            this.getCustomerList(data)
+                .then(data=>{
+                    this.customerList = data;
+                })
         },
         onCustomerClose(){
-
+            this.customerQuery.page = 1;
         },
         searchCustomer(){
-
+            this.flushCustomerList(this.customerQuery);
+            this.customerQuery.customerName = "";
         },
-        handlCustonerPage(){
-
+        handlCustonerPage(val){
+            this.customerQuery.page = val;
+            this.flushCustomerList(this.customerQuery);
+        },
+        selectCustomer(options){
+            this.demandParams.customerName = options.customerName;
+            this.demandParams.customerPhone = options.customerPhone;
+            this.demandParams.destination = options.destination;
+            this.customerListDlShow = false;
         },
         showNewCustomer(){
-
+            this.customerAddDlShow = true;
+        },
+        submitCustomer(){
+            this.newCustomer(this.customerParams)
+                .then(data=>{
+                    this.$message({
+                        message: `新增成功`,
+                        type: 'success'
+                    });
+                    this.customerAddDlShow = false;
+                    this.flushCustomerList();
+                })
+        },
+        deleteCustomer(customerId){
+            this.removeCustomer({customerId});
         }
     },
     mounted: function () {
@@ -618,8 +676,71 @@ export default {
         }
 
     }
-  
-
-
+}
+.customer-content{
+    margin-left:20px;
+    margin-right:20px;
+    overflow:hidden;
+    .customer-item{
+        border:2px dashed #D3DCE6;
+        margin-bottom:5px;
+        padding:5px 10px;
+        cursor:pointer;
+        .customer-name{
+            color:#F7BA2A;
+            font-size:14px;
+        }
+        .customer-phone{
+            color: #8492a6;
+            font-size:12px;
+            margin-left: 10px;
+        }
+        .destination{
+            color: #444444;
+            font-size:14px;
+        }
+        aside{
+            font-size:12px;
+            .set-default{
+                color:#13CE66;
+                margin-right:20px;
+            }
+            .delete{
+                color:#FF4949
+            }
+            span:hover{
+                text-decoration:underline;
+            }
+        }
+        &:hover{
+            border:2px dashed #F7BA2A;
+        }
+    }
+    .add-customer{
+        font-size:16px;
+        .iconfont{
+            font-size:18px;
+            margin-right:5px;
+        }
+    }
+    .customer-page{
+        margin-bottom:5px;
+        .el-pagination{
+            padding:3px 0px;
+            text-align:right;
+            li.active{
+                background-color: #f7ba2a;
+                border-color: #f7ba2a;
+                &:hover{
+                    background-color: #f7ba2a;
+                    border-color: #f7ba2a;
+                    color:#fff;
+                }
+            }
+            li:hover{
+                color:#f7ba2a;
+            }
+        }
+    }
 }
 </style>

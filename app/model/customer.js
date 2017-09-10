@@ -39,7 +39,7 @@ module.exports = app => {
             * getList(options){
                 const [$1,$2] = yield [app.model.query(`SELECT * FROM customer WHERE
                 customerName LIKE :customerName
-                ORDER customerId ASC
+                ORDER BY customerId ASC
                 LIMIT :start,:offset
                 `,{
                     replacements:{
@@ -49,8 +49,8 @@ module.exports = app => {
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM customer WHERE
-                customerName LIKE :address
-                ORDER customerId ASC
+                customerName LIKE :customerName
+                ORDER BY customerId ASC
                 `,{
                     replacements:{
                         customerName: options.customerName ? `%${options.customerName}%` : `%%`
@@ -96,9 +96,9 @@ module.exports = app => {
                 }
             },
             * remove(options) {
-                if(!options.carId) return {
-                    code:-1,
-                    msg:"缺少车辆主键"
+                if(!options.customerId) return {
+                    code: -1,
+                    msg: "缺少客户主键"
                 }
                 const result = yield this.destroy({
                     where:{
