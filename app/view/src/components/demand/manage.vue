@@ -136,26 +136,63 @@
                 </div>
                 <div class="clearfix" style="margin-top: 16px;">
                     <el-row :gutter='8'>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.destination" auto-complete="off">
                                 <template slot="prepend">目的地</template>
                             </el-input>
                         </el-col>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.customerName" auto-complete="off">
                                 <template slot="prepend">客户</template>
                             </el-input>
                         </el-col>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.customerPhone" auto-complete="off">
                                 <template slot="prepend">电话</template>
                             </el-input>
+                        </el-col>
+                        <el-col :span='3'>
+                            <el-button style="color:#97a8be" icon="edit" @click="editCostomer">管理</el-button>
                         </el-col>
                     </el-row>
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
                 </div>
                 <el-button type="info" @keyup.enter.native="submitDdemand" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
                 <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog
+            v-model="customerListDlShow"
+            size="tiny"
+            @close="onCustomerClose">
+            <div class="customer-content">
+                <div style="margin-bottom:15px;">
+                    <el-input placeholder="输入地址检索" v-model="customerQuery.customerName">
+                        <template slot="append">
+                            <el-button type="success" icon="search" @click="searchCustomer">搜索</el-button>
+                        </template>
+                    </el-input>
+                </div>
+                <div class="customer-item" v-for="(item,index) in customerList.row" @click="selectCustomer(item)">
+                    <div class="distination">{{item.distination}}</div>
+                    <div class="customer-name"><i class="iconfont icon-location"></i>{{item.customerName}}<span cla></span></div>
+                    <aside>
+                        <span class="delete" @click.stop="deleteCustomer(item.customerId)">删除地址</span>
+                    </aside>
+                </div>
+                <div class="customer-page">
+                    <el-pagination
+                        @current-change="handlCustonerPage"
+                        :current-page.sync="customerQuery.page"
+                        layout=" prev, pager, next"
+                        :page-size="5"
+                        :total="customerList.totalCount"
+                    >
+                    </el-pagination>
+                </div>
+                <div class="add-customer customer-item"  @click="showNewCustomer">
+                    <span><i class="iconfont icon-rectadd"></i>添加地址</span>
+                </div>
             </div>
         </el-dialog>
         <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
@@ -312,7 +349,12 @@ export default {
             loading: true,
             dearr: [],
             currentDemand: '',
-            unit: 1
+            unit: 1,
+            customerListDlShow: false,//客户列表弹出框
+            customerQuery: {
+                customerName: '',
+            },
+            customerList: [],
         }
     },
     methods: {
@@ -493,6 +535,21 @@ export default {
         exportDemandList(){
             var date = new Date().formatDate('yyyyMMdd');
             window.open(`/zues/api/export/demandlist/需求列表.xls`);
+        },
+        editCostomer(){
+            this.customerListDlShow = true;
+        },
+        onCustomerClose(){
+
+        },
+        searchCustomer(){
+
+        },
+        handlCustonerPage(){
+
+        },
+        showNewCustomer(){
+
         }
     },
     mounted: function () {

@@ -12,7 +12,7 @@ module.exports = app => {
     }
     * list() {
         const ctx = this.ctx;
-        ctx.body = yield ctx.model.Customer.list(ctx.query);
+        ctx.body = yield ctx.model.Customer.getList(ctx.query);
     }
   }
   return customerController;

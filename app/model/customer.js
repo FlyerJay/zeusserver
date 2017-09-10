@@ -37,7 +37,43 @@ module.exports = app => {
 		timestamps:false,
         classMethods:{
             * getList(options){
-                return yield this.findAll();
+                const [$1,$2] = yield [app.model.query(`SELECT * FROM customer WHERE
+                customerName LIKE :customerName
+                ORDER customerId ASC
+                LIMIT :start,:offset
+                `,{
+                    replacements:{
+                        start: !options.page ? 0 : (options.page - 1) * (options.pageSize?options.pageSize:5),
+                        offset: options.pageSize ? options.pageSize:5,
+                        customerName: options.customerName ? `%${options.customerName}%` : `%%`
+                    }
+                }),
+                app.model.query(`SELECT count(1) as count FROM customer WHERE
+                customerName LIKE :address
+                ORDER customerId ASC
+                `,{
+                    replacements:{
+                        customerName: options.customerName ? `%${options.customerName}%` : `%%`
+                    }
+                })]
+                if(!$1[0] || $1[0].length ===0) return {
+                    code:200,
+                    msg:"数据为空",
+                    data:{
+                        count:0,
+                        row:[]
+                    }
+                }
+                let result= {};
+                result.row = $1[0];
+                result.totalCount = $2[0][0].count;
+                result.page = options.page?options.page:0;
+                result.pageSize = options.pageSize?options.pageSize:5;
+                return {
+                    code:200,
+                    data:result,
+                    msg:"查询成功"
+                }
             },
             * add(options){
                 if(!options.customerName) return {
