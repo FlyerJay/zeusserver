@@ -535,6 +535,21 @@ export const upDateDemandList = ({ dispatch }, params) => {
   })
 }
 
+//修改需求
+export const changeDemandList = ({ dispatch }, params) => {
+  return axios.post('/zues/api/demand/submitudapte',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    }else if (response.data.code === -1) {
+      showErrorMessage({ dispatch },response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error) {
+    return Promise.reject();
+  })
+}
+
 //定制化需求明细
 export const demandDetailList = ({ dispatch }, params,destination) => {
   return axios.get('/zues/api/demand/detail',{ params })

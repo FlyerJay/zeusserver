@@ -2,7 +2,7 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.searchDeParam" placeholder="输入销售名称"></el-input>
+                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
@@ -67,7 +67,7 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
-        <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
+        <el-dialog v-model="dlDemandView" :close-on-click-modal="false" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
                 <div class="spec-wrap">
                     <el-table :data="demandDetail" border style="width: 100%">
@@ -92,7 +92,7 @@
                                 </el-row>        
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" width="200px">
+                        <el-table-column label="备注" width="230px">
                             <template scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 </el-input>
@@ -115,12 +115,17 @@
                         </el-row>
                     </div>
                     <div style="margin-top:15px;">
-                        <el-row>
-                            <el-col :span='24'>
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true">
-                                    <template slot="prepend">备注</template>
+                                    <template slot="prepend">销售备注</template>
                                 </el-input>
                             </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">采购备注</template>
+                                </el-input>
+                            </el-col>
                         </el-row>    
                     </div>
                 </div>    
@@ -178,6 +183,7 @@ export default {
             dlgDemandVisible: false,
             dlDemandView: false,
             comment: '',
+            priceComment: '',
             destination: '',
             allweight: 0,
             loading: true,
@@ -211,9 +217,16 @@ export default {
                     this.updreason = row.dealReason;
                     this.destination = row.destination;
                     this.comment = row.comment;
+                    this.priceComment = row.priceComment;
                     var w = 0;
                     this.demandDetail.map((v) => {
                         w =  w + Number(Number(v.demandWeight).toFixed(2));
+                        if (v.factoryPrice == 0) {
+                            v.factoryPrice = ''
+                        }
+                        if (v.freight == 0) {
+                            v.freight = ''
+                        }
                     })
                     this.allweight = w.toFixed(2)
                 })
@@ -237,12 +250,6 @@ export default {
                 .then(() => {
                     this.loading = false;
                 });
-        },
-        fpriceFormat(scope) {
-            console.log('dd',scope.row.factoryPrice)
-            if(scope.row.factoryPrice == 0) {
-                return ''
-            }
         },
         submitPrice() {
             this.$confirm('确认提交?', '确认', {

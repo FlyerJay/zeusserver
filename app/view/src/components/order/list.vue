@@ -502,7 +502,7 @@
                 return row.supplierName.replace(/黑管|热镀锌|镀锌带/g,'');
             },
             unitFormatter(row,colum){
-                return Nmuber(row.orderDcrease/row.Weight).toFixed(2);
+                return Number(row.orderDcrease/row.Weight).toFixed(2);
             },
             viewDetail(index,row) {
                 this.detailDialogShow = true;

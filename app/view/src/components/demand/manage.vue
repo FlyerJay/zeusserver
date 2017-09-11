@@ -17,7 +17,7 @@
         </el-form>
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
-            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="dlgDemandVisible = true">需求上传</el-button>
+            <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="demandUpload">需求上传</el-button>
             <el-button style="margin:7px 0px 0px 10px;float:left;" type="warning" @click="exportDemandList">导出需求</el-button>
         </div>
         <div class="tab-wrap">
@@ -70,8 +70,9 @@
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" v-if="activeName == 0">
+                <el-table-column label="操作" align="center" v-if="activeName == 0" width='150px'>
                     <template scope="scope">
+                        <el-button size="small" @click="changeDemand(scope.row)" type="warning">修改</el-button>
                         <el-button size="small" @click="removeDemand(scope.row)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
@@ -81,10 +82,10 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgDemandVisible" size="" class="custom-dialog" custom-class="demand-dlg" @close="closeAdddlg">
+        <el-dialog v-model="dlgDemandVisible" :close-on-click-modal="false" class="custom-dialog" custom-class="demand-dlg" @close="closeAdddlg">
             <div class="dialog-content">
                 <div class="spec-wrap">
-                    <el-table :data="dearr" border style="width: 100%">
+                    <el-table :data="demandParams.demandDetails" border style="width: 100%">
                         <el-table-column label="规格" prop='spec'></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
@@ -129,9 +130,6 @@
                                 <el-button type="warning" style="width:100%" @click="addSpec">添加规格</el-button>
                             </el-col>
                         </el-row>
-                        <div>
-                            <span class="sub-txt"></span>
-                        </div>
                     </div>
                 </div>
                 <div class="clearfix" style="margin-top: 16px;">
@@ -164,7 +162,7 @@
         <el-dialog
             v-model="customerListDlShow"
             size="tiny"
-            @close="onCustomerClose">
+            @close="onCustomerClose" :close-on-click-modal="false">
             <div class="customer-content">
                 <div style="margin-bottom:15px;">
                     <el-input placeholder="输入地址检索" v-model="customerQuery.customerName">
@@ -197,6 +195,7 @@
         </el-dialog>
         <el-dialog
             v-model="customerAddDlShow"
+            :close-on-click-modal="false"
             size="tiny"
             class="custom-dialog">
             <div class="dialog-content">
@@ -212,7 +211,7 @@
                 <el-button type="info" class="dialog-item float-right" @click="submitCustomer">确定</el-button>
             </div>
         </el-dialog>
-        <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
+        <el-dialog v-model="dlDemandView" size="tiny" :close-on-click-modal="false" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content clearfix">
                 <div class="spec-wrap">
                     <el-table :data="demandDetail" border style="width: 100%">
@@ -224,7 +223,7 @@
                             <template scope="scope">
                                 <el-row>
                                     <el-col :span='12'>
-                                        <el-input auto-complete="off" type="text" placeholder="出厂价" v-model="scope.row.factoryPrice" :readonly="true" :formatter="fpriceFormat">
+                                        <el-input auto-complete="off" type="text" placeholder="出厂价" v-model="scope.row.factoryPrice" :readonly="true">
                                             <template slot="prepend">出厂价</template>
                                         </el-input>
                                     </el-col>
@@ -237,7 +236,7 @@
                                 </el-row>  
                             </template>    
                         </el-table-column>
-                        <el-table-column label="备注" width="200px" v-if="activeName > 0">
+                        <el-table-column label="备注" width="230px" v-if="activeName > 0">
                             <template scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="true" style="width: 100%;float:left;margin: 5px 0px 5px;">
                                 </el-input>
@@ -260,20 +259,25 @@
                         </el-row>
                     </div>
                     <div style="margin-top:15px;">
-                        <el-row>
-                            <el-col :span='24'>
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true">
-                                    <template slot="prepend">备注</template>
+                                    <template slot="prepend">销售备注</template>
                                 </el-input>
-                            </el-col>    
-                        </el-row>    
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">采购备注</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>
                     </div>
                 </div>
                 <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
             </div>
         </el-dialog>
             
-        <el-dialog title="" v-model="dlFeedback" size="tiny" class="custom-dialog">
+        <el-dialog title="" v-model="dlFeedback" :close-on-click-modal="false" size="tiny" class="custom-dialog">
             <div class="dialog-content">
                 <div class="select-control clearfix dialog-item">
                     <el-row :gutter="0">
@@ -300,6 +304,7 @@ import {
     addToDemandList,
     upDateDemandList,
     demandDetailList,
+    changeDemandList,
     removeDemandList,
     getCustomerList,
     newCustomer,
@@ -312,6 +317,7 @@ export default {
             loadDemandList,
             addToDemandList,
             upDateDemandList,
+            changeDemandList,
             demandDetailList,
             removeDemandList,
             getCustomerList,
@@ -363,6 +369,7 @@ export default {
                 page: 1,
             },
             comment: '',
+            priceComment: '',
             destination: '',
             allweight: 0,
             dealStatusArray: [{ value: 3, key: '交易成功' }, { value: 2, key: '交易失败' }],
@@ -370,13 +377,14 @@ export default {
             dlDemandView: false,
             dlFeedback: false,
             loading: true,
-            dearr: [],
+            // dearr: [],
             currentDemand: '',
             unit: 1,
             customerListDlShow: false,//客户列表弹出框
             customerQuery: {
                 customerName: '',
             },
+            submitstate: 0,
             customerList: [],
             customerAddDlShow: false,//客户电话框
             customerParams: {
@@ -396,7 +404,7 @@ export default {
                 });
         },
         deleteSpec(index) {
-            this.dearr.splice(index, 1);
+            // this.dearr.splice(index, 1);
             this.demandParams.demandDetails.splice(index, 1);
         },
         statusFormatter(row, column) {
@@ -413,13 +421,7 @@ export default {
             this.specParams.type = '';
             this.specParams.demandAmount = '';
             this.specParams.demandWeight = '';
-            this.dearr = [];
-        },
-        fpriceFormat(scope) {
-            console.log(scope.row.factoryPrice)
-            if(scope.row.factoryPrice == 0) {
-                return scope.row.factoryPrice = ''
-            }
+            // this.dearr = [];
         },
         viewDetail(row) {
             this.dlDemandView = true;
@@ -428,12 +430,43 @@ export default {
             this.demandDetailList(param)
                 .then(() => {
                     this.comment = row.comment;
+                    this.priceComment = row.priceComment;
                     this.destination = row.destination;
                     var w = 0;
                     this.demandDetail.map((v) => {
                         w =  w + Number(Number(v.demandWeight).toFixed(2));
+                        if (v.factoryPrice == 0) {
+                            v.factoryPrice = ''
+                        }
+                        if (v.freight == 0) {
+                            v.freight = ''
+                        }
                     })
                     this.allweight = w.toFixed(2)
+                })
+        },
+        demandUpload() {
+            this.dlgDemandVisible = true;
+            this.submitstate = 0;
+            this.demandParams.demandDetails = [];
+            this.demandParams.destination = '';
+            this.demandParams.customerName = '';
+            this.demandParams.comment = '';
+            this.demandParams.customerPhone = '';
+        },
+        changeDemand(row) {
+            const param = {demandNo: row.demandNo};
+            this.dlgDemandVisible = true;
+            this.submitstate = 1;
+            this.demandDetailList(param)
+                .then(() => {
+                    // this.dearr = this.demandDetail;
+                    this.demandParams.demandDetails = this.demandDetail;
+                    this.demandParams.demandNo = row.demandNo;
+                    this.demandParams.destination = row.destination;
+                    this.demandParams.customerName = row.customerName;
+                    this.demandParams.customerPhone = row.customerPhone;
+                    this.demandParams.comment = row.comment;
                 })
         },
         dealFeedback(row) {
@@ -483,7 +516,7 @@ export default {
                 demandWeight: this.specParams.demandWeight
             }
             this.demandParams.demandDetails.push(specObj);
-            this.dearr.push(specObj);
+            // this.dearr.push(specObj);
             this.specParams.spec = '';
             this.specParams.type = '';
             this.specParams.demandAmount = '';
@@ -505,23 +538,44 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.addToDemandList(this.demandParams)
-                    .then(rs => {
-                        this.demandParams.demandDetails = [];
-                        this.demandParams.destination = '';
-                        this.demandParams.customerName = '';
-                        this.demandParams.comment = '';
-                        this.demandParams.customerPhone = '';
-                        this.$message({
-                            message: `信息录入成功`,
-                            type: 'success'
+                if(!this.submitstate) {
+                    this.addToDemandList(this.demandParams)
+                        .then(rs => {
+                            this.demandParams.demandDetails = [];
+                            this.demandParams.destination = '';
+                            this.demandParams.customerName = '';
+                            this.demandParams.comment = '';
+                            this.demandParams.customerPhone = '';
+                            this.$message({
+                                message: `信息录入成功`,
+                                type: 'success'
+                            })
+                            this.loadDemandList(this.searchDeParam)
+                                .then(() => {
+                                    this.loading = false;
+                                });
+                            this.dlgDemandVisible = false;
                         })
-                        this.loadDemandList(this.searchDeParam)
-                            .then(() => {
-                                this.loading = false;
-                            });
-                        this.dlgDemandVisible = false;
-                    })
+                } else {
+                    this.changeDemandList(this.demandParams)
+                        .then(rs => {
+                            this.demandParams.demandDetails = [];
+                            this.demandParams.destination = '';
+                            this.demandParams.customerName = '';
+                            this.demandParams.comment = '';
+                            this.demandParams.customerPhone = '';
+                            this.$message({
+                                message: `修改成功`,
+                                type: 'success'
+                            })
+                            this.loadDemandList(this.searchDeParam)
+                                .then(() => {
+                                    this.loading = false;
+                                });
+                            this.dlgDemandVisible = false;
+                        })
+                }
+                    
             });
         
         },
@@ -668,7 +722,11 @@ export default {
         .detailview {
             width: auto;
         }
+        .demand-dlg {
+            width: 840px;
+        }
     }
+
 }
 .customer-content{
     margin-left:20px;
