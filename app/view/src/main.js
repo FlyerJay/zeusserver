@@ -67,7 +67,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             setTimeout(()=>{
               Vue.prototype.$notify.info({
                 title: '需求交易结果',
-                message: `有${newDemand[item]}条去求交易失败`,
+                message: `有${newDemand[item]}条需求交易失败`,
               });
             },0)
           }(newDemand,item)
@@ -77,7 +77,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             setTimeout(()=>{
               Vue.prototype.$notify.info({
                 title: '需求交易结果',
-                message: `有${newDemand[item]}条交易成功`,
+                message: `有${newDemand[item]}条需求交易成功`,
               });
             },0)
           }(newDemand,item)

@@ -26,6 +26,18 @@ module.exports = app => {
         ctx.body = yield ctx.model.Demand.add(ctx.request.body);
       }
     }
+    * submitUdapte() {
+      const ctx = this.ctx;
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(4) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.Demand.submitUpdate(ctx.request.body);
+      }
+    }
     * price() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');

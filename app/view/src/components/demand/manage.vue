@@ -29,10 +29,10 @@
                     <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
                 <el-tab-pane name="2">
-                    <span slot='label'>未成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
+                    <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="成交需求" name="3">
-                    <span slot='label'>成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
+                    <span slot='label'>成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -136,20 +136,23 @@
                 </div>
                 <div class="clearfix" style="margin-top: 16px;">
                     <el-row :gutter='8'>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.destination" auto-complete="off">
                                 <template slot="prepend">目的地</template>
                             </el-input>
                         </el-col>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.customerName" auto-complete="off">
                                 <template slot="prepend">客户</template>
                             </el-input>
                         </el-col>
-                        <el-col :span='8'>
+                        <el-col :span='7'>
                             <el-input v-model="demandParams.customerPhone" auto-complete="off">
                                 <template slot="prepend">电话</template>
                             </el-input>
+                        </el-col>
+                        <el-col :span='3'>
+                            <el-button style="color:#97a8be" icon="edit" @click="editCostomer">管理</el-button>
                         </el-col>
                     </el-row>
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
@@ -158,7 +161,58 @@
                 <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog v-model="dlDemandView" class="custom-dialog" custom-class="detailview">
+        <el-dialog
+            v-model="customerListDlShow"
+            size="tiny"
+            @close="onCustomerClose">
+            <div class="customer-content">
+                <div style="margin-bottom:15px;">
+                    <el-input placeholder="输入地址检索" v-model="customerQuery.customerName">
+                        <template slot="append">
+                            <el-button type="success" icon="search" @click="searchCustomer">搜索</el-button>
+                        </template>
+                    </el-input>
+                </div>
+                <div class="customer-item" v-for="(item,index) in customerList.row" @click="selectCustomer(item)">
+                    <div class="customer-name">{{item.customerName}}</div>
+                    <div class="destination">{{item.destination}}<span class="customer-phone">{{item.customerPhone}}</span></div>
+                    <aside>
+                        <span class="delete" @click.stop="deleteCustomer(item.customerId)">删除</span>
+                    </aside>
+                </div>
+                <div class="customer-page">
+                    <el-pagination
+                        @current-change="handlCustonerPage"
+                        :current-page.sync="customerQuery.page"
+                        layout=" prev, pager, next"
+                        :page-size="5"
+                        :total="customerList.totalCount"
+                    >
+                    </el-pagination>
+                </div>
+                <div class="add-customer customer-item"  @click="showNewCustomer">
+                    <span><i class="iconfont icon-rectadd"></i>添加地址</span>
+                </div>
+            </div>
+        </el-dialog>
+        <el-dialog
+            v-model="customerAddDlShow"
+            size="tiny"
+            class="custom-dialog">
+            <div class="dialog-content">
+                <el-input v-model="customerParams.customerName" placeholder="必填">
+                    <template slot="prepend">客户名称</template>
+                </el-input>
+                <el-input v-model="customerParams.customerPhone" class="dialog-item" placeholder="必填">
+                    <template slot="prepend">客户电话</template>
+                </el-input>
+                <el-input v-model="customerParams.destination" class="dialog-item" placeholder="可不填">
+                    <template slot="prepend">目&nbsp;的&nbsp;地</template>
+                </el-input>
+                <el-button type="info" class="dialog-item float-right" @click="submitCustomer">确定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog v-model="dlDemandView" size="tiny" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content clearfix">
                 <div class="spec-wrap">
                     <el-table :data="demandDetail" border style="width: 100%">
@@ -246,7 +300,10 @@ import {
     addToDemandList,
     upDateDemandList,
     demandDetailList,
-    removeDemandList
+    removeDemandList,
+    getCustomerList,
+    newCustomer,
+    removeCustomer
 } from '../../vuex/action'
 
 export default {
@@ -256,7 +313,10 @@ export default {
             addToDemandList,
             upDateDemandList,
             demandDetailList,
-            removeDemandList
+            removeDemandList,
+            getCustomerList,
+            newCustomer,
+            removeCustomer
         },
         getters: {
             userInfo: ({
@@ -312,7 +372,18 @@ export default {
             loading: true,
             dearr: [],
             currentDemand: '',
-            unit: 1
+            unit: 1,
+            customerListDlShow: false,//客户列表弹出框
+            customerQuery: {
+                customerName: '',
+            },
+            customerList: [],
+            customerAddDlShow: false,//客户电话框
+            customerParams: {
+                customerName: '',
+                customerPhone: '',
+                destination: '',
+            }
         }
     },
     methods: {
@@ -499,6 +570,50 @@ export default {
         exportDemandList(){
             var date = new Date().formatDate('yyyyMMdd');
             window.open(`/zues/api/export/demandlist/需求列表.xls`);
+        },
+        editCostomer(){
+            this.customerListDlShow = true;
+            this.flushCustomerList();
+        },
+        flushCustomerList(data={}){
+            this.getCustomerList(data)
+                .then(data=>{
+                    this.customerList = data;
+                })
+        },
+        onCustomerClose(){
+            this.customerQuery.page = 1;
+            this.customerQuery.customerName = "";
+        },
+        searchCustomer(){
+            this.flushCustomerList(this.customerQuery);
+        },
+        handlCustonerPage(val){
+            this.customerQuery.page = val;
+            this.flushCustomerList(this.customerQuery);
+        },
+        selectCustomer(options){
+            this.demandParams.customerName = options.customerName;
+            this.demandParams.customerPhone = options.customerPhone;
+            this.demandParams.destination = options.destination;
+            this.customerListDlShow = false;
+        },
+        showNewCustomer(){
+            this.customerAddDlShow = true;
+        },
+        submitCustomer(){
+            this.newCustomer(this.customerParams)
+                .then(data=>{
+                    this.$message({
+                        message: `新增成功`,
+                        type: 'success'
+                    });
+                    this.customerAddDlShow = false;
+                    this.flushCustomerList();
+                })
+        },
+        deleteCustomer(customerId){
+            this.removeCustomer({customerId});
         }
     },
     mounted: function () {
@@ -554,8 +669,71 @@ export default {
             width: auto;
         }
     }
-  
-
-
+}
+.customer-content{
+    margin-left:20px;
+    margin-right:20px;
+    overflow:hidden;
+    .customer-item{
+        border:2px dashed #D3DCE6;
+        margin-bottom:5px;
+        padding:5px 10px;
+        cursor:pointer;
+        .customer-name{
+            color:#F7BA2A;
+            font-size:14px;
+        }
+        .customer-phone{
+            color: #8492a6;
+            font-size:12px;
+            margin-left: 10px;
+        }
+        .destination{
+            color: #444444;
+            font-size:14px;
+        }
+        aside{
+            font-size:12px;
+            .set-default{
+                color:#13CE66;
+                margin-right:20px;
+            }
+            .delete{
+                color:#FF4949
+            }
+            span:hover{
+                text-decoration:underline;
+            }
+        }
+        &:hover{
+            border:2px dashed #F7BA2A;
+        }
+    }
+    .add-customer{
+        font-size:16px;
+        .iconfont{
+            font-size:18px;
+            margin-right:5px;
+        }
+    }
+    .customer-page{
+        margin-bottom:5px;
+        .el-pagination{
+            padding:3px 0px;
+            text-align:right;
+            li.active{
+                background-color: #f7ba2a;
+                border-color: #f7ba2a;
+                &:hover{
+                    background-color: #f7ba2a;
+                    border-color: #f7ba2a;
+                    color:#fff;
+                }
+            }
+            li:hover{
+                color:#f7ba2a;
+            }
+        }
+    }
 }
 </style>

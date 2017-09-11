@@ -58,6 +58,10 @@ module.exports = app => {
   app.get('/zues/api/car/list','car.list');
   app.post('/zues/api/car/add','car.add');
   app.post('/zues/api/car/remove','car.remove');
+  //客户
+  app.get('/zues/api/customer/list','customer.list');
+  app.post('/zues/api/customer/add','customer.add');
+  app.post('/zues/api/customer/remove','customer.remove');
   //下单
   app.get('/zues/api/order/list','order.list');
   app.get('/zues/api/order/detail','order.detail');
@@ -75,6 +79,7 @@ module.exports = app => {
   app.get('/zues/api/demand/detail','demand.detail');
   app.get('/zues/api/demand/price','demand.priceList');
   app.post('/zues/api/demand/add','demand.add');
+  app.post('/zues/api/demand/submitudapte','demand.submitUdapte');
   app.post('/zues/api/demand/update','demand.update');
   app.post('/zues/api/demand/price','demand.price');  
   app.post('/zues/api/demand/remove','demand.remove');
