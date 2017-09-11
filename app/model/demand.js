@@ -386,7 +386,6 @@ module.exports = app => {
                             factoryPrice: v.factoryPrice || 0,
                             freight: v.freight || 0,
                             comment: v.comment,
-                            priceComment: v.priceComment || '',
                         },{
                             where:{
                                 demandDetailId:{
@@ -404,14 +403,15 @@ module.exports = app => {
                 if(isSuccess) {
                     yield app.model.query(`
                         UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume,
-                        priceUser = :priceUser
+                        priceUser = :priceUser,priceComment = :priceComment
                         WHERE demandNo = :demandNo
                     `,{
                         replacements:{
                             priceTime: +new Date(),
                             demandNo: options.demandNo,
                             timeConsume: options.timeConsume || 0,
-                            priceUser: options.userId
+                            priceUser: options.userId,
+                            priceComment: options.priceComment || '',
                         }
                     })
                     //yield this.countDemand(options);
