@@ -184,7 +184,7 @@ module.exports = app => {
                     demandWeight += (v.demandWeight - 0);
                 });
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
-                const isSuccess = app.model.transaction(async (t)=>{
+                const isSuccess = yield app.model.transaction(async (t)=>{
                     return await this.create(
                         Object.assign(options,{
                         state: 0,
@@ -386,7 +386,6 @@ module.exports = app => {
                             factoryPrice: v.factoryPrice || 0,
                             freight: v.freight || 0,
                             comment: v.comment,
-                            priceComment: v.priceComment || '',
                         },{
                             where:{
                                 demandDetailId:{
@@ -404,14 +403,15 @@ module.exports = app => {
                 if(isSuccess) {
                     yield app.model.query(`
                         UPDATE demand SET state = 1,priceTime = :priceTime,timeConsume = :timeConsume,
-                        priceUser = :priceUser
+                        priceUser = :priceUser,priceComment = :priceComment
                         WHERE demandNo = :demandNo
                     `,{
                         replacements:{
                             priceTime: +new Date(),
                             demandNo: options.demandNo,
                             timeConsume: options.timeConsume || 0,
-                            priceUser: options.userId
+                            priceUser: options.userId,
+                            priceComment: options.priceComment || '',
                         }
                     })
                     //yield this.countDemand(options);
