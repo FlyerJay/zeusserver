@@ -439,7 +439,7 @@ module.exports = app => {
                             $eq:options.comId
                         },
                         userId: {
-                            $like: options.demandUser ? `%${options.demandUser}%` : '%%'
+                            $like: options.demandUser ? `${options.demandUser}` : '%%'
                         },
                         createTime:{
                             $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.createTime?new Date(options.createTime).getTime() + 5.86e7:99999999999999999]
