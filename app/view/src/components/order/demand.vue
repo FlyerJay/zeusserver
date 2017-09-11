@@ -75,15 +75,15 @@
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
-                        <el-table-column label="报价" width="280px;">
+                        <el-table-column label="报价" width="330px;">
                             <template scope="scope">
-                                <el-row :gutter='5'>
+                                <el-row>
                                     <el-col :span='12'>
                                         <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
                                             <template slot="prepend">出厂价</template>
                                         </el-input>
                                     </el-col>
-                                    <el-col :span='2'><span style="display:inline-block;margin-top:3px">+</span></el-col>
+                                    <el-col :span='2'><span style="display:inline-block;margin:5px 0px 0px 6px">+</span></el-col>
                                     <el-col :span='10'>
                                         <el-input auto-complete="off" type="text" v-model="scope.row.freight" :readonly="activeName > 1">
                                             <template slot="prepend">运费</template>
@@ -92,7 +92,7 @@
                                 </el-row>        
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" width="150px">
+                        <el-table-column label="备注" width="200px">
                             <template scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 </el-input>
@@ -238,6 +238,12 @@ export default {
                     this.loading = false;
                 });
         },
+        fpriceFormat(scope) {
+            console.log('dd',scope.row.factoryPrice)
+            if(scope.row.factoryPrice == 0) {
+                return ''
+            }
+        },
         submitPrice() {
             this.$confirm('确认提交?', '确认', {
                 confirmButtonText: '确定',
@@ -332,16 +338,9 @@ export default {
             padding: 15px;
             box-shadow: 1px 1px 1px 1px #e5e7ef;
         }
-        .demand-dlg {
-            width: 840px;
-        }
 
         .detailview {
-            width: 965px;
-            .el-input-group {
-                float: inherit;
-                width: 100%;
-            }
+            width: auto;
         }
 
     }
