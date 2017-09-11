@@ -122,7 +122,7 @@
                                 </el-input>
                             </el-col>    
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="true">
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName == 0">
                                     <template slot="prepend">采购备注</template>
                                 </el-input>
                             </el-col>
@@ -261,7 +261,8 @@ export default {
                     var params = {
                         demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
                         demandPrices: this.demandDetail,
-                        timeConsume: this.timeConsume
+                        timeConsume: this.timeConsume,
+                        priceComment: this.priceComment
                     }
                     this.loadDemandPriceList(params).then(rs => {
                         this.$message({

@@ -219,7 +219,7 @@
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量(支)" prop='demandAmount' width="120px"></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight' width="120px"></el-table-column>
-                        <el-table-column label="报价" width="330px;" v-if="activeName > 0">
+                        <el-table-column label="报价" width="330px;" align="center" v-if="activeName > 0">
                             <template scope="scope">
                                 <el-row>
                                     <el-col :span='12'>
@@ -236,7 +236,7 @@
                                 </el-row>  
                             </template>    
                         </el-table-column>
-                        <el-table-column label="备注" width="230px" v-if="activeName > 0">
+                        <el-table-column label="备注" width="230px" align="center" v-if="activeName > 0">
                             <template scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="true" style="width: 100%;float:left;margin: 5px 0px 5px;">
                                 </el-input>
@@ -377,7 +377,6 @@ export default {
             dlDemandView: false,
             dlFeedback: false,
             loading: true,
-            // dearr: [],
             currentDemand: '',
             unit: 1,
             customerListDlShow: false,//客户列表弹出框
@@ -404,7 +403,6 @@ export default {
                 });
         },
         deleteSpec(index) {
-            // this.dearr.splice(index, 1);
             this.demandParams.demandDetails.splice(index, 1);
         },
         statusFormatter(row, column) {
@@ -421,7 +419,6 @@ export default {
             this.specParams.type = '';
             this.specParams.demandAmount = '';
             this.specParams.demandWeight = '';
-            // this.dearr = [];
         },
         viewDetail(row) {
             this.dlDemandView = true;
@@ -460,7 +457,6 @@ export default {
             this.submitstate = 1;
             this.demandDetailList(param)
                 .then(() => {
-                    // this.dearr = this.demandDetail;
                     this.demandParams.demandDetails = this.demandDetail;
                     this.demandParams.demandNo = row.demandNo;
                     this.demandParams.destination = row.destination;
@@ -516,7 +512,6 @@ export default {
                 demandWeight: this.specParams.demandWeight
             }
             this.demandParams.demandDetails.push(specObj);
-            // this.dearr.push(specObj);
             this.specParams.spec = '';
             this.specParams.type = '';
             this.specParams.demandAmount = '';
