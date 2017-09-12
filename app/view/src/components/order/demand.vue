@@ -122,7 +122,7 @@
                                 </el-input>
                             </el-col>    
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName == 0">
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0">
                                     <template slot="prepend">采购备注</template>
                                 </el-input>
                             </el-col>
