@@ -117,12 +117,12 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
                             </el-col>    
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0">
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
                                     <template slot="prepend">采购备注</template>
                                 </el-input>
                             </el-col>
