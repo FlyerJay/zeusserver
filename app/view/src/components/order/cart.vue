@@ -289,7 +289,8 @@
             confirmAdjust() {
                 const self = this;
                 self.supplierInventoryIds.map((v)=>{
-                    v.chartAdjust = -self.adjustnum
+                    v.chartAdjust = -self.adjustnum;
+                    this.totalAdjust = (Number(v.chartAdjust) * Number(this.totalWeight)).toFixed(2);
                 });
                 self.dlgAdjustVisible = false;
             },
