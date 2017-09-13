@@ -49,6 +49,8 @@
                 </el-table-column>
                 <el-table-column prop="priceTime" label="报价时间" :formatter="dateFormat">
                 </el-table-column>
+                <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
+                </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
