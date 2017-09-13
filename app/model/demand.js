@@ -79,6 +79,10 @@ module.exports = app => {
             type:BIGINT(15),
             comment:"报价时间"
         },
+        feedbackTime: {
+            type: BIGINT(15),
+            comment: "反馈时间"
+        },
         state: {
             type: INTEGER,
             allowNull: false,
@@ -289,6 +293,7 @@ module.exports = app => {
                     if(arr == 'userId') continue;
                     result[arr] = options[arr];
                 }
+                result.feedbackTime = new Date().getTime();
                 const data = yield result.save();
                 //yield this.countDemand(options);
                 return {
@@ -433,7 +438,7 @@ module.exports = app => {
                 const list = yield this.findAndCountAll({
                     offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
                     limit: options.pageSize?options.pageSize:15,
-                    order: 'priceTime DESC , createTime ASC',
+                    order: 'priceTime DESC , createTime ASC , feedbackTime DESC',
                     where:{
                         comId:{
                             $eq:options.comId
