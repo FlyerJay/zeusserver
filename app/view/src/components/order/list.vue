@@ -12,7 +12,7 @@
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
-            <el-table :data="orderList.row" stripe style="width: 100%" v-loading.body="loading" border>
+            <el-table :data="orderList.row" stripe v-loading.body="loading" border>
                 <el-table-column prop="orderNo" label="订单号" width="200"></el-table-column>
                 <el-table-column prop="createTime" :formatter="dateFormat" label="下单时间" width="180"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商" :formatter="nameFormat"></el-table-column>
@@ -40,10 +40,8 @@
             >
             </el-pagination>
         </div>
-        <el-dialog
-            v-model="detailDialogShow"
-            size="small">
-            <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
+        <el-dialog v-model="detailDialogShow" custom-class="o-detail">
+            <el-table :data="orderDetail" stripe v-loading.body="detailLoading" border>
                 <el-table-column prop="spec" label="规格" width="140px"></el-table-column>
                 <el-table-column prop="type" label="类型"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
@@ -715,3 +713,10 @@
         }
     }
 </script>
+<style lang="less">
+    .order-wrap {
+        .o-detail {
+            width:auto
+        }
+    }
+</style>

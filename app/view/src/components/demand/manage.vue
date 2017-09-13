@@ -72,8 +72,8 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" v-if="activeName == 0" width='150px'>
                     <template scope="scope">
-                        <el-button size="small" @click="changeDemand(scope.row)" type="warning">修改</el-button>
-                        <el-button size="small" @click="removeDemand(scope.row)" type="danger">删除</el-button>
+                        <el-button size="small" @click="changeDemand(scope.row)" type="warning" v-if="userInfo.userId == scope.row.userId">修改</el-button>
+                        <el-button size="small" @click="removeDemand(scope.row)" type="danger" v-if="userInfo.userId == scope.row.userId">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -261,12 +261,12 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
                             </el-col>
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="true">
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">采购备注</template>
                                 </el-input>
                             </el-col>
@@ -788,5 +788,8 @@ export default {
             }
         }
     }
+}
+.comtxt .el-input__inner {
+    color: red
 }
 </style>

@@ -270,11 +270,27 @@
                 this.changeParams.oldPrice = row.totalPrice;
                 this.changeParams.comment = row.comment;
                 this.changeParams.row = row;
+                this.supplierInventoryIds.map((v) => {
+                    if(v.chartId === row.chartId){
+                        this.totalPrice = (Number(this.totalPrice) + Number(this.changeParams.newPrice) - Number(this.changeParams.oldPrice)).toFixed(2);
+                        const specArr = row.spec.split('*');
+                        const height = Number(specArr[0]);
+                        const width = Number(specArr[1]);
+                        const land = Number(specArr[2]);
+                        const long = Number(row.long) ? Number(row.long) : 6;
+                        const per = Number(row.perAmount);
+                        const perimeter = 2 * height + 2 * width;
+                        const amount = Number(row.chartAmount);
+                        this.totalWeight = (((perimeter/3.14 - land) * land * long * 0.02466 * amount * per)/1000).toFixed(2);
+                        this.totalAdjust = (Number(this.changeParams.chartAdjust) * Number(this.totalWeight)).toFixed(2);
+                    }
+                })
             },
             confirmAdjust() {
                 const self = this;
                 self.supplierInventoryIds.map((v)=>{
-                    v.chartAdjust = -self.adjustnum
+                    v.chartAdjust = -self.adjustnum;
+                    this.totalAdjust = (Number(v.chartAdjust) * Number(this.totalWeight)).toFixed(2);
                 });
                 self.dlgAdjustVisible = false;
             },
