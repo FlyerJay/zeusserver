@@ -37,7 +37,7 @@
             </el-tabs>
         </div>
         <div class="tb-wrap">
-            <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
+            <el-table :data="demandInfo.row" stripe v-loading.body="loading" border>
                 <el-table-column width='60px' label="#">
                     <template scope="scope">
                         {{scope.$index + (searchDeParam.page - 1) * 15 + 1}}
@@ -67,12 +67,12 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1">
+                <el-table-column label="交易反馈" align="center" property="id" v-show="activeName == 1">
                     <template scope="scope">
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" v-if="activeName == 0" width='150px'>
+                <el-table-column label="操作" align="center" v-show="activeName == 0" width='150px'>
                     <template scope="scope">
                         <el-button size="small" @click="changeDemand(scope.row)" type="warning" v-if="userInfo.userId == scope.row.userId">修改</el-button>
                         <el-button size="small" @click="removeDemand(scope.row)" type="danger" v-if="userInfo.userId == scope.row.userId">删除</el-button>
