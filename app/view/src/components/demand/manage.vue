@@ -671,7 +671,16 @@ export default {
         this.loading = true;
         this.loadDemandList(this.searchDeParam).then(() => {
             this.loading = false;
-        })
+        });
+        var self = this;
+        document.onkeyup = function(event) {
+        event = event || window.event;
+        if(event.keyCode === 13) {
+            if(!self.dlgDemandVisible && !self.dlDemandView && !self.dlFeedback && !self.customerListDlShow && !self.customerAddDlShow) {
+                self.searchDemand()
+            }
+        };
+    };
     },
     watch: {
         ['specParams.demandAmount'](val) {

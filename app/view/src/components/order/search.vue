@@ -22,7 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="warning" @click="searchStock" :loading="loading">厂家现货查询</el-button>
+        <el-button type="warning" @click="searchStock" :loading="loading" @v-on:keyup.enter="searchStock" class="search-bt">厂家现货查询</el-button>
       </el-form-item>
     </el-form>
     <div class="sea-title">
@@ -76,7 +76,7 @@
           <template scope="scope">
             <el-button size="small" @click="enterNum(scope.index, scope.row)" type="success" :disabled="!scope.row.value">下单</el-button>
             <el-button size="small" @click="markNum(scope.index, scope.row)" type="warning" v-if="scope.row.mark">清除</el-button>
-            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else="scope.row.mark">标记
+            <el-button size="small" @click="markNum(scope.index, scope.row)" type="info" v-else>标记
               <i class="iconfont icon-mark" :style="{'color':scope.row.markType == 1 ? '#ed3f14' : '#ff9900'}" @click.stop="scope.row.markType == 1 ? scope.row.markType = 2 : scope.row.markType = 1"></i>
             </el-button>
           </template>
@@ -293,8 +293,18 @@ export default {
         this.loading = false;
       });
     this.loadOrdAddress();
+    var  self = this;
+    document.onkeyup = function(event) {
+      event = event || window.event;
+      if(event.keyCode === 13) {
+        if(!self.dlgShopVisible && !self.dlgTbheadVisible) {
+          self.searchStock()
+        }
+      };
+    };
   }
 }
+
 </script>
   
 <style lang="less">
