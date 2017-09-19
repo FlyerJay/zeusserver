@@ -805,5 +805,9 @@ export default {
 }
 .op-col {
     width: 150px;
+    .cell {
+        padding-left: 5px;
+        padding-right: 0px;
+    }
 }
 </style>

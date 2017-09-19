@@ -104,9 +104,9 @@ export default {
   },
   methods:{
     handleCurrentChange(val){
-      this.verifyParams.page = val;
+      this.orderParams.page = val;
       this.loading = true;
-      this.loadSpecList(this.verifyParams)
+      this.searchOrder()
       .then(rs => {
         this.loading = false;
       });
