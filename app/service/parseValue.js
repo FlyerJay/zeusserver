@@ -275,6 +275,9 @@ module.exports = app => {
                     if(`${lines[j][2]}` && `${lines[j][2]}`.indexOf('-') > -1){
                         const arr = `${lines[j][2]}`.split('-');
                         lines[j][2] = utils.getLand(arr[0],arr[1]);
+                    }else if(`${lines[j][2]}` && `${lines[j][2]}`.indexOf("以上") > -1) {
+                        var num = `${lines[j][2]}`.replace("以上","");
+                        lines[j][2] = utils.getLand(num,30);
                     }
                 }
                 options[i].lines = lines;
