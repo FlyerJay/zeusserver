@@ -137,17 +137,17 @@
                 <div class="clearfix" style="margin-top: 16px;">
                     <el-row :gutter='8'>
                         <el-col :span='7'>
-                            <el-input v-model="demandParams.destination" auto-complete="off">
+                            <el-input v-model="demandParams.destination" auto-complete="off" @focus="editCostomer">
                                 <template slot="prepend">目的地</template>
                             </el-input>
                         </el-col>
                         <el-col :span='7'>
-                            <el-input v-model="demandParams.customerName" auto-complete="off">
+                            <el-input v-model="demandParams.customerName" auto-complete="off" @focus="editCostomer">
                                 <template slot="prepend">客户</template>
                             </el-input>
                         </el-col>
                         <el-col :span='7'>
-                            <el-input v-model="demandParams.customerPhone" auto-complete="off">
+                            <el-input v-model="demandParams.customerPhone" auto-complete="off" @focus="editCostomer">
                                 <template slot="prepend">电话</template>
                             </el-input>
                         </el-col>
