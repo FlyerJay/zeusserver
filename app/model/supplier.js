@@ -62,9 +62,9 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight 
                 FROM supplier s
                 LEFT JOIN freight f ON
-                f.comId = s.comId AND
+                f.comId = :comId AND
                 f.address = s.address
-                WHERE s.comId = :comId AND
+                WHERE s.comId = "00" AND
                 s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'
                 ${condition}
@@ -80,9 +80,9 @@ module.exports = app => {
                 app.model.query(`SELECT count(1) as count 
                 FROM supplier s
                 LEFT JOIN freight f ON
-                f.comId = s.comId AND
+                f.comId = :comId AND
                 f.address = s.address
-                WHERE s.comId = :comId AND
+                WHERE s.comId = "00" AND
                 s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'
                 ${condition}`,{
@@ -167,6 +167,7 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
+                options.comId = "00";
                 if(!options.supplierName) return {
                     code:-1,
                     msg:"请输入供应商名称"
@@ -182,7 +183,7 @@ module.exports = app => {
                             $eq:options.supplierName
                         },
                         comId:{
-                            $eq:options.comId
+                            $eq:"00"
                         }
                     }
                 })

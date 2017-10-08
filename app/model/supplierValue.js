@@ -72,7 +72,6 @@ module.exports = app => {
                 FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
-                AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
@@ -83,7 +82,7 @@ module.exports = app => {
                 LIMIT :start,:offset`,{
                     replacements:{
                         address:options.address?options.address:'',
-                        comId:options.comId,
+                        comId:"00",
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
@@ -95,7 +94,6 @@ module.exports = app => {
                 FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
-                AND s.comId LIKE sv.comId
                 AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
@@ -104,7 +102,7 @@ module.exports = app => {
                 AND (sv.type = :type OR :type = '')`,{
                     replacements:{
                         address:options.address?options.address:'',
-                        comId:options.comId,
+                        comId:"00",
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
@@ -136,6 +134,7 @@ module.exports = app => {
                     code: -1,
                     msg: '请选择供应商',
                 }
+                options.comId = "00";
                 if(!options.spec) return {
                     code: -1,
                     msg: '规格不能为空'
@@ -162,6 +161,7 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少必要参数'
                 }
+                options.comId = "00";
                 if(!options.value) return {
                     code:-1,
                     msg:"没有修改的价格"
@@ -202,13 +202,13 @@ module.exports = app => {
                 }
                 options.adjust = Number(options.adjust);
                 const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust},sv.adjustValue = ${options.adjust} where
-                    sv.comId = :comId
+                    sv.comId = "00"
                     AND sv.lastUpdateTime = :lastUpdateTime
                     AND sv.spec LIKE :spec
                     AND (sv.type = :type OR :type = '')
                     AND (f.address = :address OR :address = '')
+                    AND f.comId = :comId
                     AND s.supplierName LIKE :supplierName
-                    AND s.comId = sv.comId
                     AND s.supplierId = sv.supplierId
                     AND s.address = f.address
                 `,{

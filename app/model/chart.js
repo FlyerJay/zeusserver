@@ -102,10 +102,8 @@ module.exports = app => {
                 si.type = sv.type AND
                 si.material = sv.material
                 AND si.supplierId = sv.supplierId
-                AND si.comId = c.comId
                 LEFT JOIN supplier s ON
                 s.supplierId = si.supplierId
-                AND s.comId = c.comId
                 LEFT JOIN freight f ON
                 f.address = s.address
                 AND f.comId = c.comId
@@ -130,10 +128,8 @@ module.exports = app => {
                 si.spec = sv.spec AND
                 si.type = sv.type 
                 AND si.supplierId = sv.supplierId
-                AND si.comId = c.comId
                 LEFT JOIN supplier s ON
                 s.supplierId = si.supplierId
-                AND s.comId = c.comId
                 AND s.isDelete = 'N'
                 LEFT JOIN freight f ON
                 f.address = s.address

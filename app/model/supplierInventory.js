@@ -87,16 +87,15 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.supplierId,si.comId,si.spec,si.lastUpdateTime,
                 si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.mark,s.supplierName,s.address,s.benifit,f.freight FROM supplier_inventory si
                 INNER JOIN supplier s ON
-                s.comId = si.comId
-                AND s.supplierName LIKE :supplierName
+                s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
                 AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
-                and f.comId = s.comId
+                and f.comId = :comId
                 WHERE si.spec LIKE :spec
-                AND si.comId = :comId
+                AND si.comId = "00"
                 ${typeCondition}
                 ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec
                 LIMIT :start,:offset`,{
@@ -112,16 +111,15 @@ module.exports = app => {
                 }),
                 app.model.query(`SELECT count(1) as count FROM supplier_inventory si
                 INNER JOIN supplier s ON
-                s.comId = si.comId
-                AND s.supplierName LIKE :supplierName
+                s.supplierName LIKE :supplierName
                 AND s.supplierId = si.supplierId
                 AND s.isDelete = 'N'
                 ${addressCondition}
                 LEFT JOIN freight f ON
                 f.address = s.address
-                and f.comId = s.comId
+                and f.comId = :comId
                 WHERE si.spec LIKE :spec
-                AND si.comId = :comId
+                AND si.comId = "00"
                 ${typeCondition}
                 ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`,{
                     replacements:{
@@ -178,6 +176,7 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少必要参数'
                 }
+                options.comId = "00";
                 const result = yield this.update(options,{
                     where :{
                         supplierInventoryId:{
@@ -233,7 +232,6 @@ module.exports = app => {
                     FROM supplier_inventory si
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
-                    AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
                     AND s.isDelete = 'N'
                     LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv
@@ -241,13 +239,12 @@ module.exports = app => {
                     AND si.type = sv.type
                     AND si.material = sv.material
                     AND si.spec = sv.spec
-                    AND sv.comId = si.comId
                     LEFT JOIN freight f ON
                     f.address = s.address
-                    AND f.comId = si.comId
+                    AND f.comId = :comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    AND si.comId = :comId
+                    AND si.comId = "00"
                     ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec
                     LIMIT :start,:offset`,{
                         replacements:{
@@ -263,7 +260,6 @@ module.exports = app => {
                     FROM supplier_inventory si
                     INNER JOIN supplier s
                     ON s.supplierId = si.supplierId
-                    AND s.comId = si.comId
                     AND (s.address = :address OR :address = '')
                     AND s.isDelete = 'N'
                     LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv
@@ -271,13 +267,12 @@ module.exports = app => {
                     AND si.type = sv.type
                     AND si.material = sv.material
                     AND si.spec = sv.spec
-                    AND sv.comId = si.comId
+                    AND sv.comId = :comId
                     LEFT JOIN freight f ON
                     f.address = s.address
-                    AND f.comId = si.comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
-                    AND si.comId = :comId
+                    AND si.comId = "00"
                     ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec`,{
                         replacements:{
                             spec:options.spec?`%${options.spec}%`:'%%',
