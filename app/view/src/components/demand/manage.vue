@@ -472,6 +472,13 @@ export default {
             this.FeedbackParams.demandNo = row.demandNo;
         },
         submitFeedback() {
+            if(!this.FeedbackParams.dealReason){
+                this.$message({
+                    message: `请填写反馈原因`,
+                    type: 'warning'
+                })
+                return false;
+            }
             this.$confirm('确认提交?','确认',{
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

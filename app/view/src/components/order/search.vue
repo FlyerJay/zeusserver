@@ -42,6 +42,13 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商"  v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
+        <el-table-column label="到岸单价" sortable width="120px" v-if="checkedTBhead.indexOf('到岸单价') > -1">
+          <template scope="scope">
+            <span class="value">{{scope.row.purePrice + scope.row.freight}}</span>
+            <i class="iconfont icon-down" v-if="scope.row.priceAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
+            <i class="iconfont icon-up" v-if="scope.row.priceAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
+          </template>
+        </el-table-column>
         <el-table-column prop="purePrice" label="开单价" sortable width="110px" v-if="checkedTBhead.indexOf('开单价') > -1">
           <template scope="scope">
             <span class="value">{{scope.row.purePrice}}</span>
@@ -156,7 +163,7 @@ export default {
       dlgTbheadVisible: false,
       loading: true,
       checkedTBhead: [],
-      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
+      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'到岸单价','开单价',	'操作']
     }
   },
   methods: {
