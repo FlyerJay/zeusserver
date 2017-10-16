@@ -59,15 +59,19 @@ module.exports = app => {
                 if(options.address) {
                     condition = `AND s.address = :address`
                 }
-                const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight 
+                const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight,sr.isValide,sr.benifitAdjust 
                 FROM supplier s
                 LEFT JOIN freight f ON
                 f.comId = :comId AND
                 f.address = s.address
+                LEFT JOIN supplier_relate sr
+                ON sr.comId = :comId
+                AND sr.supplierId = s.supplierId
                 WHERE s.comId = "00" AND
                 s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'
                 ${condition}
+                ORDER BY sr.isValide DESC
                 LIMIT :start,:offset`,{
                     replacements:{
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
@@ -82,6 +86,9 @@ module.exports = app => {
                 LEFT JOIN freight f ON
                 f.comId = :comId AND
                 f.address = s.address
+                LEFT JOIN supplier_relate sr
+                ON sr.comId = :comId
+                AND sr.supplierId = s.supplierId
                 WHERE s.comId = "00" AND
                 s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'

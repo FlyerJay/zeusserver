@@ -22,6 +22,14 @@
           <el-table-column property="address" label="供应商所在地"></el-table-column>
           <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
           <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
+          <el-table-column label="启用状态" align="center" property="id" v-if="supplierAuth">
+            <template scope="scope" >
+              <select class="custom-select" :class="{'active': scope.isValide == 1 }" name="isValide" value="scope.isValide ? 1 : 0" @change="changeState">
+                <option value="0">关闭</option>
+                <option value="1">开启</option>
+              </select>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
             <template scope="scope" >
               <el-button size="small" @click="changeSupDlg(scope.index, scope.row)" type="warning">修改</el-button>
@@ -357,6 +365,10 @@
             this.loadfreightList();
           })
       },
+      changeState(e){
+        var value = e.currentTarget.value;
+        
+      }
     },
     mounted: function() {
       this.loadSupAddress({
@@ -385,6 +397,16 @@
   .sup-info {
     .demo-form-inline {
         margin-top: 16px;
+    }
+    .custom-select{
+      padding: 2px 5px;
+      color: #324057;
+      border: 1px solid ##475669;
+      outline: none;
+      &.active{
+        color: #13CE66;
+        border: 1px solid #13CE66;
+      }
     }
   }
  
