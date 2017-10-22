@@ -30,6 +30,8 @@ module.exports = app => {
   app.post('/zues/api/supplier/add','supplier.add');
   app.post('/zues/api/supplier/remove','supplier.remove');
   app.get('/zues/api/supplier/address','supplier.address');
+  app.post('/zues/api/supplier/open','supplier.open');
+  app.post('/zues/api/supplier/close','supplier.close');
   //供应商库存
   app.get('/zues/api/inventory/list','inventory.list');
   app.post('/zues/api/inventory/add','inventory.add');

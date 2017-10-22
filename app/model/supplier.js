@@ -21,11 +21,6 @@ module.exports = app => {
             allowNull: false,
             comment: "供应商名称"
         },
-        comId: {
-            type: STRING(2),
-            allowNull: false,
-            comment: "公司编号"
-        },
         address: {
             type: STRING(20),
             allowNull: false,
@@ -59,7 +54,7 @@ module.exports = app => {
                 if(options.address) {
                     condition = `AND s.address = :address`
                 }
-                const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.comId,s.address,s.benifit,f.freight,sr.isValide,sr.benifitAdjust 
+                const [$1,$2] = yield [app.model.query(`SELECT s.supplierId,s.supplierName,s.address,sr.benifit,f.freight,sr.isValide,sr.benifitAdjust 
                 FROM supplier s
                 LEFT JOIN freight f ON
                 f.comId = :comId AND
@@ -67,8 +62,7 @@ module.exports = app => {
                 LEFT JOIN supplier_relate sr
                 ON sr.comId = :comId
                 AND sr.supplierId = s.supplierId
-                WHERE s.comId = "00" AND
-                s.supplierName LIKE :supplierName
+                WHERE s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'
                 ${condition}
                 ORDER BY sr.isValide DESC
@@ -89,8 +83,7 @@ module.exports = app => {
                 LEFT JOIN supplier_relate sr
                 ON sr.comId = :comId
                 AND sr.supplierId = s.supplierId
-                WHERE s.comId = "00" AND
-                s.supplierName LIKE :supplierName
+                WHERE s.supplierName LIKE :supplierName
                 AND s.isDelete = 'N'
                 ${condition}`,{
                     replacements:{
@@ -118,55 +111,6 @@ module.exports = app => {
                     code:200,
                     msg:"查询成功",
                     data:result,
-                }
-            },
-            * update(options){
-                var result = yield this.findOne({
-                    where:{
-                        supplierId:{
-                            $eq:options.supplierId,
-                        }
-                    }
-                })
-                if(!result) return{
-                    code:-1,
-                    msg:'修改的记录不存在'
-                }
-                var keys = '';
-                var values = '';
-                var value = '';
-                var lastBenifit = result.dataValues.benifit;
-                for(var props in options){
-                    if(props == 'freight'){
-                        yield app.model.query('UPDATE freight SET freight = :freight WHERE address = :address AND comId = :comId',{
-                            replacements:{
-                                address: options.address?options.address:'',
-                                freight: options.freight - 0,
-                                comId: options.comId,
-                            }
-                        })
-                    }
-                    else if(props == 'benifit'){
-                        yield app.model.query(`UPDATE supplier SET benifit = :benifit,benifitAdjust = :benifitAdjust WHERE supplierId = :supplierId`,{
-                            replacements:{
-                                supplierId:options.supplierId,
-                                benifit: options.benifit - 0,
-                                benifitAdjust: options.benifit - lastBenifit,
-                            }
-                        })
-                    }else if(props != 'row' && props != 'userId' && props != 'role'){
-                        yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
-                            replacements:{
-                                supplierId:options.supplierId,
-                                value:options[props]+''
-                            }
-                        })
-                    }
-                   
-                }
-                return {
-                    code:200,
-                    msg:"修改成功"
                 }
             },
             * add(options){

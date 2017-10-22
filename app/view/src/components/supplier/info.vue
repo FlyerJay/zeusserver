@@ -24,10 +24,16 @@
           <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
           <el-table-column label="启用状态" align="center" property="id" v-if="supplierAuth">
             <template scope="scope" >
-              <select class="custom-select" :class="{'active': scope.isValide == 1 }" name="isValide" value="scope.isValide ? 1 : 0" @change="changeState">
-                <option value="0">关闭</option>
-                <option value="1">开启</option>
-              </select>
+              <el-select size="small" :class="{'open': scope.row.isValide==1 }" v-model="scope.row.isValide" placeholder="请选择" @change="changeState.call(this,$event,scope.row)">
+                <el-option
+                  label="开启"
+                  :value="1">
+                </el-option>
+                <el-option
+                  label="关闭"
+                  :value="0">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
@@ -134,9 +140,6 @@
           </el-col>
           </el-row>
         </div>
-        <el-input v-model="changeSupParam.freight" auto-complete="off" type="number" class="dialog-item">
-          <template slot="prepend">运费</template>
-        </el-input>
         <el-input v-model="changeSupParam.benifit" auto-complete="off" type="number" class="dialog-item">
           <template slot="prepend">政策下浮</template>
         </el-input>
@@ -157,7 +160,9 @@
     updataSup,
     updateFre,
     deletSupplier,
-    deleteFreight
+    deleteFreight,
+    openRelate,
+    closeRelate
   } from '../../vuex/action'
   
   export default {
@@ -171,7 +176,9 @@
         loadfreightList,
         updateFre,
         deletSupplier,
-        deleteFreight
+        deleteFreight,
+        openRelate,
+        closeRelate
       },
       getters: {
         supInfo: ({
@@ -207,7 +214,6 @@
         changeSupParam: {
           supplierName: '',
           address: '',
-          freight: '',
           benifit: '',
           supplierId: '',
           row: '',
@@ -331,7 +337,6 @@
         this.dlgChangeSupVisible = true;
         this.changeSupParam.supplierName = row.supplierName;
         this.changeSupParam.address = row.address;
-        this.changeSupParam.freight = row.freight;
         this.changeSupParam.benifit = row.benifit;
         this.changeSupParam.supplierId = row.supplierId;
         this.changeSupParam.row = row
@@ -365,9 +370,12 @@
             this.loadfreightList();
           })
       },
-      changeState(e){
-        var value = e.currentTarget.value;
-        
+      changeState(value,{supplierId}){
+        if(value == 1) {
+          this.openRelate({supplierId})
+        }else{
+          this.closeRelate({supplierId})
+        }
       }
     },
     mounted: function() {
@@ -393,21 +401,22 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .sup-info {
     .demo-form-inline {
         margin-top: 16px;
     }
-    .custom-select{
-      padding: 2px 5px;
-      color: #324057;
-      border: 1px solid ##475669;
-      outline: none;
-      &.active{
+    .open{
+      input{
         color: #13CE66;
-        border: 1px solid #13CE66;
+        border-color: #13CE66;
+      }
+      .el-input__inner:hover{
+        border-color: #13CE66;
+      }
+      & .el-input .el-input__icon{
+        color: #13CE66;
       }
     }
   }
- 
 </style>

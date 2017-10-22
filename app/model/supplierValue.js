@@ -21,11 +21,6 @@ module.exports = app => {
             allowNull:false,
             comment:"供应商编号",
         },
-        comId: {
-            type:STRING(2),
-            allowNull:false,
-            comment:"公司编号",
-        },
         spec: {
             type: STRING(16),
             allowNull:false,
@@ -67,22 +62,25 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.comId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
-                s.supplierName,s.address,s.benifit
+                const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
+                s.supplierName,s.address,sr.benifit
                 FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
-                AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
+                INNER JOIN supplier_relate sr ON
+                sr.supplierId = s.supplierId
+                AND sr.supplierId = sv.supplierId
+                AND sr.comId = :comId
+                AND sr.isValide = 1
                 WHERE sv.spec LIKE :spec
-                AND sv.comId = :comId
                 AND (sv.type = :type OR :type = '')
                 ORDER BY sv.lastUpdateTime DESC,sv.supplierId,sv.type,sv.spec
                 LIMIT :start,:offset`,{
                     replacements:{
                         address:options.address?options.address:'',
-                        comId:"00",
+                        comId:options.comId,
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
@@ -94,15 +92,18 @@ module.exports = app => {
                 FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv) sv
                 INNER JOIN supplier s ON
                 s.supplierName LIKE :supplierName
-                AND s.supplierId = sv.supplierId
                 AND s.isDelete = 'N'
                 AND (s.address = :address OR :address = '')
+                INNER JOIN supplier_relate sr ON
+                sr.supplierId = s.supplierId
+                AND sr.supplierId = sv.supplierId
+                AND sr.comId = :comId
+                AND sr.isValide = 1
                 WHERE sv.spec LIKE :spec
-                AND sv.comId = :comId
                 AND (sv.type = :type OR :type = '')`,{
                     replacements:{
                         address:options.address?options.address:'',
-                        comId:"00",
+                        comId:options.comId,
                         supplierName:options.supplierName?`%${options.supplierName}%`:'%%',
                         spec:options.spec?`%${options.spec}%`:'%%',
                         type:options.type?options.type:'',
@@ -202,8 +203,7 @@ module.exports = app => {
                 }
                 options.adjust = Number(options.adjust);
                 const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust},sv.adjustValue = ${options.adjust} where
-                    sv.comId = "00"
-                    AND sv.lastUpdateTime = :lastUpdateTime
+                    sv.lastUpdateTime = :lastUpdateTime
                     AND sv.spec LIKE :spec
                     AND (sv.type = :type OR :type = '')
                     AND (f.address = :address OR :address = '')
@@ -268,11 +268,10 @@ module.exports = app => {
                 var res = yield app.model.query(`SELECT sv.spec,sv.value,sv.lastUpdateTime as time,s.supplierName FROM supplier_value sv 
                 INNER JOIN supplier s 
                 ON s.supplierId = sv.supplierId
-                AND s.comId = sv.comId
+                AND s.comId = :comId
                 WHERE sv.supplierId = :supplierId
                 AND sv.type = :type 
                 AND sv.spec LIKE :spec
-                AND sv.comId = :comId
                 GROUP BY sv.spec,sv.lastUpdateTime ORDER BY sv.lastupdateTime asc`
                 ,{
                     replacements:{

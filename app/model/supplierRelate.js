@@ -9,23 +9,18 @@
  module.exports = app => {
     const { STRING, INTEGER } = app.Sequelize;
     return app.model.define("SupplierRelate",{
-        relateId: {
-            type: INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-            comment: "关联表主键",
-        },
         supplierId: {
             type: INTEGER,
             allowNull: false,
-            comment: "与供应商表作关联用"
+            comment: "与供应商表作关联用",
+            primaryKey: true,
         },
         comId: {
             type: STRING(2),
             primaryKey: true,
             allowNull:false,
             comment: "与公司进行关联",
+            primaryKey: true,
         },
         isValide: {
             type: INTEGER,
@@ -46,6 +41,90 @@
         freezeTabName:true,
 		tableName:"supplier_relate",
         underscored:true,
-		timestamps:false,
+        timestamps:false,
+        classMethods: {
+            * openRelate(option) {
+                if(!option.comId) return {
+                    code: -1,
+                    msg: "缺少公司信息",
+                }
+                if(!option.supplierId) return {
+                    code: -1,
+                    msg: "缺少供应商信息"
+                }
+                var res = yield this.findOne({
+                    where: {
+                        supplierId: {
+                            $eq: option.supplierId
+                        },
+                        comId: {
+                            $eq: option.comId
+                        }
+                    }
+                });
+                if(res){
+                    yield res.update({isValide: 1});
+                }else{
+                    yield this.create(Object.assign(option,{isValide:1}));
+                }
+                return {
+                    code: 200,
+                    msg: "开启成功",
+                }
+            },
+            * closeRelate( option ){
+                yield app.model.query(`UPDATE supplier_relate sr SET sr.isValide = 0 WHERE supplierId = :supplierId AND comId = :comId`,{
+                    replacements:{
+                        supplierId: option.supplierId,
+                        comId: option.comId
+                    }
+                })
+                return {
+                    code: 200,
+                    msg: "关闭成功"
+                }
+            },
+            * update(options){
+                var result = yield this.findOne({
+                    where:{
+                        supplierId:{
+                            $eq:options.supplierId,
+                        }
+                    }
+                })
+                if(!result) return{
+                    code:-1,
+                    msg:'修改的记录不存在'
+                }
+                var keys = '';
+                var values = '';
+                var value = '';
+                var lastBenifit = result.dataValues.benifit;
+                for(var props in options){
+                    if(props == 'benifit'){
+                        yield app.model.query(`UPDATE supplier_relate SET benifit = :benifit,benifitAdjust = :benifitAdjust WHERE supplierId = :supplierId AND comId = :comId`,{
+                            replacements:{
+                                supplierId:options.supplierId,
+                                benifit: options.benifit - 0,
+                                benifitAdjust: options.benifit - lastBenifit,
+                                comId: options.comId,
+                            }
+                        })
+                    }else if(props != 'row' && props != 'userId' && props != 'role' && props != 'comId'){
+                        yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
+                            replacements:{
+                                supplierId:options.supplierId,
+                                value:options[props]+''
+                            }
+                        })
+                    }
+                   
+                }
+                return {
+                    code:200,
+                    msg:"修改成功"
+                }
+            },
+        }
     })
  }

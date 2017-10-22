@@ -844,6 +844,35 @@ export const removeCustomer = ({ dispatch }, params) => {
   });
 }
 
+//开启供应商设置
+export const openRelate = ({ dispatch }, params) => {
+  return axios.post('/zues/api/supplier/open',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//关闭供应商设置
+export const closeRelate = ({ dispatch }, params) => {
+  return axios.post('/zues/api/supplier/close',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
 
 //展示错误信息
 export const showErrorMessage = ({ dispatch }, msg) => {
