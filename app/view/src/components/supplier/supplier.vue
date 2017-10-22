@@ -75,7 +75,7 @@
             icon: 'icon-trend',
             name: '价格走势',
         };
-        this.topMenuData.push(priceItem);
+        //this.topMenuData.push(priceItem);
       }
       this.updateForm('topMenuData', this.topMenuData)
     },
