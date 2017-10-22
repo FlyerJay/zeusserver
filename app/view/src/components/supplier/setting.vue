@@ -17,7 +17,7 @@
             <el-select v-model="selectCompany" placeholder="请选择">
                 <el-option v-for="item in companyInfo" :value="item.value" :label="item.label"/>
             </el-select>
-            <el-button style="margin:0px 0px 15px 0;" type="info" @click="setDataSource">数据来源</el-button>
+            <el-button style="margin:0px 0px 15px 0;" type="info" @click="setDataSource">提交设置</el-button>
         </div>
         <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中" border>
             <el-table-column property="supplierName" label="供应商名称"></el-table-column>
