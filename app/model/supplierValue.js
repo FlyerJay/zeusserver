@@ -62,6 +62,9 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
+                if( options.comId == "00" ){
+                    options.comId = options.tempComId || "01";
+                }
                 const [$1,$2] = yield [app.model.query(`SELECT sv.supplierValueId,sv.supplierId,sv.spec,sv.type,sv.value,sv.material,sv.lastUpdateTime,
                 s.supplierName,s.address,sr.benifit
                 FROM (select * from (select * from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv) sv

@@ -71,6 +71,9 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
+                if( options.comId == "00" ){
+                    options.comId = options.tempComId || "01";
+                }
                 var addressCondition = '';
                 if(options.address){
                     addressCondition = `AND s.address = :address`
@@ -225,6 +228,9 @@ module.exports = app => {
                 }
             },
             * queryProduct(options){
+                if( options.comId == "00" ){
+                    options.comId = options.tempComId || "01";
+                }
                 var result = {};
                 const [$1,$2] = yield [app.model.query(`SELECT si.supplierInventoryId,si.spec,
                     si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.mark,s.supplierId,s.supplierName,s.address,f.freight,sr.benifit,sv.value,

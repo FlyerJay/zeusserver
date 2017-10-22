@@ -19,6 +19,7 @@ module.exports = app => {
   app.post('/zues/api/user/logout','user.logout');
   //公司
   app.get('/zues/api/company','company.list');
+  app.post('/zues/api/company/setting','company.defaultdata');
   //运费信息
   app.get('/zues/api/freight/list','freight.list');
   app.post('/zues/api/freight/add','freight.add');

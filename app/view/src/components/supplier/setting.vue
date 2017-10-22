@@ -10,8 +10,15 @@
             <el-form-item>
                 <el-button type="warning" @click="searchSup" :loading="infoloading">查询</el-button>
             </el-form-item>
+            <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true"  v-if="supplierAuth">供应商信息录入</el-button>
         </el-form>
-        <el-button style="margin:0px 0px 15px 0;" type="warning" @click="dlgSupVisible = true"  v-if="supplierAuth">供应商信息录入</el-button>
+        <div class="setting-datasource">
+            <span class="tip">设置数据来源</span>
+            <el-select v-model="selectCompany" placeholder="请选择">
+                <el-option v-for="item in companyInfo" :value="item.value" :label="item.label"/>
+            </el-select>
+            <el-button style="margin:0px 0px 15px 0;" type="info" @click="setDataSource">数据来源</el-button>
+        </div>
         <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中" border>
             <el-table-column property="supplierName" label="供应商名称"></el-table-column>
             <el-table-column property="address" label="供应商所在地"></el-table-column>
@@ -66,7 +73,8 @@
         loadSupList,
         addNewSup,
         updataSup,
-        deletSupplier
+        deletSupplier,
+        settingDataSource
     } from '../../vuex/action'
   
     export default {
@@ -75,7 +83,8 @@
                 loadSupList,
                 addNewSup,
                 updataSup,
-                deletSupplier
+                deletSupplier,
+                settingDataSource
             },
             getters: {
                 supInfo: ({
@@ -88,6 +97,16 @@
         },
         data() {
             return {
+                companyInfo: [
+                    {label:"南京奎鑫",value:"01"},
+                    {label:"武汉奎鑫",value:"02"},
+                    {label:"西安奎鑫",value:"03"},
+                    {label:"长春奎鑫",value:"04"},
+                    {label:"沈阳奎鑫",value:"05"},
+                    {label:"山东奎鑫",value:"06"},
+                    {label:"南昌奎鑫",value:"07"}
+                ],
+                selectCompany: "",
                 searchSupParam: {
                     supplierName: '',
                     address: '',
@@ -176,15 +195,34 @@
                 this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
                 .then(rs => {
                     this.$message({
-                    message: `信息修改成功`,
-                    type: 'success'
+                        message: `信息修改成功`,
+                        type: 'success'
                     });
                     this.dlgChangeSupVisible = false;
                     this.loadSupList(this.searchSupParam);
                 })
             },
+            setDataSource(){
+                if(this.selectCompany){
+                    this.settingDataSource({dataSource:this.selectCompany})
+                    .then( rs => {
+                        this.$message({
+                            message: `设置成功，你可以查看基础数据了`,
+                            type: 'success'
+                        });
+                    })
+                }
+            },
+            getCookie(name) {
+                var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+                if (arr = document.cookie.match(reg))
+                    return decodeURI(arr[2]);
+                else
+                    return null;
+            }
         },
         mounted: function() {
+            this.selectCompany = this.getCookie("dataSource");
             this.loadSupList({
                 comId: this.userInfo.comId
             }).then(rs => {
@@ -204,16 +242,10 @@
         .demo-form-inline {
             margin-top: 16px;
         }
-        .open{
-            input{
-                color: #13CE66;
-                border-color: #13CE66;
-            }
-            .el-input__inner:hover{
-                border-color: #13CE66;
-            }
-            .el-input .el-input__icon{
-                color: #13CE66;
+        .setting-datasource{
+            .tip{
+                font-size: 14px;
+                color: #999;
             }
         }
     }
