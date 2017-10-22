@@ -16,6 +16,11 @@
     vuex: {
       actions: {
         updateForm
+      },
+      getters: {
+        userInfo: ({
+            common
+        }) => common.userInfo
       }
     },
     data() {
@@ -39,7 +44,44 @@
       }
     },
     mounted: function() {
-      this.updateForm('topMenuData', this.topMenuData)
+      if (this.userInfo.userRole) {
+        this.topMenuData = [];
+        if(parseInt(this.userInfo.userRole.charAt(7))) {
+          const itemArr = [
+            {
+              url: '/manager/review',
+              icon: 'icon-review',
+              name: '下单审核'
+            },
+            {
+              url: '/manager/operate',
+              icon: 'icon-history',
+              name: '操作记录'
+            }
+          ];
+          this.topMenuData = this.topMenuData.concat(itemArr)
+        }else{
+          const itemArr = [
+            {
+              url: '/manager/review',
+              icon: 'icon-review',
+              name: '下单审核'
+            },
+            {
+              url: '/manager/member',
+              icon: 'icon-member',
+              name: '成员列表'
+            },
+            {
+              url: '/manager/operate',
+              icon: 'icon-history',
+              name: '操作记录'
+            }
+          ];
+          this.topMenuData = this.topMenuData.concat(itemArr)
+        }
+      }
+      this.updateForm('topMenuData', this.topMenuData);
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {

@@ -39,7 +39,6 @@
           <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
             <template scope="scope" >
               <el-button size="small" @click="changeSupDlg(scope.index, scope.row)" type="warning">修改</el-button>
-              <el-button size="small" @click="deleteSup(scope.index, scope.row)" type="danger">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -70,32 +69,6 @@
       </el-tab-pane>
     </el-tabs>
      
-    <!--供应商信息录入dlg--> 
-    <el-dialog title="" v-model="dlgSupVisible" class="custom-dialog">
-      <div class="dialog-content">
-        <el-input v-model="newSupParam.supplierName" auto-complete="off" >
-          <template slot="prepend">供应商名称</template>
-        </el-input>
-        <div class="select-control clearfix dialog-item">
-          <el-row :gutter="0">
-          <el-col :span="5"><div class="select-prepend">所在地</div></el-col>
-          <el-col :span="19">
-              <el-select v-model="newSupParam.address" placeholder="请选择活动区域" >
-                <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-              </el-select>
-          </el-col>
-          </el-row>
-        </div>
-        <el-input v-model="newSupParam.freight" auto-complete="off" type="number" class="dialog-item">
-          <template slot="prepend">运费</template>
-        </el-input>
-        <el-input v-model="newSupParam.benifit" auto-complete="off" type="number" class="dialog-item">
-          <template slot="prepend">政策下浮</template>
-        </el-input>
-        <el-button type="info" @click="addSup" class="dialog-item float-right">确 定</el-button>
-        <el-button type="warning" @click="dlgSupVisible = false" class="dialog-item float-right">取 消</el-button>
-      </div>
-    </el-dialog>
     <!--运费信息录入dlg-->
     <el-dialog title="" v-model="fredlgAddshow" class="custom-dialog">
       <div class="dialog-content">
@@ -127,19 +100,12 @@
     <!--修改供应商信息-->
     <el-dialog title="" v-model="dlgChangeSupVisible" class="custom-dialog">
       <div class="dialog-content">
-        <el-input v-model="changeSupParam.supplierName" auto-complete="off">
+        <el-input v-model="changeSupParam.supplierName" auto-complete="off" readonly>
           <template slot="prepend">供应商名称</template>
         </el-input>
-        <div class="select-control clearfix dialog-item">
-          <el-row :gutter="0">
-          <el-col :span="5"><div class="select-prepend">所在地</div></el-col>
-          <el-col :span="19">
-              <el-select v-model="changeSupParam.address" placeholder="请选择活动区域">
-                <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
-              </el-select>
-          </el-col>
-          </el-row>
-        </div>
+        <el-input v-model="changeSupParam.address" auto-complete="off" class="dialog-item" readonly>
+          <template slot="prepend">供应商名称</template>
+        </el-input>
         <el-input v-model="changeSupParam.benifit" auto-complete="off" type="number" class="dialog-item">
           <template slot="prepend">政策下浮</template>
         </el-input>
@@ -159,7 +125,6 @@
     addNewFre,
     updataSup,
     updateFre,
-    deletSupplier,
     deleteFreight,
     openRelate,
     closeRelate
@@ -175,7 +140,6 @@
         updataSup,
         loadfreightList,
         updateFre,
-        deletSupplier,
         deleteFreight,
         openRelate,
         closeRelate
@@ -226,9 +190,6 @@
         changeFreParam: {
           address: '',
           freight: ''
-        },
-        deleteSupParams: {
-          supplierId: ''
         },
         deleteFreParams: {
           freightId: ''
@@ -288,28 +249,6 @@
             this.fredlgAddshow = false;
             this.loadfreightList(this.searchSupParam);
           })
-      },
-      deleteSup(index, row) {
-        this.$confirm('确认删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.deleteSupParams.supplierId = row.supplierId.toString();
-          this.deletSupplier(this.deleteSupParams)
-            .then(rs => {
-              this.$message({
-                message: `删除成功`,
-                type: 'success'
-              })
-              this.loadSupList(this.searchSupParam);
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });    
       },
       deleteFre(index, row) {
         this.$confirm('确认删除?', '提示', {

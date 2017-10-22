@@ -7,7 +7,10 @@
       <li class="nav-item">
         <a href="#/order/search" :class="[ mainRoute === 'order' ? 'active' : '' ]">宙斯报价系统</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="userInfo.comId == '00'">
+        <a href="#/supplier/setting" :class="[ mainRoute === 'supplier' ? 'active' : '' ]">供应商录入</a>
+      </li>
+      <li class="nav-item" v-else="userInfo.comId == '00'">
         <a href="#/supplier/info" :class="[ mainRoute === 'supplier' ? 'active' : '' ]">供应商录入</a>
       </li>
       <li class="nav-item" v-if="userInfo.userRole.charAt(0)">

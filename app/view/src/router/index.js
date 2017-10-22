@@ -9,7 +9,8 @@ import Supplier from '../components/supplier/supplier'
 import Info from '../components/supplier/info'
 import Price from '../components/supplier/price'
 import Stock from '../components/supplier/stock'
-import priceChart from '../components/supplier/pricechart'
+import PriceChart from '../components/supplier/pricechart'
+import Setting from '../components/supplier/setting'
 
 //管理员后台
 import Manager from '../components/manager/manager'
@@ -85,7 +86,11 @@ export default new Router({
         },
         {
           path: 'pricechart',
-          component: priceChart,
+          component: PriceChart,
+        },
+        {
+          path: 'setting',
+          component: Setting,
         }
       ]
     },

@@ -48,7 +48,14 @@
     mounted: function() {
       if (this.userInfo.userRole) {
         this.topMenuData = [];
-        if(parseInt(this.userInfo.userRole.charAt(3))) {
+        if(parseInt(this.userInfo.userRole.charAt(7))) {
+          const item = {
+            url: '/supplier/setting',
+            icon: 'icon-supplier',
+            name: '供应商'
+          }
+          this.topMenuData.push(item)
+        }else if(parseInt(this.userInfo.userRole.charAt(3))){
           const item = {
               url: '/supplier/info',
               icon: 'icon-supplier',
@@ -57,7 +64,8 @@
           this.topMenuData.push(item)
         }
         if(parseInt(this.userInfo.userRole.charAt(6))) {
-          const itemArr = [{
+          const itemArr = [
+            {
               url: '/supplier/price',
               icon: 'icon-price',
               name: '价格表'

@@ -26,18 +26,9 @@ module.exports = app => {
             allowNull: false,
             comment: "供应商地址"
         },
-        benifit: {
-            type: INTEGER,
-            comment: "优惠"
-        },
         isDelete:{
             type: STRING(1),
             comment: "是否删除"
-        },
-        benifitAdjust:{
-            type: INTEGER,
-            default: 0,
-            comment: "优惠浮动"
         }
     },{
         freezeTabName:true,
@@ -133,9 +124,6 @@ module.exports = app => {
                         supplierName:{
                             $eq:options.supplierName
                         },
-                        comId:{
-                            $eq:"00"
-                        }
                     }
                 })
                 if(isExsit) return {
