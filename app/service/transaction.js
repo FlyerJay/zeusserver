@@ -16,9 +16,6 @@ module.exports = app => {
                         },
                         isDelete:{
                             $eq:'N',
-                        },
-                        comId:{
-                            $eq:"00"
                         }
                     },
                     attributes:['supplierId','supplierName'],
@@ -33,9 +30,6 @@ module.exports = app => {
                     indexs = supplierIndex;
                     return app.model.SupplierValue.destroy({
                         where:{
-                            comId:{
-                                $eq:"00"
-                            },
                             lastUpdateTime:{
                                 $eq:query.time
                             },
@@ -57,7 +51,6 @@ module.exports = app => {
                                 if(indexs[v[2]]){
                                     app.model.SupplierValue.create({
                                         supplierId:indexs[v[2]],
-                                        comId:"00",
                                         spec:v[0],
                                         type:query.material,
                                         value:v[3],
@@ -112,9 +105,6 @@ module.exports = app => {
                         },
                         isDelete:{
                             $eq:'N',
-                        },
-                        comId:{
-                            $eq:"00"
                         }
                     },
                     attributes:['supplierId','supplierName'],
@@ -130,9 +120,6 @@ module.exports = app => {
                             },
                             type:{
                                 $eq:info.material
-                            },
-                            comId:{
-                                $eq:"00"
                             }
                         },
                         transaction:t
@@ -148,7 +135,6 @@ module.exports = app => {
                             if(supplierId != 0 ){
                                 app.model.SupplierInventory.create({
                                     supplierId:supplierId,
-                                    comId:"00",
                                     spec:v[0],
                                     type:info.material,
                                     long:v[1],
@@ -207,9 +193,6 @@ module.exports = app => {
                         },
                         isDelete:{
                             $eq:'N',
-                        },
-                        comId:{
-                            $eq:"00"
                         }
                     },
                     attributes:['supplierId','supplierName'],
@@ -225,9 +208,6 @@ module.exports = app => {
                             },
                             type:{
                                 $eq:info.material
-                            },
-                            comId:{
-                                $eq:"00"
                             }
                         },
                         transaction:t
@@ -243,7 +223,6 @@ module.exports = app => {
                             if(supplierId != 0 ){
                                 app.model.SupplierInventory.create({
                                     supplierId:supplierId,
-                                    comId:"00",
                                     spec:v[0],
                                     type:info.material,
                                     long:v[1],
