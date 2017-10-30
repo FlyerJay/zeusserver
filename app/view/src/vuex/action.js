@@ -889,6 +889,50 @@ export const settingDataSource = ({ dispatch }, params) => {
   });
 }
 
+//获取消息列表
+export const getMessageList = ({ dispatch }, params) => {
+  return axios.get('/zues/api/message/list',{ params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//设置总共数据默认来源
+export const orderDetailUp = ({ dispatch }, params) => {
+  return axios.post('/zues/api/orderdetail/update',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+export const priceHistoryGet = ({ dispatch }, params) => {
+  return axios.get('/zues/api/demand/pricehistory',{ params })
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //展示错误信息
 export const showErrorMessage = ({ dispatch }, msg) => {
   Message({

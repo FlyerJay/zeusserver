@@ -62,6 +62,18 @@ module.exports = app => {
         ctx.body = yield ctx.service.export.orderPrint(ctx.request.body);
       }
     }
+    * update() {
+      const ctx = this.ctx;
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(5) === '0'){
+        ctx.body = {
+          code:-1,
+          msg:"抱歉，没有权限进行该操作"
+        }
+      }else{
+        ctx.body = yield ctx.model.OrderDetail.updateDetail(ctx.request.body);
+      }
+    }
   }
   return OrderController;
 };

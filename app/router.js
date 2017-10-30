@@ -71,6 +71,7 @@ module.exports = app => {
   app.post('/zues/api/order/add','order.add');
   app.post('/zues/api/order/remove','order.remove');
   app.post('/zues/api/order/print','order.print');
+  app.post('/zues/api/orderdetail/update','order.update');
   //管理员操作
   app.get('/zues/api/operate/list','manage.operateList');
   app.get('/zues/api/userrole/list','manage.userRoleList');
@@ -86,6 +87,7 @@ module.exports = app => {
   app.post('/zues/api/demand/update','demand.update');
   app.post('/zues/api/demand/price','demand.price');  
   app.post('/zues/api/demand/remove','demand.remove');
+  app.get('/zues/api/demand/pricehistory','demand.priceHistory')
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');
@@ -93,4 +95,6 @@ module.exports = app => {
   app.get('/zues/api/export/demandlist/*','export.demandList');
   //数据分析
   app.get('/zues/api/cdata/value','cdata.value');
+  //消息
+  app.get('/zues/api/message/list','message.list')
 };

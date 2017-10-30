@@ -81,9 +81,9 @@
                             <template scope="scope">
                                 <el-row>
                                     <el-col :span='12'>
-                                        <el-input auto-complete="off" type="text" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
+                                        <el-autocomplete class="inline-input" @select="handleSelect" :fetch-suggestions="queryFactoryPrice.bind(this,scope.row)" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
                                             <template slot="prepend">出厂价</template>
-                                        </el-input>
+                                        </el-autocomplete>
                                     </el-col>
                                     <el-col :span='2'><span style="display:inline-block;margin:5px 0px 0px 6px">+</span></el-col>
                                     <el-col :span='10'>
@@ -144,7 +144,8 @@ import {
     loadDemandList,
     demandDetailList,
     loadDemandPriceList,
-    upDateDemandList
+    upDateDemandList,
+    priceHistoryGet
 } from '../../vuex/action'
 
 export default {
@@ -153,7 +154,8 @@ export default {
             loadDemandList,
             demandDetailList,
             loadDemandPriceList,
-            upDateDemandList
+            upDateDemandList,
+            priceHistoryGet
         },
         getters: {
             userInfo: ({
@@ -302,6 +304,19 @@ export default {
                 }
             })
 
+        },
+        queryFactoryPrice(query,string,cb) {
+            if(!string){
+                this.priceHistoryGet({spec:query.spec,type:query.type})
+                .then(data=>{
+                    console.log(data);
+                    cb(data);
+                })
+            }
+            cb([]);
+        },
+        handleSelect() {
+            
         }
     },
     mounted: function () {

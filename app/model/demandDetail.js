@@ -5,6 +5,8 @@
  */
 'use strict';
 
+var Util = require('../utils');
+
 module.exports = app => {
     const { STRING, INTEGER, BIGINT} = app.Sequelize;
 
@@ -70,6 +72,30 @@ module.exports = app => {
 		tableName:"demand_detail",
 		timestamps:false,
         classMethods:{
+            * getHistory(options) {
+                if(!options.spec) return {
+                    code: -1,
+                    msg: '缺少规格'
+                }
+
+                const result = yield app.model.query(`SELECT DISTINCT dd.factoryPrice as value FROM demand_detail dd
+                INNER JOIN demand d
+                ON d.demandNo = dd.demandNo
+                AND d.priceTime BETWEEN :startTime AND :endTime
+                WHERE dd.spec = :spec AND dd.type = :type` ,{
+                    replacements: {
+                        spec: options.spec,
+                        type: options.type,
+                        startTime: new Date(Util.getCurrentDate("-")).getTime() - 8 * 60 * 60 * 1000,
+                        endTime: new Date(Util.getCurrentDate("-")).getTime() + 16 * 60 * 60 * 1000
+                    }
+                })
+
+                return {
+                    code: 200,
+                    data: result[0]
+                }
+            }
         }
     })
 }

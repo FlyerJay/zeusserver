@@ -36,6 +36,14 @@
             type: INTEGER,
             allowNull: true,
             comment: "厂家优惠"
+        },
+        valueTime: {
+            type: STRING(20),
+            comment: "价格表更新时间"
+        },
+        inventoryTime: {
+            type: STRING(20),
+            comment: "库存表更新时间"
         }
     },{
         freezeTabName:true,
@@ -84,7 +92,7 @@
                     msg: "关闭成功"
                 }
             },
-            * update(options){
+            * updates(options){
                 var result = yield this.findOne({
                     where:{
                         supplierId:{
@@ -110,7 +118,7 @@
                                 comId: options.comId,
                             }
                         })
-                    }else if(props != 'row' && props != 'userId' && props != 'role' && props != 'comId'){
+                    }else if(props != 'row' && props != 'userId' && props != 'role' && props != 'comId' && props != 'tempComId'){
                         yield app.model.query(`UPDATE supplier SET ${props} = :value WHERE supplierId = :supplierId`,{
                             replacements:{
                                 supplierId:options.supplierId,
@@ -119,6 +127,20 @@
                         })
                     }
                    
+                }
+                if(options.benifit){
+                    var supplierName = yield app.model.query('SELECT supplierName from supplier where supplierId = :supplierId',{
+                        replacements: {
+                            supplierId: options.supplierId
+                        }
+                    })
+                    yield app.model.query(`INSERT INTO message (messageType, comId, createTime, message) values('1',:comId,:createTime,:message)`,{
+                        replacements:{
+                            comId: options.comId,
+                            createTime: new Date().getTime(),
+                            message: `${supplierName[0][0].supplierName}政策下浮更新为${options.benifit}`
+                        }
+                    })
                 }
                 return {
                     code:200,

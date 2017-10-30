@@ -78,6 +78,54 @@ module.exports = app => {
         freezeTabName:true,
         underscored:true,
 		tableName:"order_detail",
-		timestamps:false,
+        timestamps:false,
+        classMethods: {
+            * updateDetail(options) {
+                if(!options.orderNo) return {
+                    code: -1,
+                    msg: "缺少订单编号"
+                }
+                if(!options.orderDetailId) return {
+                    code: -1,
+                    msg: "缺少订单详情编号"
+                }
+                const $1 = yield this.findOne({where:{
+                    orderDetailId: {
+                        $eq: options.orderDetailId
+                    }
+                }})
+                
+                const $2 = yield app.model.Order.findOne({
+                    where: {
+                        orderNo: {
+                            $eq: options.orderNo
+                        }
+                    }
+                })
+                var oldDetail = $1.dataValues;
+                var oldData = $2.dataValues;
+                app.model.Order.update({
+                    orderPrice: oldData.orderPrice - (oldDetail.unitPrice * oldDetail.Weight + oldDetail.orderDcrease) + options.unitPrice * options.Weight + options.orderDcrease,
+                    orderAdjust: (oldData.orderAdjust - 0) + (options.orderDcrease - 0) - (oldDetail.orderDcrease-0),
+                    orderWeight: oldData.orderWeight + options.Weight - oldDetail.Weight
+                },{where:{
+                    orderNo: {
+                        $eq: options.orderNo
+                    }
+                }})
+                yield this.update(options,{
+                    where: {
+                        orderDetailId: {
+                            $eq: options.orderDetailId
+                        }
+                    }
+                })
+                
+                return {
+                    code: 200,
+                    msg: "操作成功"
+                }
+            }
+        }
     })
 }

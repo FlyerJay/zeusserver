@@ -51,8 +51,38 @@
                 <el-table-column prop="orderDcrease" label="总下浮"></el-table-column>
                 <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="单位下浮"></el-table-column>
                 <el-table-column prop="comment" label="备注"></el-table-column>
+                <el-table-column label="操作">
+                    <template scope="scope">
+                        <el-button size="small" @click="updateDatail(scope.index, scope.row)" type="success">修改</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             <el-button type="warning" style="margin:5px 0px 10px 0px;;float:right;" @click="exportOrderDetail" :loading="loading">导出Excel</el-button>
+        </el-dialog>
+
+        <el-dialog
+            v-model="updateDatailDlShow"
+            size="tiny"
+            class="custom-dialog"
+            >
+            <div class="dialog-content">
+                <el-input v-model="detailUpdateParams.orderDcrease" class="dialog-item">
+                    <template slot="prepend">下浮</template>
+                </el-input>
+                <el-input v-model="detailUpdateParams.Weight" class="dialog-item">
+                    <template slot="prepend">重量</template>
+                </el-input>
+                <el-input v-model="detailUpdateParams.unitPrice" class="dialog-item">
+                    <template slot="prepend">单价</template>
+                </el-input>
+                <el-input v-model="detailUpdateParams.orderAmount" class="dialog-item">
+                    <template slot="prepend">数量</template>
+                </el-input>
+                <el-input v-model="detailUpdateParams.comment" class="dialog-item">
+                    <template slot="prepend">备注</template>
+                </el-input>
+                <el-button type="info" class="dialog-item float-right" @click="submitOrderDetail">确定</el-button>
+            </div>
         </el-dialog>
 
         <el-dialog
@@ -370,6 +400,7 @@
         getCarList,
         newCar,
         removeCar,
+        orderDetailUp
     } from '../../vuex/action';
     import printpage from '../common/printpage';
     export default {
@@ -387,6 +418,7 @@
                 getCarList,
                 newCar,
                 removeCar,
+                orderDetailUp
             },
             getters: {
                 userInfo: ({
@@ -419,6 +451,7 @@
                 addressAddDlShow: false,//添加地址
                 carAddDlShow: false,//车辆添加
                 carListDlShow: false,//车辆列表
+                updateDatailDlShow: false, //更新订单详情
                 orderNo:'',
                 printParams: {
                     specs: [],//发货单规格列表
@@ -461,6 +494,15 @@
                 },
                 addressList: [],
                 carList: [],
+                detailUpdateParams: {
+                    orderDetailId: '',
+                    orderNo: '',
+                    comment: '',
+                    orderDcrease: '',
+                    unitPrice: '',
+                    orderAmount: '',
+                    Weight: '',
+                }
             }
         },
         methods: {
@@ -701,6 +743,30 @@
                 this.loadOrderList(this.orderParams).then(()=>{
                     this.loading = false;
                 });
+            },
+            updateDatail(scope,row) {
+                this.detailUpdateParams.orderNo = row.orderNo;
+                this.detailUpdateParams.orderDcrease = row.orderDcrease;
+                this.detailUpdateParams.comment = row.comment;
+                this.detailUpdateParams.orderDetailId = row.orderDetailId;
+                this.detailUpdateParams.orderAmount = row.orderAmount;
+                this.detailUpdateParams.Weight = row.Weight;
+                this.detailUpdateParams.unitPrice = row.unitPrice;
+                this.updateDatailDlShow = true;
+            },
+            submitOrderDetail() {
+                this.orderDetailUp(this.detailUpdateParams)
+                    .then(()=> {
+                        this.$message(
+                            {
+                                type: 'success',
+                                message: '更新成功!',
+                            }
+                        )
+                        this.updateDatailDlShow = false;
+                        this.detailDialogShow = false;
+                        this.loadList();
+                    })
             }
         },
         mounted: function() {

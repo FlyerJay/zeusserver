@@ -15,12 +15,15 @@
           <el-form-item>
             <el-button type="warning" @click="searchSup" :loading="infoloading">查询</el-button>
           </el-form-item>
+          <slide ref="slide" :items="messageList"></slide>
         </el-form>
         <el-table :data="supInfo.row" style="width: 100%" v-loading.body="infoloading" element-loading-text="拼命加载中" border>
           <el-table-column property="supplierName" label="供应商名称"></el-table-column>
           <el-table-column property="address" label="供应商所在地"></el-table-column>
           <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
           <el-table-column property="benifit" label="厂家优惠政策（元/吨）"></el-table-column>
+          <el-table-column property="valueTime" :formatter="valueDateFormat" label="价格更新"></el-table-column>
+          <el-table-column property="inventoryTime" :formatter="inventoryDateFormat" label="库存更新"></el-table-column>
           <el-table-column label="启用状态" align="center" property="id" v-if="supplierAuth">
             <template scope="scope" >
               <el-select size="small" :class="{'open': scope.row.isValide==1 }" v-model="scope.row.isValide" placeholder="请选择" @change="changeState.call(this,$event,scope.row)">
@@ -126,8 +129,10 @@
     updateFre,
     deleteFreight,
     openRelate,
-    closeRelate
-  } from '../../vuex/action'
+    closeRelate,
+    getMessageList
+  } from '../../vuex/action';
+  import Slide from '../plugin/slide';
   
   export default {
     vuex: {
@@ -141,7 +146,8 @@
         updateFre,
         deleteFreight,
         openRelate,
-        closeRelate
+        closeRelate,
+        getMessageList
       },
       getters: {
         supInfo: ({
@@ -157,6 +163,9 @@
           supplier
         }) => supplier.freightList
       }
+    },
+    components:{
+      Slide
     },
     data() {
       return {
@@ -199,7 +208,8 @@
         fredlgAddshow: false,
         fredlgChangeshow: false,
         infoloading: true,
-        freightloading: true
+        freightloading: true,
+        messageList: [],
       }
     },
     methods: {
@@ -314,6 +324,16 @@
         }else{
           this.closeRelate({supplierId})
         }
+      },
+      valueDateFormat(row, colum) {
+        if(row.valueTime)
+          return new Date(parseInt(row.valueTime)).formatDate('yyyy-MM-dd hh:mm:ss')
+        return "";
+      },
+      inventoryDateFormat(row, colum) {
+        if(row.inventoryTime)
+          return new Date(parseInt(row.inventoryTime)).formatDate('yyyy-MM-dd hh:mm:ss')
+        return "";
       }
     },
     mounted: function() {
@@ -330,6 +350,13 @@
       }).then(rs => {
         this.freightloading = false;
       })
+    },
+    created() {
+      this.getMessageList({messageType:1})
+        .then( data =>{
+          this.messageList = data.row;
+          console.log(data.row);
+        })
     },
     computed: {
       supplierAuth() {

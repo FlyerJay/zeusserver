@@ -8,6 +8,7 @@ module.exports = app => {
     class TransAction extends app.Service {
         * valueImport(options,query) {
             var indexs = {};
+            var supplierIds = [];
             return app.model.transaction((t)=>{
                 return app.model.Supplier.findAll({
                     where:{
@@ -22,7 +23,6 @@ module.exports = app => {
                     transaction:t,
                 }).then((data)=>{
                     let supplierIndex = {};
-                    let supplierIds = [];
                     for(var j=0;j<data.length;j++){
                         supplierIndex[data[j].dataValues.supplierName] = data[j].dataValues.supplierId;
                         supplierIds.push(data[j].dataValues.supplierId);
@@ -62,6 +62,22 @@ module.exports = app => {
                         }))
                     })
                 }).then(() => {
+                    return Promise.all(supplierIds.map(v=>{
+                        app.model.SupplierRelate.update({
+                            valueTime: new Date().getTime()
+                        },{
+                            where:{
+                                supplierId:{
+                                    $eq: v
+                                },
+                                comId: {
+                                    $eq: query.comId,
+                                }
+                            },
+                            transaction: t,
+                        })
+                    }))
+                }).then(() => {
                     return app.model.OperateRecord.create({
                         userId:query.userId,
                         comId:query.comId,
@@ -69,6 +85,18 @@ module.exports = app => {
                         detail:`${query.fileName}`,
                         createTime:+new Date()
                     },{transaction:t})
+                }).then(() => {
+                    return Promise.all(supplierIds.map(v=>{
+                        app.model.SupplierRelate.update({
+                            valueTime: new Date().getTime()
+                        },{
+                            where:{
+                                supplierId: v,
+                                comId: query.comId,
+                            },
+                            transaction: t
+                        })
+                    }))
                 })
             }).then((res)=>{
                 return {
@@ -76,6 +104,7 @@ module.exports = app => {
                     msg:"解析完成"
                 }
             }).catch((err)=>{
+                console.log(err);
                 return {
                     code:-1,
                     msg:"解析失败"
@@ -156,13 +185,28 @@ module.exports = app => {
                         detail:`${info.fileName}`,
                         createTime:+new Date()
                     },{transaction:t})
+                }).then(() => {
+                    return app.model.SupplierRelate.update({
+                        inventoryTime: new Date().getTime()
+                    },{
+                        where:{
+                            supplierId:{
+                                $eq: supplierId
+                            },
+                            comId: {
+                                $eq: info.comId,
+                            }
+                        },
+                        transaction: t,
+                    })
                 })
-            }).then((res)=>{
+            }).then( async (res)=>{
                 return {
                     code:200,
                     msg:"解析完成"
                 }
             }).catch((err)=>{
+                console.log(err);
                 return {
                     code:-1,
                     msg:"解析失败",
@@ -244,6 +288,20 @@ module.exports = app => {
                         detail:`${info.fileName}`,
                         createTime:+new Date()
                     },{transaction:t})
+                }).then(() => {
+                    return app.model.SupplierRelate.update({
+                        inventoryTime: new Date().getTime()
+                    },{
+                        where:{
+                            supplierId:{
+                                $eq: supplierId
+                            },
+                            comId: {
+                                $eq: info.comId,
+                            }
+                        },
+                        transaction: t,
+                    })
                 })
             }).then((res)=>{
                 return {

@@ -15,7 +15,7 @@ module.exports = app => {
           msg:"抱歉，没有权限进行该操作"
         }
       }else{
-        ctx.body = yield ctx.model.SupplierRelate.update(ctx.request.body);
+        ctx.body = yield ctx.model.SupplierRelate.updates(ctx.request.body);
       }
     }
     * add() {

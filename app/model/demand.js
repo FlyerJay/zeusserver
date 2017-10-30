@@ -385,6 +385,45 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少报价信息'
                 } 
+                if(options.imp == 4){
+                    const isSuccess = yield app.model.transaction(async (t) => {
+                        return Promise.all(options.demandPrices.map( v => {
+                            app.model.DemandDetail.update({
+                                feedbackPrice: v.feedbackPrice - 0 || 0,
+                            },{
+                                where:{
+                                    demandDetailId:{
+                                        $eq: v.demandDetailId
+                                    }
+                                },
+                                transaction: t,
+                            })
+                        }))
+                    }).then((res) => {
+                        return true;
+                    }).catch(err => {
+                        return false;
+                    })
+                    if(isSuccess) {
+                        yield app.model.query(`
+                            UPDATE demand SET state = 4
+                            WHERE demandNo = :demandNo
+                        `,{
+                            replacements:{
+                                demandNo: options.demandNo,
+                            }
+                        })
+                        //yield this.countDemand(options);
+                        return {
+                            code: 200,
+                            msg: '报价成功'
+                        }
+                    }
+                    return {
+                        code: -1,
+                        msg: '报价出错'
+                    }
+                }
                 const isSuccess = yield app.model.transaction(async (t) => {
                     return Promise.all(options.demandPrices.map( v => {
                         app.model.DemandDetail.update({

@@ -28,6 +28,9 @@
                 <el-tab-pane name="1">
                     <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
+                <el-tab-pane name="4">
+                    <span slot='label'>已反馈报价</span>
+                </el-tab-pane>
                 <el-tab-pane name="2">
                     <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
                 </el-tab-pane>
@@ -53,6 +56,8 @@
                 </el-table-column>
                 <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
                 </el-table-column>
+                <el-table-column prop="priceTimeFragment" label="报价时长" :formatter="pruceFormat">
+                </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 </el-table-column>
@@ -68,6 +73,11 @@
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
                 <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1">
+                    <template scope="scope">
+                        <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">销售报价</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 4">
                     <template scope="scope">
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
@@ -278,6 +288,66 @@
                 <el-button style="float:right;margin-top:10px;" type="warning" @click="exportDemand">导出需求</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog v-model="dlDemandView2" :close-on-click-modal="false" size="small" class="custom-dialog" custom-class="detailview">
+            <div class="dialog-content">
+                <div class="spec-wrap">
+                    <el-table :data="demandDetail" border style="width: 100%">
+                        <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
+                        <el-table-column label="类型" prop='type'></el-table-column>
+                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
+                        <el-table-column label="业务报价" width="200px">
+                            <template scope="scope">
+                                <el-input v-model="scope.row.feedbackPrice"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="成本报价" width="100px">
+                            <template scope="scope">
+                                <el-input :value="scope.row.factoryPrice + scope.row.freight" :readonly="true"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" width="200px">
+                            <template scope="scope">
+                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
+                                </el-input>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="destination" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">目的地</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-input v-model="allweight" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">总重量</template>
+                                    <template slot="append">吨</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
+                                    <template slot="prepend">销售备注</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
+                                    <template slot="prepend">采购备注</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
+                    </div>
+                </div>    
+                <el-button type="info" @click="submitFeedPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
+                <el-button type="warning" @click="dlDemandView2 = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
+            </div>
+        </el-dialog>
             
         <el-dialog title="" v-model="dlFeedback" :close-on-click-modal="false" size="tiny" class="custom-dialog">
             <div class="dialog-content">
@@ -310,7 +380,8 @@ import {
     removeDemandList,
     getCustomerList,
     newCustomer,
-    removeCustomer
+    removeCustomer,
+    loadDemandPriceList
 } from '../../vuex/action'
 
 export default {
@@ -324,7 +395,8 @@ export default {
             removeDemandList,
             getCustomerList,
             newCustomer,
-            removeCustomer
+            removeCustomer,
+            loadDemandPriceList
         },
         getters: {
             userInfo: ({
@@ -355,6 +427,10 @@ export default {
                 state: '',
                 dealReason: '',
             },
+            feedbackPriceParam: {
+                demandDetails: [],
+                demandNo: '',
+            },
             demandParams: {
                 destination: '',
                 customerName: '',
@@ -377,6 +453,7 @@ export default {
             dealStatusArray: [{ value: 3, key: '交易成功' }, { value: 2, key: '交易失败' }],
             dlgDemandVisible: false,
             dlDemandView: false,
+            dlDemandView2: false,
             dlFeedback: false,
             loading: true,
             currentDemand: '',
@@ -471,6 +548,43 @@ export default {
             this.dlFeedback = true;
             this.FeedbackParams.demandNo = row.demandNo;
         },
+        feedBackPrice(row) {
+            const param = {demandNo: row.demandNo};
+            this.dlDemandView2 = true;
+            this.submitstate = 1;
+            this.demandDetailList(param)
+                .then(() => {
+                    this.feedbackPriceParam.demandNo = row.demandNo;
+                })
+        },
+        submitFeedPrice() {
+            this.$confirm('确认提交?', '确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then((v) => {
+                var params = {
+                    demandNo: this.feedbackPriceParam.demandNo,
+                    demandPrices: this.demandDetail,
+                    imp: 4,
+                }
+                this.loadDemandPriceList(params)
+                    .then(data=>{
+                        this.$message({
+                            message: `报价成功`,
+                            type: 'success'
+                        });
+                        this.timeConsume = '';
+                        this.demandDetail.map(v => {
+                            v.freight = '';
+                            v.factoryPrice = '';
+                            v.feedbackPrice = '';
+                        });
+                        this.loadDemandList(this.searchDeParam);
+                        this.dlDemandView2 = false;
+                    })
+            });
+        },
         submitFeedback() {
             if(!this.FeedbackParams.dealReason){
                 this.$message({
@@ -484,6 +598,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                this.FeedbackParams.state ? '' : this.FeedbackParams.state = 0;
                 this.upDateDemandList(this.FeedbackParams)
                     .then(() => {
                         this.dlFeedback = false;
@@ -505,6 +620,11 @@ export default {
             } else {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
+        },
+        pruceFormat(row, column) {
+            if(row.priceTime)
+                return Math.ceil((row.priceTime - row.createTime) / 1000 / 60 ) + "分钟";
+            return "未报价"
         },
         addSpec() {
             if(!this.specParams.spec || !this.specParams.demandAmount || !this.specParams.type || !this.specParams.demandWeight) {

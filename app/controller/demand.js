@@ -85,6 +85,10 @@ module.exports = app => {
         ctx.body = yield ctx.model.Demand.remove(ctx.request.body);
       }
     }
+    * priceHistory() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.DemandDetail.getHistory(ctx.query);
+    }
   }
   return DemandController;
 };
