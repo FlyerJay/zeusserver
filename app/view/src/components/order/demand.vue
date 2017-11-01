@@ -26,6 +26,9 @@
                 <el-tab-pane label="待反馈需求" name="1">
                     <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
+                <el-tab-pane label="已反馈报价" name="4">
+                    <span slot='label'>已反馈报价<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
+                </el-tab-pane>
                 <el-tab-pane label="未成交需求" name="2">
                     <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
                 </el-tab-pane>
@@ -136,6 +139,54 @@
             </div>
         </el-dialog>
 
+        <el-dialog v-model="dlDemandView2" :close-on-click-modal="false" size="small" class="custom-dialog" custom-class="detailview">
+            <div class="dialog-content">
+                <div class="spec-wrap">
+                    <el-table :data="demandDetail" border style="width: 100%">
+                        <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
+                        <el-table-column label="类型" prop='type'></el-table-column>
+                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
+                        <el-table-column label="业务报价" prop='feedbackPrice'></el-table-column>
+                        <el-table-column label="出厂价" prop="factoryPrice"></el-table-column>
+                        <el-table-column label="运费" prop="freight"></el-table-column>
+                        <el-table-column label="备注" prop="comment"></el-table-column>
+                    </el-table>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="destination" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">目的地</template>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-input v-model="allweight" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">总重量</template>
+                                    <template slot="append">吨</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
+                                    <template slot="prepend">销售备注</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
+                                    <template slot="prepend">采购备注</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
+                    </div>
+                </div>    
+                <el-button type="info" @click="submitFeedPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
+                <el-button type="warning" @click="dlDemandView2 = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
+            </div>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -186,6 +237,7 @@ export default {
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
+            dlDemandView2: false,
             comment: '',
             priceComment: '',
             destination: '',
@@ -214,7 +266,7 @@ export default {
             return status[row.state];
         },
         viewDetail(row) {
-            this.dlDemandView = true;
+            this.dlDemandView2 = true;
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {

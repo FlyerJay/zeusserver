@@ -46,6 +46,7 @@
       }
     },
     mounted: function() {
+      this.userInfo.userRole = this.getCookie("userRole");
       if (this.userInfo.userRole) {
         this.topMenuData = [];
         if(parseInt(this.userInfo.userRole.charAt(7))) {

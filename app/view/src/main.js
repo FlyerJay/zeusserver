@@ -101,6 +101,14 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
 Vue.config.productionTip = false;
 Vue.prototype.socket = socket;
 
+Vue.prototype.getCookie = function(name) {
+  var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+  if (arr = document.cookie.match(reg))
+      return decodeURI(arr[2]);
+  else
+      return null;
+}
+
 // axios全局绑定到Vue.prototype（目前用webpack.ProvidePlugin插件代替）
 // Object.defineProperty(Vue.prototype, '$axios', { value: axios })
 
