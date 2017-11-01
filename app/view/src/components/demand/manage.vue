@@ -169,7 +169,7 @@
                     <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
                 </div>
                 <el-button type="info" @keyup.enter.native="submitDdemand" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
-                <el-button type="warning" @click="dlgDemandVisible = false" class="dialog-item float-right">取 消</el-button>
+                <el-button type="warning" @click="addCancel" class="dialog-item float-right">取 消</el-button>
             </div>
         </el-dialog>
         <el-dialog
@@ -470,7 +470,8 @@ export default {
                 customerName: '',
                 customerPhone: '',
                 destination: '',
-            }
+            },
+            cancelAddSave: false,
         }
     },
     methods: {
@@ -495,10 +496,22 @@ export default {
             return status[row.state];
         },
         closeAdddlg() {
+            if(!this.cancelAddSave) {
+                var addSave = {
+                    demandParams: this.demandParams,
+                    specParams: this.specParams,
+                }
+                localStorage.setItem("addSave",JSON.stringify(addSave));
+            }
             this.specParams.spec = '';
             this.specParams.type = '';
             this.specParams.demandAmount = '';
             this.specParams.demandWeight = '';
+        },
+        addCancel() {
+            this.dlgDemandVisible = false;
+            localStorage.removeItem("addSave");
+            this.cancelAddSave = true;
         },
         viewDetail(row) {
             this.dlDemandView = true;
@@ -530,6 +543,14 @@ export default {
             this.demandParams.customerName = '';
             this.demandParams.comment = '';
             this.demandParams.customerPhone = '';
+            var local = localStorage.getItem("addSave");
+            this.cancelAddSave = false;
+            if(local){
+                var addSave = JSON.parse(localStorage.getItem("addSave"));
+                this.demandParams = addSave.demandParams;
+                this.specParams = addSave.demandParams;
+            }
+            
         },
         changeDemand(row) {
             const param = {demandNo: row.demandNo};
