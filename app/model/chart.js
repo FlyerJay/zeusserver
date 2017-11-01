@@ -196,7 +196,7 @@ module.exports = app => {
                     }
                 })
                 var today = utils.getCurrentDate() - 0;
-                const $2 = yield app.model.query(`SELECT (sv.value - s.benifit) as value,s.supplierName,sii.inventoryAmount FROM (SELECT * FROM (SELECT * FROM  supplier_value ORDER BY lastUpdateTime DESC LIMIT 0,100000000) sv GROUP BY supplierId,type,spec) sv
+                const $2 = yield app.model.query(`SELECT (sv.value - sr.benifit) as value,s.supplierName,sii.inventoryAmount FROM (SELECT * FROM (SELECT * FROM  supplier_value ORDER BY lastUpdateTime DESC LIMIT 0,100000000) sv GROUP BY supplierId,type,spec) sv
                     INNER JOIN supplier_inventory si 
                     ON si.supplierInventoryId = :supplierInventoryId
                     AND si.spec = sv.spec 

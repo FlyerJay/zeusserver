@@ -11,6 +11,7 @@ module.exports = app => {
                 FROM tb_order o
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
+                AND ui.comId = o.comId
                 WHERE o.comId = :comId
                 AND o.userId = :userId
                 AND orderNo LIKE :orderNo
