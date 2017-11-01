@@ -93,6 +93,7 @@ module.exports = app => {
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');
   app.get('/zues/api/export/demandexport/*','export.demandExport');
   app.get('/zues/api/export/demandlist/*','export.demandList');
+  app.get('/zues/api/export/demanddetaillist/*','export.demandDetailList');
   //数据分析
   app.get('/zues/api/cdata/value','cdata.value');
   //消息

@@ -1,5 +1,6 @@
 'use strict';
 const xlsx = require('node-xlsx');
+const Util = require('../utils');
 
 module.exports = app => {
     class Export extends app.Service {
@@ -118,7 +119,8 @@ module.exports = app => {
                 '0':'未报价',
                 '1':'未反馈',
                 '2':'成交失败',
-                '3':'成交成功'
+                '3':'成交成功',
+                '4':'已反馈报价'
             }
             var tmpData = [];
             tmpData.push(
@@ -150,7 +152,39 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "需求详情", data: tmpData}])
             return buffer;
         }
-        * orderPrint(options) {
+        * demandDetailExport (options) {
+            var info = yield app.model.query(`SELECT dd.demandDetailId, dd.demandNo,dd.spec,dd.type,dd.demandAmount,perAmount,dd.demandWeight,dd.factoryPrice,dd.feedbackPrice,dd.freight,d.state from demand_detail dd 
+            inner join demand d
+            on d.demandNo = dd.demandNo
+            and ( d.userId = :otherId or :otherId = '' ) 
+            and customerName like :customerName
+            and (createTime between :startTime and :endTime)
+            order by dd.demandNo desc`,{
+                replacements:{
+                    otherId: options.demandUser || '',
+                    customerName: options.customName ? `%${options.customName}%` : '%%',
+                    startTime: options.createTime ? new Date(options.searchTime).getTime() - 2.88e7   : 0,
+                    endTime: options.createTime ? new Date(options.searchTime).getTime() + 5.86e7 : 9999999999999,
+                }
+            })
+
+            var states = {
+                '0':'未报价',
+                '1':'未反馈',
+                '2':'成交失败',
+                '3':'成交成功',
+                '4':'已反馈报价'
+            }
+
+            var tmpData = [];
+            tmpData.push(['需求编号','规格','类型','需求数量','需求重量','出厂价','运费','业务报价','成交状态']);
+            info[0].map( v => {
+                tmpData.push([v['demandNo'],v['spec'],v['type'],v['demandAmount'],v['demandWeight'],v['factoryPrice'],v['freight'],v['feedbackPrice'],states[v['state']]]);
+            })
+            var buffer = xlsx.build([{name: "需求详情列表", data: tmpData}])
+            return buffer;
+        }
+        * orderPrint(options) {t
             const [$1,$2] = yield [app.model.query(`SELECT o.* FROM tb_order o WHERE o.orderNo = :orderNo`,{
                 replacements:{
                     orderNo:options.orderNo,

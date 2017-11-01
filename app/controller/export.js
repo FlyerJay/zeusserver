@@ -18,6 +18,10 @@ module.exports = app => {
         const ctx = this.ctx;
         ctx.body = yield this.ctx.service.export.demandList(ctx.query);
     }
+    * demandDetailList() {
+        const ctx = this.ctx;
+        ctx.body = yield this.ctx.service.export.demandDetailExport(ctx.query);
+    }
   }
   return ExportController;
 };
