@@ -1,5 +1,5 @@
 <template>
-    <div class="slide">
+    <div class="slide" v-show="items.length > 0">
         <div class="slide-wapper">
             <transition>
                 <div class="slide-item" v-for="item,index in items" key="index" v-if="index == active">
@@ -48,7 +48,6 @@
             autoPlay() {
                 this.timer = setInterval(()=>{
                     this.active >= this.items.length - 1 ? this.active = 0 : this.active ++ ; 
-                    console.log(this.active);
                 },10000)
                 
             }

@@ -64,7 +64,6 @@ module.exports = app => {
                 const [$1,$2] = yield [app.model.query(`SELECT * FROM message WHERE
                 messageType = :messageType
                 AND comId = :comId
-                AND createTime BETWEEN :startTime AND :endTime
                 ORDER BY messageId DESC
                 LIMIT :start,:offset
                 `,{
@@ -73,20 +72,15 @@ module.exports = app => {
                         offset: options.pageSize ? options.pageSize:10,
                         messageType: options.messageType,
                         comId: options.comId,
-                        startTime: options.startTime || new Date(Util.getCurrentDate("-")).getTime() - 8 * 60 * 60 * 1000 + '',
-                        endTime: options.endTime || new Date(Util.getCurrentDate("-")).getTime() + 16 * 60 * 60 * 1000 + ''
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM message WHERE
                 messageType = :messageType
                 AND comId = :comId
-                AND createTime BETWEEN :startTime AND :endTime
                 `,{
                     replacements:{
                         comId: options.comId,
                         messageType: options.messageType,
-                        startTime: options.startTime || new Date(Util.getCurrentDate("-")).getTime() - 8 * 60 * 60 * 1000 + '',
-                        endTime: options.endTime || new Date(Util.getCurrentDate("-")).getTime() + 16 * 60 * 60 * 1000 + ''
                     }
                 })]
                 if(!$1[0] || $1[0].length ===0) return {
