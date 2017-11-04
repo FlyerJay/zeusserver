@@ -24,14 +24,25 @@ import List from '../components/order/list'
 import Search from '../components/order/search'
 import Cart from '../components/order/cart'
 import Demand from '../components/order/demand'
+import DemandView from '../components/order/demandView'
 
 Vue.use(Router)
+
+function getCookie(name) {
+  var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+  if (arr = document.cookie.match(reg))
+      return decodeURI(arr[2]);
+  else
+      return null;
+}
+
+var comId = getCookie("comId");
 
 export default new Router({
   routes: [{
       path: '/',
-      redirect: '/demand',
-      component: DemandIndex
+      redirect: comId == '00' ? '/order' : '/demand',
+      component: comId =='00' ? Order : DemandIndex
     },
     {
       path: '/demand',
@@ -64,6 +75,10 @@ export default new Router({
         {
           path: 'demand',
           component: Demand
+        },
+        {
+          path: 'demandview',
+          component: DemandView
         }
       ]
     },

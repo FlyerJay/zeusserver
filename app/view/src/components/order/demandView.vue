@@ -19,28 +19,6 @@
                 <el-button type="warning" @click="searchDemand">查询</el-button>
             </el-form-item>
         </el-form>
-        <div class="title clearfix">
-            <span class="tit">需求列表：</span>
-        </div>
-        <div class="tab-wrap">
-            <el-tabs v-model="activeName" @tab-click="switchTab">
-                <el-tab-pane label="未报价需求" name="0">
-                    <span slot='label'>未报价需求<el-badge v-if="demand && demand.submit > 0" class="mark" :value="demand.submit" /></span>
-                </el-tab-pane>
-                <el-tab-pane label="待反馈需求" name="1">
-                    <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
-                </el-tab-pane>
-                <el-tab-pane label="已反馈报价" name="2">
-                    <span slot='label'>已反馈报价<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
-                </el-tab-pane>
-                <el-tab-pane label="未成交需求" name="3">
-                    <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
-                </el-tab-pane>
-                <el-tab-pane label="成交需求" name="4">
-                    <span slot='label'>成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
-                </el-tab-pane>
-            </el-tabs>
-        </div>
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column width='60px' label="#">
@@ -66,84 +44,13 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="priceUser" label="采购"></el-table-column>
-                <el-table-column prop="state" :formatter="statusFormatter" label="成交结果">
+                <el-table-column prop="state" :formatter="statusFormatter" label="需求状态">
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
             </el-table>
         </div>
-        <div class="page-wrap">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
-            </el-pagination>
-        </div>
-        <el-dialog v-model="dlDemandView" :close-on-click-modal="false" size="tiny" class="custom-dialog" custom-class="detailview">
-            <div class="dialog-content">
-                <div class="spec-wrap">
-                    <el-table :data="demandDetail" border style="width: 100%">
-                        <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
-                        <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
-                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
-                        <el-table-column label="报价" width="330px;">
-                            <template scope="scope">
-                                <el-row>
-                                    <el-col :span='12'>
-                                        <el-autocomplete class="inline-input" @select="handleSelect" :fetch-suggestions="queryFactoryPrice.bind(this,scope.row)" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
-                                            <template slot="prepend">出厂价</template>
-                                        </el-autocomplete>
-                                    </el-col>
-                                    <el-col :span='2'><span style="display:inline-block;margin:5px 0px 0px 6px">+</span></el-col>
-                                    <el-col :span='10'>
-                                        <el-input auto-complete="off" type="text" v-model="scope.row.freight" :readonly="activeName > 1">
-                                            <template slot="prepend">运费</template>
-                                        </el-input>
-                                    </el-col>    
-                                </el-row>        
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="备注" width="230px">
-                            <template scope="scope">
-                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
-                                </el-input>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div style="margin-top:15px;">
-                        <el-row :gutter='10'>
-                            <el-col :span='12'>
-                                <el-input v-model="destination" auto-complete="off" :readonly="true">
-                                    <template slot="prepend">目的地</template>
-                                </el-input>
-                            </el-col>
-                            <el-col :span='12'>
-                                <el-input v-model="allweight" auto-complete="off" :readonly="true">
-                                    <template slot="prepend">总重量</template>
-                                    <template slot="append">吨</template>
-                                </el-input>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div style="margin-top:15px;">
-                        <el-row :gutter='10'>
-                            <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
-                                    <template slot="prepend">销售备注</template>
-                                </el-input>
-                            </el-col>    
-                            <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
-                                    <template slot="prepend">采购备注</template>
-                                </el-input>
-                            </el-col>
-                        </el-row>    
-                    </div>
-                </div>    
-                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
-                <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog v-model="dlDemandView2" :close-on-click-modal="false" size="small" class="custom-dialog" custom-class="detailview">
+        <el-dialog v-model="dlDemandView" :close-on-click-modal="false" size="small" class="custom-dialog" custom-class="detailview">
             <div class="dialog-content">
                 <div class="spec-wrap">
                     <el-table :data="demandDetail" border style="width: 100%">
@@ -186,11 +93,8 @@
                         </el-row>    
                     </div>
                 </div>    
-                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 1">提 交</el-button>
-                <el-button type="warning" @click="dlDemandView2 = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 1">取 消</el-button>
             </div>
         </el-dialog>
-
     </div>
 </template>
 
@@ -242,7 +146,6 @@ export default {
             dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
             dlgDemandVisible: false,
             dlDemandView: false,
-            dlDemandView2: false,
             comment: '',
             priceComment: '',
             destination: '',
@@ -272,11 +175,7 @@ export default {
             return status[row.state];
         },
         viewDetail(row) {
-            if(this.activeName > 0){
-                this.dlDemandView2 = true;
-            }else{
-                this.dlDemandView = true;
-            }
+            this.dlDemandView = true;
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {
@@ -305,9 +204,6 @@ export default {
                 return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
             }
         },
-        switchTab() {
-            this.searchDemand();
-        },
         searchDemand() {
             this.loading = true;
             this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
@@ -317,69 +213,6 @@ export default {
                 .then(() => {
                     this.loading = false;
                 });
-        },
-        submitPrice() {
-            this.$confirm('确认提交?', '确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then((v) => {
-                if (this.activeName < 2) {
-                    var params = {
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        demandPrices: this.demandDetail,
-                        timeConsume: this.timeConsume,
-                        priceComment: this.priceComment
-                    }
-                    this.loadDemandPriceList(params).then(rs => {
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        });
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                } else {
-                    var upparams = {
-                        state: this.activeName,
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        dealReason: this.updreason,
-                        timeConsume: this.timeConsume
-                    }
-                    this.upDateDemandList(upparams).then(rs => {
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        })
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                }
-            })
-
-        },
-        queryFactoryPrice(query,string,cb) {
-            if(!string){
-                this.priceHistoryGet({spec:query.spec,type:query.type})
-                .then(data=>{
-                    console.log(data);
-                    cb(data);
-                })
-            }
-            cb([]);
-        },
-        handleSelect() {
-            
         }
     },
     mounted: function () {

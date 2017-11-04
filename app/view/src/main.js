@@ -57,7 +57,17 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
             setTimeout(()=>{
               Vue.prototype.$notify.info({
                 title: '需求报价',
-                message: `有${newDemand[item]}条需求报价`,
+                message: `有${newDemand[item]}待反馈需求`,
+              });
+            },0)
+          }(newDemand,item)
+        }
+        if(item == 'priced' && isDemandAuth){
+          !function(newDemand,item){
+            setTimeout(()=>{
+              Vue.prototype.$notify.info({
+                title: '需求报价',
+                message: `有${newDemand[item]}已报价需求`,
               });
             },0)
           }(newDemand,item)
@@ -91,6 +101,7 @@ socket.on('update',( {demand} ) => {//接收需求变更通知
     }
     if(!demandAmount) {
       newDemand.price = 0;
+      newDemand.priced = 0;
     }
     localStorage.setItem('demandAmount',JSON.stringify(demandAmount));
     store.dispatch('UPDATE_DEMAND',newDemand);
@@ -108,6 +119,8 @@ Vue.prototype.getCookie = function(name) {
   else
       return null;
 }
+
+Vue.prototype.global = new Vue({});
 
 // axios全局绑定到Vue.prototype（目前用webpack.ProvidePlugin插件代替）
 // Object.defineProperty(Vue.prototype, '$axios', { value: axios })

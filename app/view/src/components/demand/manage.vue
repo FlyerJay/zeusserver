@@ -8,7 +8,11 @@
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
             </el-form-item>
             <el-form-item label="提交日期：">
-                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="选择日期">
+                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="-">
+                <el-date-picker v-model="searchDeParam.endTime" type="date" placeholder="结束日期">
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -29,13 +33,13 @@
                 <el-tab-pane name="1">
                     <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
-                <el-tab-pane name="4">
+                <el-tab-pane name="2">
                     <span slot='label'>已反馈报价</span>
                 </el-tab-pane>
-                <el-tab-pane name="2">
+                <el-tab-pane name="3">
                     <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>
                 </el-tab-pane>
-                <el-tab-pane label="成交需求" name="3">
+                <el-tab-pane label="成交需求" name="4">
                     <span slot='label'>成交需求<el-badge v-if="demand && demand.deal > 0" class="mark" :value="demand.deal" /></span>
                 </el-tab-pane>
             </el-tabs>
@@ -78,7 +82,7 @@
                         <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">销售报价</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 4">
+                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 2">
                     <template scope="scope">
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
@@ -128,7 +132,7 @@
                                 </div>
                             </el-col>
                             <el-col :span='5'>
-                                <el-input v-model="specParams.demandAmount" auto-complete="off">
+                                <el-input v-model="specParams.demandAmount" @change="inputDemanAmount" auto-complete="off">
                                     <template slot="prepend">数量</template>
                                     <template slot="append">支</template>
                                 </el-input>
@@ -305,7 +309,7 @@
                         </el-table-column>
                         <el-table-column label="成本报价" width="100px">
                             <template scope="scope">
-                                <el-input :value="scope.row.factoryPrice + scope.row.freight" :readonly="true"></el-input>
+                                <el-input :value="(scope.row.factoryPrice-0) + scope.row.freight" :readonly="true"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" width="200px">
@@ -443,6 +447,7 @@ export default {
             searchDeParam: {
                 demandUser: '',
                 createTime: '',
+                endTime: '',
                 customName: '',
                 state: 0,
                 page: 1,
@@ -451,7 +456,7 @@ export default {
             priceComment: '',
             destination: '',
             allweight: 0,
-            dealStatusArray: [{ value: 3, key: '交易成功' }, { value: 2, key: '交易失败' }],
+            dealStatusArray: [{ value: 4, key: '交易成功' }, { value: 3, key: '交易失败' }],
             dlgDemandVisible: false,
             dlDemandView: false,
             dlDemandView2: false,
@@ -490,8 +495,9 @@ export default {
             const status = {
                 '0': '未报价需求',
                 '1': '待反馈',
-                '2': '未成交',
-                '3': '已成交'
+                '2': '已反馈',
+                '3': '未成交',
+                '4': '已成交'
             }
             return status[row.state];
         },
@@ -548,7 +554,7 @@ export default {
             if(local){
                 var addSave = JSON.parse(localStorage.getItem("addSave"));
                 this.demandParams = addSave.demandParams;
-                this.specParams = addSave.demandParams;
+                this.specParams = addSave.specParams;
             }
             
         },
@@ -588,7 +594,7 @@ export default {
                 var params = {
                     demandNo: this.feedbackPriceParam.demandNo,
                     demandPrices: this.demandDetail,
-                    imp: 4,
+                    imp: 2,
                 }
                 this.loadDemandPriceList(params)
                     .then(data=>{
@@ -696,11 +702,13 @@ export default {
                                 message: `信息录入成功`,
                                 type: 'success'
                             })
-                            this.loadDemandList(this.searchDeParam)
-                                .then(() => {
-                                    this.loading = false;
-                                });
-                            this.dlgDemandVisible = false;
+                            setTimeout(()=>{
+                                this.loadDemandList(this.searchDeParam)
+                                    .then(() => {
+                                        this.loading = false;
+                                    });
+                                this.dlgDemandVisible = false;
+                            },100)
                         })
                 } else {
                     this.changeDemandList(this.demandParams)
@@ -714,11 +722,13 @@ export default {
                                 message: `修改成功`,
                                 type: 'success'
                             })
-                            this.loadDemandList(this.searchDeParam)
-                                .then(() => {
-                                    this.loading = false;
-                                });
-                            this.dlgDemandVisible = false;
+                            setTimeout(()=>{
+                                this.loadDemandList(this.searchDeParam)
+                                    .then(() => {
+                                        this.loading = false;
+                                    });
+                                this.dlgDemandVisible = false;
+                            },100)
                         })
                 }
                     
@@ -728,6 +738,7 @@ export default {
         searchDemand() {
             this.loading = true;
             this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
+            this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : '';
             this.searchDeParam.state = this.activeName;
             this.loadDemandList(this.searchDeParam)
                 .then(() => {
@@ -818,6 +829,9 @@ export default {
         },
         deleteCustomer(customerId){
             this.removeCustomer({customerId});
+        },
+        inputDemanAmount() {
+            this.weightFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
         }
     },
     mounted: function () {
@@ -827,19 +841,14 @@ export default {
         });
         var self = this;
         document.onkeyup = function(event) {
-        event = event || window.event;
-        if(event.keyCode === 13) {
-            if(!self.dlgDemandVisible && !self.dlDemandView && !self.dlFeedback && !self.customerListDlShow && !self.customerAddDlShow) {
-                self.searchDemand()
-            }
+            event = event || window.event;
+            if(event.keyCode === 13) {
+                if(!self.dlgDemandVisible && !self.dlDemandView && !self.dlFeedback && !self.customerListDlShow && !self.customerAddDlShow) {
+                    self.searchDemand()
+                }
+            };
         };
-    };
     },
-    watch: {
-        ['specParams.demandAmount'](val) {
-            this.weightFormatter(this.specParams.spec, Number(val))
-        }
-    }
 }
 </script>
 <style lang="less">

@@ -557,6 +557,7 @@ export const demandDetailList = ({ dispatch }, params,destination) => {
     if (response.data.code === 200) {
       response.data.data.forEach( v => {
         v.destination = destination;
+        v.factoryPrice += "";
       })
       dispatch('UPDATE_ORDERFORM','demandDetail', response.data.data)
       return Promise.resolve();

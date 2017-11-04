@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="h-contain clearfix">
     <ul class="nav clearfix">
-      <li class="nav-item" v-if="userInfo.userRole.charAt(4)">
+      <li class="nav-item" v-if="userInfo.userRole.charAt(4) && userInfo.comId != '00'">
         <a href="#/demand/manage" :class="[ mainRoute === 'demand' ? 'active' : '' ]">需求管理</a>
       </li>
       <li class="nav-item">
@@ -51,6 +51,9 @@
             document.location.href = "login.html"
         })
       }
+    },
+    mounted() {
+      this.userInfo.userRole = this.getCookie("userRole");
     }
   }
 </script>

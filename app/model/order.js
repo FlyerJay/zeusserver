@@ -121,10 +121,6 @@ module.exports = app => {
                     code:-1,
                     msg:"请输入公司编号"
                 }
-                if(!options.comId) return {
-                    code:-1,
-                    msg:"请输入用户信息"
-                }
                 const [$1,$2] = yield [app.model.query(`SELECT o.orderNo,o.orderPrice,o.orderWeight,o.orderAdjust,ui.userId,ui.userName,o.createTime,o.validate,
                 (select count(distinct supplierId) from order_detail where orderNo = o.orderNo) as supplierCount,
                 (select s.supplierName from order_detail od left join supplier s on s.supplierId = od.supplierId where od.orderNo = o.orderNo limit 0,1) as supplierName
@@ -132,7 +128,7 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 AND ui.comId = o.comId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = '00')
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 LIMIT :start,:offset
@@ -149,7 +145,7 @@ module.exports = app => {
                 LEFT JOIN user_info ui
                 ON ui.userId = o.userId
                 AND ui.comId = o.comId
-                WHERE o.comId = :comId
+                WHERE (o.comId = :comId OR :comId = '00')
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
                 `,{

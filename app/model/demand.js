@@ -108,21 +108,27 @@ module.exports = app => {
                         comId: options.comId,
                     }
                 })
-                const unDeal = yield this.count({
+                const priced = yield this.count({
                     where: {
                         state: 2,
                         comId: options.comId,
                     }
                 })
-                const deal = yield this.count({
+                const unDeal = yield this.count({
                     where: {
                         state: 3,
                         comId: options.comId,
                     }
                 })
+                const deal = yield this.count({
+                    where: {
+                        state: 4,
+                        comId: options.comId,
+                    }
+                })
                 return {
                     demand:{
-                        submit,price,unDeal,deal
+                        submit,price,priced,unDeal,deal
                     }
                 }
             },
@@ -194,7 +200,8 @@ module.exports = app => {
                         state: 0,
                         demandNo: randomNo,
                         createTime: +new Date(),
-                        demandWeight
+                        demandWeight,
+                        demandAmount: 0
                     }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
@@ -243,7 +250,8 @@ module.exports = app => {
                         state: 0,
                         demandNo: randomNo,
                         createTime: +new Date(),
-                        demandWeight
+                        demandWeight,
+                        demandAmount: 0,
                     }),{transaction:t}).then((res)=>{
                         var demandDetails = options.demandDetails;
                         return Promise.all(demandDetails.map((v)=>{
@@ -385,7 +393,7 @@ module.exports = app => {
                     code: -1,
                     msg: '缺少报价信息'
                 } 
-                if(options.imp == 4){
+                if(options.imp == 2){
                     const isSuccess = yield app.model.transaction(async (t) => {
                         return Promise.all(options.demandPrices.map( v => {
                             app.model.DemandDetail.update({
@@ -406,7 +414,7 @@ module.exports = app => {
                     })
                     if(isSuccess) {
                         yield app.model.query(`
-                            UPDATE demand SET state = 4
+                            UPDATE demand SET state = 2
                             WHERE demandNo = :demandNo
                         `,{
                             replacements:{
@@ -474,38 +482,67 @@ module.exports = app => {
                     code:-1,
                     msg:"缺少公司信息"
                 }
-                const list = yield this.findAndCountAll({
-                    offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                    limit: options.pageSize?options.pageSize:15,
-                    order: 'feedbackTime DESC , priceTime DESC , createTime ASC',
-                    where:{
-                        comId:{
-                            $eq:options.comId
-                        },
-                        userId: {
-                            $like: options.demandUser ? `%${options.demandUser}%` : '%%'
-                        },
-                        createTime:{
-                            $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.createTime?new Date(options.createTime).getTime() + 5.86e7:99999999999999999]
-                        },
-                        state: (function(){
-                            return options.state ? {
-                                $eq: options.state
-                            } : '';
-                        })(),
-                        customerName:{
-                            $like:options.customName ? `%${options.customName}%` : '%%'
+                if(options.comId == '00') {
+                    const list = yield this.findAndCountAll({
+                        offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        limit: options.pageSize?options.pageSize:15,
+                        order: 'feedbackTime DESC , priceTime DESC , createTime ASC',
+                        where:{
+                            userId: {
+                                $like: options.demandUser ? `%${options.demandUser}%` : '%%'
+                            },
+                            createTime:{
+                                $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.endTime?new Date(options.endTime).getTime() + 5.86e7:99999999999999999]
+                            },
+                            customerName:{
+                                $like:options.customName ? `%${options.customName}%` : '%%'
+                            }
+                        }
+                    })
+                    return {
+                        code:200,
+                        msg:"查询数据成功",
+                        data:{
+                            totalCount:list.count,
+                            row:list.rows,
+                            page:options.page?options.page:1,
+                            pageSize:options.pageSize?options.pageSize:15
                         }
                     }
-                })
-                return {
-                    code:200,
-                    msg:"查询数据成功",
-                    data:{
-                        totalCount:list.count,
-                        row:list.rows,
-                        page:options.page?options.page:1,
-                        pageSize:options.pageSize?options.pageSize:15
+                }else{
+                    const list = yield this.findAndCountAll({
+                        offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                        limit: options.pageSize?options.pageSize:15,
+                        order: 'feedbackTime DESC , priceTime DESC , createTime ASC',
+                        where:{
+                            comId:{
+                                $eq:options.comId
+                            },
+                            userId: {
+                                $like: options.demandUser ? `%${options.demandUser}%` : '%%'
+                            },
+                            createTime:{
+                                $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.endTime?new Date(options.endTime).getTime() + 5.86e7:99999999999999999]
+                            },
+                            state: (function(){
+                                return options.state ? {
+                                    $eq: options.state
+                                } : '';
+                            })(),
+                            customerName:{
+                                $like:options.customName ? `%${options.customName}%` : '%%'
+                            }
+                        }
+                    })
+                    return {
+                        code:200,
+                        msg:"查询数据成功",
+                        data:{
+                            totalCount:list.count,
+                            row:list.rows,
+                            page:options.page?options.page:1,
+                            pageSize:options.pageSize?options.pageSize:15
+                        }
                     }
                 }
             }
