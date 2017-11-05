@@ -895,6 +895,52 @@ export const getMessageList = ({ dispatch }, params) => {
   return axios.get('/zues/api/message/list',{ params })
   .then(function (response) {
     if (response.data.code === 200) {
+      dispatch('UPDATE_MANAGERFORM', 'messageList', response.data.data)
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//添加消息
+export const newMessage = ({ dispatch }, params) => {
+  return axios.post('/zues/api/message/add',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//删除消息
+export const removeMessage = ({ dispatch }, params) => {
+  return axios.post('/zues/api/message/delete',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//修改消息
+export const modifyMessage = ({ dispatch }, params) => {
+  return axios.post('/zues/api/message/update',params)
+  .then(function (response) {
+    if (response.data.code === 200) {
       return Promise.resolve(response.data.data);
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);

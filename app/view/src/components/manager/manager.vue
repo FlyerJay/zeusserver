@@ -77,6 +77,11 @@
               url: '/manager/operate',
               icon: 'icon-history',
               name: '操作记录'
+            },
+            {
+              url: '/manager/message',
+              icon: 'icon-message',
+              name: '消息管理'
             }
           ];
           this.topMenuData = this.topMenuData.concat(itemArr)

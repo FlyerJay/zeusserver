@@ -355,7 +355,6 @@
       this.getMessageList({messageType:1})
         .then( data =>{
           this.messageList = data.row;
-          console.log(data.row);
         })
     },
     computed: {

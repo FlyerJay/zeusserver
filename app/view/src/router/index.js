@@ -17,6 +17,7 @@ import Manager from '../components/manager/manager'
 import Member from '../components/manager/member'
 import Operate from '../components/manager/operate'
 import Review from '../components/manager/review'
+import Message from '../components/manager/message'
 
 //订单
 import Order from '../components/order/order'
@@ -125,6 +126,10 @@ export default new Router({
         {
           path: 'review',
           component: Review
+        },
+        {
+          path: 'message',
+          component: Message
         }
       ]
     }

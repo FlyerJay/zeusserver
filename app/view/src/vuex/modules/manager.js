@@ -1,7 +1,8 @@
 const state = {
   verify: {},
   userRoleInfo: {},
-  operateInfo: {}
+  operateInfo: {},
+  messageList: {},
 }
 
 const mutations = {

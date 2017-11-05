@@ -53,17 +53,58 @@ module.exports = app => {
                     code: -1,
                     msg: "缺少消息所属类别"
                 }
+                options.createTime = new Date().getTime();
                 yield this.create(options);
                 return {
                     code:200,
                     msg:"消息添加成功"
                 }
             },
+            * delete(options) {
+                var rs = yield this.destroy({
+                    where: {
+                        messageId: {
+                            $eq: options.messageId,
+                        }
+                    }
+                })
+                if(rs) return {
+                    code: 200,
+                    msg: '删除消息成功',
+                }
+                return {
+                    code: -1,
+                    msg: '删除消息失败',
+                }
+            },
+            * modify(options) {
+                var result = yield this.findOne({
+                    where:{
+                        messageId:{
+                            $eq:options.messageId,
+                        }
+                    }
+                })
+                if(!result) return{
+                    code:-1,
+                    msg:'修改的记录不存在'
+                }
+                options.createTime =  new Date().getTime();
+                for(var props in options){
+                    result[props] = options[props];
+                }
+                result.save();
+                return {
+                    code:200,
+                    msg:"修改成功"
+                }
+            },
             * list(options) {
-                console.log(Util.getCurrentDate("-"));
+                options.pageSize ? options.pageSize -= 0 : '';
                 const [$1,$2] = yield [app.model.query(`SELECT * FROM message WHERE
-                messageType = :messageType
+                (messageType = :messageType OR :messageType = '')
                 AND comId = :comId
+                AND createTime BETWEEN :startTime AND :endTime
                 ORDER BY messageId DESC
                 LIMIT :start,:offset
                 `,{
@@ -72,15 +113,19 @@ module.exports = app => {
                         offset: options.pageSize ? options.pageSize:10,
                         messageType: options.messageType,
                         comId: options.comId,
+                        startTime: options.startTime ? new Date(options.startTime).getTime() - 2.88e7 : 0,
+                        endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 9999999999999
                     }
                 }),
                 app.model.query(`SELECT count(1) as count FROM message WHERE
-                messageType = :messageType
+                (messageType = :messageType OR :messageType = '')
                 AND comId = :comId
                 `,{
                     replacements:{
                         comId: options.comId,
                         messageType: options.messageType,
+                        startTime: options.startTime ? new Date(options.startTime).getTime() - 2.88e7 : 0,
+                        endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 9999999999999
                     }
                 })]
                 if(!$1[0] || $1[0].length ===0) return {

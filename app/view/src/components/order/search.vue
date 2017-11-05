@@ -24,6 +24,7 @@
       <el-form-item>
         <el-button type="warning" @click="searchStock" :loading="loading" @v-on:keyup.enter="searchStock" class="search-bt">厂家现货查询</el-button>
       </el-form-item>
+      <slide ref="slide" :items="messageList"></slide>
     </el-form>
     <div class="sea-title">
         厂家现货价格/库存表:
@@ -120,7 +121,9 @@ import {
   addTocart, //加入购物车
   loadOrdAddress, //读取到岸目的地址
   updateStock,
+  getMessageList
 } from '../../vuex/action'
+import Slide from '../plugin/slide';
 
 export default {
   vuex: {
@@ -128,7 +131,8 @@ export default {
       loadStock,
       addTocart,
       loadOrdAddress,
-      updateStock
+      updateStock,
+      getMessageList
     },
     getters: {
       userInfo: ({
@@ -163,8 +167,12 @@ export default {
       dlgTbheadVisible: false,
       loading: true,
       checkedTBhead: [],
-      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'到岸单价','开单价',	'操作']
+      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'到岸单价','开单价',	'操作'],
+      messageList: [],
     }
+  },
+  components:{
+    Slide
   },
   methods: {
     filterTag(value, row) {
@@ -309,7 +317,13 @@ export default {
         }
       };
     };
-  }
+  },
+  created() {
+    this.getMessageList({messageType:3})
+      .then( data =>{
+        this.messageList = data.row;
+      })
+  },
 }
 
 </script>

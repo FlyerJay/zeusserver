@@ -97,5 +97,8 @@ module.exports = app => {
   //数据分析
   app.get('/zues/api/cdata/value','cdata.value');
   //消息
-  app.get('/zues/api/message/list','message.list')
+  app.get('/zues/api/message/list','message.list');
+  app.post('/zues/api/message/add','message.add');
+  app.post('/zues/api/message/update','message.modify');
+  app.post('/zues/api/message/delete','message.delete');
 };

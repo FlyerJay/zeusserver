@@ -95,6 +95,10 @@
                 </div>    
             </div>
         </el-dialog>
+        <div class="page-wrap">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchDeParam.page" layout=" prev, pager, next" :page-size="15" :total="demandInfo.totalCount">
+            </el-pagination>
+        </div>
     </div>
 </template>
 

@@ -18,6 +18,7 @@
             <el-form-item>
                 <el-button type="warning" @click="searchDemand">查询</el-button>
             </el-form-item>
+            <slide ref="slide" :items="messageList"></slide>
         </el-form>
         <div class="title clearfix">
             <span class="tit">需求列表：</span>
@@ -200,8 +201,10 @@ import {
     demandDetailList,
     loadDemandPriceList,
     upDateDemandList,
-    priceHistoryGet
+    priceHistoryGet,
+    getMessageList
 } from '../../vuex/action'
+import Slide from '../plugin/slide';
 
 export default {
     vuex: {
@@ -210,7 +213,8 @@ export default {
             demandDetailList,
             loadDemandPriceList,
             upDateDemandList,
-            priceHistoryGet
+            priceHistoryGet,
+            getMessageList
         },
         getters: {
             userInfo: ({
@@ -249,8 +253,12 @@ export default {
             allweight: 0,
             loading: true,
             updreason: '',
-            demandcount: 0
+            demandcount: 0,
+            messageList: [],
         }
+    },
+    components:{
+      Slide
     },
     methods: {
         handleCurrentChange(val) {
@@ -387,7 +395,13 @@ export default {
         this.loadDemandList(this.searchDeParam).then(() => {
             this.loading = false;
         })
-    }
+    },
+    created() {
+        this.getMessageList({messageType:2})
+            .then( data =>{
+                this.messageList = data.row;
+            })
+    },
 }
 </script>
 <style lang="less">
