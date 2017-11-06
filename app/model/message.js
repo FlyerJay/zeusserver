@@ -89,11 +89,19 @@ module.exports = app => {
                     code:-1,
                     msg:'修改的记录不存在'
                 }
-                options.createTime =  new Date().getTime();
                 for(var props in options){
                     result[props] = options[props];
                 }
                 result.save();
+                this.update({
+                    createTime: new Date().getTime()
+                },{
+                    where: {
+                        messageId: {
+                            $eq: options.messageId
+                        }
+                    }
+                })
                 return {
                     code:200,
                     msg:"修改成功"

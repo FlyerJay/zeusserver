@@ -477,6 +477,59 @@ module.exports = app => {
                     msg: '报价出错'
                 }
             },
+            * save(options) {
+                if(!options.demandNo) return {
+                    code: -1,
+                    msg: '缺少需求编号'
+                }
+                if(!options.demandPrices || options.length <= 0) return {
+                    code: -1,
+                    msg: '缺少报价信息'
+                } 
+                const isSuccess = yield app.model.transaction(async (t) => {
+                    return Promise.all(options.demandPrices.map( v => {
+                        app.model.DemandDetail.update({
+                            factoryPrice: v.factoryPrice || 0,
+                            freight: v.freight || 0,
+                            comment: v.comment,
+                        },{
+                            where:{
+                                demandDetailId:{
+                                    $eq: v.demandDetailId
+                                }
+                            },
+                            transaction: t,
+                        })
+                    }))
+                }).then((res) => {
+                    return true;
+                }).catch(err => {
+                    return false;
+                })
+                if(isSuccess) {
+                    yield app.model.query(`
+                        UPDATE demand SET timeConsume = :timeConsume,priceComment = :priceComment
+                        WHERE demandNo = :demandNo
+                    `,{
+                        replacements:{
+                            priceTime: +new Date(),
+                            demandNo: options.demandNo,
+                            timeConsume: options.timeConsume || 0,
+                            priceUser: options.userId,
+                            priceComment: options.priceComment || '',
+                        }
+                    })
+                    //yield this.countDemand(options);
+                    return {
+                        code: 200,
+                        msg: '报价成功'
+                    }
+                }
+                return {
+                    code: -1,
+                    msg: '报价出错'
+                }
+            },
             * list(options){//定制化需求报价
                 if(!options.comId) return {
                     code:-1,

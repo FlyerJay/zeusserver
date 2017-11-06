@@ -231,11 +231,16 @@ module.exports = app => {
                     minInventory = $2[0][0].inventoryAmount;
                 }else{
                     var $3 = yield app.model.query(`
-                        SELECT si.inventoryAmount,s.supplierName,sv.value FROM supplier_inventory si
+                        SELECT si.inventoryAmount,s.supplierName,sv.value,sr.benifit FROM supplier_inventory si
                             LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv ON
                             si.spec = sv.spec AND
                             si.type = sv.type 
                             AND si.supplierId = sv.supplierId
+                            INNER JOIN supplier_relate sr 
+                            ON sr.supplierId = sv.supplierId
+                            AND sr.comId = :comId
+                            AND sr.supplierId = s.supplierId
+                            AND sr.isValide = 1
                             LEFT JOIN supplier s ON
                             s.supplierId = si.supplierId
                             AND s.isDelete = 'N'
@@ -245,7 +250,7 @@ module.exports = app => {
                             Id: options.supplierInventoryId
                         }
                     })
-                    minPrice = $3[0][0].value;
+                    minPrice = $3[0][0].value - $3[0][0].benifit;
                     minSupplier = $3[0][0].supplierName;
                     minInventory = $3[0][0].inventoryAmount;
                 }

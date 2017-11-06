@@ -59,6 +59,8 @@
                 </el-table-column>
                 <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
                 </el-table-column>
+                <el-table-column prop="priceTimeFragment" v-if="activeName > 0" label="报价时长" :formatter="pruceFormat">
+                </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
@@ -138,8 +140,11 @@
                             </el-col>
                         </el-row>    
                     </div>
+                </div>
+                <div class="button-group dialog-item float-right">
+                    <el-button type="info" @click="submitPrice" class="float-right group-item" v-if="demandDetail.length && activeName < 2">提 交</el-button>
+                    <el-button type="info" @click="savePriceList" class="float-right group-item" v-if="demandDetail.length && activeName < 2">保 存</el-button>
                 </div>    
-                <el-button type="info" @click="submitPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
                 <el-button type="warning" @click="dlDemandView = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
             </div>
         </el-dialog>
@@ -202,7 +207,8 @@ import {
     loadDemandPriceList,
     upDateDemandList,
     priceHistoryGet,
-    getMessageList
+    getMessageList,
+    saveDemand
 } from '../../vuex/action'
 import Slide from '../plugin/slide';
 
@@ -214,7 +220,8 @@ export default {
             loadDemandPriceList,
             upDateDemandList,
             priceHistoryGet,
-            getMessageList
+            getMessageList,
+            saveDemand
         },
         getters: {
             userInfo: ({
@@ -374,6 +381,55 @@ export default {
                     })
                 }
             })
+        },
+        savePriceList() {
+            this.$confirm('确认保存?', '确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then((v) => {
+                if (this.activeName < 2) {
+                    var params = {
+                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                        demandPrices: this.demandDetail,
+                        timeConsume: this.timeConsume,
+                        priceComment: this.priceComment
+                    }
+                    this.saveDemand(params).then(rs => {
+                        this.$message({
+                            message: `保存成功`,
+                            type: 'success'
+                        });
+                        this.timeConsume = '';
+                        this.demandDetail.map(v => {
+                            v.freight = '';
+                            v.factoryPrice = '';
+                        });
+                        this.loadDemandList(this.searchDeParam);
+                        this.dlDemandView = false;
+                    })
+                } else {
+                    var upparams = {
+                        state: this.activeName,
+                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+                        dealReason: this.updreason,
+                        timeConsume: this.timeConsume
+                    }
+                    this.upDateDemandList(upparams).then(rs => {
+                        this.$message({
+                            message: `报价成功`,
+                            type: 'success'
+                        });
+                        this.timeConsume = '';
+                        this.demandDetail.map(v => {
+                            v.freight = '';
+                            v.factoryPrice = '';
+                        })
+                        this.loadDemandList(this.searchDeParam);
+                        this.dlDemandView = false;
+                    })
+                }
+            })
 
         },
         queryFactoryPrice(query,string,cb) {
@@ -386,9 +442,13 @@ export default {
             }
             cb([]);
         },
-        handleSelect() {
-            
-        }
+        handleSelect() { 
+        },
+        pruceFormat(row, column) {
+            if(row.priceTime)
+                return Math.ceil((row.priceTime - row.createTime) / 1000 / 60 ) + "分钟";
+            return "未报价"
+        },
     },
     mounted: function () {
         this.loading = true;
@@ -423,6 +483,12 @@ export default {
         .tit {
             float: left;
         }
+    }
+    .button-group{
+        width: 100%;
+    }
+    .group-item{
+        width: 49%;
     }
     .sub-txt {
         font-size: 12px;

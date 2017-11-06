@@ -235,30 +235,12 @@
                     <el-table :data="demandDetail" border style="width: 100%">
                         <el-table-column label="规格" prop='spec' width="120px"></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量(支)" prop='demandAmount' width="120px"></el-table-column>
-                        <el-table-column label="重量(吨)" prop='demandWeight' width="120px"></el-table-column>
-                        <el-table-column label="报价" width="330px;" align="center" v-if="activeName > 0">
-                            <template scope="scope">
-                                <el-row>
-                                    <el-col :span='12'>
-                                        <el-input auto-complete="off" type="text" placeholder="出厂价" v-model="scope.row.factoryPrice" :readonly="true">
-                                            <template slot="prepend">出厂价</template>
-                                        </el-input>
-                                    </el-col>
-                                    <el-col :span='2'><span style="display:inline-block;margin:5px 0px 0px 6px">+</span></el-col>
-                                    <el-col :span='10'>
-                                        <el-input auto-complete="off" type="text" placeholder="运费" v-model="scope.row.freight" :readonly="true">
-                                            <template slot="prepend">运费</template>
-                                        </el-input>
-                                    </el-col>    
-                                </el-row>  
-                            </template>    
-                        </el-table-column>
-                        <el-table-column label="备注" width="230px" align="center" v-if="activeName > 0">
-                            <template scope="scope">
-                                <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="true" style="width: 100%;float:left;margin: 5px 0px 5px;">
-                                </el-input>
-                            </template>    
+                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
+                        <el-table-column label="业务报价" prop='feedbackPrice'></el-table-column>
+                        <el-table-column label="出厂价" prop='factoryPrice'></el-table-column>
+                        <el-table-column label="运费" prop='freight'></el-table-column>
+                        <el-table-column label="备注" prop='comment' align="center">
                         </el-table-column>
                     </el-table>
                     <div style="margin-top:15px;">

@@ -60,7 +60,7 @@
         },
         filters:{
             dateFormate(val) {
-                return new Date(val - 0).formatDate('yyyy-MM-dd');
+                return new Date(val - 0).formatDate('yyyy-MM-dd hh:mm');
             }
         }
     }

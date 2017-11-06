@@ -47,6 +47,9 @@
                 <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
                 <el-table-column prop="orderAmount" label="数量"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价"></el-table-column>
+                <el-table-column prop="minPrice" label="最低价"/>
+                <el-table-column prop="minSupplier" width="130px" label="最低价供应商"/>
+                <el-table-column prop="minInventory" width="120px" label="最低价库存"/>
                 <el-table-column prop="Weight" label="重量"></el-table-column>
                 <el-table-column prop="orderDcrease" label="总下浮"></el-table-column>
                 <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="单位下浮"></el-table-column>

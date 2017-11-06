@@ -80,7 +80,7 @@ module.exports = app => {
                 }
             });
             var tmpData = [];
-            tmpData.push(['需求编号','用户ID','状态','总重量','客户名称','目的地','客户电话','创建时间','报价时间','报价时长','备注']);
+            tmpData.push(['需求编号','销售','采购','状态','总重量','客户名称','目的地','客户电话','创建时间','报价时间','报价时长','备注']);
             list[0].map((v) => {
                 const totalFreight = v['totalFreight'] || 0;
                 const customerName = v['customerName'] || '';
@@ -88,7 +88,7 @@ module.exports = app => {
                 const customerPhone = v['customerPhone'] || '';
                 const createTime = new Date(v['createTime']).toLocaleString();
                 const priceTime = new Date(v['priceTime']).toLocaleString();
-                const priceFragment = v['priceTime'] ? Math.ceil(( v['priceTime'] - v['createTime'] ) / 1000 / 60) + "分钟" : "未报价"
+                const priceFragment = v['priceTime'] ? Math.ceil(( v['priceTime'] - v['createTime'] ) / 1000 / 60) + "分钟" : "未报价";
                 const states = {
                     '0':'未报价',
                     '1':'待反馈',
@@ -96,7 +96,7 @@ module.exports = app => {
                     '3':'已成交'
                 }
                 const state = states[v['state']];
-                tmpData.push([v['demandNo'],v['userId'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,priceFragment,v['comment']]);
+                tmpData.push([v['demandNo'],v['userId'],v['priceUser'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,priceFragment,v['comment']]);
             })
             var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
             return buffer;
@@ -154,7 +154,7 @@ module.exports = app => {
             return buffer;
         }
         * demandDetailExport (options) {
-            var info = yield app.model.query(`SELECT dd.demandDetailId,dd.demandNo,dd.spec,dd.type,dd.demandAmount,perAmount,dd.demandWeight,dd.factoryPrice,dd.feedbackPrice,dd.freight,d.state,d.userId,d.customerName,d.customerPhone,d.destination from demand_detail dd 
+            var info = yield app.model.query(`SELECT dd.demandDetailId,dd.demandNo,dd.spec,dd.type,dd.demandAmount,perAmount,dd.demandWeight,dd.factoryPrice,dd.feedbackPrice,dd.freight,d.state,d.userId,d.customerName,d.customerPhone,d.destination,d.priceUser from demand_detail dd 
             inner join demand d
             on d.demandNo = dd.demandNo
             and ( d.userId = :otherId or :otherId = '' ) 
@@ -178,9 +178,9 @@ module.exports = app => {
             }
 
             var tmpData = [];
-            tmpData.push(['需求编号','规格','类型','需求数量','需求重量','出厂价','运费','业务报价','成交状态',"销售","客户","客户电话","目的地"]);
+            tmpData.push(['需求编号','规格','类型','需求数量','需求重量','出厂价','运费','业务报价','成交状态',"销售","采购","客户","客户电话","目的地"]);
             info[0].map( v => {
-                tmpData.push([v['demandNo'],v['spec'],v['type'],v['demandAmount'],v['demandWeight'],v['factoryPrice'],v['freight'],v['feedbackPrice'],states[v['state']],v['userId'],v['customerName'],v['customerPhone'],v['destination']]);
+                tmpData.push([v['demandNo'],v['spec'],v['type'],v['demandAmount'],v['demandWeight'],v['factoryPrice'],v['freight'],v['feedbackPrice'],states[v['state']],v['userId'],v['priceUser'],v['customerName'],v['customerPhone'],v['destination']]);
             })
             var buffer = xlsx.build([{name: "需求详情列表", data: tmpData}])
             return buffer;

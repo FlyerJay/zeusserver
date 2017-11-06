@@ -473,9 +473,24 @@ export const loadDemandList = (store, params) => {
   });
 }
 
-//定制化需求报价查询
+//定制化需求报价
 export const loadDemandPriceList = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/price', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//定制化需求报价保存
+export const saveDemand = ({ dispatch }, params) => {
+  return axios.post('/zues/api/demand/save', params)
   .then(function (response) {
     if (response.data.code === 200) {
       return Promise.resolve();
@@ -979,6 +994,7 @@ export const priceHistoryGet = ({ dispatch }, params) => {
     return Promise.reject();
   });
 }
+
 
 //展示错误信息
 export const showErrorMessage = ({ dispatch }, msg) => {
