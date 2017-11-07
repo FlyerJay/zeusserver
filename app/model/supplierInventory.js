@@ -283,6 +283,7 @@ module.exports = app => {
                     AND si.spec = sv.spec
                     LEFT JOIN freight f ON
                     f.address = s.address
+                    AND f.comId = :comId
                     WHERE si.spec LIKE :spec
                     AND (si.type = :type OR :type = '')
                     ORDER BY si.type desc,si.lastUpdateTime DESC,si.supplierId,si.spec`,{
