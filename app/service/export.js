@@ -13,17 +13,13 @@ module.exports = app => {
                 ON ui.userId = o.userId
                 AND ui.comId = o.comId
                 WHERE o.comId = :comId
-                AND o.userId = :userId
                 AND orderNo LIKE :orderNo
                 ORDER BY o.createTime DESC
-                LIMIT :start,:offset
                 `,{
                     replacements:{
                         comId:options.comId,
                         userId:options.userId?options.userId:'',
                         orderNo:options.orderNo?`%${options.orderNo}%`:'%%',
-                        start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                        offset:options.pageSize?options.pageSize:15,
                     }
                 })
             var tmpData = [];
