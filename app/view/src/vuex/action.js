@@ -450,11 +450,16 @@ export const loadDemandList = (store, params) => {
             store._modules.common.state.demand.price = 0;
             break;
           case '2':
+            var priced = store._modules.common.state.demand.priced;
+            demandAmount.priced += priced;
+            store._modules.common.state.demand.priced = 0;
+            break;
+          case '3':
             var unDeal = store._modules.common.state.demand.unDeal;
             demandAmount.unDeal += unDeal;
             store._modules.common.state.demand.unDeal = 0;
             break;
-          case '3':
+          case '4':
             var deal = store._modules.common.state.demand.deal;
             demandAmount.deal += deal;
             store._modules.common.state.demand.deal = 0;

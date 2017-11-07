@@ -32,7 +32,7 @@
                     <span slot='label'>待反馈需求<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="已反馈报价" name="2">
-                    <span slot='label'>已反馈报价<el-badge v-if="demand && demand.price > 0" class="mark" :value="demand.price" /></span>
+                    <span slot='label'>已反馈报价<el-badge v-if="demand && demand.priced > 0" class="mark" :value="demand.priced" /></span>
                 </el-tab-pane>
                 <el-tab-pane label="未成交需求" name="3">
                     <span slot='label'>未成交需求<el-badge v-if="demand && demand.unDeal > 0" class="mark" :value="demand.unDeal" /></span>

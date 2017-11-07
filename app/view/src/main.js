@@ -25,7 +25,8 @@ if(!isStorage){
     submit: 0,
     price: 0,
     deal: 0,
-    unDeal: 0
+    unDeal: 0,
+    priced: 0,
   }));
 }
 const isOrderAuth = userRole && userRole.charAt(5) == '1';
