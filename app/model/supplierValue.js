@@ -205,15 +205,13 @@ module.exports = app => {
                     msg:"缺少调整价格"
                 }
                 options.adjust = Number(options.adjust);
-                const result = yield app.model.query(`update supplier_value sv,supplier s,freight f set sv.value = sv.value + ${options.adjust},sv.adjustValue = ${options.adjust} where
+                const result = yield app.model.query(`update supplier_value sv,supplier s set sv.value = sv.value + ${options.adjust},sv.adjustValue = ${options.adjust} where
                     sv.lastUpdateTime = :lastUpdateTime
                     AND sv.spec LIKE :spec
                     AND (sv.type = :type OR :type = '')
-                    AND (f.address = :address OR :address = '')
-                    AND f.comId = :comId
                     AND s.supplierName LIKE :supplierName
                     AND s.supplierId = sv.supplierId
-                    AND s.address = f.address
+                    AND (s.address = :address OR :address = '')
                 `,{
                     replacements:{
                         comId:options.comId,
