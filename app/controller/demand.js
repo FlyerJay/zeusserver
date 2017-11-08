@@ -41,13 +41,24 @@ module.exports = app => {
     * price() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
-        ctx.body = {
-          code:-1,
-          msg:"抱歉，没有权限进行该操作"
+      if(ctx.request.body.imp == 2) {
+        if(userRole.charAt(4) === '0'){
+          ctx.body = {
+            code:-1,
+            msg:"抱歉，没有权限进行该操作"
+          }
+        }else{
+          ctx.body = yield ctx.model.Demand.price(ctx.request.body);
         }
       }else{
-        ctx.body = yield ctx.model.Demand.price(ctx.request.body);
+        if(userRole.charAt(5) === '0'){
+          ctx.body = {
+            code:-1,
+            msg:"抱歉，没有权限进行该操作"
+          }
+        }else{
+          ctx.body = yield ctx.model.Demand.price(ctx.request.body);
+        }
       }
     }
     * save() {
