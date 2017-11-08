@@ -16855,7 +16855,7 @@ function sheet_to_csv(sheet, opts) {
 	if(sheet == null || sheet["!ref"] == null) return "";
 	var r = safe_decode_range(sheet["!ref"]);
 	var FS = o.FS !== undefined ? o.FS : ",", fs = FS.charCodeAt(0);
-	var RS = o.RS !== undefined ? o.RS : "\r\t\n", rs = RS.charCodeAt(0);
+	var RS = o.RS !== undefined ? o.RS : "translate", rs = RS.charCodeAt(0);
 	var endregex = new RegExp((FS=="|" ? "\\|" : FS)+"+$");
 	var row = "", cols = [];
 	o.dense = Array.isArray(sheet);

@@ -101,10 +101,12 @@ module.exports = app => {
                 let elements = options[i].lines[0].split(',');
                 let head = elements[0];
                 let isFirst = true;
+                let isSecend = true;
                 let $1BeatStart = 0;
                 let $1BeatEnd = 0; //默认长度为0
                 let $2BeatStart = 0;
                 let $3BeatStart = 0; //假设表头最多重复3次
+                let $4BeatStart = 0; //假设3次已经不行了，现在必须假设为4次，后面也许要假设为5次
                 let beat = 2; //假设最小重复长度为2
                 if (!options[i].isRepeat) {
                     continue;
@@ -122,14 +124,20 @@ module.exports = app => {
                         isFirst = false;
                         continue;
                     }
-                    if (!isFirst && elements[beat] === head) {
+                    if (!isFirst && isSecend && elements[beat] === head) {
                         $3BeatStart = beat;
+                        isSecend = false;
+                        continue;
+                    }
+                    if (!isFirst && !isSecend && elements[beat] === head) {
+                        $4BeatStart = beat;
                         break;
                     }
                 }
                 options[i].$1BeatStart = $1BeatStart;
                 options[i].$2BeatStart = $2BeatStart;
                 options[i].$3BeatStart = $3BeatStart;
+                options[i].$4BeatStart = $4BeatStart;
                 options[i].beat = $1BeatEnd + 1;
             }
             i = 0;
@@ -149,6 +157,11 @@ module.exports = app => {
                 if (options[i].$3BeatStart) {
                     for (var j = 1; j < elements.length; j++) {
                         line.push(elements[j].split(',').slice(options[i].$3BeatStart, options[i].beat + options[i].$3BeatStart));
+                    }
+                }
+                if (options[i].$4BeatStart) {
+                    for (var j = 1; j < elements.length; j++) {
+                        line.push(elements[j].split(',').slice(options[i].$4BeatStart, options[i].beat + options[i].$4BeatStart));
                     }
                 }
                 options[i].lines = line;

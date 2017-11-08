@@ -162,7 +162,7 @@ module.exports = app => {
                 // options[i].content = options[i].content.replace(/\n\s/g,' ');//匹配换行后空格
                 // options[i].content = options[i].content.replace(/\n{2,}/g,' ');//匹配连续换行多次
                 options[i].content = options[i].content.replace(/\"/g,' ');
-                res.lines = options[i].content.split('\r\t\n');
+                res.lines = options[i].content.split('translate'); //修改了特殊的换行技巧
                 res.lineLength = (res.lines[0]+'').split(',').length;
                 res.lineAmount = res.lines.length
                 for(var j = res.lineAmount-1;j>0;j--){//去掉空行干扰项
