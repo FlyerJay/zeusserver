@@ -247,6 +247,7 @@ module.exports = app => {
                             WHERE si.supplierInventoryId = :Id
                     `,{
                         replacements:{
+                            comId: options.comId,
                             Id: options.supplierInventoryId
                         }
                     })
