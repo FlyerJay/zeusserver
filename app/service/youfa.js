@@ -302,8 +302,8 @@ module.exports = app => {
                     v[3] = v[3].replace(/\s.*/g,'');//先处理掉某些特殊字符
                 })
                 lines.map(v => {
-                    if(/\d*m\/\d/.test(v[3])){
-                        v[3].replace(/(\d*)m\/(\d)/g,(v1,v2,v3) => {
+                    if(/\d*m{0,1}\/\d*m{0,1}/.test(v[3])){
+                        v[3].replace(/(\d*)m{0,1}\/(\d*)m{0,1}/g,(v1,v2,v3) => {
                             v[3] = v3;
                             v[4] = v2;
                         })
