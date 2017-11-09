@@ -181,7 +181,7 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "需求详情列表", data: tmpData}])
             return buffer;
         }
-        * orderPrint(options) {t
+        * orderPrint(options) {
             const [$1,$2] = yield [app.model.query(`SELECT o.* FROM tb_order o WHERE o.orderNo = :orderNo`,{
                 replacements:{
                     orderNo:options.orderNo,
