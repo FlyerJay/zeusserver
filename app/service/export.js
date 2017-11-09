@@ -85,11 +85,12 @@ module.exports = app => {
                 const createTime = new Date(v['createTime']).toLocaleString();
                 const priceTime = new Date(v['priceTime']).toLocaleString();
                 const priceFragment = v['priceTime'] ? Math.ceil(( v['priceTime'] - v['createTime'] ) / 1000 / 60) + "分钟" : "未报价";
-                const states = {
+                var states = {
                     '0':'未报价',
-                    '1':'待反馈',
-                    '2':'未成交',
-                    '3':'已成交'
+                    '1':'未反馈',
+                    '2':'已反馈报价',
+                    '3':'成交失败',
+                    '4':'成交成功',
                 }
                 const state = states[v['state']];
                 tmpData.push([v['demandNo'],v['userId'],v['priceUser'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,priceFragment,v['comment']]);
@@ -115,9 +116,9 @@ module.exports = app => {
             var states = {
                 '0':'未报价',
                 '1':'未反馈',
-                '2':'成交失败',
-                '3':'成交成功',
-                '4':'已反馈报价'
+                '2':'已反馈报价',
+                '3':'成交失败',
+                '4':'成交成功',
             }
             var tmpData = [];
             tmpData.push(
@@ -168,9 +169,9 @@ module.exports = app => {
             var states = {
                 '0':'未报价',
                 '1':'未反馈',
-                '2':'成交失败',
-                '3':'成交成功',
-                '4':'已反馈报价'
+                '2':'已反馈报价',
+                '3':'成交失败',
+                '4':'成交成功',
             }
 
             var tmpData = [];
