@@ -64,8 +64,11 @@ module.exports = app => {
                 }
                 var isExist = yield this.findOne({
                     where:{
-                        userId:{
+                        userId: {
                             $eq:options.registerId
+                        },
+                        comId: {
+                            $eq: options.comId
                         }
                     }
                 });
