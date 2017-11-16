@@ -69,9 +69,6 @@ module.exports = app => {
                             where:{
                                 supplierId:{
                                     $eq: v
-                                },
-                                comId: {
-                                    $eq: query.comId,
                                 }
                             },
                             transaction: t,
@@ -85,18 +82,6 @@ module.exports = app => {
                         detail:`${query.fileName}`,
                         createTime:+new Date()
                     },{transaction:t})
-                }).then(() => {
-                    return Promise.all(supplierIds.map(v=>{
-                        app.model.SupplierRelate.update({
-                            valueTime: new Date().getTime()
-                        },{
-                            where:{
-                                supplierId: v,
-                                comId: query.comId,
-                            },
-                            transaction: t
-                        })
-                    }))
                 })
             }).then((res)=>{
                 return {
@@ -192,9 +177,6 @@ module.exports = app => {
                         where:{
                             supplierId:{
                                 $eq: supplierId
-                            },
-                            comId: {
-                                $eq: info.comId,
                             }
                         },
                         transaction: t,
@@ -295,9 +277,6 @@ module.exports = app => {
                         where:{
                             supplierId:{
                                 $eq: supplierId
-                            },
-                            comId: {
-                                $eq: info.comId,
                             }
                         },
                         transaction: t,
