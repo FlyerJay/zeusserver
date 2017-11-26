@@ -43,9 +43,9 @@
         </el-table-column>
         <el-table-column prop="supplierName" label="供应商"  v-if="checkedTBhead.indexOf('供应商') > -1">
         </el-table-column>
-        <el-table-column label="到岸单价" sortable width="120px" v-if="checkedTBhead.indexOf('到岸单价') > -1">
+        <el-table-column prop="daPrice" label="到岸单价" sortable width="120px" v-if="checkedTBhead.indexOf('到岸单价') > -1">
           <template scope="scope">
-            <span class="value">{{scope.row.purePrice + scope.row.freight}}</span>
+            <span class="value">{{scope.row.daPrice}}</span>
             <i class="iconfont icon-down" v-if="scope.row.priceAdjust < 0 && scope.row.purePrice" style="color:#13CE66;font-size:18p;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
             <i class="iconfont icon-up" v-if="scope.row.priceAdjust > 0 && scope.row.purePrice" style="color:#FF4949;font-size:18px;text-decoration:none"><span style="font-size:8px;">{{Math.abs(scope.row.priceAdjust)}}</span></i>
           </template>

@@ -19,7 +19,8 @@
         height: 36px;
         padding: 0px 20px;
         background-color: #f7f7f7;
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: bold;
         color: #13CE66;
         .slide-wapper{
             width: 100%;
