@@ -49,6 +49,21 @@ export const addNewSup = ({ dispatch }, newSupParam) => {
   });
 }
 
+//重置密码
+export const resetPasswordAxios = ({ dispatch }, newSupParam) => {
+  return axios.post('/zues/api/user/update', newSupParam)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //新增运费信息 
 export const addNewFre = ({ dispatch }, params) => {
   return axios.post('/zues/api/freight/add', params)

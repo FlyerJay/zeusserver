@@ -67,10 +67,11 @@
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
-                <el-table-column label="操作" width='280px' align="center" property="id" v-if="adminAuthority">
+                <el-table-column label="操作" width='360px' align="center" property="id" v-if="adminAuthority">
                     <template scope="scope">
                         <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
                         <el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>
+                        <el-button size="small" @click="resetPassword(scope.index, scope.row)" type="success">重置</el-button>
                         <el-button size="small" @click="removeUser(scope.index, scope.row)" type="danger">删除</el-button>
                     </template>
                </el-table-column>
@@ -162,6 +163,14 @@
             </div>
        </el-dialog>
 
+       <el-dialog title="" v-model="dlgResetPasswordVisible" class="custom-dialog">
+        <div class="dialog-content">
+            <el-input v-model="resetParams.password" auto-complete="off" type="password">
+                <template slot="prepend">密码</template>
+            </el-input>
+            <el-button type="info" @click="submitReset()" class="dialog-item float-right">确 定</el-button>
+        </div>
+    </el-dialog>
 
     </div>
 </template>
@@ -172,7 +181,8 @@ import{
     loadmemberList,
     updateuserRole,
     addNewUser,
-    deleteUser
+    deleteUser,
+    resetPasswordAxios
 }from '../../vuex/action'
 
 export default {
@@ -182,6 +192,7 @@ export default {
             updateuserRole,
             addNewUser,
             deleteUser,
+            resetPasswordAxios
         },
         getters:{
             userInfo:({
@@ -221,6 +232,7 @@ export default {
             dlgChangeAuthVisible: false,
             dlgAddUserVisible: false,
             dlgAllocationRole: false,
+            dlgResetPasswordVisible: false,
             roleValue: 0,
             roleArray:[{ value: 0, key: '自定义角色' },{ value: 1, key: '销售' },{ value: 2, key: '采购' },{ value: 3, key: '管理员' }],
             roleStrArray:{
@@ -239,6 +251,10 @@ export default {
                 operator:'',
                 supplierAuth:'',
                 queryAuth:'',
+            },
+            resetParams: {
+                password: '',
+                resetUser: ''
             }
         }
     },
@@ -259,6 +275,20 @@ export default {
             const auth = `${row.orderAuth}${row.supplierAuth}${row.valueAuth}${row.inventoryAuth}${row.demandAuth}${row.adminAuth}${row.queryAuth}${row.crossAuth}`;
             this.roleStrArray[auth] ? this.roleValue = this.roleStrArray[auth] : this.roleValue = 0;
             this.allocParams.operator = row.userId;
+        },
+        resetPassword(index,row){
+            this.dlgResetPasswordVisible = true;
+            this.resetParams.resetUser = row.userId;
+        },
+        submitReset(){
+            this.resetPasswordAxios(this.resetParams)
+                .then(rs=> {
+                    this.$message({
+                        message: "修改密码成功",
+                        type: 'success'
+                    })
+                    this.dlgResetPasswordVisible = false;
+                })
         },
         configAllocRole(){
             switch(this.roleValue){

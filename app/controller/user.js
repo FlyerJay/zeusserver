@@ -34,6 +34,18 @@ module.exports = app => {
       const user =  yield ctx.model.User.registeUser(ctx.request.body);
       ctx.body = user;
     };
+    * reset() {
+      const ctx = this.ctx;
+      const userRole = ctx.cookies.get('userRole');
+      if(userRole.charAt(0) === '0' && userRole.charAt(7) === '0'){
+        ctx.body = {
+          code: -1,
+          msg: "抱歉，没有权限进行该操作!"
+        }
+      }else{
+        ctx.body = yield ctx.model.User.resetPassword(ctx.request.body);
+      }
+    };
     * info() {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.User.getUserInfo(ctx.query);

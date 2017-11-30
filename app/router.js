@@ -17,6 +17,7 @@ module.exports = app => {
   app.post('/zues/api/user/delete','user.remove');
   app.get('/zues/api/user/validate','user.validate');
   app.post('/zues/api/user/logout','user.logout');
+  app.post('/zues/api/user/update','user.reset');
   //公司
   app.get('/zues/api/company','company.list');
   app.post('/zues/api/company/setting','company.defaultdata');

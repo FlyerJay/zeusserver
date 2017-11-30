@@ -117,6 +117,28 @@ module.exports = app => {
                     console.log(err);
                 });
             },
+            * resetPassword(options) {
+                if(!options.resetUser || !options.comId) return {
+                    code: -1,
+                    msg: "缺少必要参数"
+                }
+                const result =  yield this.update({
+                    password: options.password
+                },{
+                    where:{
+                        userId: {
+                            $eq: options.resetUser
+                        },
+                        comId: {
+                            $eq: options.comId
+                        }
+                    }
+                });
+                return {
+                    code: 200,
+                    msg: "修改密码成功"
+                }
+            },
             * userLogin(options){
                 if(!options || !options.userId || !options.password || !options.comId) return {
                     code:-1,
