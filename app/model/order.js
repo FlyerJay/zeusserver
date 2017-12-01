@@ -229,6 +229,7 @@ module.exports = app => {
                                 supplierId:v.supplierId,
                                 orderAmount:Number(v.chartAmount),
                                 unitPrice:Number(v.purePrice),
+                                daPrice:Number(v.daPrice),
                                 Weight:Number(v.chartWeight),
                                 orderDcrease:Number(v.totalAdjust),
                                 comment: v.comment,

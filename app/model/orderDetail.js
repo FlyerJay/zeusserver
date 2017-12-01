@@ -50,6 +50,11 @@ module.exports = app => {
             allowNull:false,
             comment:"单价",
         },
+        daPrice: {
+            type: DOUBLE(10,2),
+            allowNull: true,
+            comment: "到岸单价"
+        },
         Weight:{
             type:DOUBLE(10,2),
             comment:"总吨数"

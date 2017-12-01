@@ -47,6 +47,7 @@
                 <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
                 <el-table-column prop="orderAmount" label="数量"></el-table-column>
                 <el-table-column prop="unitPrice" label="单价"></el-table-column>
+                <el-table-column prop="daPrice" label="到岸价"></el-table-column>
                 <el-table-column prop="minPrice" label="最低价"/>
                 <el-table-column prop="minSupplier" width="130px" label="最低价供应商"/>
                 <el-table-column prop="minInventory" width="120px" label="最低价库存"/>

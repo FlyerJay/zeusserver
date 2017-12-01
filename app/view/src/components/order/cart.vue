@@ -43,6 +43,8 @@
                 </el-table-column>
                 <el-table-column prop="purePrice" :formatter="purePriceFormatter" label="开单价" v-if="checkedTBhead.indexOf('开单价') > -1">
                 </el-table-column>
+                <el-table-column prop="daPrice" :formatter="daPriceFormatter" label="到岸价" v-if="checkedTBhead.indexOf('到岸价') > -1">
+                </el-table-column>
                 <el-table-column prop="chartAdjust" label="采购议价" width="100px" v-if="checkedTBhead.indexOf('采购议价') > -1">
                 </el-table-column>
                 <el-table-column prop="totalAdjust" :formatter="adjustFormatter" label="议价总额" width="100px" v-if="checkedTBhead.indexOf('议价总额') > -1">
@@ -165,8 +167,8 @@
                 },
                 supplierInventoryIds: [],
                 dlgTbheadVisible: false,
-                checkedTBhead: ['规格', '长度',	'类别', '供应商', '数量', '包装', '吨位', '开单价', '采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
-                TBheads: ['规格',	'长度', '类别',	'供应商', '数量', '包装', '吨位', '开单价',	'采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
+                checkedTBhead: ['规格', '长度',	'类别', '供应商', '数量', '包装', '吨位', '开单价', '到岸价', '采购议价', '议价总额', '金额', '用户Id', '备注', '操作'],
+                TBheads: ['规格',	'长度', '类别',	'供应商', '数量', '包装', '吨位', '开单价', '到岸价', '采购议价',	'议价总额',	'金额', '用户Id', '备注', '操作'],
                 dialogVisible: false,
                 dlgAdjustVisible: false,
                 adjustnum: 0,
@@ -214,6 +216,12 @@
                 const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
                 row.purePrice = (row.value - row.benifit).toFixed(2);
                 return (row.value - row.benifit).toFixed(0);
+            },
+            daPriceFormatter(row,column){
+                const value = Number(row.value);
+                const freight = Number(row.freight) - Number(row.benifit?row.benifit:0);
+                row.daPrice = (row.value + freight).toFixed(2);
+                return (row.value + freight).toFixed(0);
             },
             adjustFormatter(row,column){
                 const adjust = Number(row.chartAdjust?row.chartAdjust:0) * row.chartWeight;
