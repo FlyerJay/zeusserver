@@ -236,14 +236,14 @@ module.exports = app => {
                             si.spec = sv.spec AND
                             si.type = sv.type 
                             AND si.supplierId = sv.supplierId
+                            LEFT JOIN supplier s ON
+                            s.supplierId = si.supplierId
+                            AND s.isDelete = 'N'
                             INNER JOIN supplier_relate sr 
                             ON sr.supplierId = sv.supplierId
                             AND sr.comId = :comId
                             AND sr.supplierId = s.supplierId
                             AND sr.isValide = 1
-                            LEFT JOIN supplier s ON
-                            s.supplierId = si.supplierId
-                            AND s.isDelete = 'N'
                             WHERE si.supplierInventoryId = :Id
                     `,{
                         replacements:{
