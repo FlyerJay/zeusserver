@@ -273,7 +273,7 @@ module.exports = app => {
                     return false
                 })
                 if(isSuccess){
-                    //yield this.countDemand(options,1);
+                    yield this.countDemand(options,1);
                     return {
                         code:200,
                         msg:"提交成功"
@@ -303,7 +303,7 @@ module.exports = app => {
                 }
                 result.feedbackTime = new Date().getTime();
                 const data = yield result.save();
-                //yield this.countDemand(options);
+                yield this.countDemand(options);
                 return {
                     code:200,
                     msg:"更新数据成功",
@@ -421,7 +421,7 @@ module.exports = app => {
                                 demandNo: options.demandNo,
                             }
                         })
-                        //yield this.countDemand(options);
+                        yield this.countDemand(options);
                         return {
                             code: 200,
                             msg: '报价成功'
@@ -466,7 +466,7 @@ module.exports = app => {
                             priceComment: options.priceComment || '',
                         }
                     })
-                    //yield this.countDemand(options);
+                    yield this.countDemand(options);
                     return {
                         code: 200,
                         msg: '报价成功'
@@ -519,7 +519,7 @@ module.exports = app => {
                             priceComment: options.priceComment || '',
                         }
                     })
-                    //yield this.countDemand(options);
+                    yield this.countDemand(options);
                     return {
                         code: 200,
                         msg: '报价成功'
