@@ -26,6 +26,12 @@ module.exports = appInfo => {
           connectionMiddleware:[],
           packetMiddleware:[],
         }
+      },
+      redis: {
+        host: "116.62.226.140",
+        port: 6379,
+        auth_pass: "zeuskx001",
+        db: 0,
       }
     },
     proxyworker:{
