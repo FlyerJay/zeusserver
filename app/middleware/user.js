@@ -14,6 +14,7 @@ module.exports = options => {
                     httpOnly: false,
                 })
                 this.query = this.query?Object.assign(this.query,{userId,comId,role,tempComId}):this.query
+                this.query && this.query.pageSize ? this.query.pageSize -= 0: "";
                 this.request.body = this.request.body?Object.assign(this.request.body,{userId,comId,role,tempComId}):this.request.body
                 yield next;
             }else{
