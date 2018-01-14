@@ -93,6 +93,7 @@ module.exports = app => {
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');
+  app.get('/zues/api/export/orderdetaillist/*','export.orderDetailList');
   app.get('/zues/api/export/demandexport/*','export.demandExport');
   app.get('/zues/api/export/demandlist/*','export.demandList');
   app.get('/zues/api/export/demanddetaillist/*','export.demandDetailList');

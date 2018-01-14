@@ -69,6 +69,29 @@ module.exports = app => {
             var buffer = xlsx.build([{name: "订单列表", data: tmpData}])
             return buffer;
         }
+        * orderDetailList(options) {
+            const list = yield app.model.query(`SELECT od.orderNo, od.spec, od.type, od.long, od.Weight, od.orderAmount, od.unitPrice, od.daPrice, od.orderDcrease, tbo.createTime, tbo.userId FROM order_detail od 
+                INNER JOIN tb_order tbo
+                ON tbo.orderNo = od.orderNo`)
+            var tmpData = [];
+            tmpData.push(['订单编号', '规格', '类型', '长度', '数量', '重量', '单价', '到岸单价', '下浮', '创建时间', '下单人']);
+            list[0].map(v=>{
+                var orderNo = v['orderNo'];
+                var spec = v['spec'];
+                var type = v['type'];
+                var long = v['long'];
+                var weight = v['Weight'];
+                var orderAmount = v['orderAmount'];
+                var unitPrice = v['unitPrice'];
+                var daPrice = v['daPrice'];
+                var orderDcrease = v['orderDcrease'];
+                var createTime = new Date(v['createTime']).toLocaleString();
+                var userId = v['userId'];
+                tmpData.push([orderNo, spec, type, long, orderAmount, weight, unitPrice, daPrice, orderDcrease, createTime, userId]);
+            });
+            var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
+            return buffer;
+        }
         * demandList(options){
             const list = yield app.model.query(`SELECT * FROM demand d where comId = :comId`,{
                 replacements:{

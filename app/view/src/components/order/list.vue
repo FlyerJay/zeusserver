@@ -8,7 +8,10 @@
                 <el-button type="warning" @click="searchOrder" :loading="loading">查询</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="warning" @click="exportOrder" :loading="loading">导出Excel</el-button>
+                <el-button type="warning" @click="exportOrder" :loading="loading">导出订单列表</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="warning" @click="exportOrderDetailList" :loading="loading">导出订单详情列表</el-button>
             </el-form-item>
         </el-form>
         <div class="tb-wrap">
@@ -532,6 +535,10 @@
             exportOrder() {
                 var date = new Date().formatDate('yyyyMMdd');
                 window.open(`/zues/api/export/order/订单列表${date}.xls`);
+            },
+            exportOrderDetailList() {
+                var date = new Date().formatDate('yyyyMMdd');
+                window.open(`/zues/api/export/orderdetaillist/订单详情列表${date}.xls`);
             },
             exportOrderDetail() {
                 window.open(`/zues/api/export/orderdetail/${this.orderDetail[0].orderNo}订单详情.xls?orderNo=${this.orderDetail[0].orderNo}`);
