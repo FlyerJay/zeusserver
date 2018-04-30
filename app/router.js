@@ -89,7 +89,8 @@ module.exports = app => {
   app.post('/zues/api/demand/price','demand.price');  
   app.post('/zues/api/demand/save','demand.save');  
   app.post('/zues/api/demand/remove','demand.remove');
-  app.get('/zues/api/demand/pricehistory','demand.priceHistory')
+  app.get('/zues/api/demand/pricehistory','demand.priceHistory');
+  app.post('/zues/api/demand/check','demand.checkRepeate');
   //导出报表
   app.get('/zues/api/export/order/*','export.order');
   app.get('/zues/api/export/orderdetail/*','export.orderDetail');

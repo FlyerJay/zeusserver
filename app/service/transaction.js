@@ -30,9 +30,10 @@ module.exports = app => {
                     indexs = supplierIndex;
                     return app.model.SupplierValue.destroy({
                         where:{
-                            lastUpdateTime:{
-                                $eq:query.time
-                            },
+                            // 删除该供应商之前所有的价格历史记录，目前历史记录暂时没用，以后需要使用时再加上。。。
+                            // lastUpdateTime:{
+                            //     $eq:query.time
+                            // },
                             supplierId:{
                                 $in:supplierIds
                             },

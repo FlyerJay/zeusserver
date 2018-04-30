@@ -70,13 +70,16 @@ module.exports = app => {
             return buffer;
         }
         * orderDetailList(options) {
-            const list = yield app.model.query(`SELECT od.orderNo, od.spec, od.type, od.long, od.Weight, od.orderAmount, od.unitPrice, od.daPrice, od.orderDcrease, tbo.createTime, tbo.userId FROM order_detail od 
+            const list = yield app.model.query(`SELECT od.*, tbo.createTime, tbo.userId, s.supplierName FROM order_detail od 
                 INNER JOIN tb_order tbo
-                ON tbo.orderNo = od.orderNo`)
+                ON tbo.orderNo = od.orderNo
+                LEFT JOIN supplier s
+                ON s.supplierId = od.supplierId`)
             var tmpData = [];
-            tmpData.push(['订单编号', '规格', '类型', '长度', '数量', '重量', '单价', '到岸单价', '下浮', '创建时间', '下单人']);
+            tmpData.push(['订单编号','供应商名称', '规格', '类型', '长度', '数量', '重量', '单价', '到岸单价', '下浮', '最低价供应商', '最低价格', '最低价库存', '创建时间', '下单人']);
             list[0].map(v=>{
                 var orderNo = v['orderNo'];
+                var supplierName = v['supplierName'];
                 var spec = v['spec'];
                 var type = v['type'];
                 var long = v['long'];
@@ -85,17 +88,27 @@ module.exports = app => {
                 var unitPrice = v['unitPrice'];
                 var daPrice = v['daPrice'];
                 var orderDcrease = v['orderDcrease'];
+                var minSupplier = v['minSupplier'];
+                var minPrice = v['minPrice'];
+                var minInventory = v['minInventory'];
                 var createTime = new Date(v['createTime']).toLocaleString();
                 var userId = v['userId'];
-                tmpData.push([orderNo, spec, type, long, orderAmount, weight, unitPrice, daPrice, orderDcrease, createTime, userId]);
+                tmpData.push([orderNo, supplierName, spec, type, long, orderAmount, weight, unitPrice, daPrice, orderDcrease, minSupplier, minPrice, minInventory, createTime, userId]);
             });
             var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
             return buffer;
         }
         * demandList(options){
-            const list = yield app.model.query(`SELECT * FROM demand d where comId = :comId`,{
+            const list = yield app.model.query(`SELECT * FROM demand d where comId = :comId
+                AND userId LIKE :demandUser
+                AND customerName LIKE :customerName
+                AND createTime BETWEEN :startTime AND :endTime`,{
                 replacements:{
                     comId: options.comId,
+                    demandUser: options.demandUser ? `%${options.demandUser}%` : '%%',
+                    customerName: options.customName ? `%${options.customName}%` : '%%',
+                    startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
+                    endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 9999999999999,
                 }
             });
             var tmpData = [];
@@ -177,14 +190,16 @@ module.exports = app => {
             var info = yield app.model.query(`SELECT dd.demandDetailId,dd.demandNo,dd.spec,dd.type,dd.demandAmount,perAmount,dd.demandWeight,dd.factoryPrice,dd.feedbackPrice,dd.freight,d.state,d.userId,d.customerName,d.customerPhone,d.destination,d.priceUser from demand_detail dd 
             inner join demand d
             on d.demandNo = dd.demandNo
-            and ( d.userId = :otherId or :otherId = '' ) 
+            and d.userId like :otherId
+            and d.comId = :comId
             and customerName like :customerName
             and (createTime between :startTime and :endTime)
             order by dd.demandNo desc`,{
                 replacements:{
-                    otherId: options.demandUser || '',
+                    comId: options.comId,
+                    otherId: options.demandUser ? `%${options.demandUser}%` : '%%',
                     customerName: options.customName ? `%${options.customName}%` : '%%',
-                    startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7   : 0,
+                    startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
                     endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 9999999999999,
                 }
             })

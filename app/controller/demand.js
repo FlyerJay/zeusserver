@@ -112,6 +112,10 @@ module.exports = app => {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.DemandDetail.getHistory(ctx.query);
     }
+    * checkRepeate() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.Demand.checkRepeate(ctx.request.body);
+    }
   }
   return DemandController;
 };

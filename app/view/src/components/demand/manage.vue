@@ -78,17 +78,18 @@
                 </el-table-column>
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1">
+                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1"  width="180">
                     <template scope="scope">
                         <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">销售报价</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 2">
+                <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 2" width="180">
                     <template scope="scope">
+                        <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">重新报价</el-button>
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作类型" align="center" v-if="activeName == 0" class-name="op-col">
+                <el-table-column label="操作类型" align="center" v-if="activeName == 0" class-name="op-col"  width="180">
                     <template scope="scope">
                         <el-button size="small" @click="changeDemand(scope.row)" type="warning" v-if="userInfo.userId == scope.row.userId" style="float:left">修改</el-button>
                         <el-button size="small" @click="removeDemand(scope.row)" type="danger" v-if="userInfo.userId == scope.row.userId" style="float:left">删除</el-button>
@@ -261,6 +262,20 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
+                                <el-input v-model="customerName" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">客户名称</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="customerPhone" auto-complete="off" :readonly="activeName > 0">
+                                    <template slot="prepend">客户电话</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
@@ -320,6 +335,20 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
+                                <el-input v-model="customerName" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">客户名称</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="customerPhone" auto-complete="off" :readonly="activeName > 0">
+                                    <template slot="prepend">客户电话</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
@@ -332,8 +361,8 @@
                         </el-row>    
                     </div>
                 </div>    
-                <el-button type="info" @click="submitFeedPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">提 交</el-button>
-                <el-button type="warning" @click="dlDemandView2 = false" class="dialog-item float-right" v-if="demandDetail.length && activeName < 2">取 消</el-button>
+                <el-button type="info" @click="submitFeedPrice" class="dialog-item float-right" v-if="demandDetail.length && activeName <= 2">提 交</el-button>
+                <el-button type="warning" @click="dlDemandView2 = false" class="dialog-item float-right" v-if="demandDetail.length && activeName <= 2">取 消</el-button>
             </div>
         </el-dialog>
             
@@ -370,7 +399,8 @@ import {
     newCustomer,
     removeCustomer,
     loadDemandPriceList,
-    getMessageList
+    getMessageList,
+    checkRepeateDemand
 } from '../../vuex/action'
 import Slide from '../plugin/slide';
 
@@ -387,7 +417,8 @@ export default {
             newCustomer,
             removeCustomer,
             loadDemandPriceList,
-            getMessageList
+            getMessageList,
+            checkRepeateDemand
         },
         getters: {
             userInfo: ({
@@ -439,6 +470,8 @@ export default {
                 page: 1,
             },
             comment: '',
+            customerName: '',
+            customerPhone: '',
             priceComment: '',
             destination: '',
             allweight: 0,
@@ -515,9 +548,12 @@ export default {
             const param = {demandNo: row.demandNo};
             this.demandDetailList(param)
                 .then(() => {
+                    this.destination = row.destination;
                     this.comment = row.comment;
                     this.priceComment = row.priceComment;
                     this.destination = row.destination;
+                    this.customerName = row.customerName;
+                    this.customerPhone = row.customerPhone;
                     var w = 0;
                     this.demandDetail.map((v) => {
                         w =  w + Number(Number(v.demandWeight).toFixed(2));
@@ -570,6 +606,15 @@ export default {
             const param = {demandNo: row.demandNo};
             this.dlDemandView2 = true;
             this.submitstate = 1;
+
+            //获取基本信息
+            this.destination = row.destination;
+            this.comment = row.comment;
+            this.priceComment = row.priceComment;
+            this.destination = row.destination;
+            this.customerName = row.customerName;
+            this.customerPhone = row.customerPhone;
+
             this.demandDetailList(param)
                 .then(() => {
                     this.feedbackPriceParam.demandNo = row.demandNo;
@@ -667,7 +712,7 @@ export default {
         switchTab() {
             this.searchDemand();
         },
-        submitDdemand() {
+        submitDdemand() { //提交需求
             if(!this.demandParams.demandDetails.length) {
                 this.$message({
                     message: `请添加规格`,
@@ -679,51 +724,60 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                if(!this.submitstate) {
-                    this.addToDemandList(this.demandParams)
-                        .then(rs => {
-                            this.demandParams.demandDetails = [];
-                            this.demandParams.destination = '';
-                            this.demandParams.customerName = '';
-                            this.demandParams.comment = '';
-                            this.demandParams.customerPhone = '';
-                            this.$message({
-                                message: `信息录入成功`,
-                                type: 'success'
-                            })
-                            setTimeout(()=>{
-                                this.loadDemandList(this.searchDeParam)
-                                    .then(() => {
-                                        this.loading = false;
-                                    });
-                                this.dlgDemandVisible = false;
-                            },100)
-                        })
-                } else {
-                    this.changeDemandList(this.demandParams)
-                        .then(rs => {
-                            this.demandParams.demandDetails = [];
-                            this.demandParams.destination = '';
-                            this.demandParams.customerName = '';
-                            this.demandParams.comment = '';
-                            this.demandParams.customerPhone = '';
-                            this.$message({
-                                message: `修改成功`,
-                                type: 'success'
-                            })
-                            setTimeout(()=>{
-                                this.loadDemandList(this.searchDeParam)
-                                    .then(() => {
-                                        this.loading = false;
-                                    });
-                                this.dlgDemandVisible = false;
-                            },100)
-                        })
-                }
-                    
-            });
-        
+            }).then(() => { //再提交之前先检查一下是否有重复需求
+                this.checkRepeateDemand(this.demandParams).then(rs => {
+                    this.confirmSubmit();
+                }, (data) => {
+                    this.$confirm('有重复需求，是否继续提交?','确认',{
+                        confirmButtonText: '继续',
+                        cancelButtonText: '不提交',
+                        type: 'warning'
+                    }).then(() => {
+                        this.confirmSubmit();
+                    })
+                })
+            })
+        },
+        confirmSubmit() { //确认提交需求
+            if(!this.submitstate) {
+                this.addToDemandList(this.demandParams).then(rs => {
+                    this.demandParams.demandDetails = [];
+                    this.demandParams.destination = '';
+                    this.demandParams.customerName = '';
+                    this.demandParams.comment = '';
+                    this.demandParams.customerPhone = '';
+                    this.$message({
+                        message: `信息录入成功`,
+                        type: 'success'
+                    })
+                    setTimeout(()=>{
+                        this.loadDemandList(this.searchDeParam)
+                            .then(() => {
+                                this.loading = false;
+                            });
+                        this.dlgDemandVisible = false;
+                    },100)
+                })
+            } else {
+                this.changeDemandList(this.demandParams).then(rs => {
+                    this.demandParams.demandDetails = [];
+                    this.demandParams.destination = '';
+                    this.demandParams.customerName = '';
+                    this.demandParams.comment = '';
+                    this.demandParams.customerPhone = '';
+                    this.$message({
+                        message: `修改成功`,
+                        type: 'success'
+                    })
+                    setTimeout(()=>{
+                        this.loadDemandList(this.searchDeParam)
+                            .then(() => {
+                                this.loading = false;
+                            });
+                        this.dlgDemandVisible = false;
+                    },100)
+                })
+            }
         },
         searchDemand() {
             this.loading = true;
@@ -770,7 +824,7 @@ export default {
         },
         exportDemandList(){
             var date = new Date().formatDate('yyyyMMdd');
-            window.open(`/zues/api/export/demandlist/需求列表.xls`);
+            window.open(`/zues/api/export/demandlist/需求列表.xls?demandUser=${this.searchDeParam.demandUser}&createTime=${this.searchDeParam.createTime}&customerName=${this.searchDeParam.customerName}`);
         },
         exportDemandDetailList() {
             var date = new Date().formatDate('yyyyMMdd');

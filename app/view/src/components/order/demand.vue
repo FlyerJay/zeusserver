@@ -129,6 +129,20 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
+                                <el-input v-model="customerName" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">客户名称</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="customerPhone" auto-complete="off" :readonly="activeName > 0">
+                                    <template slot="prepend">客户电话</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
@@ -176,6 +190,20 @@
                                 </el-input>
                             </el-col>
                         </el-row>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <el-row :gutter='10'>
+                            <el-col :span='12'>
+                                <el-input v-model="customerName" auto-complete="off" :readonly="true">
+                                    <template slot="prepend">客户名称</template>
+                                </el-input>
+                            </el-col>    
+                            <el-col :span='12'>
+                                <el-input v-model="customerPhone" auto-complete="off" :readonly="activeName > 0">
+                                    <template slot="prepend">客户电话</template>
+                                </el-input>
+                            </el-col>
+                        </el-row>    
                     </div>
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
@@ -256,6 +284,8 @@ export default {
             dlDemandView2: false,
             comment: '',
             priceComment: '',
+            customerName: '',
+            customerPhone: '',
             destination: '',
             allweight: 0,
             loading: true,
@@ -299,6 +329,8 @@ export default {
                     this.destination = row.destination;
                     this.comment = row.comment;
                     this.priceComment = row.priceComment;
+                    this.customerName = row.customerName;
+                    this.customerPhone = row.customerPhone;
                     var w = 0;
                     this.demandDetail.map((v) => {
                         w =  w + Number(Number(v.demandWeight).toFixed(2));

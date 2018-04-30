@@ -598,6 +598,34 @@ module.exports = app => {
                         }
                     }
                 }
+            },
+            * checkRepeate(options) { //检查重复需求
+                var demandWeight = 0; 
+                options.demandDetails.forEach( v => {
+                    demandWeight += (v.demandWeight - 0);
+                });
+                const isExist = yield this.findOne({
+                    where: {
+                        customerName: {
+                            $eq: options.customerName
+                        },
+                        demandWeight: {
+                            $eq: demandWeight
+                        }
+                    }
+                })
+                if(isExist) {
+                    return {
+                        code: -1,
+                        msg: "有重复需求",
+                        data: isExist
+                    }
+                }else{
+                    return {
+                        code: 200,
+                        msg: "可以添加的需求"
+                    }
+                }
             }
         }
     })
