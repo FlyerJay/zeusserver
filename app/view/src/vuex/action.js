@@ -1025,12 +1025,28 @@ export const showErrorMessage = ({ dispatch }, msg) => {
   });
 }
 
+//检查重复需求
 export const checkRepeateDemand = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/check', params)
   .then(function (response) {
     if (response.data.code === 200) {
       return Promise.resolve(response.data.data);
     } else if (response.data.code === -1) {
+      return Promise.reject(response.data);
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
+//批量查询
+export const batchQuery = ({ dispatch }, params) => {
+  return axios.post('/zues/api/batch/batch', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data);
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
       return Promise.reject(response.data);
     }
   }).catch(function(error){

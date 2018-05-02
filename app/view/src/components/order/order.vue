@@ -29,6 +29,11 @@
             name: '现货查询'
           },
           {
+            url: '/order/batchsearch',
+            icon: 'icon-good',
+            name: '现货查询'
+          },
+          {
             url: '/order/cart',
             icon: 'icon-cart',
             name: '购物车'
@@ -79,9 +84,15 @@
             const item = {
               url: '/order/search',
               icon: 'icon-good',
-              name: '现货查询'
+              name: '现货查询',
             };
-            this.topMenuData.push(item)
+            this.topMenuData.push(item);
+            const batchItem = {
+              url: '/order/batchsearch',
+              icon: 'icon-good',
+              name: '批量查询',
+            }
+            this.topMenuData.push(batchItem);
           }
           if (parseInt(this.userInfo.userRole.charAt(5))) {
             const itemArr = [{

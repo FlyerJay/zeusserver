@@ -47,6 +47,7 @@ module.exports = app => {
   app.post('/zues/api/price/adjust','price.adjust');
   //供应商现货
   app.get('/zues/api/product/list','product.list');
+  app.post('/zues/api/batch/batch','batch.batch');
   //购物车
   app.get('/zues/api/chart/list','chart.list');
   app.post('/zues/api/chart/addToChart','chart.addToChart');

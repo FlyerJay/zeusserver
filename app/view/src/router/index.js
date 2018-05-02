@@ -26,6 +26,7 @@ import Search from '../components/order/search'
 import Cart from '../components/order/cart'
 import Demand from '../components/order/demand'
 import DemandView from '../components/order/demandView'
+import BatchSearch from '../components/order/batchSearch'
 
 Vue.use(Router)
 
@@ -80,6 +81,10 @@ export default new Router({
         {
           path: 'demandview',
           component: DemandView
+        },
+        {
+          path: 'batchsearch',
+          component: BatchSearch
         }
       ]
     },
