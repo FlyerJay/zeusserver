@@ -59,14 +59,17 @@ module.exports = app => {
                 paramLines.forEach( (v,i)=> {
                     var vArr = v.split(/\s+/);
                     if(vArr[0]) {
-                        params[i] = {};
+                        var param = {};
                         let specArr = vArr[0].split("*");
                         specArr[2] = Number(specArr[2]).toFixed(2);
-                        params[i].spec = specArr.join("*");
-                        vArr[0] = params[i].spec;
-                        params[i].type = vArr[1] || '黑管';
-                        params[i].inventory = vArr[2] || '1';
-                        params[i].long = vArr[3] || 6;
+                        param.spec = specArr.join("*");
+                        vArr[0] = param.spec;
+                        param.type = vArr[1] || '黑管';
+                        param.inventory = vArr[2] || '1';
+                        param.long = vArr[3] || 6;
+                        if(param.spec) {
+                            params.push(param);
+                        }
                         let perimeterArr = vArr[0].split("*");
                         let perimeter = 2 * perimeterArr[0] + 2 * perimeterArr[1];
                         let land = Number(perimeterArr[2]);
@@ -115,7 +118,9 @@ module.exports = app => {
                 })
                 let formatResult = [];
                 resultArr.map((v, i) => {
-                    formatResult[i] = v[0];
+                    if(v) {
+                        formatResult.push(v[0]);
+                    }
                 })
                 for(var i = 0; i < formatResult.length; i++) {
                     if(formatResult[i].length == 0) {
@@ -125,14 +130,28 @@ module.exports = app => {
                         }
                     }
                 }
-                formatResult.map(v => {
+                formatResult.map((v,i) => {
                     v.map(vv => {
                         let spec = vv.spec;
                         vv.weight = indexs[spec].weight;
                         vv.totalPrice = Number((vv.weight * Number(vv.daPrice)).toFixed(2));
+                        vv.amount = params[i].inventory
                         return vv;
                     })
                 });
+                var customResolve = {};
+                var customResolveList = [];
+                formatResult.forEach(v => {
+                    v.forEach((v, i) => {
+                        if(i < 3) {
+                            customResolveList.push(v);
+                        }
+                    })
+                })
+                customResolve.name = '低价列表（自选）';
+                customResolve.list = customResolveList;
+                customResolve.supplierName = '--';
+                customResolve.price = '--';
                 var bestResolve = {};
                 var bestResolveList = [];
                 formatResult.forEach(v => {
@@ -177,7 +196,7 @@ module.exports = app => {
                     }
                 })
                 var result = {};
-                result.row = [bestResolve].concat(otherList);
+                result.row = [customResolve,bestResolve].concat(otherList);
                 result.totalCount = otherList.length + 1;
                 result.page = 1;
                 result.pageSize = 30;

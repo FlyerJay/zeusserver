@@ -51,6 +51,7 @@ module.exports = app => {
   //购物车
   app.get('/zues/api/chart/list','chart.list');
   app.post('/zues/api/chart/addToChart','chart.addToChart');
+  app.post('/zues/api/chart/addToChartBatch','chart.addToChartBatch');
   app.post('/zues/api/chart/remove','chart.remove');
   app.post('/zues/api/chart/update','chart.update');
   //地址

@@ -257,7 +257,6 @@ module.exports = app => {
                             Id: options.supplierInventoryId
                         }
                     })
-                    console.log($3[0][0]);
                     minPrice = $3[0][0].value - $3[0][0].benifit + $3[0][0].freight;
                     minSupplier = $3[0][0].supplierName;
                     minInventory = $3[0][0].inventoryAmount;
@@ -280,6 +279,39 @@ module.exports = app => {
                 return {
                     code:200,
                     msg:"添加购物车成功"
+                }
+            },
+            *batchAdd(options) {
+                let charts = options.charts;
+                var res = yield charts.map( async v => {
+                    var inventory = await app.model.SupplierInventory.findOne({
+                        where:{
+                            supplierInventoryId:{
+                                $eq: v.id
+                            }
+                        }
+                    })
+                    return this.create({
+                        userId: options.userId,
+                        comId: options.comId,
+                        spec: inventory.spec,
+                        type: inventory.type,
+                        supplierId: inventory.supplierId,
+                        chartAmount: v.amount || 1,
+                        chartAdjust: 0,
+                        long: inventory.long,
+                        createTime: new Date().getTime(),
+                        comment: '批量添加',
+                        minPrice: 0,
+                        minSupplier: 0 ,
+                        minInventory: 0 ,
+                    });
+                })
+                if(res) {
+                    return {
+                        code: 200,
+                        msg:"添加购物车成功"
+                    }
                 }
             },
             * update(options) {

@@ -26,11 +26,17 @@
             </el-table>
         </div>
         <el-dialog v-model="detailDialogShow" custom-class="o-detail">
-            <el-table :data="batchDetail" stripe v-loading.body="batchLoading" border>
+            <el-form :inline="false" :model="seachParams" class="demo-form-inline">
+                <el-form-item>
+                    <el-button type="warning" @click="addToChart" :loading="addLoading" class="search-bt">添加到购物车</el-button>
+                </el-form-item>
+            </el-form>
+            <el-table :data="batchDetail" stripe v-loading.body="batchLoading" border @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width=""></el-table-column>
                 <el-table-column prop="spec" label="规格" width="140px"></el-table-column>
                 <el-table-column prop="type" label="类型"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
-                <el-table-column prop="orderAmount" label="库存数量"></el-table-column>
+                <el-table-column prop="inventoryAmount" label="库存数量"></el-table-column>
                 <el-table-column prop="weight" label="需求重量" :formatter="weightFormatter"></el-table-column>
                 <el-table-column prop="daPrice" label="到岸单价"></el-table-column>
                 <el-table-column prop="totalPrice" label="到岸总价" width="120px"></el-table-column>
@@ -46,11 +52,12 @@
     }
 </style>
 <script>
-    import  { batchQuery } from "../../vuex/action";
+    import  { batchQuery, addToChartBatch } from "../../vuex/action";
     export default {
         vuex: {
             actions: {
-                batchQuery
+                batchQuery,
+                addToChartBatch
             },
             getters: {
                 userInfo: ({
@@ -64,12 +71,14 @@
                     searchData: '',
                 },
                 loading: false,
+                addLoading: false,
                 searchResult: {
                     row: [],
                 },
                 detailDialogShow: false,
                 batchLoading: false,
                 batchDetail: [],
+                selects: []
             }
         },
         methods: {
@@ -95,6 +104,33 @@
             },
             weightFormatter(row, column) {
                 return Number(row.weight).toFixed(2) + "吨";
+            },
+            handleSelectionChange(val) {
+                this.selects = val;
+                console.log(val);
+            },
+            addToChart() {
+                if(this.selects.length == 0) {
+                    this.$message({
+                        message: '选择不能为空',
+                        type: 'warning'
+                    })
+                    return;
+                }
+                var param = {};
+                param.charts = [];
+                this.selects.forEach(v => {
+                    var data = {};
+                    data.id = v.supplierInventoryId;
+                    data.amount = v.amount;
+                    param.charts.push(data);
+                });
+                this.addLoading = true;
+                this.addToChartBatch(param).then(rs => {
+                    this.addLoading = false;
+                }, err => {
+                    this.addLoading = true;
+                })
             }
         }
     }

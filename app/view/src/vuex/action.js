@@ -204,6 +204,22 @@ export const addTocart = ({ dispatch }, params) => {
   });
 }
 
+//批量添加到购物车
+export const addToChartBatch = ({ dispatch }, params) => {
+  return axios.post('/zues/api/chart/addToChartBatch', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      dispatch('UPDATE_ORDERFORM', 'cartList', response.data.data)
+      return Promise.resolve();
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg);
+      return Promise.reject();
+    }
+  }).catch(function(error){
+    return Promise.reject();
+  });
+}
+
 //修改购物车信息
 export const updateCart = ({dispatch},params) => {
   return axios.post('/zues/api/chart/update',params)
