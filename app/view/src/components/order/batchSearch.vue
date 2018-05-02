@@ -85,6 +85,8 @@
                 this.batchQuery(this.seachParams).then(rs => {
                     this.loading = false;
                     this.searchResult = rs;
+                }, err => {
+                    this.loading = false;
                 });
             },
             viewDetail(index, row) {

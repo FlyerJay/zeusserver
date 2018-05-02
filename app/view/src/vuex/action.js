@@ -1047,7 +1047,7 @@ export const batchQuery = ({ dispatch }, params) => {
       return Promise.resolve(response.data.data);
     } else if (response.data.code === -1) {
       showErrorMessage({ dispatch }, response.data.msg);
-      return Promise.reject(response.data);
+      return Promise.reject(response.data.msg);
     }
   }).catch(function(error){
     return Promise.reject();

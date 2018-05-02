@@ -58,19 +58,24 @@ module.exports = app => {
                 let weights = {};
                 paramLines.forEach( (v,i)=> {
                     var vArr = v.split(/\s+/);
-                    params[i] = {};
-                    params[i].spec = vArr[0] || '';
-                    params[i].type = vArr[1] || '';
-                    params[i].inventory = vArr[2] || '';
-                    params[i].long = vArr[3] || '';
-                    let specArr = vArr[0].split("*");
-                    let perimeter = 2 * specArr[0] + 2 * specArr[1];
-                    let land = Number(specArr[2]);
-                    let weight = (perimeter / 3.14 - land) * land * (specArr[3] || 6) * 0.02466 * Number(vArr[2]) / 1000;
-                    indexs[vArr[0]] = {
-                        index: i,
-                        weight: weight
-                    };
+                    if(vArr[0]) {
+                        params[i] = {};
+                        let specArr = vArr[0].split("*");
+                        specArr[2] = Number(specArr[2]).toFixed(2);
+                        params[i].spec = specArr.join("*");
+                        vArr[0] = params[i].spec;
+                        params[i].type = vArr[1] || '黑管';
+                        params[i].inventory = vArr[2] || '1';
+                        params[i].long = vArr[3] || 6;
+                        let perimeterArr = vArr[0].split("*");
+                        let perimeter = 2 * perimeterArr[0] + 2 * perimeterArr[1];
+                        let land = Number(perimeterArr[2]);
+                        let weight = (perimeter / 3.14 - land) * land * (perimeterArr[3] || 6) * 0.02466 * Number(vArr[2]) / 1000;
+                        indexs[vArr[0]] = {
+                            index: i,
+                            weight: weight
+                        };
+                    }
                 });
                 var resultArr = yield params.map( (v,i) => {
                     return app.model.query(`SELECT si.supplierInventoryId,si.spec,
@@ -112,6 +117,14 @@ module.exports = app => {
                 resultArr.map((v, i) => {
                     formatResult[i] = v[0];
                 })
+                for(var i = 0; i < formatResult.length; i++) {
+                    if(formatResult[i].length == 0) {
+                        return {
+                            code: -1,
+                            msg: `规格为${params[i].spec}找不到供应商`
+                        }
+                    }
+                }
                 formatResult.map(v => {
                     v.map(vv => {
                         let spec = vv.spec;
@@ -142,7 +155,7 @@ module.exports = app => {
                 var keys = Object.keys(cache);
                 var otherList = [];
                 keys.forEach(key => {
-                    if(cache[key] == paramLines.length && otherList.length < 5) {
+                    if(cache[key] == params.length && otherList.length < 5) {
                         let otherResolve = {};
                         let otherResolveList = [];
                         formatResult.forEach(v => {
