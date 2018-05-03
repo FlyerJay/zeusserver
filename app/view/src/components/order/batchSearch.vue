@@ -34,11 +34,13 @@
             <el-table :data="batchDetail" stripe v-loading.body="batchLoading" border @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width=""></el-table-column>
                 <el-table-column prop="spec" label="规格" width="140px"></el-table-column>
+                <el-table-column prop="long" label="长度" width="140px"></el-table-column>
+                <el-table-column prop="amount" label="需求数量" width="120px"></el-table-column>
                 <el-table-column prop="type" label="类型"></el-table-column>
                 <el-table-column prop="supplierName" label="供应商" width="100px"></el-table-column>
-                <el-table-column prop="inventoryAmount" label="库存数量"></el-table-column>
-                <el-table-column prop="weight" label="需求重量" :formatter="weightFormatter"></el-table-column>
-                <el-table-column prop="daPrice" label="到岸单价"></el-table-column>
+                <el-table-column prop="inventoryAmount" label="库存数量" width="120px"></el-table-column>
+                <el-table-column prop="weight" label="需求重量" :formatter="weightFormatter" width="120px"></el-table-column>
+                <el-table-column prop="daPrice" label="到岸单价" width="120px"></el-table-column>
                 <el-table-column prop="totalPrice" label="到岸总价" width="120px"></el-table-column>
             </el-table>
         </el-dialog>

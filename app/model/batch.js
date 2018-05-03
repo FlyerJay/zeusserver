@@ -56,28 +56,71 @@ module.exports = app => {
                 let params = [];
                 let indexs = {};
                 let weights = {};
+                var j = 0;
                 paramLines.forEach( (v,i)=> {
                     var vArr = v.split(/\s+/);
+                    //处理复杂规格逻辑
                     if(vArr[0]) {
                         var param = {};
                         let specArr = vArr[0].split("*");
-                        specArr[2] = Number(specArr[2]).toFixed(2);
-                        param.spec = specArr.join("*");
-                        vArr[0] = param.spec;
-                        param.type = vArr[1] || '黑管';
-                        param.inventory = vArr[2] || '1';
-                        param.long = vArr[3] || 6;
-                        if(param.spec) {
-                            params.push(param);
+                        //处理长度
+                        if(specArr[3]) {
+                            param.long = specArr[3].match(/\d+/)[0] || 6;
+                        }else{
+                            param.long = 6;
                         }
-                        let perimeterArr = vArr[0].split("*");
-                        let perimeter = 2 * perimeterArr[0] + 2 * perimeterArr[1];
-                        let land = Number(perimeterArr[2]);
-                        let weight = (perimeter / 3.14 - land) * land * (perimeterArr[3] || 6) * 0.02466 * Number(vArr[2]) / 1000;
-                        indexs[vArr[0]] = {
-                            index: i,
-                            weight: weight
-                        };
+                        //处理需求数量和类型
+                        if(vArr[1]) {
+                            if(/\d+/.test(vArr[1])) {
+                                param.inventory = vArr[1].match(/\d+/)[0];
+                                param.type = vArr[2] || '黑管';
+                            }else{
+                                param.inventory = vArr[2].match(/\d+/)[0];
+                                param.type = vArr[1] || '黑管';
+                            }
+                        }else{
+                            param.type = '黑管';
+                            param.inventory = 1;
+                        }
+                        //处理多壁厚中间以/或\分割
+                        var landArr = specArr[2].split(/(?:\/|\\)/);
+                        if(landArr.length > 1) {
+                            landArr.forEach(l => {
+                                let newParam = {};
+                                newParam.type = param.type;
+                                newParam.long = param.long;
+                                newParam.inventory = param.inventory;
+                                l = Number(l).toFixed(2);
+                                newParam.spec = (specArr.slice(0, 2)).concat([l]).join("*");
+                                if(newParam.spec) {
+                                    params.push(newParam);
+                                }
+                                let perimeterArr = newParam.spec.split("*");
+                                let perimeter = 2 * perimeterArr[0] + 2 * perimeterArr[1];
+                                let land = Number(perimeterArr[2]);
+                                let weight = (perimeter / 3.14 - land) * land * (perimeterArr[3] || 6) * 0.02466 * Number(newParam.inventory) / 1000;
+                                indexs[newParam.spec] = {
+                                    index: i + j,
+                                    weight: weight
+                                };
+                                j++
+                            })
+                            j--;
+                        }else{
+                            specArr[2] = Number(specArr[2]).toFixed(2);
+                            param.spec = specArr.slice(0,3).join("*");
+                            if(param.spec) {
+                                params.push(param);
+                            }
+                            let perimeterArr = param.spec.split("*");
+                            let perimeter = 2 * perimeterArr[0] + 2 * perimeterArr[1];
+                            let land = Number(perimeterArr[2]);
+                            let weight = (perimeter / 3.14 - land) * land * (perimeterArr[3] || 6) * 0.02466 * Number(param.inventory) / 1000;
+                            indexs[param.spec] = {
+                                index: i + j,
+                                weight: weight
+                            };
+                        }
                     }
                 });
                 var resultArr = yield params.map( (v,i) => {
@@ -133,7 +176,7 @@ module.exports = app => {
                 formatResult.map((v,i) => {
                     v.map(vv => {
                         let spec = vv.spec;
-                        vv.weight = indexs[spec].weight;
+                        vv.weight = indexs[spec].weight * Number(vv.perAmount);
                         vv.totalPrice = Number((vv.weight * Number(vv.daPrice)).toFixed(2));
                         vv.amount = params[i].inventory
                         return vv;

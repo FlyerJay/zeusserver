@@ -317,7 +317,7 @@ export default {
             return status[row.state];
         },
         viewDetail(row) {
-            if(this.activeName > 0){
+            if(this.activeName > 1){
                 this.dlDemandView2 = true;
             }else{
                 this.dlDemandView = true;
