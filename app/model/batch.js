@@ -75,7 +75,7 @@ module.exports = app => {
                                 param.inventory = vArr[1].match(/\d+/)[0];
                                 param.type = vArr[2] || '黑管';
                             }else{
-                                param.inventory = vArr[2].match(/\d+/)[0];
+                                param.inventory = vArr[2] ? vArr[2].match(/\d+/)[0] : 1;
                                 param.type = vArr[1] || '黑管';
                             }
                         }else{
