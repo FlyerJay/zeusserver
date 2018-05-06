@@ -89,7 +89,7 @@
             this.topMenuData.push(item);
             const batchItem = {
               url: '/order/batchsearch',
-              icon: 'icon-good',
+              icon: 'icon-batch',
               name: '批量查询',
             }
             this.topMenuData.push(batchItem);

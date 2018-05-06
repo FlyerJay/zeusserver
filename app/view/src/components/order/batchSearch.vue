@@ -130,6 +130,10 @@
                 this.addLoading = true;
                 this.addToChartBatch(param).then(rs => {
                     this.addLoading = false;
+                    this.$message({
+                        message: "添加购物车成功",
+                        type: 'success'
+                    })
                 }, err => {
                     this.addLoading = true;
                 })
