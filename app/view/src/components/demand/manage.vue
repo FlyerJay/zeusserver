@@ -117,38 +117,64 @@
                     </el-table>
                     <div class="clearfix" style="margin-top:10px;">
                         <el-row :gutter='11'>
-                            <el-col :span='7'>
+                            <el-col :span='10'>
                                 <el-input v-model="specParams.spec" auto-complete="off" placeholder="例:50*50*3.0*6">
                                     <template slot="prepend">规格</template>
                                 </el-input>
                             </el-col>
-                            <el-col :span='4'>
+                            <el-col :span='14'>
                                 <div class="select-control">
                                     <el-row>
-                                        <el-col :span="10"><div class="select-prepend">类别</div></el-col>
-                                        <el-col :span="14">
-                                            <el-input v-model="specParams.type" placeholder="">
+                                        <el-col :span="4"><div class="select-prepend">类别</div></el-col>
+                                        <el-col :span="20">
+                                            <el-select v-model="specParams.type">
+                                                <el-option value="">全部</el-option>
+                                                <el-option value="方矩管">方矩管</el-option>
+                                                <el-option value="镀锌带方矩管">镀锌带方矩管</el-option>
+                                                <el-option value="热镀锌方矩管">热镀锌方矩管</el-option>
+                                                <el-option value="圆管">圆管</el-option>
+                                                <el-option value="镀锌带圆管">镀锌带圆管</el-option>
+                                                <el-option value="热镀锌圆管">热镀锌圆管</el-option>
+                                                <el-option value="镀锌角钢">镀锌角钢</el-option>
+                                                <el-option value="镀锌槽钢">镀锌槽钢</el-option>
+                                                <el-option value="其他">其他</el-option>
+                                            </el-select>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-col>
+                        </el-row>
+                    </div>    
+                    <div class="clearfix" style="margin-top:10px;">    
+                        <el-row :gutter='11'>    
+                            <el-col :span='10'>
+                                <div class="select-control">
+                                    <el-row>
+                                        <el-col :span="4"><div class="select-prepend">数量</div></el-col>
+                                        <el-col :span="20">
+                                            <el-input v-model="specParams.demandWeight" auto-complete="off">
+                                                <template slot="append">
+                                                    <el-select v-model="specParams.demandAmount">
+                                                        <el-option value=""></el-option>
+                                                        <el-option value="支">支</el-option>
+                                                        <el-option value="件">件</el-option>
+                                                    </el-select>
+                                                </template>
                                             </el-input>
                                         </el-col>
                                     </el-row>
                                 </div>
                             </el-col>
-                            <el-col :span='5'>
-                                <el-input v-model="specParams.demandAmount" @change="inputDemanAmount" auto-complete="off">
-                                    <template slot="prepend">数量</template>
-                                    <template slot="append">支</template>
-                                </el-input>
-                            </el-col>
-                            <el-col :span='5'>
+                            <el-col :span='10'>
                                 <el-input v-model="specParams.demandWeight" auto-complete="off">
                                     <template slot="prepend">重量</template>
                                     <template slot="append">吨</template>
                                 </el-input>
                             </el-col>
-                            <el-col :span='3'>
+                            <el-col :span='4'>
                                 <el-button type="warning" style="width:100%" @click="addSpec">添加规格</el-button>
                             </el-col>
-                        </el-row>
+                        </el-row>    
                     </div>
                 </div>
                 <div class="clearfix" style="margin-top: 16px;">
