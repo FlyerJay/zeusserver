@@ -7,6 +7,9 @@
             <el-form-item label="客户名称：">
                 <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
             </el-form-item>
+            <el-form-item label="规格">
+                <el-input v-model="searchDeParam.spec" placeholder="输入规格"></el-input>
+            </el-form-item>
             <el-form-item label="提交日期：">
                 <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期">
                 </el-date-picker>
@@ -492,6 +495,7 @@ export default {
                 createTime: '',
                 endTime: '',
                 customName: '',
+                spec: '',
                 state: 0,
                 page: 1,
             },

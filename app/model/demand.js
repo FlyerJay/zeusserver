@@ -563,39 +563,64 @@ module.exports = app => {
                         }
                     }
                 }else{
-                    const list = yield this.findAndCountAll({
-                        offset: !options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
-                        limit: options.pageSize?options.pageSize:15,
-                        order: 'feedbackTime DESC , priceTime DESC , createTime ASC',
-                        where:{
-                            comId:{
-                                $eq:options.comId
-                            },
-                            userId: {
-                                $like: options.demandUser ? `%${options.demandUser}%` : '%%'
-                            },
-                            createTime:{
-                                $between:[options.createTime?new Date(options.createTime).getTime() - 2.88e7:0,options.endTime?new Date(options.endTime).getTime() + 5.86e7:99999999999999999]
-                            },
-                            state: (function(){
-                                return options.state ? {
-                                    $eq: options.state
-                                } : '';
-                            })(),
-                            customerName:{
-                                $like:options.customName ? `%${options.customName}%` : '%%'
-                            }
+                    const [$1, $2] = yield [app.model.query(`SELECT d.* FROM demand d
+                        INNER JOIN demand_detail dd
+                        ON dd.demandNo = d.demandNo
+                        AND dd.spec LIKE :spec
+                        WHERE d.comId = :comId 
+                        AND d.userId LIKE :userId 
+                        AND d.createTime BETWEEN :startTime AND :endTime 
+                        AND (d.state = :state OR :state = '') 
+                        AND d.customerName LIKE :customerName 
+                        ORDER BY feedbackTime DESC, priceTime DESC, createTime ASC LIMIT :start, :offset`, {
+                        replacements: {
+                            comId: options.comId,
+                            spec: options.spec ? `%${options.spec}%` : '%%',
+                            userId: options.demandUser ? `%${options.demandUser}%` : '%%',
+                            startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
+                            endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 99999999999999999,
+                            state: options.state,
+                            customerName:options.customName ? `%${options.customName}%` : '%%',
+                            start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
+                            offset:options.pageSize?options.pageSize:15,
                         }
-                    })
+                    }),
+                    app.model.query(`SELECT count(1) as count FROM demand d 
+                        INNER JOIN demand_detail dd
+                        ON dd.demandNo = d.demandNo
+                        AND dd.spec LIKE :spec
+                        WHERE d.comId = :comId 
+                        AND d.userId LIKE :userId 
+                        AND d.createTime BETWEEN :startTime AND :endTime 
+                        AND (d.state = :state OR :state = '') 
+                        AND d.customerName LIKE :customerName`, {
+                        replacements: {
+                            comId: options.comId,
+                            userId: options.demandUser ? `%${options.demandUser}%` : '%%',
+                            spec: options.spec ? `%${options.spec}%` : '%%',
+                            startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
+                            endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 99999999999999999,
+                            state: options.state,
+                            customerName:options.customName ? `%${options.customName}%` : '%%',
+                        }
+                    })];
+                    if(!$1[0] || $1[0].length === 0) return {
+                        code:200,
+                        msg:"数据为空",
+                        data:{
+                            count:0,
+                            row:[]
+                        }
+                    }
+                    let result= {};
+                    result.row = $1[0];
+                    result.totalCount = $2[0][0].count;
+                    result.page = options.page?options.page:0;
+                    result.pageSize = options.pageSize?options.pageSize:15;
                     return {
                         code:200,
-                        msg:"查询数据成功",
-                        data:{
-                            totalCount:list.count,
-                            row:list.rows,
-                            page:options.page?options.page:1,
-                            pageSize:options.pageSize?options.pageSize:15
-                        }
+                        msg:"查询成功",
+                        data:result,
                     }
                 }
             },
