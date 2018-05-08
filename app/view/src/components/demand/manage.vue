@@ -719,7 +719,7 @@ export default {
             return "未报价"
         },
         addSpec() {
-            if(!this.specParams.spec || !this.specParams.demandAmount || !this.specParams.type || !this.specParams.demandWeight) {
+            if(!this.specParams.spec || (!this.specParams.demandAmount && !this.specParams.demandWeight) || !this.specParams.type ) {
                 this.$message({
                     message: `请填写规格明细`,
                     type: 'warning'
