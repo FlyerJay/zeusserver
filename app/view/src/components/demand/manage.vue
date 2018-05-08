@@ -1,21 +1,21 @@
 <template>
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
-            <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称"></el-input>
+            <el-form-item label="销售：" size='mini'>
+                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称" style="width: 113px;"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
-                <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
+                <el-input v-model="searchDeParam.customName" placeholder="输入名称" style="width: 113px;"></el-input>
             </el-form-item>
             <el-form-item label="规格">
-                <el-input v-model="searchDeParam.spec" placeholder="输入规格"></el-input>
+                <el-input v-model="searchDeParam.spec" placeholder="输入规格" style="width: 125px;"></el-input>
             </el-form-item>
             <el-form-item label="提交日期：">
-                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期">
+                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期" style="width: 140px;">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="-">
-                <el-date-picker v-model="searchDeParam.endTime" type="date" placeholder="结束日期">
+                <el-date-picker v-model="searchDeParam.endTime" type="date" placeholder="结束日期" style="width: 140px;">
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -121,11 +121,6 @@
                     <div class="clearfix" style="margin-top:10px;">
                         <el-row :gutter='11'>
                             <el-col :span='10'>
-                                <el-input v-model="specParams.spec" auto-complete="off" placeholder="例:50*50*3.0*6">
-                                    <template slot="prepend">规格</template>
-                                </el-input>
-                            </el-col>
-                            <el-col :span='14'>
                                 <div class="select-control">
                                     <el-row>
                                         <el-col :span="4"><div class="select-prepend">类别</div></el-col>
@@ -144,6 +139,11 @@
                                         </el-col>
                                     </el-row>
                                 </div>
+                            </el-col>
+                            <el-col :span='10'>
+                                <el-input v-model="specParams.spec" auto-complete="off" placeholder="例:50*50*3.0*6">
+                                    <template slot="prepend">规格</template>
+                                </el-input>
                             </el-col>
                         </el-row>
                     </div>    
