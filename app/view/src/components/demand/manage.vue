@@ -130,8 +130,7 @@
                                     <el-row>
                                         <el-col :span="4"><div class="select-prepend">类别</div></el-col>
                                         <el-col :span="20">
-                                            <el-select v-model="specParams.type">
-                                                <el-option value="">全部</el-option>
+                                            <el-select v-model="specParams.type" placeholder="请选择">
                                                 <el-option value="方矩管">方矩管</el-option>
                                                 <el-option value="镀锌带方矩管">镀锌带方矩管</el-option>
                                                 <el-option value="热镀锌方矩管">热镀锌方矩管</el-option>
@@ -154,16 +153,15 @@
                                 <div class="select-control">
                                     <el-row>
                                         <el-col :span="4"><div class="select-prepend">数量</div></el-col>
-                                        <el-col :span="20">
-                                            <el-input v-model="specParams.demandWeight" auto-complete="off">
-                                                <template slot="append">
-                                                    <el-select v-model="specParams.demandAmount">
-                                                        <el-option value=""></el-option>
-                                                        <el-option value="支">支</el-option>
-                                                        <el-option value="件">件</el-option>
-                                                    </el-select>
-                                                </template>
+                                        <el-col :span="10">
+                                            <el-input v-model="specParams.demandAmount" auto-complete="off">
                                             </el-input>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-select v-model="specParams.unit" placeholder="请选择">
+                                                <el-option value="支">支</el-option>
+                                                <el-option value="件">件</el-option>
+                                            </el-select>
                                         </el-col>
                                     </el-row>
                                 </div>
@@ -470,6 +468,7 @@ export default {
             specParams: {
                 spec: '',
                 type: '',
+                unit: '',
                 demandAmount: '',
                 demandWeight: ''
             },
@@ -837,7 +836,7 @@ export default {
                 });
             });
         },
-        weightFormatter(spec, demandcount) {
+        weightSquareFormatter(spec, demandcount) {
             if (!spec) {
                 return 0
             }
@@ -848,6 +847,24 @@ export default {
             const long = Number(specArr[3]) ? Number(specArr[3]) : 6;
             const perimeter = 2 * height + 2 * width;
             this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * long * 0.02466 * demandcount / 1000).toFixed(2);
+        },
+        weightRoundFormatter(spec, demandcount) {
+            if (!spec) {
+                return 0
+            }
+            const specArr = spec.split('*');
+            const perimeter = Number(specArr[0]);
+            const land = Number(specArr[1]);
+            const long = Number(specArr[2]) ? Number(specArr[2]) : 6;
+            this.specParams.demandWeight = (perimeter * land * long * 0.02466 * demandcount / 1000).toFixed(2);
+        },
+        weightAngleFormatter(spec, demandcount) {
+            if (!spec) {
+                return 0
+            }
+            const specArr = spec.split('#');
+            const weight = specArr[1].replace(/kg/, '');
+            this.specParams.demandWeight = (Number(weight) * demandcount / 1000).toFixed(2);
         },
         exportDemand(){
             window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`);
@@ -905,8 +922,24 @@ export default {
             this.removeCustomer({customerId});
         },
         inputDemanAmount() {
-            this.weightFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+            if(this.specParams.type.indexOf('圆管') > -1) {
+                this.weightRoundFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+            } else if (this.specParams.type.indexOf('方矩管') > -1){
+                this.weightSquareFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+            } else if (this.specParams.type.indexOf('角') > -1 || this.specParams.type.indexOf('槽') > -1) {
+                this.weightAngleFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+            }
         }
+    },
+    watch: {
+      specParams: {
+        handler: function (val, oldVal) {
+            if(val.unit === '支' && val.demandAmount && val.spec) {
+                this.inputDemanAmount()
+            }
+        },
+        deep: true
+       }
     },
     mounted: function () {
         this.loading = true;
