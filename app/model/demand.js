@@ -570,11 +570,13 @@ module.exports = app => {
                         WHERE d.comId = :comId 
                         AND d.userId LIKE :userId 
                         AND d.createTime BETWEEN :startTime AND :endTime 
-                        AND (d.state = :state OR :state = '') 
+                        AND (:demandNo <> '' OR (d.state = :state OR :state = '')) 
+                        AND (d.demandNo = :demandNo OR :demandNo = '')
                         AND d.customerName LIKE :customerName 
                         ORDER BY feedbackTime DESC, priceTime DESC, createTime ASC LIMIT :start, :offset`, {
                         replacements: {
                             comId: options.comId,
+                            demandNo: options.demandNo || '',
                             spec: options.spec ? `%${options.spec}%` : '%%',
                             userId: options.demandUser ? `%${options.demandUser}%` : '%%',
                             startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
@@ -629,6 +631,8 @@ module.exports = app => {
                 options.demandDetails.forEach( v => {
                     demandWeight += (v.demandWeight - 0);
                 });
+                var now = new Date();
+                var today = now.getFullYear() + '-' + ((now.getMonth() + 1) > 9 ? (now.getMonth() + 1) : ('0' + (now.getMonth() + 1))) + '-' + (now.getDate() > 9 ? now.getDate() : ('0' + now.getDate()));
                 const isExist = yield this.findOne({
                     where: {
                         customerName: {
@@ -636,6 +640,9 @@ module.exports = app => {
                         },
                         demandWeight: {
                             $eq: demandWeight
+                        },
+                        createTime: {
+                            $between: [new Date(today).getTime() - 2.88e7, new Date(today).getTime() + 5.86e7]
                         }
                     }
                 })

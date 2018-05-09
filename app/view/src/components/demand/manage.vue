@@ -755,15 +755,17 @@ export default {
                 type: 'warning'
             }).then(() => { //再提交之前先检查一下是否有重复需求
                 this.checkRepeateDemand(this.demandParams).then(rs => {
-                    this.confirmSubmit();
-                }, (data) => {
                     this.$confirm('有重复需求，是否继续提交?','确认',{
                         confirmButtonText: '继续',
-                        cancelButtonText: '不提交',
+                        cancelButtonText: '查看详情',
                         type: 'warning'
                     }).then(() => {
                         this.confirmSubmit();
+                    }, ()=> {
+                        window.open("/#/demand/manage?demandNo=" + rs.data.demandNo, "_blank")
                     })
+                }, (rs) => {
+                    this.confirmSubmit();
                 })
             })
         },
@@ -943,9 +945,16 @@ export default {
     },
     mounted: function () {
         this.loading = true;
-        this.loadDemandList(this.searchDeParam).then(() => {
-            this.loading = false;
-        });
+        var demandNo = this.$route.query.demandNo;
+        if(demandNo) {
+            this.loadDemandList(Object.assign(this.searchDeParam, {demandNo: demandNo})).then(() => {
+                this.loading = false;
+            });
+        }else{
+            this.loadDemandList(this.searchDeParam).then(() => {
+                this.loading = false;
+            });
+        }
         var self = this;
         document.onkeyup = function(event) {
             event = event || window.event;

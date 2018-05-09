@@ -1045,9 +1045,10 @@ export const showErrorMessage = ({ dispatch }, msg) => {
 export const checkRepeateDemand = ({ dispatch }, params) => {
   return axios.post('/zues/api/demand/check', params)
   .then(function (response) {
-    if (response.data.code === 200) {
-      return Promise.resolve(response.data.data);
-    } else if (response.data.code === -1) {
+    if (response.data.code === -1) {
+      return Promise.resolve(response.data);
+    } else if (response.data.code === 200) {
+      console.log(response.data);
       return Promise.reject(response.data);
     }
   }).catch(function(error){
