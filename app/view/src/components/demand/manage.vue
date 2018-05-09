@@ -728,7 +728,7 @@ export default {
             }
             var specObj = {
                 spec: this.specParams.spec,
-                demandAmount: this.specParams.demandAmount,
+                demandAmount: this.specParams.demandAmount + this.specParams.unit,
                 type: this.specParams.type,
                 demandWeight: this.specParams.demandWeight
             }

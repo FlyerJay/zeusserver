@@ -34,7 +34,7 @@ module.exports = app => {
             comment:"类型"
         },
         demandAmount: {
-            type: INTEGER,
+            type: STRING(11),
             allowNull: false,
             comment:"需求件数"
         },

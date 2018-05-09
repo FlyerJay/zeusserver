@@ -209,10 +209,10 @@ module.exports = app => {
                                 demandNo: randomNo,
                                 spec: v.spec,
                                 type:v.type,
-                                demandAmount:Number(v.demandAmount) || 0,
+                                demandAmount: v.demandAmount || '1支',
                                 perAmount: Number(v.perAmount) || 100,
-                                factoryPrice:Number(v.factoryPrice) || 0,
-                                demandWeight:Number(v.demandWeight) || 0,
+                                factoryPrice: Number(v.factoryPrice) || 0,
+                                demandWeight: Number(v.demandWeight) || 0,
                                 freight: Number(v.freight) || 0,
                             },{transaction:t})
                         }));
@@ -259,10 +259,10 @@ module.exports = app => {
                                 demandNo: randomNo,
                                 spec: v.spec,
                                 type:v.type,
-                                demandAmount:Number(v.demandAmount) || 0,
+                                demandAmount:v.demandAmount || '1支',
                                 perAmount: Number(v.perAmount) || 100,
                                 factoryPrice: Number(v.factoryPrice) || 0,
-                                demandWeight:Number(v.demandWeight) || 0,
+                                demandWeight: Number(v.demandWeight) || 0,
                                 freight: Number(v.freight) || 0,
                             },{transaction:t})
                         }));
