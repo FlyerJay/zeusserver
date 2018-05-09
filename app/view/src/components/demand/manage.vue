@@ -263,7 +263,7 @@
                     <el-table :data="demandDetail" border style="width: 100%">
                         <el-table-column label="规格" prop='spec' width="120px"></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
-                        <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
+                        <el-table-column label="数量" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
                         <el-table-column label="业务报价" prop='feedbackPrice'></el-table-column>
                         <el-table-column label="出厂价" prop='factoryPrice'></el-table-column>
@@ -934,14 +934,29 @@ export default {
         }
     },
     watch: {
-      specParams: {
-        handler: function (val, oldVal) {
-            if(val.unit === '支' && val.demandAmount && val.spec) {
+        'specParams.unit': function(val){
+            if(val === '支' && this.specParams.demandAmount && this.specParams.spec) {
+                this.inputDemanAmount();
+            } else {
+                this.specParams.demandWeight = '';
+            }
+        },
+        'specParams.spec': function(val) {
+            if(this.specParams.unit === '支' && this.specParams.demandAmount && val) {
                 this.inputDemanAmount()
             }
         },
-        deep: true
-       }
+        'specParams.type': function(val, oldval) {
+            this.specParams.spec = '';
+            this.specParams.demandAmount = '';
+            this.specParams.demandWeight = '';
+            this.specParams.unit === '支';
+        },
+        'specParams.demandAmount': function(val) {
+            if(this.specParams.unit === '支' && this.specParams.demandAmount && this.specParams.spec) {
+                this.inputDemanAmount()
+            }
+        }
     },
     mounted: function () {
         this.loading = true;
