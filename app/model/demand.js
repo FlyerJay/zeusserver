@@ -637,9 +637,6 @@ module.exports = app => {
                 var today = now.getFullYear() + '-' + ((now.getMonth() + 1) > 9 ? (now.getMonth() + 1) : ('0' + (now.getMonth() + 1))) + '-' + (now.getDate() > 9 ? now.getDate() : ('0' + now.getDate()));
                 const isExist = yield this.findOne({
                     where: {
-                        customerName: {
-                            $eq: options.customerName
-                        },
                         demandWeight: {
                             $eq: demandWeight
                         },
