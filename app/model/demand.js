@@ -564,9 +564,9 @@ module.exports = app => {
                     }
                 }else{
                     const [$1, $2] = yield [app.model.query(`SELECT d.* FROM demand d
-                        INNER JOIN demand_detail dd
-                        ON dd.demandNo = d.demandNo
-                        AND dd.spec LIKE :spec
+                        INNER JOIN (SELECT dd.demandNo from  demand_detail dd
+                        WHERE dd.spec LIKE :spec GROUP BY dd.demandNo) as ddd
+                        ON ddd.demandNo = d.demandNo
                         WHERE d.comId = :comId 
                         AND d.userId LIKE :userId 
                         AND d.createTime BETWEEN :startTime AND :endTime 
@@ -588,16 +588,18 @@ module.exports = app => {
                         }
                     }),
                     app.model.query(`SELECT count(1) as count FROM demand d 
-                        INNER JOIN demand_detail dd
-                        ON dd.demandNo = d.demandNo
-                        AND dd.spec LIKE :spec
+                        INNER JOIN (SELECT dd.demandNo from  demand_detail dd
+                        WHERE dd.spec LIKE :spec GROUP BY dd.demandNo) as ddd
+                        ON ddd.demandNo = d.demandNo
                         WHERE d.comId = :comId 
                         AND d.userId LIKE :userId 
                         AND d.createTime BETWEEN :startTime AND :endTime 
-                        AND (d.state = :state OR :state = '') 
-                        AND d.customerName LIKE :customerName`, {
+                        AND (:demandNo <> '' OR (d.state = :state OR :state = '')) 
+                        AND (d.demandNo = :demandNo OR :demandNo = '')
+                        AND d.customerName LIKE :customerName `, {
                         replacements: {
                             comId: options.comId,
+                            demandNo: options.demandNo || '',
                             userId: options.demandUser ? `%${options.demandUser}%` : '%%',
                             spec: options.spec ? `%${options.spec}%` : '%%',
                             startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
