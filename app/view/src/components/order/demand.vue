@@ -2,20 +2,20 @@
     <div class="demand-wrap">
         <el-form :inline="true" :model="searchDeParam" class="demo-form-inline">
             <el-form-item label="销售：">
-                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称"></el-input>
+                <el-input v-model="searchDeParam.demandUser" placeholder="输入销售名称" style="width: 113px;"></el-input>
             </el-form-item>
             <el-form-item label="客户名称：">
-                <el-input v-model="searchDeParam.customName" placeholder="输入名称"></el-input>
+                <el-input v-model="searchDeParam.customName" placeholder="输入名称" style="width: 113px;"></el-input>
             </el-form-item>
             <el-form-item label="规格：">
-                <el-input v-model="searchDeParam.spec" placeholder="输入规格"></el-input>
+                <el-input v-model="searchDeParam.spec" placeholder="输入规格" style="width: 125px;"></el-input>
             </el-form-item>
             <el-form-item label="提交日期：">
-                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期">
+                <el-date-picker v-model="searchDeParam.createTime" type="date" placeholder="开始日期" style="width: 140px;">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="-">
-                <el-date-picker v-model="searchDeParam.endTime" type="date" placeholder="结束日期">
+                <el-date-picker v-model="searchDeParam.endTime" type="date" placeholder="结束日期" style="width: 140px;">
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -146,7 +146,7 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt" :maxlength="18">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
                             </el-col>    
@@ -211,7 +211,7 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
+                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt" :maxlength="18">
                                     <template slot="prepend">销售备注</template>
                                 </el-input>
                             </el-col>    
