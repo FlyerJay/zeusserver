@@ -5,7 +5,7 @@
                 <el-input
                     type="textarea"
                     :rows="10"
-                    placeholder="请输入内容"
+                    placeholder="规格，类型，数量，以空格（空格可以是多个）分割，例：100*100*2.50(*6) (黑管) (10)，加了括号的地方表示可以省略。另，类型和数量可以调换位置，如：100*100*2.5*6 10 黑管，每行只能有一条数据。"
                     v-model="seachParams.searchData">
                 </el-input>
             </el-form-item>
