@@ -81,8 +81,11 @@ module.exports = app => {
                 return app.model.transaction(async (t)=>{
                     return await self.findOne({
                         where:{
-                            userId:{
-                                $eq:options.operator,
+                            userId: {
+                                $eq: options.operator,
+                            },
+                            comId: {
+                                $eq: options.comId
                             }
                         },
                         transaction:t
