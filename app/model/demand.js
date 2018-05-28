@@ -641,7 +641,7 @@ module.exports = app => {
                             $eq: demandWeight
                         },
                         createTime: {
-                            $between: [new Date(today).getTime() - 2.88e7, new Date(today).getTime() + 5.86e7]
+                            $between: [new Date(today).getTime() - 5.47e8, new Date(today).getTime() + 5.86e7]
                         }
                     }
                 })

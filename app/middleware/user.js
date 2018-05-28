@@ -10,7 +10,7 @@ module.exports = options => {
             if(userId&&comId){
                 const role = yield this.app.model.Userrole.getUserRole({userId,comId});
                 this.cookies.set('userRole',role,{
-                    maxAge: 30 * 24 * 3600 * 1000,//cookie有效期为1个月
+                    maxAge: 1 * 24 * 3600 * 1000,//cookie有效期为1天
                     httpOnly: false,
                 })
                 this.query = this.query?Object.assign(this.query,{userId,comId,role,tempComId}):this.query
