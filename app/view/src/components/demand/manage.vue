@@ -199,7 +199,7 @@
                             <el-button style="color:#97a8be" icon="edit" @click="editCostomer">管理</el-button>
                         </el-col>
                     </el-row>
-                    <el-input placeholder="填写备注" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item"></el-input>
+                    <el-input placeholder="填写备注(字数不超过18个字)" v-model="demandParams.comment" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" auto-complete="off" class="dialog-item" :maxlength="18"></el-input>
                 </div>
                 <el-button type="info" @keyup.enter.native="submitDdemand" @click="submitDdemand" class="dialog-item float-right">提 交</el-button>
                 <el-button type="warning" @click="addCancel" class="dialog-item float-right">取 消</el-button>
