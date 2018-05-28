@@ -588,7 +588,7 @@ module.exports = app => {
                         }
                     }),
                     app.model.query(`SELECT count(1) as count FROM demand d 
-                        INNER JOIN (SELECT dd.demandNo from  demand_detail dd
+                        INNER JOIN (SELECT dd.demandNo from demand_detail dd
                         WHERE dd.spec LIKE :spec GROUP BY dd.demandNo) as ddd
                         ON ddd.demandNo = d.demandNo
                         WHERE d.comId = :comId 
