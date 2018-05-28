@@ -148,6 +148,7 @@
                             <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt" :maxlength="18">
                                     <template slot="prepend">销售备注</template>
+                                    <template slot="append">{{comment.length}}/18</template>
                                 </el-input>
                             </el-col>    
                             <el-col :span='12'>
@@ -213,6 +214,7 @@
                             <el-col :span='12'>
                                 <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt" :maxlength="18">
                                     <template slot="prepend">销售备注</template>
+                                    <template slot="append">{{comment.length}}/18</template>
                                 </el-input>
                             </el-col>    
                             <el-col :span='12'>
