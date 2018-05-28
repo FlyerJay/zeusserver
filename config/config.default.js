@@ -15,10 +15,10 @@ module.exports = appInfo => {
     sequelize:{
       dialect: 'mysql',
       database: 'zues',
-      host: '118.190.207.142',
+      host: '116.62.226.140',
       port: '3306',
-      username: 'flyerjay',
-      password: '080728',
+      username: 'zues',
+      password: 'zues@Kx002',
     },
     io:{//socket.io配置
       namespace:{
