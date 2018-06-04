@@ -64,6 +64,8 @@
                 </el-table-column>
                 <el-table-column prop="priceTimeFragment" v-if="activeName > 0" label="报价时长" :formatter="pruceFormat">
                 </el-table-column>
+                <el-table-column prop="demandWeight" label="总重量(吨)">
+                </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
