@@ -195,72 +195,6 @@ module.exports = app => {
                         }
                     }
                 })
-                var today = utils.getCurrentDate() - 0;
-                const $2 = yield app.model.query(`SELECT (sv.value - sr.benifit + f.freight) as value,s.supplierName,sii.inventoryAmount FROM (SELECT * FROM (SELECT * FROM  supplier_value ORDER BY lastUpdateTime DESC LIMIT 0,100000000) sv GROUP BY supplierId,type,spec) sv
-                    INNER JOIN supplier_inventory si 
-                    ON si.supplierInventoryId = :supplierInventoryId
-                    AND si.spec = sv.spec 
-                    AND si.type = sv.type
-                    INNER JOIN supplier s
-                    ON s.isDelete = 'N'
-                    INNER JOIN supplier_relate sr 
-                    ON sr.supplierId = sv.supplierId
-                    AND sr.comId = :comId
-                    AND sr.supplierId = s.supplierId
-                    AND sr.isValide = 1
-                    INNER JOIN supplier_inventory sii 
-                    ON sii.supplierId = sv.supplierId 
-                    AND sii.spec = sv.spec 
-                    AND sii.type = sv.type 
-                    LEFT JOIN freight f
-                    ON f.address = s.address
-                    AND f.comId = :comId
-                    WHERE (sv.value > 0 AND sv.value <> '')
-                    AND (sv.lastUpdateTime >= :today OR sii.lastUpdateTime >= :today)
-                    ORDER BY value ASC
-                    LIMIT 0,1`,
-                    {
-                        replacements:{
-                            supplierInventoryId: options.supplierInventoryId,
-                            comId: options.comId,
-                            today: today,
-                        }
-                    }
-                )
-                var minPrice,minSupplier,minInventory;
-                if($2[0][0]){
-                    minPrice = $2[0][0].value;
-                    minSupplier = $2[0][0].supplierName;
-                    minInventory = $2[0][0].inventoryAmount;
-                }else{
-                    var $3 = yield app.model.query(`
-                        SELECT si.inventoryAmount,s.supplierName,sv.value,sr.benifit,f.freight FROM supplier_inventory si
-                            LEFT JOIN (select *,sv.lastUpdateTime as time from (select * from supplier_value order by lastUpdateTime desc limit 0,100000000) sv group by supplierId,type,spec) sv ON
-                            si.spec = sv.spec AND
-                            si.type = sv.type 
-                            AND si.supplierId = sv.supplierId
-                            LEFT JOIN supplier s ON
-                            s.supplierId = si.supplierId
-                            AND s.isDelete = 'N'
-                            INNER JOIN supplier_relate sr 
-                            ON sr.supplierId = sv.supplierId
-                            AND sr.comId = :comId
-                            AND sr.supplierId = s.supplierId
-                            AND sr.isValide = 1
-                            LEFT JOIN freight f
-                            ON f.address = s.address
-                            AND f.comId = :comId
-                            WHERE si.supplierInventoryId = :Id
-                    `,{
-                        replacements:{
-                            comId: options.comId,
-                            Id: options.supplierInventoryId
-                        }
-                    })
-                    minPrice = $3[0][0].value - $3[0][0].benifit + $3[0][0].freight;
-                    minSupplier = $3[0][0].supplierName;
-                    minInventory = $3[0][0].inventoryAmount;
-                }
                 const result = yield this.create({
                     userId:options.userId,
                     comId:options.comId,
@@ -272,9 +206,9 @@ module.exports = app => {
                     long:inventory.long,
                     createTime:new Date().getTime(),
                     comment: options.comment || '',
-                    minPrice: minPrice || 0,
-                    minSupplier: minSupplier || 0 ,
-                    minInventory: minInventory || 0 ,
+                    minPrice: 0,
+                    minSupplier: 0,
+                    minInventory: 0,
                 });
                 return {
                     code:200,

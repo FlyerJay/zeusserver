@@ -4,6 +4,7 @@
  * 订单实体类
  */
 'use strict';
+var utils = require('../utils');
 
 module.exports = app => {
     const { STRING , INTEGER, DOUBLE, BIGINT } = app.Sequelize;
@@ -209,6 +210,7 @@ module.exports = app => {
                 }
                 let orderNo = `${year}${mouth}${date}${hour}${min}${sec}${options.comId}${random}`
                 var self = this;
+                var today = utils.getCurrentDate() - 0;
                 return app.model.transaction(async (t)=>{
                     return await self.create({
                         orderNo,
@@ -221,22 +223,62 @@ module.exports = app => {
                         createTime:+new Date()
                     },{transaction:t}).then((res)=>{
                         var orderDetail = options.supplierInventoryIds;
-                        return Promise.all(orderDetail.map((v)=>{
+                        return Promise.all(orderDetail.map(async (v)=>{
+                            let $2 = await app.model.query(`SELECT (sv.value - sr.benifit + f.freight) as value,s.supplierName,sii.inventoryAmount FROM (SELECT * FROM (SELECT * FROM  supplier_value ORDER BY lastUpdateTime DESC LIMIT 0,100000000) sv GROUP BY supplierId,type,spec) sv
+                                INNER JOIN supplier s
+                                ON s.isDelete = 'N'
+                                INNER JOIN supplier_relate sr 
+                                ON sr.supplierId = sv.supplierId
+                                AND sr.comId = :comId
+                                AND sr.supplierId = s.supplierId
+                                AND sr.isValide = 1
+                                INNER JOIN supplier_inventory sii 
+                                ON sii.supplierId = sv.supplierId 
+                                AND sii.spec = sv.spec 
+                                AND sii.type = sv.type 
+                                LEFT JOIN freight f
+                                ON f.address = s.address
+                                AND f.comId = :comId
+                                WHERE (sv.value > 0 AND sv.value <> '')
+                                AND sv.spec = :spec
+                                AND sv.type = :type
+                                AND (sv.lastUpdateTime >= :today OR sii.lastUpdateTime >= :today)
+                                ORDER BY value ASC
+                                LIMIT 0,1`,
+                                {
+                                    replacements:{
+                                        spec: v.spec,
+                                        type: v.type,
+                                        comId: options.comId,
+                                        today: today,
+                                    }
+                                }
+                            )
+                            var minPrice,minSupplier,minInventory;
+                            if($2[0][0]){
+                                minPrice = $2[0][0].value;
+                                minSupplier = $2[0][0].supplierName;
+                                minInventory = $2[0][0].inventoryAmount;
+                            }else{
+                                minPrice = Number(v.daPrice);
+                                minSupplier = '最低价供应商';
+                                minInventory = Number(v.chartAmount);
+                            }
                             app.model.OrderDetail.create({
                                 orderNo,
                                 spec: v.spec,
-                                type:v.type,
-                                supplierId:v.supplierId,
-                                orderAmount:Number(v.chartAmount),
-                                unitPrice:Number(v.purePrice),
-                                daPrice:Number(v.daPrice),
-                                Weight:Number(v.chartWeight),
-                                orderDcrease:Number(v.totalAdjust),
+                                type: v.type,
+                                supplierId: v.supplierId,
+                                orderAmount: Number(v.chartAmount),
+                                unitPrice: Number(v.purePrice),
+                                daPrice: Number(v.daPrice),
+                                Weight: Number(v.chartWeight),
+                                orderDcrease: Number(v.totalAdjust),
                                 comment: v.comment,
                                 long: v.long,
-                                minPrice: v.minPrice,
-                                minInventory: v.minInventory || 0,
-                                minSupplier: v.minSupplier,
+                                minPrice: minPrice || 0,
+                                minInventory: minInventory || 0,
+                                minSupplier: minSupplier || 0,
                             },{transaction:t})
                             app.model.Chart.destroy({
                                 where:{

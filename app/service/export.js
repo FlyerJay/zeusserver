@@ -112,7 +112,7 @@ module.exports = app => {
                 }
             });
             var tmpData = [];
-            tmpData.push(['需求编号','销售','采购','状态','总重量','客户名称','目的地','客户电话','创建时间','报价时间','报价时长','备注']);
+            tmpData.push(['需求编号','销售','采购','状态','总重量','客户名称','目的地','客户电话','创建时间','报价时间','报价时长', '反馈时间','备注']);
             list[0].map((v) => {
                 const totalFreight = v['totalFreight'] || 0;
                 const customerName = v['customerName'] || '';
@@ -121,6 +121,7 @@ module.exports = app => {
                 const createTime = new Date(v['createTime']).toLocaleString();
                 const priceTime = new Date(v['priceTime']).toLocaleString();
                 const priceFragment = v['priceTime'] ? Math.ceil(( v['priceTime'] - v['createTime'] ) / 1000 / 60) + "分钟" : "未报价";
+                const feedbackTime = v['feedbackTime'] ? new Date(v['feedbackTime']).toLocaleString() : '';
                 var states = {
                     '0':'未报价',
                     '1':'未反馈',
@@ -129,7 +130,7 @@ module.exports = app => {
                     '4':'成交成功',
                 }
                 const state = states[v['state']];
-                tmpData.push([v['demandNo'],v['userId'],v['priceUser'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,priceFragment,v['comment']]);
+                tmpData.push([v['demandNo'],v['userId'],v['priceUser'],state,demandWeight,customerName,v['destination'],customerPhone,createTime,priceTime,priceFragment,feedbackTime,v['comment']]);
             })
             var buffer = xlsx.build([{name: '需求列表',data: tmpData}]);
             return buffer;
