@@ -54,6 +54,7 @@
             <div class="dialog-content">
                 <div class="spec-wrap">
                     <el-table :data="demandDetail" border style="width: 100%">
+                        <el-table-column type="index" width="50"></el-table-column>
                         <el-table-column label="规格" prop='spec' width="100px"></el-table-column>
                         <el-table-column label="类型" prop='type'></el-table-column>
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
