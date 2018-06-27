@@ -435,7 +435,22 @@
                     </el-col>
                     </el-row>
                 </div>
-                <el-input placeholder="请填写原因" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="FeedbackParams.dealReason" auto-complete="off" class="dialog-item" ></el-input>
+                <div class="select-control clearfix dialog-item">
+                    <el-row :gutter="0">
+                    <el-col :span="7"><div class="select-prepend">反馈原因</div></el-col>
+                    <el-col :span="17">
+                        <el-select v-model="FeedbackParams.dealReason" placeholder="请选择">
+                            <el-option
+                                v-for="item in feedbackReseaon"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-col>
+                    </el-row>
+                </div>
+
                 <el-button type="info" @click="submitFeedback" class="dialog-item float-right">提 交</el-button>
                 <el-button type="warning" @click="dlFeedback = false" class="dialog-item float-right">取 消</el-button>
             </div>
@@ -537,7 +552,7 @@ export default {
             dlgDemandVisible: false,
             dlDemandView: false,
             dlDemandView2: false,
-            dlFeedback: false,
+            dlFeedback: true,
             loading: true,
             currentDemand: '',
             unit: 1,
@@ -555,6 +570,15 @@ export default {
             },
             cancelAddSave: false,
             messageList: [],
+            feedbackReseaon: [
+                { value: '已成交', key: '已成交' },
+                { value: '询价订单', key: '询价订单' },
+                { value: '价格偏高', key: '价格偏高' },
+                { value: '资金要求不达标', key: '资金要求不达标' },
+                { value: '工期、材质不符合要求', key: '工期、材质不符合要求' },
+                { value: '再次报价', key: '再次报价' },
+                { value: '其他', key: '其他' },
+            ]
         }
     },
     components:{
