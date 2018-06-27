@@ -148,14 +148,26 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
-                                    <template slot="prepend">销售备注</template>
-                                </el-input>
-                            </el-col>    
+                                <el-row>
+                                    <el-col :span="5">
+                                        <span class="comment-label">&nbsp;销售备注&nbsp;&nbsp;</span>
+                                    </el-col>
+                                    <el-col :span="19">
+                                        <el-input v-model="comment" auto-complete="off" type="textarea" :readonly="true" :rows="1" class="comtxt">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+                            </el-col>
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
-                                    <template slot="prepend">采购备注</template>
-                                </el-input>
+                                <el-row>
+                                    <el-col :span="5">
+                                        <span class="comment-label">&nbsp;采购备注&nbsp;&nbsp;</span>
+                                    </el-col>
+                                    <el-col :span="19">
+                                        <el-input v-model="priceComment" auto-complete="off" type="textarea" :readonly="activeName > 0" :rows="1" class="comtxt">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
                             </el-col>
                         </el-row>    
                     </div>
@@ -213,14 +225,26 @@
                     <div style="margin-top:15px;">
                         <el-row :gutter='10'>
                             <el-col :span='12'>
-                                <el-input v-model="comment" auto-complete="off" :readonly="true" class="comtxt">
-                                    <template slot="prepend">销售备注</template>
-                                </el-input>
-                            </el-col>    
+                                <el-row>
+                                    <el-col :span="6">
+                                        <span class="comment-label">销售备注</span>
+                                    </el-col>
+                                    <el-col :span="18">
+                                        <el-input v-model="comment" auto-complete="off" type="textarea" :readonly="true" :rows="1" class="comtxt">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
+                            </el-col>
                             <el-col :span='12'>
-                                <el-input v-model="priceComment" auto-complete="off" :readonly="activeName > 0" class="comtxt">
-                                    <template slot="prepend">采购备注</template>
-                                </el-input>
+                                <el-row>
+                                    <el-col :span="6">
+                                        <span class="comment-label">采购备注</span>
+                                    </el-col>
+                                    <el-col :span="18">
+                                        <el-input v-model="priceComment" auto-complete="off" type="textarea" :readonly="activeName > 0" :rows="1" class="comtxt">
+                                        </el-input>
+                                    </el-col>
+                                </el-row>
                             </el-col>
                         </el-row>    
                     </div>
