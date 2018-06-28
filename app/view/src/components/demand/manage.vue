@@ -71,7 +71,6 @@
                 </el-table-column>
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
-                </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination" width="100px">
                     <template scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
@@ -552,7 +551,7 @@ export default {
             dlgDemandVisible: false,
             dlDemandView: false,
             dlDemandView2: false,
-            dlFeedback: true,
+            dlFeedback: false,
             loading: true,
             currentDemand: '',
             unit: 1,
