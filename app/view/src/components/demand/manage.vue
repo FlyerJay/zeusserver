@@ -59,9 +59,9 @@
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="createTime" label="提交时间" width="110px" :formatter="dateFormat">
+                <el-table-column prop="createTime" label="提交时间" width="120px" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="报价时间" width="110px" :formatter="dateFormat">
+                <el-table-column prop="priceTime" label="报价时间" width="120px" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
                 </el-table-column>
@@ -552,7 +552,7 @@ export default {
             dlgDemandVisible: false,
             dlDemandView: false,
             dlDemandView2: false,
-            dlFeedback: true,
+            dlFeedback: false,
             loading: true,
             currentDemand: '',
             unit: 1,
