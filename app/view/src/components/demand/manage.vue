@@ -61,7 +61,7 @@
                 </el-table-column>
                 <el-table-column prop="createTime" label="提交时间" width="110px" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="报价时间" width="1110px" :formatter="dateFormat">
+                <el-table-column prop="priceTime" label="报价时间" width="110px" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
                 </el-table-column>
