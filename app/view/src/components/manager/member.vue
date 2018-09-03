@@ -145,7 +145,7 @@
                 <el-form-item label="密码：" :required="true">
                     <el-input style="width:85%" v-model="newUserParams.password" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="公司：" :required="true">
+                <!-- <el-form-item label="公司：" :required="true">
                     <el-select v-model="newUserParams.comId" placeholder="请选择">
                         <el-option value="南京奎鑫">南京奎鑫</el-option>
                         <el-option value='武汉奎鑫'>武汉奎鑫</el-option>
@@ -155,7 +155,7 @@
                         <el-option value='山东奎鑫'>山东奎鑫</el-option>
                         <el-option value='南昌奎鑫'>南昌奎鑫</el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button  type="warning" @click="addUser">提 交</el-button>
