@@ -104,6 +104,8 @@ module.exports = app => {
                 result = yield youfa.XQ(options,query);
             }else if(query.supplier.indexOf("邯郸友发") > -1){
                 result = yield youfa.YF(options,query);
+            }else if(query.supplier.indexOf("连创热镀锌") > -1){
+                result = yield youfa.LCRDX(options,query);
             }else if(query.supplier.indexOf("连创") > -1){
                 result = yield youfa.LC(options,query);
             }else if(query.supplier.indexOf("友发德众") > -1){

@@ -28,19 +28,59 @@ module.exports = app => {
             var $10 = parseInventory.mergeData($9);
             return $10;
         }
-        * LC(options,query) {//连创处理程序
+        * LC(options,query) {//连创黑管处理程序
             const parseInventory = this.ctx.service.parseInventory;
+            // 找到表头
             var $1 = parseInventory.getTableHead(options,['件数']);
+            // 表头修正
             var $2 = this.lcHeadRevise($1);
+            // 处理重复表头
             var $3 = parseInventory.dealRepeatHeadTable($2);
-            var $4 = this.separateSpecAndPer($3);
-            var $5 = parseInventory.mixinSpec($4);
+            // 分离规格
+            // var $4 = this.separateSpecAndPer($3);
+            // 继承规格
+            var $5 = parseInventory.mixinSpec($3);
+            // 继承壁厚
             var $6 = parseInventory.mixinLand($5);
-            var $7 = parseInventory.requireColumn($6,['规格','壁厚','长度','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            // 选取有用的列
+            var $7 = parseInventory.requireColumn($6,['规格','壁厚','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            // 合并规格和壁厚
             var $8 = parseInventory.mergeSpecAndLand($7);
-            var $9 = parseInventory.mergeData($8);
-            var $10 = this.lcRemoveOrder($9);
-            return $10;
+            // 连创黑管单独添加长度
+            var $9 = this.lcHGaddLong($8);
+            // 合并全部数据
+            var $10 = parseInventory.mergeData($9);
+            // 找到重复规格并合并件数数据
+            var $11 = this.lcRemoveOrder($10);
+            return $11;
+        }
+        * LCRDX(options) { //连创热镀锌特殊处理
+            const parseInventory = this.ctx.service.parseInventory;
+            // 找到表头
+            var $1 = parseInventory.getTableHead(options,['件数']);
+            // 表头修正
+            var $2 = this.lcHeadRevise($1);
+            // 处理重复表头
+            var $3 = parseInventory.dealRepeatHeadTable($2);
+            // 选取有用的列
+            var $4 = parseInventory.requireColumn($3,['规格','件数','支/件']);//从表格中取出需要保留的列，其他列都删除掉
+            // 连创黑管单独添加长度
+            var $5 = this.lcHGaddLong($4);
+            // 分离规格
+            var $6 = this.separateSpec($5);
+            // 选取有用的列
+            var $7 = parseInventory.requireColumn($6,['规格','壁厚','长度','件数','支/件']);
+            // 继承规格
+            var $8 = parseInventory.mixinSpec($7);
+            // 继承壁厚
+            var $9 = parseInventory.mixinLand($8);
+            // 合并规格和壁厚
+            var $10 = parseInventory.mergeSpecAndLand($9);
+            // 合并全部数据
+            var $11 = parseInventory.mergeData($10);
+            // 找到重复规格并合并件数数据
+            var $12 = this.lcRemoveOrder($11);
+            return $12;
         }
         * DZ(options,query) {//友发德众处理程序
             const parseInventory = this.ctx.service.parseInventory;
@@ -507,7 +547,7 @@ module.exports = app => {
         separateSpecAndPer(options){/**分离规格和单件支数 */
             var i = 0;
             for(;i<options.length;i++){
-                var lines = options[i].lines;
+                let lines = options[i].lines;
                 let per = '';
                 lines.map((v)=>{
                     if(v[0]){
@@ -531,6 +571,25 @@ module.exports = app => {
                     landArr[1] ? v.push(landArr[1]):v.push('6');
                 })
                 options[i].head.push('支/件','长度');
+            }
+            return options;
+        }
+        separateSpec(options) { // 分离规格壁厚
+            var i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let per = '';
+                lines.map((v)=>{
+                    let specArr = v[0].split('*');
+                    if (specArr[2]) {
+                        v.push(specArr[2])
+                    } else {
+                        v.push('');
+                    }
+                    v[0] = `${specArr[0]}*${specArr[1]}`;
+                    return v;
+                })
+                options[i].head.push('壁厚');
             }
             return options;
         }
@@ -596,6 +655,25 @@ module.exports = app => {
                 })
                 options[i].head = ['规格','壁厚','长度','件数','支/件'];
                 options[i].lines = newLine;
+            }
+            return options;
+        }
+        lcHGaddLong(options) { // 连创黑管单独添加长度
+            let i = 0;
+            for(;i<options.length;i++){
+                let lines = options[i].lines;
+                let head = options[i].head;
+                head.splice(1, 0, '长度');
+                let newLines = [];
+                lines.map(v => {
+                    if(v[0]) {
+                        newLines.push(v);
+                    }
+                })
+                newLines.map(v => {
+                    return v.splice(1, 0, '6');
+                });
+                options[i].lines = newLines;
             }
             return options;
         }

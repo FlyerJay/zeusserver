@@ -14,6 +14,7 @@
 	            <el-option value='沈阳奎鑫'>沈阳奎鑫</el-option>
 	            <el-option value='山东奎鑫'>山东奎鑫</el-option>
 	            <el-option value='南昌奎鑫'>南昌奎鑫</el-option>
+                <el-option value='重庆奎鑫'>重庆奎鑫</el-option>
 	          </el-select>
             </el-form-item>
             <el-form-item>
