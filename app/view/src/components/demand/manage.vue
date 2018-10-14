@@ -59,9 +59,9 @@
                 </el-table-column>
                 <el-table-column prop="customerName" label="客户名称">
                 </el-table-column>
-                <el-table-column prop="createTime" label="提交时间" :formatter="dateFormat">
+                <el-table-column prop="createTime" label="提交时间" width="120px" :formatter="dateFormat">
                 </el-table-column>
-                <el-table-column prop="priceTime" label="报价时间" :formatter="dateFormat">
+                <el-table-column prop="priceTime" label="报价时间" width="120px" :formatter="dateFormat">
                 </el-table-column>
                 <el-table-column prop="feedbackTime" label="反馈时间" :formatter="dateFormat">
                 </el-table-column>
@@ -576,6 +576,7 @@ export default {
                 { value: '资金要求不达标', key: '资金要求不达标' },
                 { value: '工期、材质不符合要求', key: '工期、材质不符合要求' },
                 { value: '再次报价', key: '再次报价' },
+                { value: '无货', key: '无货' },
                 { value: '其他', key: '其他' },
             ]
         }
@@ -1152,6 +1153,9 @@ export default {
     }
 }
 .comtxt .el-input__inner {
+    color: red
+}
+.comtxt .el-textarea__inner {
     color: red
 }
 .op-col {

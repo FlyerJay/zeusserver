@@ -33,7 +33,7 @@
         </div>
         <el-dialog
         v-model="detailDialogShow"
-        size="small">
+        size="large">
           <el-table :data="orderDetail" stripe style="width: 100%" v-loading.body="detailLoading" border>
               <el-table-column prop="spec" label="规格" width="140px"/>
               <el-table-column prop="type" label="类型"/>
