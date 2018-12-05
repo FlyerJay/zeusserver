@@ -8,7 +8,7 @@ function getMaxAge() {
   var month = m > 9 ? m : `0${m}`
   var date = d > 9 ? m : `0${d}`
 
-  new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
+  return new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
 }
 
 module.exports = options => {
