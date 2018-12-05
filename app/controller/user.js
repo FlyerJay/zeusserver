@@ -1,21 +1,33 @@
 'use strict';
 
+function getMaxAge() {
+  var now = new Date()
+  var year = now.getFullYear()
+  var m = now.getMonth() + 1
+  var d = now.getDate()
+  var month = m > 9 ? m : `0${m}`
+  var date = d > 9 ? m : `0${d}`
+
+  new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
+}
+
 module.exports = app => {
   class UserController extends app.Controller {
     * login() {
       const ctx = this.ctx;
       const user =  yield ctx.model.User.userLogin(ctx.request.body);
+      var maxAge = getMaxAge()
       if(user.code == 200){
         var info = user.data.userInfo.dataValues;
         for(var props in info){
           if(props == 'userId' ){
             ctx.cookies.set(`${props}`,encodeURI(`${info[props]}`).toString('base64'),{
-              maxAge: 1 * 24 * 3600 * 1000,//cookie有效期为1个月
+              maxAge: maxAge,//cookie有效期为1个月
               httpOnly: false,
             })
           }else if(props == 'comId' || props == 'userToken'){
             ctx.cookies.set(`${props}`,`${info[props]}`,{
-              maxAge: 1 * 24 * 3600 * 1000,//cookie有效期为1个月
+              maxAge: maxAge,//cookie有效期为1个月
               httpOnly: false,
             })
           }
@@ -23,7 +35,7 @@ module.exports = app => {
         var _role = user.data.userRole.dataValues;
         var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}`;
         ctx.cookies.set('userRole',role,{
-          maxAge: 1 * 24 * 3600 * 1000,//cookie有效期为1个月
+          maxAge: maxAge,//cookie有效期为1个月
           httpOnly: false,
         })
       }

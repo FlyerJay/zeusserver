@@ -104,7 +104,8 @@
                     {label:"长春奎鑫",value:"04"},
                     {label:"沈阳奎鑫",value:"05"},
                     {label:"山东奎鑫",value:"06"},
-                    {label:"南昌奎鑫",value:"07"}
+                    {label:"南昌奎鑫",value:"07"},
+                    {label:"重庆奎鑫",value:"08"}
                 ],
                 selectCompany: "",
                 searchSupParam: {

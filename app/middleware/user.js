@@ -1,5 +1,16 @@
 'use strict'
 
+function getMaxAge() {
+  var now = new Date()
+  var year = now.getFullYear()
+  var m = now.getMonth() + 1
+  var d = now.getDate()
+  var month = m > 9 ? m : `0${m}`
+  var date = d > 9 ? m : `0${d}`
+
+  new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
+}
+
 module.exports = options => {
     return function* user(next) {
         var userId = this.cookies.get('userId');
@@ -10,7 +21,7 @@ module.exports = options => {
             if(userId&&comId){
                 const role = yield this.app.model.Userrole.getUserRole({userId,comId});
                 this.cookies.set('userRole',role,{
-                    maxAge: 1 * 24 * 3600 * 1000,//cookie有效期为1天
+                    maxAge: getMaxAge,//cookie有效期为1天
                     httpOnly: false,
                 })
                 this.query = this.query?Object.assign(this.query,{userId,comId,role,tempComId}):this.query
