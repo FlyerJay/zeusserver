@@ -1,14 +1,15 @@
 'use strict'
 
 function getMaxAge() {
-  var now = new Date()
-  var year = now.getFullYear()
-  var m = now.getMonth() + 1
-  var d = now.getDate()
-  var month = m > 9 ? m : `0${m}`
-  var date = d > 9 ? m : `0${d}`
+    var now = new Date()
+    var year = now.getFullYear()
+    var m = now.getMonth() + 1
+    var d = now.getDate()
+    var month = m > 9 ? m : `0${m}`
+    var date = d > 9 ? m : `0${d}`
 
-  return new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
+//   return new Date(`${year}-${month}-${date} 23:59:59`).getTime() - now.getTime()
+    return 24 * 60 * 60 * 1000
 }
 
 module.exports = options => {
