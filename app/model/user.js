@@ -4,6 +4,7 @@
  * 用户实体类
  */
 'use strict';
+var request = require('superagent')
 var uuid = require('uuid');
 
 module.exports = app => {
@@ -47,6 +48,22 @@ module.exports = app => {
         lastLoginTime: {
             type: BIGINT(20),
             comment:"上次登录时间"
+        },
+        wxOpenId: {
+            type: STRING(50),
+            comment: "微信openid"
+        },
+        wxUserName: {
+            type: STRING(30),
+            comment: "微信用户名"
+        },
+        wxAvatar: {
+            type: STRING(200),
+            comment: "微信头像"
+        },
+        wxMobile: {
+            type: STRING(20),
+            comment: "微信绑定的手机号码"
         }
     },{
         freezeTabName:true,
@@ -187,6 +204,95 @@ module.exports = app => {
                     },
                     code:200,
                     msg:'登录成功',
+                }
+            },
+            * loginByOpenId (options) {
+                if (!options.openid) {
+                    return {
+                        code: -1,
+                        msg: '缺少必要参数'
+                    }
+                }
+                const isExist = yield this.findOne({
+                    where:{
+                        wxOpenId: {
+                            $eq: options.openid,
+                        }
+                    },
+                    attributes:['userToken','userId','comId','valid','userName','registerTime','lastLoginTime']
+                });
+                if(!isExist) return {
+                    code: -1,
+                    msg: '用户未绑定'
+                }
+                isExist.userToken = uuid.v4();
+                isExist.lastLoginTime = new Date().getTime();
+                isExist.save();
+                const role = yield app.model.Userrole.findOne({
+                    where: {
+                        userId: {
+                            $eq: isExist.userId
+                        }
+                    }
+                })
+                return {
+                    data: {
+                        userInfo: isExist,
+                        userRole: role
+                    },
+                    code: 200,
+                    msg: '登录成功',
+                }
+            },
+            // 绑定微信账号
+            * bindWxAccount (options) {
+                try {
+                    const result =  yield this.update({
+                        wxAvatar: options.avatarUrl,
+                        wxOpenId: options.openid,
+                        wxUserName: options.nickName
+                    }, {
+                        where: {
+                            userId: {
+                                $eq: options.userId
+                            },
+                            comId: {
+                                $eq: options.comId
+                            }
+                        }
+                    })
+                } catch (error) {
+                    return {
+                        code: -1,
+                        msg: error
+                    }
+                }
+                return {
+                    code: 200,
+                    msg: '绑定成功'
+                }
+            },
+            // 获取openId
+            * getWxOpenId (options) {
+                const appId = 'wxc86dc970d5b4aa32';
+                const appKey = '1b4bdda8982d2836c10b979985730824';
+                if (!options.code) return {
+                    code: -1,
+                    msg: '缺少必要参数'
+                }
+                const code = options.code;
+                const grant_type = 'authorization_code';
+                const result = yield request.get(`https://api.weixin.qq.com/sns/jscode2session?appid=${appId}&secret=${appKey}&js_code=${code}&grant_type=${grant_type}`)
+                if (result.statusCode === 200) {
+                    return {
+                        code: 200,
+                        data: result.text,
+                        msg: '获取openid成功'
+                    }
+                }
+                return {
+                    code: -1,
+                    msg: '获取openid失败'
                 }
             },
             * removeUser(options){

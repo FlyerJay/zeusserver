@@ -581,7 +581,7 @@ module.exports = app => {
                             userId: options.demandUser ? `%${options.demandUser}%` : '%%',
                             startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
                             endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 99999999999999999,
-                            state: options.state,
+                            state: options.state || '',
                             customerName:options.customName ? `%${options.customName}%` : '%%',
                             start:!options.page?0:(options.page - 1)*(options.pageSize?options.pageSize:15),
                             offset:options.pageSize?options.pageSize:15,
@@ -604,7 +604,7 @@ module.exports = app => {
                             spec: options.spec ? `%${options.spec}%` : '%%',
                             startTime: options.createTime ? new Date(options.createTime).getTime() - 2.88e7 : 0,
                             endTime: options.endTime ? new Date(options.endTime).getTime() + 5.86e7 : 99999999999999999,
-                            state: options.state,
+                            state: options.state || '',
                             customerName:options.customName ? `%${options.customName}%` : '%%',
                         }
                     })];
