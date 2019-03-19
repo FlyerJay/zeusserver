@@ -18,7 +18,8 @@ function getMaxAge() {
 const filters = [
   '/user/login',
   '/user/logout',
-  '/user/openid'
+  '/user/openid',
+  '/product/kx'
 ];
 
 module.exports = (options) => function* user(next) {

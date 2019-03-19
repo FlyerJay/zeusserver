@@ -110,4 +110,6 @@ module.exports = (app) => {
   app.post('/zues/api/message/add', 'message.add');
   app.post('/zues/api/message/update', 'message.modify');
   app.post('/zues/api/message/delete', 'message.delete');
+  // 单独提供给奎鑫小程序的接口
+  app.get('/zues/api/product/kx', 'product.kxlist');
 };
