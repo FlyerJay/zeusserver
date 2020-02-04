@@ -17,6 +17,11 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield ctx.model.Client.updateWechat(ctx.request.body);
     }
+
+    * userInfo () {
+      const { ctx } = this;
+      ctx.body = yield ctx.model.Client.userInfo(ctx.query);
+    }
 	}
 
   return clientController;

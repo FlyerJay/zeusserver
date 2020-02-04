@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = (app) => {
-  const { STRING, INTEGER, BIGINT} = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
 
   return app.model.define('Notify', {
     notifyId: {

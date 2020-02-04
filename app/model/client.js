@@ -139,6 +139,24 @@ module.exports = (app) => {
         }
       },
 
+      * userInfo (options) {
+        const result = yield app.model.query(`
+        SELECT c.*, e.enterpriseName, e.businessLicense, e.bankName, e.bankcardNo, e.contract, e.invoiceInfo, e.taxNumber, e.telephone, e.address FROM client c
+          LEFT JOIN enterprise e ON
+          e.enterpriseId = c.enterpriseId
+          WHERE c.clientId = :clientId
+        `, {
+          replacements: {
+            clientId: options.clientId
+          }
+        });
+        return {
+          code: 200,
+          data: result,
+          msg: '查询用户信息成功'
+        };
+      },
+
       * code2Session (code) {
         const appId = 'wxc86dc970d5b4aa32';
         const appKey = '1b4bdda8982d2836c10b979985730824';

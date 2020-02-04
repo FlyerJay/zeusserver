@@ -114,6 +114,10 @@ module.exports = (app) => {
   app.get('/zues/api/product/kx', 'product.kxlist');
 
   // 奎鑫发票小程序接口
-  app.get('/zues/api/invoiceminiapp/login', 'client.login');
-  app.post('/zues/api/invoiceminiapp/client/wechat', 'client.updateWechat');
+  app.get('/zues/api/invoiceminiapp/user/login', 'client.login');
+  app.post('/zues/api/invoiceminiapp/user/wechat', 'client.updateWechat');
+  app.get('/zues/api/invoiceminiapp/user/info', 'client.userInfo');
+  app.get('/zues/api/invoiceminiapp/enterprise/search', 'enterprise.search');
+  app.post('/zues/api/invoiceminiapp/enterprise/create', 'enterprise.create');
+  app.post('/zues/api/invoiceminiapp/enterprise/change', 'enterprise.bind');
 };

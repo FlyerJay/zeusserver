@@ -128,7 +128,15 @@ module.exports = (app) => {
       },
 
       * matchList (options) {
-
+        const result = yield this.findAll({
+          where: {
+            enterpriseName: {
+              $like: `%${options.enterpriseName}%`
+            }
+          },
+          limit: 5
+        });
+        return result.rows;
       }
     }
   });

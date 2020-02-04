@@ -17,6 +17,11 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.changeBind(ctx.request.body);
     }
+
+    * search () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.matchList(ctx.query);
+    }
   }
 
   return enterpriseController;
