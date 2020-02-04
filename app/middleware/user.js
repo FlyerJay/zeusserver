@@ -1,7 +1,9 @@
+
+
 'use strict';
 
 /**
- * 获取最大有效时间
+ * 获取最大有效时间
  * @return {string} timestamp 时间戳
  */
 function getMaxAge() {
@@ -19,7 +21,8 @@ const filters = [
   '/user/login',
   '/user/logout',
   '/user/openid',
-  '/product/kx'
+  '/product/kx',
+  '/invoiceminiapp'
 ];
 
 module.exports = (options) => function* user(next) {
@@ -38,6 +41,8 @@ module.exports = (options) => function* user(next) {
       this.query = this.query ? Object.assign(this.query, {userId, comId, role, tempComId, userToken}) : this.query;
       this.query && this.query.pageSize ? this.query.pageSize -= 0 : '';
       this.request.body = this.request.body ? Object.assign(this.request.body, {userId, comId, role, tempComId}) : this.request.body;
+      this.logger.warn('获取Ip地址');
+      this.logger.warn(this.request.header && this.request.header['x-forwarded-for']);
       yield next;
     } else {
       this.body = {

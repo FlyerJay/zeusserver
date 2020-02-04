@@ -211,7 +211,7 @@ module.exports = app => {
                 let orderNo = `${year}${mouth}${date}${hour}${min}${sec}${options.comId}${random}`
                 var self = this;
                 var today = utils.getCurrentDate() - 0;
-                return app.model.transaction(async (t)=>{
+                return app.model.transaction(async (t) => {
                     return await self.create({
                         orderNo,
                         userId:options.userId,

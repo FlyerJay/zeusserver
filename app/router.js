@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (app) => {
-  // app.beforeStart(async function(){
+  // app.beforeStart(async () => {
   //     await app.model.sync();
   // });
   app.io.route('info', app.io.controllers.info);
@@ -112,4 +112,8 @@ module.exports = (app) => {
   app.post('/zues/api/message/delete', 'message.delete');
   // 单独提供给奎鑫小程序的接口
   app.get('/zues/api/product/kx', 'product.kxlist');
+
+  // 奎鑫发票小程序接口
+  app.get('/zues/api/invoiceminiapp/login', 'client.login');
+  app.post('/zues/api/invoiceminiapp/client/wechat', 'client.updateWechat');
 };

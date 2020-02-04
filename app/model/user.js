@@ -101,7 +101,7 @@ module.exports = app => {
                     valid:1,
                 };
                 var self = this;
-                return app.model.transaction(async (t)=>{
+                return app.model.transaction(async (t) => {
                     return await self.create(Object.assign(options,extendFiled)
                     ,{transaction:t}).then(async (res)=>{
                         const data = res.dataValues;

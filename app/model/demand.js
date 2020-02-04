@@ -194,7 +194,7 @@ module.exports = app => {
                     demandWeight += (v.demandWeight - 0);
                 });
                 const randomNo = `D${options.comId}${new Date().getTime()}`;
-                const isSuccess = yield app.model.transaction(async (t)=>{
+                const isSuccess = yield app.model.transaction(async (t) => {
                     return await this.create(
                         Object.assign(options,{
                         state: 0,
