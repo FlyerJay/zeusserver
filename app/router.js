@@ -119,5 +119,5 @@ module.exports = (app) => {
   app.get('/zues/api/invoiceminiapp/user/info', 'client.userInfo');
   app.get('/zues/api/invoiceminiapp/enterprise/search', 'enterprise.search');
   app.post('/zues/api/invoiceminiapp/enterprise/create', 'enterprise.create');
-  app.post('/zues/api/invoiceminiapp/enterprise/change', 'enterprise.bind');
+  app.post('/zues/api/invoiceminiapp/enterprise/bind', 'enterprise.bind');
 };

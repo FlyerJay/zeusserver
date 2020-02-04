@@ -88,7 +88,8 @@ module.exports = (app) => {
               openID: {
                 $eq: info.openid
               }
-            }
+            },
+            attributes: ['clientId', 'nickName', 'realName', 'mobileNumber', 'avatarUrl', 'gender', 'language', 'address', 'enterpriseId']
           });
           if (!result) {
             result = yield this.createOneUser({
@@ -96,18 +97,43 @@ module.exports = (app) => {
               nickName: options.code.substring(0, 8),
               avatarUrl: 'https://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/avatar_default.jpeg'
             });
-            return {
-              code: 200,
-              data: result,
-              msg: '获取登录授权成功'
-            };
-          } else {
-            return {
-              code: 200,
-              data: result,
-              msg: '获取登录授权成功'
-            };
+            result = yield this.findOne({
+              where: {
+                openID: {
+                  $eq: info.openid
+                }
+              },
+              attributes: ['clientId', 'nickName', 'realName', 'mobileNumber', 'avatarUrl', 'gender', 'language', 'address', 'enterpriseId']
+            });
           }
+          let enterpriseInfo = {
+            enterpriseId: '',
+            enterpriseName: '',
+            address: '',
+            businessLicense: '',
+            invoiceInfo: '',
+            contract: '',
+            telephone: '',
+            taxNumber: '',
+            bankName: '',
+            bankcardNo: ''
+          };
+          if (result.enterpriseId) {
+            const _enterpriseInfo = yield app.model.Enterprise.findOne({
+              where: {
+                enterpriseId: {
+                  $eq: result.enterpriseId
+                }
+              }
+            });
+            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo.dataValues);
+          }
+          const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
+          return {
+            code: 200,
+            data: data,
+            msg: '登录成功'
+          };
         } else {
           return {
             code: -1,
@@ -140,21 +166,50 @@ module.exports = (app) => {
       },
 
       * userInfo (options) {
-        const result = yield app.model.query(`
-        SELECT c.*, e.enterpriseName, e.businessLicense, e.bankName, e.bankcardNo, e.contract, e.invoiceInfo, e.taxNumber, e.telephone, e.address FROM client c
-          LEFT JOIN enterprise e ON
-          e.enterpriseId = c.enterpriseId
-          WHERE c.clientId = :clientId
-        `, {
-          replacements: {
-            clientId: options.clientId
+        try {
+          let result = yield this.findOne({
+            where: {
+              clientId: {
+                $eq: options.clientId
+              }
+            },
+            attributes: ['clientId', 'nickName', 'realName', 'mobileNumber', 'avatarUrl', 'gender', 'language', 'address', 'enterpriseId']
+          });
+          let enterpriseInfo = {
+            enterpriseId: '',
+            enterpriseName: '',
+            address: '',
+            businessLicense: '',
+            invoiceInfo: '',
+            contract: '',
+            telephone: '',
+            taxNumber: '',
+            bankName: '',
+            bankcardNo: ''
+          };
+          if (result.enterpriseId) {
+            const _enterpriseInfo = yield app.model.Enterprise.findOne({
+              where: {
+                enterpriseId: {
+                  $eq: result.enterpriseId
+                }
+              }
+            });
+            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo.dataValues);
           }
-        });
-        return {
-          code: 200,
-          data: result,
-          msg: '查询用户信息成功'
-        };
+          const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
+          return {
+            code: 200,
+            data: data,
+            msg: '查询用户信息成功'
+          };
+        } catch (exp) {
+          return {
+            code: -1,
+            data: exp,
+            msg: '查询的用户不存在'
+          };
+        }
       },
 
       * code2Session (code) {
