@@ -75,6 +75,17 @@ module.exports = (app) => {
       // 创建发票
       * createOneInvoice (options) {
         try {
+          const client = yield app.model.Client.findOne({
+            where: {
+              clientId: {
+                $eq: options.clientId
+              }
+            }
+          });
+          if (!client.enterpriseId) throw new Error('用户未绑定企业');
+          options.enterpriseId = client.enterpriseId;
+          options.createTime = +new Date();
+          options.status = 'APPLY';
           const result = yield this.create(options);
           if (result) {
             return {
@@ -88,8 +99,7 @@ module.exports = (app) => {
         } catch (exp) {
           return {
             code: -1,
-            msg: '创建发票失败，请检查字段是否完整',
-            data: exp
+            msg: exp || '创建发票失败，请检查字段是否完整'
           };
         }
       },
