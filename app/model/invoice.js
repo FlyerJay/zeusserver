@@ -114,7 +114,7 @@ module.exports = (app) => {
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
               WHERE (i.clientId = :clientId OR :clientId = '')
-              AND (i.enterpriseId = :enterpriseId OR :enterprise = '')
+              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
               ORDER BY FIELD(i.status, 'WAIT', 'SEND', 'APPLY', 'PASSED', 'REFUSED', 'COMPLETE'), i.createTime DESC
               LIMIT :start,:offset`, {
                 replacements: {
@@ -132,7 +132,7 @@ module.exports = (app) => {
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
               WHERE (i.clientId = :clientId OR :clientId = '')
-              AND (i.enterpriseId = :enterpriseId OR :enterprise = '')`, {
+              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')`, {
                 replacements: {
                   clientId: options.clientId || '',
                   enterpriseId: options.enterpriseId || '',
