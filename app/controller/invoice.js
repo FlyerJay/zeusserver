@@ -10,7 +10,7 @@ module.exports = (app) => {
   class invoiceController extends app.Controller {
     * create () {
       const { ctx } = this;
-      ctx.body = yield app.model.Invoice.createOneInvoince(ctx.request.body);
+      ctx.body = yield app.model.Invoice.createOneInvoice(ctx.request.body);
     }
 
     * list () {
