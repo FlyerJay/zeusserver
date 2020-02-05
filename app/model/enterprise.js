@@ -16,6 +16,11 @@ module.exports = (app) => {
       allowNull: false,
       comment: '企业表主键'
     },
+    clientId: {
+      type: INTEGER,
+      allowNull: false,
+      comment: '创建者，只有这个人可以修改公司信息'
+    },
     enterpriseName: {
       type: STRING(30),
       allowNull: true,
@@ -97,6 +102,38 @@ module.exports = (app) => {
           return {
             code: -1,
             msg: '创建企业失败'
+          };
+        }
+      },
+
+      * updateEnt (options) {
+        try {
+          const result = yield this.update(options, {
+            where: {
+              clientId: {
+                $eq: options.clientId
+              },
+              enterpriseId: {
+                $eq: options.enterpriseId
+              }
+            }
+          });
+          if (result) {
+            return {
+              code: 200,
+              data: result,
+              msg: '更新企业信息成功'
+            };
+          } else {
+            return {
+              code: -1,
+              msg: '你不是该企业创建者，不能更改该企业信息'
+            };
+          }
+        } catch (exp) {
+          return {
+            code: -1,
+            msg: '更新企业信息失败'
           };
         }
       },

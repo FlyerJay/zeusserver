@@ -126,7 +126,7 @@ module.exports = (app) => {
                 }
               }
             });
-            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo.dataValues);
+            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo ? _enterpriseInfo.dataValues : {});
           }
           const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
           return {
@@ -195,7 +195,7 @@ module.exports = (app) => {
                 }
               }
             });
-            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo.dataValues);
+            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo ? _enterpriseInfo.dataValues : {});
           }
           const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
           return {

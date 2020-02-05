@@ -22,6 +22,11 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.matchList(ctx.query);
     }
+
+    * update () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.updateEnt(ctx.request.body);
+    }
   }
 
   return enterpriseController;
