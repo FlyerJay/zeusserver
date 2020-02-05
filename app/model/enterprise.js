@@ -74,6 +74,7 @@ module.exports = (app) => {
     classMethods: {
       // 添加一个企业
       * createOneEnt (options) {
+        if (!options.enterpriseName) options.enterpriseName = '未命名';
         const createResult = yield this.create(options);
         if (createResult) {
           try {
