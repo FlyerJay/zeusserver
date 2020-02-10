@@ -1064,3 +1064,33 @@ export const batchQuery = ({ dispatch }, params) => {
     return Promise.reject()
   })
 }
+
+// 企业列表
+export const enterpriseQuery = ({ dispatch }, params) => {
+  return axios.get('/zues/api/enterprise/list', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}
+
+// 企业认证
+export const enterpriseAuth = ({ dispatch }, params) => {
+  return axios.post('/zues/api/enterprise/auth', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}

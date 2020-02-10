@@ -150,6 +150,33 @@ module.exports = (app) => {
         }
       },
 
+      * authEnt (options) {
+        options.auditStatus = 'Y';
+        try {
+          const result = yield this.update(options, {
+            where: {
+              enterpriseId: {
+                $eq: options.enterpriseId
+              }
+            }
+          });
+          if (result) {
+            return {
+              code: 200,
+              data: result,
+              msg: '企业认证成功'
+            };
+          }
+          throw new Error('出现意外情况');
+        } catch (exp) {
+          return {
+            code: -1,
+            msg: '企业认证失败',
+            data: exp
+          };
+        }
+      },
+
       * changeBind (options) {
         try {
           const result = yield app.model.Client.update({
@@ -206,7 +233,7 @@ module.exports = (app) => {
             }
           }
         ), app.model.query(
-          `SELECT count(1) FROM enterprise e
+          `SELECT count(1) as count FROM enterprise e
             WHERE (e.clientId = :clientId OR :clientId = '')
               AND enterpriseName LIKE :enterpriseName
               AND (auditStatus = :auditStatus OR :auditStatus = '')`,

@@ -23,6 +23,7 @@ import Message from '../components/manager/message'
 // 财务
 import Finance from '../components/finance/finance'
 import Invoice from '../components/finance/invoice'
+import Enterprise from '../components/finance/enterprise'
 
 // 订单
 import Order from '../components/order/order'
@@ -150,6 +151,10 @@ export default new Router({
     children: [{
       path: 'invoice',
       component: Invoice
+    },
+    {
+      path: 'enterprise',
+      component: Enterprise
     }]
   }
   ]

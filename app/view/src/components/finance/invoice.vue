@@ -44,7 +44,7 @@ export default {
   },
 
   methods: {
-    onPageChange () {
+    onPageChange (page) {
 
     }
   }

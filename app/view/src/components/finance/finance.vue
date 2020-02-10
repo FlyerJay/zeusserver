@@ -29,6 +29,10 @@
           url: '/finance/invoice',
           icon: 'icon-review',
           name: '发票审核'
+        }, {
+          url: '/finance/enterprise',
+          icon: 'icon-supplier',
+          name: '企业信息'
         }]
       }
     },

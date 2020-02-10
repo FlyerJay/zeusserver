@@ -32,6 +32,16 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.entList(ctx.query);
     }
+
+    * listForZeus () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.entList(ctx.query);
+    }
+
+    * authForZeus () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.authEnt(ctx.request.body);
+    }
   }
 
   return enterpriseController;
