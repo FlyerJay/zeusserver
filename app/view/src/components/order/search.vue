@@ -117,13 +117,13 @@
 
 <script>
 import {
-  loadStock, //现货查询
-  addTocart, //加入购物车
-  loadOrdAddress, //读取到岸目的地址
+  loadStock, // 现货查询
+  addTocart, // 加入购物车
+  loadOrdAddress, // 读取到岸目的地址
   updateStock,
   getMessageList
 } from '../../vuex/action'
-import Slide from '../plugin/slide';
+import Slide from '../plugin/slide'
 
 export default {
   vuex: {
@@ -146,14 +146,14 @@ export default {
         }) => order.ordAddress
     }
   },
-  data() {
+  data () {
     return {
       cartParams: {
         userId: this.userInfo.userId,
         comId: this.userInfo.comId,
         chartAmount: '',
         supplierInventoryId: '',
-        comment: '',
+        comment: ''
       },
       stockParams: {
         spec: '',
@@ -167,118 +167,118 @@ export default {
       dlgTbheadVisible: false,
       loading: true,
       checkedTBhead: [],
-      TBheads: ['规格',	'长度',	'更新时间',	'类别',	'供应商',	'出厂价','单支重量','库存重量','库存',	'包装',	'运费',	'厂家优惠',	'到岸单价','开单价',	'操作'],
-      messageList: [],
+      TBheads: ['规格', '长度', '更新时间', '类别', '供应商', '出厂价', '单支重量', '库存重量', '库存', '包装', '运费', '厂家优惠', '到岸单价', '开单价', '操作'],
+      messageList: []
     }
   },
-  components:{
+  components: {
     Slide
   },
   methods: {
-    filterTag(value, row) {
-      return row.tag === value;
+    filterTag (value, row) {
+      return row.tag === value
     },
-    searchStock() {
-      this.loading = true;
+    searchStock () {
+      this.loading = true
       this.loadStock(this.stockParams)
         .then(() => {
-          this.loading = false;
-        });
+          this.loading = false
+        })
     },
-    weightFormatter(row, column) {
-      const specArr = row.spec.split('*');
-      const height = Number(specArr[0]);
-      const width = Number(specArr[1]);
-      const land = Number(specArr[2]);
-      const long = Number(row.long) ? Number(row.long) : 6;
-      const perimeter = 2 * height + 2 * width;
-      const amount = Number(row.perAmount);
-      const inventoryAmount = Number(row.inventoryAmount);
-      return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
+    weightFormatter (row, column) {
+      const specArr = row.spec.split('*')
+      const height = Number(specArr[0])
+      const width = Number(specArr[1])
+      const land = Number(specArr[2])
+      const long = Number(row.long) ? Number(row.long) : 6
+      const perimeter = 2 * height + 2 * width
+      const amount = Number(row.perAmount)
+      const inventoryAmount = Number(row.inventoryAmount)
+      return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2)
     },
-    perWeightFormatter(row, column) {
-      const specArr = row.spec.split('*');
-      const height = Number(specArr[0]);
-      const width = Number(specArr[1]);
-      const land = Number(specArr[2]);
-      const long = Number(row.long) ? Number(row.long) : 6;
-      const perimeter = 2 * height + 2 * width;
-      const amount = Number(row.perAmount);
-      const inventoryAmount = Number(row.inventoryAmount);
-      return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2);
+    perWeightFormatter (row, column) {
+      const specArr = row.spec.split('*')
+      const height = Number(specArr[0])
+      const width = Number(specArr[1])
+      const land = Number(specArr[2])
+      const long = Number(row.long) ? Number(row.long) : 6
+      const perimeter = 2 * height + 2 * width
+      // const amount = Number(row.perAmount)
+      // const inventoryAmount = Number(row.inventoryAmount)
+      return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2)
     },
-    tableRowClassName(row, index) {
-      var classString = [];
+    tableRowClassName (row, index) {
+      var classString = []
       if (row.inventoryTime < new Date().formatDate('yyyyMMdd')) {
-        classString.push('expired-inventory');
+        classString.push('expired-inventory')
       }
       if (row.valueTime < new Date().formatDate('yyyyMMdd')) {
-        classString.push('expired-value');
+        classString.push('expired-value')
       }
       if (row.mark) {
-        if (row.mark == 2) {
-          classString.push('warning-inventory');
+        if (row.mark === 2) {
+          classString.push('warning-inventory')
         } else {
           classString.push('error-inventory')
         }
       }
 
-      return classString.join(' ');
+      return classString.join(' ')
     },
-    confirmTocart() {
+    confirmTocart () {
       this.addTocart(this.cartParams)
         .then(rs => {
           this.$message({
             message: `成功添加到购物车`,
             type: 'success'
-          });
-          this.dlgShopVisible = false;
-        });
+          })
+          this.dlgShopVisible = false
+        })
     },
-    enterNum(index, row) {
-      this.dlgShopVisible = true;
-      this.cartParams.supplierInventoryId = row.supplierInventoryId;
+    enterNum (index, row) {
+      this.dlgShopVisible = true
+      this.cartParams.supplierInventoryId = row.supplierInventoryId
     },
-    markNum(index, row) {
-      var params = {};
-      params.supplierInventoryId = row.supplierInventoryId;
+    markNum (index, row) {
+      var params = {}
+      params.supplierInventoryId = row.supplierInventoryId
       if (row.mark) {
-        params.mark = '';
+        params.mark = ''
         this.updateStock(params)
           .then(data => {
-            row.mark = '';
+            row.mark = ''
             this.$message({
               message: `清楚标记成功`,
               type: 'success'
-            });
+            })
           })
       } else {
-        params.mark = 1;
-        if (row.markType == 2) {
-          params.mark = 2;
+        params.mark = 1
+        if (row.markType === 2) {
+          params.mark = 2
         }
-        let markup = row.markType;
+        let markup = row.markType
         this.updateStock(params)
           .then(data => {
-            row.mark = markup;
+            row.mark = markup
             this.$message({
               message: `标记成功`,
               type: 'success'
-            });
+            })
           })
       }
     },
-    handleCurrentChange(val) {
-      this.stockParams.page = val;
-      this.loading = true;
+    handleCurrentChange (val) {
+      this.stockParams.page = val
+      this.loading = true
       this.loadStock(this.stockParams)
         .then(() => {
-          this.loading = false;
-        });
+          this.loading = false
+        })
     }
   },
   filters: {
-    companyFilter(val) {
+    companyFilter (val) {
       const company = {
         '01': '南京奎鑫',
         '02': '武汉奎鑫',
@@ -286,44 +286,44 @@ export default {
         '04': '长春奎鑫',
         '05': '沈阳奎鑫',
         '06': '山东奎鑫',
-        '07': '南昌奎鑫',
+        '07': '南昌奎鑫'
       }
-      return company[val];
+      return company[val]
     }
   },
   watch: {
-    checkedTBhead(val) {
+    checkedTBhead (val) {
       window.localStorage.setItem('tbhead', this.checkedTBhead)
     }
   },
   mounted: function () {
-    var headarr = window.localStorage.getItem('tbhead');
-    if(!headarr) {
-      this.checkedTBhead = ['规格', '长度',	'更新时间',	'类别',	'供应商',	'出厂价',	'库存',	'包装',	'运费',	'厂家优惠',	'开单价',	'操作']
+    var headarr = window.localStorage.getItem('tbhead')
+    if (!headarr) {
+      this.checkedTBhead = ['规格', '长度', '更新时间', '类别', '供应商', '出厂价', '库存', '包装', '运费', '厂家优惠', '开单价', '操作']
     } else {
-      this.checkedTBhead = headarr.split(',');
+      this.checkedTBhead = headarr.split(',')
     }
     this.loadStock(this.stockParams)
       .then(() => {
-        this.loading = false;
-      });
-    this.loadOrdAddress();
-    var  self = this;
-    document.onkeyup = function(event) {
-      event = event || window.event;
-      if(event.keyCode === 13) {
-        if(!self.dlgShopVisible && !self.dlgTbheadVisible) {
+        this.loading = false
+      })
+    this.loadOrdAddress()
+    var self = this
+    document.onkeyup = function (event) {
+      event = event || window.event
+      if (event.keyCode === 13) {
+        if (!self.dlgShopVisible && !self.dlgTbheadVisible) {
           self.searchStock()
         }
       };
-    };
+    }
   },
-  created() {
-    this.getMessageList({messageType:3})
-      .then( data =>{
-        this.messageList = data.row;
+  created () {
+    this.getMessageList({messageType: 3})
+      .then(data => {
+        this.messageList = data.row
       })
-  },
+  }
 }
 
 </script>

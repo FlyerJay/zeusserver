@@ -26,6 +26,11 @@ module.exports = (app) => {
       allowNull: true,
       comment: '企业名称'
     },
+    auditStatus: {
+      type: STRING(2),
+      allowNull: true,
+      comment: '企业审核状态, U - 未审核 P - 已审核'
+    },
     address: {
       type: STRING(50),
       allowNull: true,

@@ -54,90 +54,90 @@
     }
 </style>
 <script>
-    import  { batchQuery, addToChartBatch } from "../../vuex/action";
-    export default {
-        vuex: {
-            actions: {
-                batchQuery,
-                addToChartBatch
-            },
-            getters: {
-                userInfo: ({
-                    common
-                }) => common.userInfo
-            }
+    import { batchQuery, addToChartBatch } from '../../vuex/action'
+export default {
+      vuex: {
+        actions: {
+          batchQuery,
+          addToChartBatch
         },
-        data () {
-            return {
-                seachParams: {
-                    searchData: '',
-                },
-                loading: false,
-                addLoading: false,
-                searchResult: {
-                    row: [],
-                },
-                detailDialogShow: false,
-                batchLoading: false,
-                batchDetail: [],
-                selects: []
-            }
-        },
-        methods: {
-            batchSearch() {
-                if(!this.seachParams.searchData) {
-                    this.$message({
-                        message: `请输入数据`,
-                        type: 'warning'
-                    })
-                    return false
-                }
-                this.loading = true;
-                this.batchQuery(this.seachParams).then(rs => {
-                    this.loading = false;
-                    this.searchResult = rs;
-                }, err => {
-                    this.loading = false;
-                });
-            },
-            viewDetail(index, row) {
-                this.batchDetail = row.list;
-                this.detailDialogShow = true;
-            },
-            weightFormatter(row, column) {
-                return Number(row.weight).toFixed(2) + "吨";
-            },
-            handleSelectionChange(val) {
-                this.selects = val;
-                console.log(val);
-            },
-            addToChart() {
-                if(this.selects.length == 0) {
-                    this.$message({
-                        message: '选择不能为空',
-                        type: 'warning'
-                    })
-                    return;
-                }
-                var param = {};
-                param.charts = [];
-                this.selects.forEach(v => {
-                    var data = {};
-                    data.id = v.supplierInventoryId;
-                    data.amount = v.amount;
-                    param.charts.push(data);
-                });
-                this.addLoading = true;
-                this.addToChartBatch(param).then(rs => {
-                    this.addLoading = false;
-                    this.$message({
-                        message: "添加购物车成功",
-                        type: 'success'
-                    })
-                }, err => {
-                    this.addLoading = true;
-                })
-            }
+        getters: {
+          userInfo: ({
+            common
+          }) => common.userInfo
         }
+      },
+      data () {
+        return {
+          seachParams: {
+            searchData: ''
+          },
+          loading: false,
+          addLoading: false,
+          searchResult: {
+            row: []
+          },
+          detailDialogShow: false,
+          batchLoading: false,
+          batchDetail: [],
+          selects: []
+        }
+      },
+      methods: {
+        batchSearch () {
+          if (!this.seachParams.searchData) {
+            this.$message({
+              message: `请输入数据`,
+              type: 'warning'
+            })
+            return false
+          }
+          this.loading = true
+          this.batchQuery(this.seachParams).then(rs => {
+            this.loading = false
+            this.searchResult = rs
+          }, () => {
+            this.loading = false
+          })
+        },
+        viewDetail (index, row) {
+          this.batchDetail = row.list
+          this.detailDialogShow = true
+        },
+        weightFormatter (row, column) {
+          return Number(row.weight).toFixed(2) + '吨'
+        },
+        handleSelectionChange (val) {
+          this.selects = val
+          console.log(val)
+        },
+        addToChart () {
+          if (this.selects.length === 0) {
+            this.$message({
+              message: '选择不能为空',
+              type: 'warning'
+            })
+            return
+          }
+          var param = {}
+          param.charts = []
+          this.selects.forEach(v => {
+            var data = {}
+            data.id = v.supplierInventoryId
+            data.amount = v.amount
+            param.charts.push(data)
+          })
+          this.addLoading = true
+          this.addToChartBatch(param).then(rs => {
+            this.addLoading = false
+            this.$message({
+              message: '添加购物车成功',
+              type: 'success'
+            })
+          }, () => {
+            this.addLoading = true
+          })
+        }
+      }
     }
 </script>

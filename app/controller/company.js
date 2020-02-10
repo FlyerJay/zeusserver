@@ -1,20 +1,20 @@
 'use strict';
 
-module.exports = app => {
+module.exports = (app) => {
   class CompanyController extends app.Controller {
-    * list() {
+    * list () {
       const ctx = this.ctx;
       ctx.body = yield ctx.model.Company.getList();
     }
-    * defaultdata() {
+    defaultdata () {
       const ctx = this.ctx;
-      ctx.cookies.set('dataSource',ctx.request.body.dataSource,{
-        httpOnly: false,
-      })
+      ctx.cookies.set('dataSource', ctx.request.body.dataSource, {
+        httpOnly: false
+      });
       ctx.body = {
         code: 200,
-        msg: "设置成功"
-      }
+        msg: '设置成功'
+      };
     }
   }
   return CompanyController;

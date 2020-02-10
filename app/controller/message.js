@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = app => {
+module.exports = (app) => {
   class MessageController extends app.Controller {
     * list() {
       const ctx = this.ctx;

@@ -269,263 +269,260 @@ import {
     getMessageList,
     saveDemand
 } from '../../vuex/action'
-import Slide from '../plugin/slide';
+import Slide from '../plugin/slide'
 
 export default {
-    vuex: {
-        actions: {
-            loadDemandList,
-            demandDetailList,
-            loadDemandPriceList,
-            upDateDemandList,
-            priceHistoryGet,
-            getMessageList,
-            saveDemand
-        },
-        getters: {
-            userInfo: ({
+  vuex: {
+    actions: {
+      loadDemandList,
+      demandDetailList,
+      loadDemandPriceList,
+      upDateDemandList,
+      priceHistoryGet,
+      getMessageList,
+      saveDemand
+    },
+    getters: {
+      userInfo: ({
                     common
                 }) => common.userInfo,
-            demandInfo: ({
+      demandInfo: ({
                     order
                 }) => order.demandInfo,
-            demandDetail: ({
+      demandDetail: ({
                     order
                 }) => order.demandDetail,
-            demand: ({
+      demand: ({
                     common
                 }) => common.demand
-        }
-    },
-    data() {
-        return {
-            activeName: '0',
-            timeConsume: '',
-            searchDeParam: {
-                demandUser: '',
-                createTime: '',
-                endTime: '',
-                customName: '',
-                spec: '',
-                state: 0,
-                page: 1,
-            },
-            dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
-            dlgDemandVisible: false,
-            dlDemandView: false,
-            dlDemandView2: false,
-            comment: '',
-            priceComment: '',
-            customerName: '',
-            customerPhone: '',
-            destination: '',
-            allweight: 0,
-            loading: true,
-            updreason: '',
-            demandcount: 0,
-            messageList: [],
-        }
-    },
-    components:{
-      Slide
-    },
-    methods: {
-        handleCurrentChange(val) {
-            this.searchDeParam.page = val;
-            this.loading = true;
-            this.loadDemandList(this.searchDeParam)
+    }
+  },
+  data () {
+    return {
+      activeName: '0',
+      timeConsume: '',
+      searchDeParam: {
+        demandUser: '',
+        createTime: '',
+        endTime: '',
+        customName: '',
+        spec: '',
+        state: 0,
+        page: 1
+      },
+      dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
+      dlgDemandVisible: false,
+      dlDemandView: false,
+      dlDemandView2: false,
+      comment: '',
+      priceComment: '',
+      customerName: '',
+      customerPhone: '',
+      destination: '',
+      allweight: 0,
+      loading: true,
+      updreason: '',
+      demandcount: 0,
+      messageList: []
+    }
+  },
+  components: {
+    Slide
+  },
+  methods: {
+    handleCurrentChange (val) {
+      this.searchDeParam.page = val
+      this.loading = true
+      this.loadDemandList(this.searchDeParam)
                 .then(() => {
-                    this.loading = false;
-                });
-        },
-        statusFormatter(row, column) {
-            const status = {
-                '0': '未报价需求',
-                '1': '待反馈',
-                '2': '已反馈',
-                '3': '未成交',
-                '4': '已成交'
-            }
-            return status[row.state];
-        },
-        viewDetail(row) {
-            if(this.activeName > 1){
-                this.dlDemandView2 = true;
-            }else{
-                this.dlDemandView = true;
-            }
-            const param = {demandNo: row.demandNo};
-            this.demandDetailList(param)
-                .then(() => {
-                    this.updreason = row.dealReason;
-                    this.destination = row.destination;
-                    this.comment = row.comment;
-                    this.priceComment = row.priceComment;
-                    this.customerName = row.customerName;
-                    this.customerPhone = row.customerPhone;
-                    var w = 0;
-                    this.demandDetail.map((v) => {
-                        w =  w + Number(Number(v.demandWeight).toFixed(2));
-                        if (v.factoryPrice == 0) {
-                            v.factoryPrice = ''
-                        }
-                        if (v.freight == 0) {
-                            v.freight = ''
-                        }
-                    })
-                    this.allweight = w.toFixed(2)
+                  this.loading = false
                 })
-           
-        },
-        dateFormat(row, column) {
-            if(!row[column.property]) {
-                return '';
-            } else {
-                return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
-            }
-        },
-        switchTab() {
-            this.searchDemand();
-        },
-        searchDemand() {
-            this.loading = true;
-            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.state = this.activeName;
-            this.loadDemandList(this.searchDeParam)
+    },
+    statusFormatter (row, column) {
+      const status = {
+        '0': '未报价需求',
+        '1': '待反馈',
+        '2': '已反馈',
+        '3': '未成交',
+        '4': '已成交'
+      }
+      return status[row.state]
+    },
+    viewDetail (row) {
+      if (this.activeName > 1) {
+        this.dlDemandView2 = true
+      } else {
+        this.dlDemandView = true
+      }
+      const param = {demandNo: row.demandNo}
+      this.demandDetailList(param)
                 .then(() => {
-                    this.loading = false;
-                });
-        },
-        submitPrice() {
-            this.$confirm('确认提交?', '确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then((v) => {
-                if (this.activeName < 2) {
-                    var params = {
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        demandPrices: this.demandDetail,
-                        timeConsume: this.timeConsume,
-                        priceComment: this.priceComment
+                  this.updreason = row.dealReason
+                  this.destination = row.destination
+                  this.comment = row.comment
+                  this.priceComment = row.priceComment
+                  this.customerName = row.customerName
+                  this.customerPhone = row.customerPhone
+                  var w = 0
+                  this.demandDetail.map((v) => {
+                    w = w + Number(Number(v.demandWeight).toFixed(2))
+                    if (v.factoryPrice === 0) {
+                      v.factoryPrice = ''
                     }
-                    this.loadDemandPriceList(params).then(rs => {
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        });
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                } else {
-                    var upparams = {
-                        state: this.activeName,
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        dealReason: this.updreason,
-                        timeConsume: this.timeConsume
+                    if (v.freight === 0) {
+                      v.freight = ''
                     }
-                    this.upDateDemandList(upparams).then(rs => {
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        })
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                }
-            })
-        },
-        savePriceList() {
-            this.$confirm('确认保存?', '确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then((v) => {
-                if (this.activeName < 2) {
-                    var params = {
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        demandPrices: this.demandDetail,
-                        timeConsume: this.timeConsume,
-                        priceComment: this.priceComment
-                    }
-                    this.saveDemand(params).then(rs => {
-                        this.$message({
-                            message: `保存成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        });
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                } else {
-                    var upparams = {
-                        state: this.activeName,
-                        demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
-                        dealReason: this.updreason,
-                        timeConsume: this.timeConsume
-                    }
-                    this.upDateDemandList(upparams).then(rs => {
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                        })
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView = false;
-                    })
-                }
-            })
-
-        },
-        queryFactoryPrice(query,string,cb) {
-            if(!string){
-                this.priceHistoryGet({spec:query.spec,type:query.type})
-                .then(data=>{
-                    console.log(data);
-                    cb(data);
+                  })
+                  this.allweight = w.toFixed(2)
                 })
-            }
-            cb([]);
-        },
-        handleSelect() { 
-        },
-        pruceFormat(row, column) {
-            if(row.priceTime)
-                return Math.ceil((row.priceTime - row.createTime) / 1000 / 60 ) + "分钟";
-            return "未报价"
-        },
     },
-    mounted: function () {
-        this.loading = true;
-        this.loadDemandList(this.searchDeParam).then(() => {
-            this.loading = false;
-        })
+    dateFormat (row, column) {
+      if (!row[column.property]) {
+        return ''
+      } else {
+        return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
+      }
     },
-    created() {
-        this.getMessageList({messageType:2})
-            .then( data =>{
-                this.messageList = data.row;
+    switchTab () {
+      this.searchDemand()
+    },
+    searchDemand () {
+      this.loading = true
+      this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.state = this.activeName
+      this.loadDemandList(this.searchDeParam)
+                .then(() => {
+                  this.loading = false
+                })
+    },
+    submitPrice () {
+      this.$confirm('确认提交?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((v) => {
+        if (this.activeName < 2) {
+          var params = {
+            demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+            demandPrices: this.demandDetail,
+            timeConsume: this.timeConsume,
+            priceComment: this.priceComment
+          }
+          this.loadDemandPriceList(params).then(rs => {
+            this.$message({
+              message: `报价成功`,
+              type: 'success'
             })
+            this.timeConsume = ''
+            this.demandDetail.map(v => {
+              v.freight = ''
+              v.factoryPrice = ''
+            })
+            this.loadDemandList(this.searchDeParam)
+            this.dlDemandView = false
+          })
+        } else {
+          var upparams = {
+            state: this.activeName,
+            demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+            dealReason: this.updreason,
+            timeConsume: this.timeConsume
+          }
+          this.upDateDemandList(upparams).then(rs => {
+            this.$message({
+              message: `报价成功`,
+              type: 'success'
+            })
+            this.timeConsume = ''
+            this.demandDetail.map(v => {
+              v.freight = ''
+              v.factoryPrice = ''
+            })
+            this.loadDemandList(this.searchDeParam)
+            this.dlDemandView = false
+          })
+        }
+      })
     },
+    savePriceList () {
+      this.$confirm('确认保存?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((v) => {
+        if (this.activeName < 2) {
+          var params = {
+            demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+            demandPrices: this.demandDetail,
+            timeConsume: this.timeConsume,
+            priceComment: this.priceComment
+          }
+          this.saveDemand(params).then(rs => {
+            this.$message({
+              message: `保存成功`,
+              type: 'success'
+            })
+            this.timeConsume = ''
+            this.demandDetail.map(v => {
+              v.freight = ''
+              v.factoryPrice = ''
+            })
+            this.loadDemandList(this.searchDeParam)
+            this.dlDemandView = false
+          })
+        } else {
+          var upparams = {
+            state: this.activeName,
+            demandNo: this.demandDetail[0] ? this.demandDetail[0].demandNo : '',
+            dealReason: this.updreason,
+            timeConsume: this.timeConsume
+          }
+          this.upDateDemandList(upparams).then(rs => {
+            this.$message({
+              message: `报价成功`,
+              type: 'success'
+            })
+            this.timeConsume = ''
+            this.demandDetail.map(v => {
+              v.freight = ''
+              v.factoryPrice = ''
+            })
+            this.loadDemandList(this.searchDeParam)
+            this.dlDemandView = false
+          })
+        }
+      })
+    },
+    queryFactoryPrice (query, string, cb) {
+      if (!string) {
+        this.priceHistoryGet({spec: query.spec, type: query.type})
+                .then(data => {
+                  console.log(data)
+                  cb(data)
+                })
+      }
+      cb([])
+    },
+    handleSelect () {
+    },
+    pruceFormat (row, column) {
+      if (row.priceTime) { return Math.ceil((row.priceTime - row.createTime) / 1000 / 60) + '分钟' }
+      return '未报价'
+    }
+  },
+  mounted: function () {
+    this.loading = true
+    this.loadDemandList(this.searchDeParam).then(() => {
+      this.loading = false
+    })
+  },
+  created () {
+    this.getMessageList({messageType: 2})
+            .then(data => {
+              this.messageList = data.row
+            })
+  }
 }
 </script>
 <style lang="less">

@@ -13,7 +13,10 @@
       <li class="nav-item" v-else="userInfo.comId == '00'">
         <a href="#/supplier/info" :class="[ mainRoute === 'supplier' ? 'active' : '' ]">供应商录入</a>
       </li>
-      <li class="nav-item" v-if="userInfo.userRole.charAt(0)">
+      <li class="nav-item" v-if="userInfo.userRole.charAt(8) === '1'">
+        <a href="#/finance/invoice" :class="[ mainRoute === 'finance' ? 'active' : '' ]">财务管理</a>
+      </li>
+      <li class="nav-item" v-if="userInfo.userRole.charAt(0) === '1'">
         <a href="#/manager/review" :class="[ mainRoute === 'manager' ? 'active' : '' ]">管理员后台</a>
       </li>
       <li class="user-wrap">
@@ -26,36 +29,34 @@
 </template>
 
 <script>
-    import {
-      removeCookie
-    } from '../../vuex/action'
+	import { removeCookie } from '../../vuex/action'
 
-  export default {
-    vuex: {
-      actions:{
-          removeCookie
-      },
-      getters: {
-        mainRoute: ({
-          common
-        }) => common.mainRoute,
-        userInfo: ({
-          common
-        }) => common.userInfo
-      }
-    },
-    methods: {
-      loginout() {
-        this.removeCookie()
-        .then(rs => {
-            document.location.href = "login.html"
-        })
-      }
-    },
-    mounted() {
-      this.userInfo.userRole = this.getCookie("userRole");
-    }
-  }
+	export default {
+	  data () {
+	    return {
+	      showFinance: false
+	    }
+	  },
+	  vuex: {
+	    actions: {
+	      removeCookie
+	    },
+	    getters: {
+	      mainRoute: ({ common }) => common.mainRoute,
+	      userInfo: ({ common }) => common.userInfo
+	    }
+	  },
+	  methods: {
+	    loginout () {
+	      this.removeCookie().then(rs => {
+	        document.location.href = 'login.html'
+	      })
+	    }
+	  },
+	  mounted () {
+	    this.userInfo.userRole = this.getCookie('userRole')
+	  }
+	}
 </script>
 
 <style lang="less" scoped>

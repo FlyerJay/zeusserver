@@ -17,6 +17,19 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Invoice.invoiceList(ctx.query);
     }
+
+    * listForZeus () {
+      const { ctx } = this;
+      const userRole = ctx.cookies.get('userRole');
+      if (userRole.charAt(8) === '0') {
+        ctx.body = {
+          code: -1,
+          msg: '抱歉，没有权限进行该操作'
+        };
+      } else {
+        ctx.body = yield app.model.Invoice.invoiceList(ctx.query);
+      }
+    }
 	}
 
   return invoiceController;

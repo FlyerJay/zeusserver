@@ -318,7 +318,7 @@
 <script>
   (function () {
     $('.login-btn').on('click', function (e) {
-      e.preventDefault();
+      e.preventDefault()
       var params = {
         userId: $('.userId').val(),
         password: $('.password').val(),
@@ -331,17 +331,17 @@
         type: 'post',
         success: function (res) {
           if (res.code === 200) {
-            document.location.href = 'http://127.0.0.1:8080';
+            document.location.href = 'http://127.0.0.1:8080'
           } else {
             $('.warn-txt').text(res.msg)
           }
         }
       })
-    });
-    $('.input').focus(function(){
-      $('.warn-txt').text('');
-    });
-  })()
+    })
+    $('.input').focus(function () {
+      $('.warn-txt').text('')
+    })
+})()
 
 </script>
 

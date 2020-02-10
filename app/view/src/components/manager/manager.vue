@@ -23,31 +23,31 @@
         }) => common.userInfo
       }
     },
-    data() {
+    data () {
       return {
         topMenuData: [{
-            url: '/manager/review',
-            icon: 'icon-review',
-            name: '下单审核'
-          },
-          {
-            url: '/manager/member',
-            icon: 'icon-member',
-            name: '成员列表'
-          },
-          {
-            url: '/manager/operate',
-            icon: 'icon-history',
-            name: '操作记录'
-          }
+          url: '/manager/review',
+          icon: 'icon-review',
+          name: '下单审核'
+        },
+        {
+          url: '/manager/member',
+          icon: 'icon-member',
+          name: '成员列表'
+        },
+        {
+          url: '/manager/operate',
+          icon: 'icon-history',
+          name: '操作记录'
+        }
         ]
       }
     },
-    mounted: function() {
-      this.userInfo.userRole = this.getCookie("userRole");
+    mounted: function () {
+      this.userInfo.userRole = this.getCookie('userRole')
       if (this.userInfo.userRole) {
-        this.topMenuData = [];
-        if(parseInt(this.userInfo.userRole.charAt(7))) {
+        this.topMenuData = []
+        if (parseInt(this.userInfo.userRole.charAt(7))) {
           const itemArr = [
             {
               url: '/manager/review',
@@ -59,9 +59,9 @@
               icon: 'icon-history',
               name: '操作记录'
             }
-          ];
+          ]
           this.topMenuData = this.topMenuData.concat(itemArr)
-        }else{
+        } else {
           const itemArr = [
             {
               url: '/manager/review',
@@ -83,13 +83,13 @@
               icon: 'icon-message',
               name: '消息管理'
             }
-          ];
+          ]
           this.topMenuData = this.topMenuData.concat(itemArr)
         }
       }
-      this.updateForm('topMenuData', this.topMenuData);
+      this.updateForm('topMenuData', this.topMenuData)
     },
-    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter (to, from, next) {
       next(vm => {
         vm.updateForm('mainRoute', to.path.split('/')[1])
       })

@@ -33,30 +33,34 @@ module.exports = app => {
         },
         adminAuth: {
             type: INTEGER,
-            allowNull:false,
-            comment:"管理员权限"
+            allowNull: false,
+            comment: "管理员权限"
         },
         supplierAuth:{
-            type:INTEGER,
-            allowNull:false,
-            comment:"供应商录入权限"
+            type: INTEGER,
+            allowNull: false,
+            comment: "供应商录入权限"
         },
         valueAuth: {
-            type:INTEGER,
-            allowNull:false,
-            comment:"价格表权限",
+            type: INTEGER,
+            allowNull: false,
+            comment: "价格表权限",
         },
         inventoryAuth: {
             type: INTEGER,
-            comment:"库存表权限"
+            comment: "库存表权限"
         },
         demandAuth: {
             type: INTEGER,
-            comment:"定制化需求权限"
+            comment: "定制化需求权限"
         },
         orderAuth: {
             type: INTEGER,
-            comment:"下单权限"
+            comment: "下单权限"
+        },
+        financeAuth: {
+            type: INTEGER,
+            comment: "财务权限"
         },
         lastUpdateTime: {
             type: BIGINT(20),
@@ -78,11 +82,11 @@ module.exports = app => {
                     msg:"请选择要操作的人:operator"
                 }
                 var self = this;
-                return app.model.transaction(async (t)=>{
+                return app.model.transaction(async (t) => {
                     return await self.findOne({
                         where:{
                             userId: {
-                                $eq: options.operator,
+                                $eq: options.operator, 
                             },
                             comId: {
                                 $eq: options.comId
@@ -128,7 +132,7 @@ module.exports = app => {
                     }
                 })
                 const _role = result.dataValues;
-                return `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}`;;
+                return `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}${_role['financeAuth']}`;;
             },
             * list(options){
                 if(!options.comId) return {

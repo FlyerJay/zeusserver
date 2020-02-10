@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <div>
         <el-form :inline="true" :model="searchInvenParam" class="demo-form-inline">
             <el-form-item label="规格">
@@ -77,112 +77,112 @@ import {
 } from '../../vuex/action'
 
 export default {
-    vuex: {
-        actions: {
-            loadSupInventoryList,
-            loadSupAddress,
-            updateStock
-        },
-        getters: {
-            inventory: ({
+  vuex: {
+    actions: {
+      loadSupInventoryList,
+      loadSupAddress,
+      updateStock
+    },
+    getters: {
+      inventory: ({
                     supplier
                 }) => supplier.inventory,
-            supAddress: ({
+      supAddress: ({
                     supplier
                 }) => supplier.supAddress,
-            userInfo: ({
+      userInfo: ({
                     common
                 }) => common.userInfo
-        }
-    },
-    data() {
-        return {
-            searchInvenParam: {
-                spec: '',
-                type: '',
-                material: '',
-                supplierName: '',
-                address: '',
-                page: 1
-            },
-            newStockParam: {
-                inventoryAmount: '',
-                supplierInventoryId: ''
-            },
-            row: {},
-            loading: true,
-            dlgStockVisible: false
-        }
-    },
-    methods: {
-        searchStock() {
-            this.loading = true;
-            this.searchInvenParam.page = 1;
-            this.loadSupInventoryList(this.searchInvenParam)
-                .then(rs => {
-                    this.loading = false;
-                })
-        },
-        weightFormatter(row, column) {
-            const specArr = row.spec.split('*');
-            const height = Number(specArr[0]);
-            const width = Number(specArr[1]);
-            const land = Number(specArr[2]);
-            const long = Number(row.long) ? Number(row.long) : 6;
-            const perimeter = 2 * height + 2 * width;
-            const amount = Number(row.perAmount);
-            const inventoryAmount = Number(row.inventoryAmount);
-            return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2);
-        },
-        perWeightFormatter(row, column) {
-            const specArr = row.spec.split('*');
-            const height = Number(specArr[0]);
-            const width = Number(specArr[1]);
-            const land = Number(specArr[2]);
-            const long = Number(row.long) ? Number(row.long) : 6;
-            const perimeter = 2 * height + 2 * width;
-            const amount = Number(row.perAmount);
-            const inventoryAmount = Number(row.inventoryAmount);
-            return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2);
-        },
-        handleCurrentChange(val) {
-            this.searchInvenParam.page = val;
-            this.loading = true;
-            this.loadSupInventoryList(this.searchInvenParam)
-                .then(() => {
-                    this.loading = false;
-                });
-        },
-        changeStock(index, row) {
-            this.dlgStockVisible = true;
-            this.newStockParam.inventoryAmount = Number(row.inventoryAmount);
-            this.newStockParam.supplierInventoryId = row.supplierInventoryId;
-            this.row = row;
-        },
-        confirmChangeStock(row) {
-            this.updateStock(this.newStockParam)
-                .then(rs => {
-                    this.$message({
-                        message: `库存修改成功`,
-                        type: 'success'
-                    });
-                    this.dlgStockVisible = false;
-                    this.row.inventoryAmount = this.newStockParam.inventoryAmount;
-            })
-        }
-    },
-    mounted: function () {
-        this.loadSupInventoryList()
-            .then(rs => {
-                this.loading = false;
-            });
-        this.loadSupAddress();
-    },
-    computed: {
-        inventoryAuth() {
-            return Boolean(parseInt(this.userInfo.userRole.charAt(2)));
-        }
     }
+  },
+  data () {
+    return {
+      searchInvenParam: {
+        spec: '',
+        type: '',
+        material: '',
+        supplierName: '',
+        address: '',
+        page: 1
+      },
+      newStockParam: {
+        inventoryAmount: '',
+        supplierInventoryId: ''
+      },
+      row: {},
+      loading: true,
+      dlgStockVisible: false
+    }
+  },
+  methods: {
+    searchStock () {
+      this.loading = true
+      this.searchInvenParam.page = 1
+      this.loadSupInventoryList(this.searchInvenParam)
+                .then(rs => {
+                  this.loading = false
+                })
+    },
+    weightFormatter (row, column) {
+      const specArr = row.spec.split('*')
+      const height = Number(specArr[0])
+      const width = Number(specArr[1])
+      const land = Number(specArr[2])
+      const long = Number(row.long) ? Number(row.long) : 6
+      const perimeter = 2 * height + 2 * width
+      const amount = Number(row.perAmount)
+      const inventoryAmount = Number(row.inventoryAmount)
+      return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount * inventoryAmount / 1000).toFixed(2)
+    },
+    perWeightFormatter (row, column) {
+      const specArr = row.spec.split('*')
+      const height = Number(specArr[0])
+      const width = Number(specArr[1])
+      const land = Number(specArr[2])
+      const long = Number(row.long) ? Number(row.long) : 6
+      const perimeter = 2 * height + 2 * width
+    //   const amount = Number(row.perAmount)
+    //   const inventoryAmount = Number(row.inventoryAmount)
+      return ((perimeter / 3.14 - land) * land * long * 0.02466).toFixed(2)
+    },
+    handleCurrentChange (val) {
+      this.searchInvenParam.page = val
+      this.loading = true
+      this.loadSupInventoryList(this.searchInvenParam)
+                .then(() => {
+                  this.loading = false
+                })
+    },
+    changeStock (index, row) {
+      this.dlgStockVisible = true
+      this.newStockParam.inventoryAmount = Number(row.inventoryAmount)
+      this.newStockParam.supplierInventoryId = row.supplierInventoryId
+      this.row = row
+    },
+    confirmChangeStock (row) {
+      this.updateStock(this.newStockParam)
+                .then(rs => {
+                  this.$message({
+                    message: `库存修改成功`,
+                    type: 'success'
+                  })
+                  this.dlgStockVisible = false
+                  this.row.inventoryAmount = this.newStockParam.inventoryAmount
+                })
+    }
+  },
+  mounted: function () {
+    this.loadSupInventoryList()
+            .then(rs => {
+              this.loading = false
+            })
+    this.loadSupAddress()
+  },
+  computed: {
+    inventoryAuth () {
+      return Boolean(parseInt(this.userInfo.userRole.charAt(2)))
+    }
+  }
 
 }
 </script>

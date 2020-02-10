@@ -108,7 +108,7 @@
                     <template slot="prepend">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</template>
                 </el-input>
                 <div class="car-list dialog-item clearfix">
-                    <div class="car-item" v-for="(item,index) in confirmParams.carList">
+                    <div class="car-item" v-for="(item,index) in confirmParams.carList" :key="index">
                         <span>{{item.plate}}</span>
                         <span class="close"><i class="iconfont icon-close" @click="deleteCar(index)"></i></span>
                     </div>
@@ -132,7 +132,7 @@
                         </template>
                     </el-input>
                 </div>
-                <div class="address-item" v-for="(item,index) in addressList.row" @click="selectAddress(item)">
+                <div class="address-item" v-for="(item,index) in addressList.row" @click="selectAddress(item)" :key="index">
                     <div class="address-name">{{item.addressName}}</div>
                     <div class="address"><span class="default-address" v-if="item.isDefault == 1">[默认地址]</span><i class="iconfont icon-location"></i>{{item.address}}</div>
                     <aside>
@@ -215,7 +215,7 @@
                         </template>
                     </el-input>
                 </div>
-                <div class="address-item" v-for="(item,index) in carList.row" @click="selectCar(item)">
+                <div class="address-item" v-for="(item, index) in carList.row" :key="index" @click="selectCar(item)">
                     <div class="address-name">{{item.linkName}}</div>
                     <span class="plate"><i class="iconfont icon-plate"></i>{{item.plate}}</span>
                     <span class="phone"><i class="iconfont icon-phone"></i>{{item.phone}}</span>
@@ -264,7 +264,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in confirmParams.carList">
+                        <tr v-for="(item, index) in confirmParams.carList" :key="index">
                             <td style="width:50%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.plate}}</td>
                             <td style="width:50%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.phone}}</td>
                         </tr>
@@ -283,7 +283,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item,index) in printParams.specs">
+                        <tr v-for="(item, index) in printParams.specs" :key="index">
                             <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{index+1}}</td>
                             <td style="width:30%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.spec}}</td>
                             <td style="width:10%;padding:5px 0px;text-align:center;border-right:1px solid #dfe6ec;border-bottom:1px solid #dfe6ec">{{item.long}}米</td>
@@ -397,7 +397,6 @@
         loadOrderList,
         removeOrderList,
         loadOrderDetail,
-        exportOrderList,
         printOrder,
         defaultAddress,
         getAddressList,
@@ -408,386 +407,386 @@
         newCar,
         removeCar,
         orderDetailUp
-    } from '../../vuex/action';
-    import printpage from '../common/printpage';
-    export default {
-        vuex: {
-            actions: {
-                loadOrderList,
-                removeOrderList,
-                loadOrderDetail,
-                printOrder,
-                defaultAddress,
-                getAddressList,
-                newAddress,
-                removeAddress,
-                setDefault,
-                getCarList,
-                newCar,
-                removeCar,
-                orderDetailUp
-            },
-            getters: {
-                userInfo: ({
+    } from '../../vuex/action'
+import printpage from '../common/printpage'
+export default {
+      vuex: {
+        actions: {
+          loadOrderList,
+          removeOrderList,
+          loadOrderDetail,
+          printOrder,
+          defaultAddress,
+          getAddressList,
+          newAddress,
+          removeAddress,
+          setDefault,
+          getCarList,
+          newCar,
+          removeCar,
+          orderDetailUp
+        },
+        getters: {
+          userInfo: ({
                     common
                 }) => common.userInfo,
-                orderList: ({
+          orderList: ({
                     order
                 }) => order.orderList,
-                orderDetail: ({
+          orderDetail: ({
                     order
                 }) => order.orderDetail
+        }
+      },
+      components: {
+        printpage
+      },
+      data () {
+        return {
+          orderParams: {
+            orderNo: '',
+            comId: this.userInfo.comId,
+            page: 1
+          },
+          loading: true,
+          printLoading: false,
+          detailLoading: true,
+          detailDialogShow: false, // 订单详细
+          printDlConfirmShow: false, // 打印确认
+          addressListDlShow: false, // 地址列表
+          addressAddDlShow: false, // 添加地址
+          carAddDlShow: false, // 车辆添加
+          carListDlShow: false, // 车辆列表
+          updateDatailDlShow: false, // 更新订单详情
+          orderNo: '',
+          printParams: {
+            specs: [], // 发货单规格列表
+            comInfo: {} // 公司信息，需要填写
+          },
+          addressParams: {
+            addressType: 1,
+            isDefault: 0,
+            addressName: '',
+            address: '',
+            phone: '',
+            fax: '',
+            linkName: '',
+            finance: '',
+            emainl: ''
+          },
+          carParams: {
+            plate: '',
+            phone: '',
+            linkName: ''
+          },
+          addressQuery: {
+            addressType: '',
+            page: 1,
+            address: ''
+          },
+          carQuery: {
+            plate: '',
+            page: 1
+          },
+          confirmParams: {
+            CAddress: {
+              address: ''
+            }, // 收货地址
+            BAddress: {
+              address: ''
+            }, // 发货地址
+            carList: [],
+            comment: ''
+          },
+          addressList: [],
+          carList: [],
+          detailUpdateParams: {
+            orderDetailId: '',
+            orderNo: '',
+            comment: '',
+            orderDcrease: '',
+            unitPrice: '',
+            orderAmount: '',
+            Weight: ''
+          }
+        }
+      },
+      methods: {
+        handleCurrentChange (val) {
+          this.orderParams.page = val
+          this.loadList()
+        },
+        handleAddressPage (val) {
+          this.addressQuery.page = val
+          this.getAddressList(this.addressQuery).then(data => {
+            this.addressList = data
+          })
+        },
+        handleCarPage (val) {
+          this.carQuery.page = val
+          this.getCarList(this.carQuery).then(data => {
+            this.carList = data
+          })
+        },
+        searchOrder () {
+          this.loadList()
+        },
+        exportOrder () {
+          var date = new Date().formatDate('yyyyMMdd')
+          window.open(`/zues/api/export/order/订单列表${date}.xls`)
+        },
+        exportOrderDetailList () {
+          var date = new Date().formatDate('yyyyMMdd')
+          window.open(`/zues/api/export/orderdetaillist/订单详情列表${date}.xls`)
+        },
+        exportOrderDetail () {
+          window.open(`/zues/api/export/orderdetail/${this.orderDetail[0].orderNo}订单详情.xls?orderNo=${this.orderDetail[0].orderNo}`)
+        },
+        statusFormatter (row, column) {
+          return row.validate === 0 ? '未审核' : '已审核'
+        },
+        dateFormat (row, column) {
+          return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
+        },
+        nameFormat (row, colum) {
+          return row.supplierName.replace(/黑管|热镀锌|镀锌带/g, '')
+        },
+        unitFormatter (row, colum) {
+          return Number(row.orderDcrease / row.Weight).toFixed(2)
+        },
+        viewDetail (index, row) {
+          this.detailDialogShow = true
+          this.detailLoading = true
+          this.loadOrderDetail({orderNo: row.orderNo}).then(() => {
+            this.detailLoading = false
+          })
+        },
+        enterNum (index, row) {
+          const orderNoArr = [row.orderNo].join(',')
+          this.$confirm('该订单将被删除, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            class: 'LDW'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
             },
+                  this.removeOrderList({orderNo: orderNoArr})
+                  )
+            this.loadList()
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
         },
-        components:{
-            printpage
-        },
-        data() {
-            return {
-                orderParams: {
-                    orderNo:'',
-                    comId: this.userInfo.comId,
-                    page:1,
-                },
-                loading: true,
-                printLoading: false,
-                detailLoading: true,
-                detailDialogShow: false,//订单详细
-                printDlConfirmShow: false,//打印确认
-                addressListDlShow: false,//地址列表
-                addressAddDlShow: false,//添加地址
-                carAddDlShow: false,//车辆添加
-                carListDlShow: false,//车辆列表
-                updateDatailDlShow: false, //更新订单详情
-                orderNo:'',
-                printParams: {
-                    specs: [],//发货单规格列表
-                    comInfo: {},//公司信息，需要填写
-                },
-                addressParams: {
-                    addressType: 1,
-                    isDefault: 0,
-                    addressName: '',
-                    address: '',
-                    phone: '',
-                    fax: '',
-                    linkName: '',
-                    finance: '',
-                    emainl: '',
-                },
-                carParams: {
-                    plate: '',
-                    phone: '',
-                    linkName: '',
-                },
-                addressQuery: {
-                    addressType: '',
-                    page: 1,
-                    address: '',
-                },
-                carQuery: {
-                    plate: '',
-                    page: 1,
-                },
-                confirmParams: {
-                    CAddress: {
-                        address: '',
-                    },//收货地址
-                    BAddress: {
-                        address: '',
-                    },//发货地址
-                    carList:[],
-                    comment:'',
-                },
-                addressList: [],
-                carList: [],
-                detailUpdateParams: {
-                    orderDetailId: '',
-                    orderNo: '',
-                    comment: '',
-                    orderDcrease: '',
-                    unitPrice: '',
-                    orderAmount: '',
-                    Weight: '',
-                }
+        confirmPrintInfo (index, row) {
+          this.printDlConfirmShow = true
+          this.orderNo = row.orderNo
+          var params = {}
+          params.addressType = 1
+          this.defaultAddress(params).then(data => {
+            if (data[0]) {
+              this.confirmParams.CAddress = data[0]
+            } else {
+              this.confirmParams.CAddress = {}
             }
+            params.addressType = 2
+            this.defaultAddress(params).then(data => {
+              if (data[0]) {
+                this.confirmParams.BAddress = data[0]
+              } else {
+                this.confirmParams.BAddress = {}
+              }
+            })
+          })
         },
-        methods: {
-            handleCurrentChange(val) {
-                this.orderParams.page = val;
-                this.loadList();
-            },
-            handleAddressPage(val) {
-                this.addressQuery.page = val;
-                this.getAddressList(this.addressQuery).then( data => {
-                    this.addressList = data;
-                })
-            },
-            handleCarPage(val) {
-                this.carQuery.page = val;
-                this.getCarList(this.carQuery).then( data => {
-                    this.carList = data;
-                })
-            },
-            searchOrder() {
-                this.loadList();
-            },
-            exportOrder() {
-                var date = new Date().formatDate('yyyyMMdd');
-                window.open(`/zues/api/export/order/订单列表${date}.xls`);
-            },
-            exportOrderDetailList() {
-                var date = new Date().formatDate('yyyyMMdd');
-                window.open(`/zues/api/export/orderdetaillist/订单详情列表${date}.xls`);
-            },
-            exportOrderDetail() {
-                window.open(`/zues/api/export/orderdetail/${this.orderDetail[0].orderNo}订单详情.xls?orderNo=${this.orderDetail[0].orderNo}`);
-            },
-            statusFormatter(row,column){
-                return row.validate === 0 ? '未审核' : '已审核';
-            },
-            dateFormat(row, column) {
-                return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
-            },
-            nameFormat(row, colum) {
-                return row.supplierName.replace(/黑管|热镀锌|镀锌带/g,'');
-            },
-            unitFormatter(row,colum){
-                return Number(row.orderDcrease/row.Weight).toFixed(2);
-            },
-            viewDetail(index,row) {
-                this.detailDialogShow = true;
-                this.detailLoading = true;
-                this.loadOrderDetail({orderNo:row.orderNo}).then(()=>{
-                    this.detailLoading = false;
-                });
-            },
-            enterNum(index, row) {
-                const orderNoArr = [row.orderNo].join(',');
-                this.$confirm('该订单将被删除, 是否继续?', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  type: 'warning',
-                  class:'LDW'
-                }).then(() => {
+        managerAddress (type) {
+          this.addressQuery.addressType = type
+          this.addressParams.addressType = type
+          this.addressListDlShow = true
+          this.getAddressList(this.addressQuery).then(data => {
+            this.addressList = data
+          })
+        },
+        searchAddress () {
+          this.addressQuery.page = 1
+          this.getAddressList(this.addressQuery).then(data => {
+            this.addressList = data
+          })
+        },
+        searchCar () {
+          this.carQuery.page = 1
+          this.getCarList(this.carQuery).then(data => {
+            this.carList = data
+          })
+        },
+        showNewAddress () {
+          this.addressAddDlShow = true
+        },
+        showNewCar () {
+          this.carAddDlShow = true
+        },
+        submitAddress () {
+          this.newAddress(this.addressParams)
+                .then(() => {
                   this.$message({
                     type: 'success',
-                    message: '删除成功!',
+                    message: '地址添加成功!'
                   },
-                  this.removeOrderList({orderNo:orderNoArr})
-                  );
-                  this.loadList();
-                }).catch(() => {
+                    this.getAddressList(this.addressQuery).then(data => {
+                      this.addressList = data
+                      this.addressAddDlShow = false
+                    }))
+                })
+        },
+        deleteAddress (addressId) {
+          this.addressQuery.page = 1
+          this.removeAddress({addressId: [addressId].join(',')})
+                .then(() => {
                   this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                  });          
-                });
-            },
-            confirmPrintInfo(index,row) {
-                this.printDlConfirmShow = true;
-                this.orderNo = row.orderNo;
-                var params = {};
-                params.addressType = 1;
-                this.defaultAddress(params).then(data => {
-                    if(data[0]){
-                        this.confirmParams.CAddress = data[0];
-                    }else{
-                        this.confirmParams.CAddress = {};
-                    }
-                    params.addressType = 2;
-                    this.defaultAddress(params).then(data => {
-                        if(data[0]){
-                            this.confirmParams.BAddress = data[0];
-                        }else{
-                            this.confirmParams.BAddress = {};
-                        }
-                    })
-                })
-            },
-            managerAddress(type) {
-                this.addressQuery.addressType = type;
-                this.addressParams.addressType = type;
-                this.addressListDlShow = true;
-                this.getAddressList(this.addressQuery).then( data => {
-                    this.addressList = data;
-                })
-            },
-            searchAddress() {
-                this.addressQuery.page = 1;
-                this.getAddressList(this.addressQuery).then( data => {
-                    this.addressList = data;
-                })
-            },
-            searchCar() {
-                this.carQuery.page = 1;
-                this.getCarList(this.carQuery).then( data => {
-                    this.carList = data;
-                })
-            },
-            showNewAddress() {
-                this.addressAddDlShow = true;
-            },
-            showNewCar() {
-                this.carAddDlShow = true;
-            },
-            submitAddress() {
-                this.newAddress(this.addressParams)
-                .then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '地址添加成功!',
-                    },
-                    this.getAddressList(this.addressQuery).then( data => {
-                        this.addressList = data;
-                        this.addressAddDlShow = false;
+                    type: 'success',
+                    message: '删除地址成功!'
+                  },
+                    this.getAddressList(this.addressQuery).then(data => {
+                      this.addressList = data
                     }))
                 })
-            },
-            deleteAddress(addressId) {
-                this.addressQuery.page = 1;
-                this.removeAddress({addressId:[addressId].join(',')})
+        },
+        removeRemoteCar (carId) {
+          this.carQuery.page = 1
+          this.removeCar({carId: [carId].join(',')})
                 .then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除地址成功!',
-                    },
-                    this.getAddressList(this.addressQuery).then( data => {
-                        this.addressList = data;
-                    }))
-                })
-            },
-            removeRemoteCar(carId) {
-                this.carQuery.page = 1;
-                this.removeCar({carId:[carId].join(',')})
-                .then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除车辆成功!',
-                    },
+                  this.$message({
+                    type: 'success',
+                    message: '删除车辆成功!'
+                  },
                     this.handleCarPage(1))
                 })
-            },
-            setDefaultAddress(addressId) {
-                this.setDefault({addressId,addressType:this.addressQuery.addressType})
+        },
+        setDefaultAddress (addressId) {
+          this.setDefault({addressId, addressType: this.addressQuery.addressType})
                 .then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '设置默认地址成功!',
-                    },
-                    this.getAddressList(this.addressQuery).then( data => {
-                        this.addressList = data;
+                  this.$message({
+                    type: 'success',
+                    message: '设置默认地址成功!'
+                  },
+                    this.getAddressList(this.addressQuery).then(data => {
+                      this.addressList = data
                     }))
                 })
-            },
-            onAddressClose() {
-                this.addressQuery.page = 1;
-                this.addressQuery.address = '';
-            },
-            onCarClose() {
-                this.carQuery.page = 1;
-                this.carQuery.plate = '';
-            },
-            selectAddress(address) {
-                if(this.addressQuery.addressType == 1){
-                    this.confirmParams.CAddress = address;
-                }else{
-                    this.confirmParams.BAddress = address;
-                }
-                this.addressListDlShow = false;
-            },
-            selectCar(car) {
-                this.confirmParams.carList.push(car);
-                this.carListDlShow = false;
-            },
-            carListShow() {
-                this.carListDlShow = true;
-                this.getCarList(this.carQuery).then( data => {
-                    this.carList = data;
-                })
-            },
-            submitCar() {
-                if(!this.carParams.plate){
-                    this.$message({
-                        type: 'warning',
-                        message: '请填写车牌号!',
-                    })
-                    return false;
-                }
-                if(!this.carParams.phone){
-                    this.$message({
-                        type: 'warning',
-                        message: '请填写手机号!',
-                    })
-                    return false;
-                }
-                var car = {};
-                car.plate = this.carParams.plate;
-                car.phone = this.carParams.phone;
-                car.linkName = this.carParams.linkName;
-                this.newCar(car).then(data => {
-                    this.$message(
-                        {
-                            type: 'warning',
-                            message: '添加车辆成功!',
-                        }
+        },
+        onAddressClose () {
+          this.addressQuery.page = 1
+          this.addressQuery.address = ''
+        },
+        onCarClose () {
+          this.carQuery.page = 1
+          this.carQuery.plate = ''
+        },
+        selectAddress (address) {
+          if (this.addressQuery.addressType === 1) {
+            this.confirmParams.CAddress = address
+          } else {
+            this.confirmParams.BAddress = address
+          }
+          this.addressListDlShow = false
+        },
+        selectCar (car) {
+          this.confirmParams.carList.push(car)
+          this.carListDlShow = false
+        },
+        carListShow () {
+          this.carListDlShow = true
+          this.getCarList(this.carQuery).then(data => {
+            this.carList = data
+          })
+        },
+        submitCar () {
+          if (!this.carParams.plate) {
+            this.$message({
+              type: 'warning',
+              message: '请填写车牌号!'
+            })
+            return false
+          }
+          if (!this.carParams.phone) {
+            this.$message({
+              type: 'warning',
+              message: '请填写手机号!'
+            })
+            return false
+          }
+          var car = {}
+          car.plate = this.carParams.plate
+          car.phone = this.carParams.phone
+          car.linkName = this.carParams.linkName
+          this.newCar(car).then(data => {
+            this.$message(
+              {
+                type: 'warning',
+                message: '添加车辆成功!'
+              }
                     )
-                    this.carAddDlShow = false;
-                    this.handleCarPage(1);
-                })
-            },
-            deleteCar(index) {
-                this.confirmParams.carList.splice(index,1);
-            },
-            orderPrint() {
-                var params = {
-                    orderNo:this.orderNo
-                }
-                this.printOrder(params)
+            this.carAddDlShow = false
+            this.handleCarPage(1)
+          })
+        },
+        deleteCar (index) {
+          this.confirmParams.carList.splice(index, 1)
+        },
+        orderPrint () {
+          var params = {
+            orderNo: this.orderNo
+          }
+          this.printOrder(params)
                 .then(data => {
-                    this.printParams.specs = data.orderDetail.slice();
-                    this.$refs.printpage.print();
+                  this.printParams.specs = data.orderDetail.slice()
+                  this.$refs.printpage.print()
                 })
-            },
-            loadList(){
-                this.loading = true
-                this.loadOrderList(this.orderParams).then(()=>{
-                    this.loading = false;
-                });
-            },
-            updateDatail(scope,row) {
-                this.detailUpdateParams.orderNo = row.orderNo;
-                this.detailUpdateParams.orderDcrease = row.orderDcrease;
-                this.detailUpdateParams.comment = row.comment;
-                this.detailUpdateParams.orderDetailId = row.orderDetailId;
-                this.detailUpdateParams.orderAmount = row.orderAmount;
-                this.detailUpdateParams.Weight = row.Weight;
-                this.detailUpdateParams.unitPrice = row.unitPrice;
-                this.updateDatailDlShow = true;
-            },
-            submitOrderDetail() {
-                this.orderDetailUp(this.detailUpdateParams)
-                    .then(()=> {
-                        this.$message(
-                            {
-                                type: 'success',
-                                message: '更新成功!',
-                            }
+        },
+        loadList () {
+          this.loading = true
+          this.loadOrderList(this.orderParams).then(() => {
+            this.loading = false
+          })
+        },
+        updateDatail (scope, row) {
+          this.detailUpdateParams.orderNo = row.orderNo
+          this.detailUpdateParams.orderDcrease = row.orderDcrease
+          this.detailUpdateParams.comment = row.comment
+          this.detailUpdateParams.orderDetailId = row.orderDetailId
+          this.detailUpdateParams.orderAmount = row.orderAmount
+          this.detailUpdateParams.Weight = row.Weight
+          this.detailUpdateParams.unitPrice = row.unitPrice
+          this.updateDatailDlShow = true
+        },
+        submitOrderDetail () {
+          this.orderDetailUp(this.detailUpdateParams)
+                    .then(() => {
+                      this.$message(
+                        {
+                          type: 'success',
+                          message: '更新成功!'
+                        }
                         )
-                        this.updateDatailDlShow = false;
-                        this.detailDialogShow = false;
-                        this.loadList();
+                      this.updateDatailDlShow = false
+                      this.detailDialogShow = false
+                      this.loadList()
                     })
-            }
-        },
-        mounted: function() {
-            this.loadList();
-        },
-        filters:{
-            dateFilter(val){
-                return val.formatDate('yyyy-MM-dd');
-            }
         }
+      },
+      mounted: function () {
+        this.loadList()
+      },
+      filters: {
+        dateFilter (val) {
+          return val.formatDate('yyyy-MM-dd')
+        }
+      }
     }
 </script>
 <style lang="less">

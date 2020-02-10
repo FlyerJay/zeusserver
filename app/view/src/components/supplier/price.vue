@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <div>
         <el-form :inline="true" :model="searchParam" class="demo-form-inline">
             <el-form-item label="规格">
@@ -81,130 +81,129 @@
     } from '../../vuex/action'
     
     export default {
-        vuex: {
-            actions: {
-                loadSupPriceList,
-                loadSupAddress,
-                updatePrice,
-                adjustPrice
-            },
-            getters: {
-                price: ({
+      vuex: {
+        actions: {
+          loadSupPriceList,
+          loadSupAddress,
+          updatePrice,
+          adjustPrice
+        },
+        getters: {
+          price: ({
                     supplier
                 }) => supplier.price,
-                supAddress: ({
+          supAddress: ({
                     supplier
                 }) => supplier.supAddress,
-                userInfo: ({
+          userInfo: ({
                     common
                 }) => common.userInfo,
-                userRoleInfo: ({
+          userRoleInfo: ({
                     manager
                 }) => manager.userRoleInfo
-            }
-        },
-        data() {
-            return {
-                searchParam: {
-                    spec: '',
-                    type: '',
-                    material: '',
-                    supplierName: '',
-                    address: '',
-                    page: 1
-                },
-                newPriceParam: {
-                    value: '',
-                    supplierValueId: '',
-                    row: ''
-                },
-                unitePriceParam: {
-                    comId: '',
-                    spec: '',
-                    lastUpdateTime: '',
-                    type: '',
-                    address: '',
-                    supplierName: ''
-                },
-                row: {},
-                loading: true,
-                newPrice: 0,
-                dlgPriceVisible: false,
-                dlgUnitePriceVisible: false
-            }
-        },
-        methods: {
-            searchPrice() {
-                this.loading = true;
-                this.searchParam.page = 1;
-                this.loadSupPriceList(this.searchParam)
-                    .then(rs => {
-                        this.loading = false;
-                    })
-            },
-            changePrice(index, row) {
-                this.dlgPriceVisible = true;
-                this.newPriceParam.value = Number(row.value);
-                this.newPriceParam.supplierValueId = row.supplierValueId;
-                this.row = row;
-            },
-            confirmChangePrice(row) {
-                this.updatePrice(this.newPriceParam)
-                    .then(rs => {
-                        this.$message({
-                            message: `价格修改成功`,
-                            type: 'success'
-                        });
-                        this.dlgPriceVisible = false;
-                        this.row.value = this.newPriceParam.value;
-                })
-            },
-            handleCurrentChange(val) {
-                this.searchParam.page = val;
-                this.loading = true;
-                this.loadSupPriceList(this.searchParam)
-                    .then(() => {
-                        this.loading = false;
-                    });
-            },
-            adjustPriceEvent() {
-                this.$confirm('是否确认统一调整价格?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    var params = {
-                    spec: this.searchParam.spec,
-                    type: this.searchParam.type,
-                    supplierName: this.searchParam.supplierName,
-                    address: this.searchParam.address,
-                    comId: this.userInfo.comId,
-                    lastUpdateTime: new Date().formatDate('yyyyMMdd'),
-                    adjust: this.newPrice
-                    };
-                    this.adjustPrice(params)
-                        .then(rs => {
-                            this.$message({
-                                message: `价格调整成功`,
-                                type: 'success'
-                            });
-                            this.searchPrice()
-                    });
-                })
-                
-            }
-        },
-        mounted: function() {
-            this.loadSupPriceList().then(rs => {
-                this.loading = false;
-            });
-            this.loadSupAddress();
-        },
-        computed: {
-            valueAuth() {
-                return Boolean(parseInt(this.userInfo.userRole.charAt(1)));
-            }
         }
+      },
+      data () {
+        return {
+          searchParam: {
+            spec: '',
+            type: '',
+            material: '',
+            supplierName: '',
+            address: '',
+            page: 1
+          },
+          newPriceParam: {
+            value: '',
+            supplierValueId: '',
+            row: ''
+          },
+          unitePriceParam: {
+            comId: '',
+            spec: '',
+            lastUpdateTime: '',
+            type: '',
+            address: '',
+            supplierName: ''
+          },
+          row: {},
+          loading: true,
+          newPrice: 0,
+          dlgPriceVisible: false,
+          dlgUnitePriceVisible: false
+        }
+      },
+      methods: {
+        searchPrice () {
+          this.loading = true
+          this.searchParam.page = 1
+          this.loadSupPriceList(this.searchParam)
+                    .then(rs => {
+                      this.loading = false
+                    })
+        },
+        changePrice (index, row) {
+          this.dlgPriceVisible = true
+          this.newPriceParam.value = Number(row.value)
+          this.newPriceParam.supplierValueId = row.supplierValueId
+          this.row = row
+        },
+        confirmChangePrice (row) {
+          this.updatePrice(this.newPriceParam)
+                    .then(rs => {
+                      this.$message({
+                        message: `价格修改成功`,
+                        type: 'success'
+                      })
+                      this.dlgPriceVisible = false
+                      this.row.value = this.newPriceParam.value
+                    })
+        },
+        handleCurrentChange (val) {
+          this.searchParam.page = val
+          this.loading = true
+          this.loadSupPriceList(this.searchParam)
+                    .then(() => {
+                      this.loading = false
+                    })
+        },
+        adjustPriceEvent () {
+          this.$confirm('是否确认统一调整价格?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            var params = {
+              spec: this.searchParam.spec,
+              type: this.searchParam.type,
+              supplierName: this.searchParam.supplierName,
+              address: this.searchParam.address,
+              comId: this.userInfo.comId,
+              lastUpdateTime: new Date().formatDate('yyyyMMdd'),
+              adjust: this.newPrice
+            }
+            this.adjustPrice(params)
+                        .then(rs => {
+                          this.$message({
+                            message: `价格调整成功`,
+                            type: 'success'
+                          })
+                          this.searchPrice()
+                        })
+          })
+        }
+      },
+      mounted: function () {
+        this.loadSupPriceList().then(rs => {
+          this.loading = false
+        })
+        this.loadSupAddress()
+      },
+      computed: {
+        valueAuth () {
+          return Boolean(parseInt(this.userInfo.userRole.charAt(1)))
+        }
+      }
     }
 </script>
 

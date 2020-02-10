@@ -79,7 +79,7 @@
 </template>
 <script>
 
-import{
+import {
   getMessageList,
   newMessage,
   removeMessage,
@@ -87,115 +87,113 @@ import{
 } from '../../vuex/action'
 
 export default {
-  vuex:{
-     actions:{
+  vuex: {
+    actions: {
       getMessageList,
       newMessage,
       removeMessage,
       modifyMessage
-     },
-     getters:{
-        userInfo:({
-        	common
-        })=>common.userInfo,
-        messageList:({
-          manager
-        })=>manager.messageList,
-     }
-  },
-  data(){
-      return{
-        loading: false,
-        searchParams: {
-          messageType: '',
-          startTime: '',
-          endTime: '',
-          page: 1,
-          pageSize: 30
-        },
-        updateParams: {
-          messageId: '',
-          messageType: '',
-          message: '',
-        },
-        addPrams: {
-          messageType: '',
-          message: ''
-        },
-        dlgAddMessage: false,
-        dlgUpdateMessage: false,
-        messageTypeList: [{ value: '1', key: '供应商' }, { value: '2', key: '需求' },{ value: '3', key: '现货' }],
-      }
-  },
-  methods:{
-    handleCurrentChange(val){
-      this.searchParams.page = val;
-      this.searchMessage();
     },
-    searchMessage() {
-      this.loading = true;
+    getters: {
+      userInfo: ({ common }) => common.userInfo,
+      messageList: ({
+          manager
+        }) => manager.messageList
+    }
+  },
+  data () {
+    return {
+      loading: false,
+      searchParams: {
+        messageType: '',
+        startTime: '',
+        endTime: '',
+        page: 1,
+        pageSize: 30
+      },
+      updateParams: {
+        messageId: '',
+        messageType: '',
+        message: ''
+      },
+      addPrams: {
+        messageType: '',
+        message: ''
+      },
+      dlgAddMessage: false,
+      dlgUpdateMessage: false,
+      messageTypeList: [{ value: '1', key: '供应商' }, { value: '2', key: '需求' }, { value: '3', key: '现货' }]
+    }
+  },
+  methods: {
+    handleCurrentChange (val) {
+      this.searchParams.page = val
+      this.searchMessage()
+    },
+    searchMessage () {
+      this.loading = true
       this.getMessageList(this.searchParams)
         .then(rs => {
-          this.loading = false;
+          this.loading = false
         })
     },
-    dateFormat(row, column) {
-      if(!row[column.property]) {
-        return '';
+    dateFormat (row, column) {
+      if (!row[column.property]) {
+        return ''
       } else {
         return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
       }
     },
-    messageFormatter(row, column) {
+    messageFormatter (row, column) {
       var messageType = {
         '1': '供应商',
         '2': '需求',
         '3': '现货'
       }
-      if(!row[column.property]) {
-        return '';
+      if (!row[column.property]) {
+        return ''
       } else {
-        return messageType[row[column.property]];
+        return messageType[row[column.property]]
       }
     },
-    addMessage() {
-      this.dlgAddMessage = true;
+    addMessage () {
+      this.dlgAddMessage = true
     },
-    submitNewMessage() {
+    submitNewMessage () {
       this.newMessage(this.addPrams)
         .then(rs => {
           this.$message({
             message: '添加消息成功',
             type: 'success'
-          });
-          this.dlgAddMessage = false;
-          this.addPrams.messageType = '';
-          this.addPrams.message = '';
-          this.searchMessage();
+          })
+          this.dlgAddMessage = false
+          this.addPrams.messageType = ''
+          this.addPrams.message = ''
+          this.searchMessage()
         })
     },
-    updateMessage(index,row) {
-      this.dlgUpdateMessage = true;
-      this.updateParams.messageId = row.messageId;
-      this.updateParams.messageType = row.messageType;
-      this.updateParams.message = row.message;
+    updateMessage (index, row) {
+      this.dlgUpdateMessage = true
+      this.updateParams.messageId = row.messageId
+      this.updateParams.messageType = row.messageType
+      this.updateParams.message = row.message
     },
-    submitUpdate() {
+    submitUpdate () {
       this.modifyMessage(this.updateParams)
         .then(rs => {
           this.$message({
             message: '修改消息成功',
             type: 'success'
-          });
-          this.dlgUpdateMessage = false;
-          this.updateParams.messageId = "";
-          this.updateParams.messageType = "";
-          this.updateParams.message = "";
-          this.searchMessage();
+          })
+          this.dlgUpdateMessage = false
+          this.updateParams.messageId = ''
+          this.updateParams.messageType = ''
+          this.updateParams.message = ''
+          this.searchMessage()
         })
     },
-    deleteMessage(index,row) {
-      this.$confirm('确定删除这条消息?','警告',{
+    deleteMessage (index, row) {
+      this.$confirm('确定删除这条消息?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -205,15 +203,14 @@ export default {
             this.$message({
               message: '删除消息成功',
               type: 'success'
-            });
-            this.searchMessage();
+            })
+            this.searchMessage()
           })
       })
-      
     }
   },
-  mounted: function() {
-    this.searchMessage();
+  mounted: function () {
+    this.searchMessage()
   }
 }
 </script>

@@ -39,61 +39,61 @@
     } from '../../vuex/action'
     
     export default {
-        vuex: {
-            actions: {
-                loadOperateList
-            },
-            getters: {
-                userInfo: ({
+      vuex: {
+        actions: {
+          loadOperateList
+        },
+        getters: {
+          userInfo: ({
                     common
                 }) => common.userInfo,
-                operateInfo: ({
+          operateInfo: ({
                     manager
                 }) => manager.operateInfo
-            }
-        },
-        data() {
-            return {
-                operateParams: {
-                    id: '',
-                    page: 1,
-                    createTime:'',
-                    operate:'',
-                },
-                loading: true,
-                searchTime: '',
-            }
-        },
-        methods: {
-            searchOperate() {
-                this.loading = true;
-                this.operateParams.createTime = this.searchTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd'):'';
-                this.loadOperateList(this.operateParams)
-                    .then(rs => {
-                        this.loading = false;
-                    });
-            },
-            dateFormat(row, column) {
-                return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
-            },
-            pickerOptions(){
-
-            },
-            handleCurrentChange(val) {
-                this.operateParams.page = val;
-                this.loading = true;
-                this.loadOperateList(this.operateParams)
-                    .then(() => {
-                        this.loading = false;
-                });
-            }
-        },
-        mounted: function() {
-            this.loadOperateList(this.operateParams)
-                .then(rs => {
-                    this.loading = false;
-                });
         }
+      },
+      data () {
+        return {
+          operateParams: {
+            id: '',
+            page: 1,
+            createTime: '',
+            operate: ''
+          },
+          loading: true,
+          searchTime: ''
+        }
+      },
+      methods: {
+        searchOperate () {
+          this.loading = true
+          this.operateParams.createTime = this.searchTime ? new Date(this.searchTime).formatDate('yyyy-MM-dd') : ''
+          this.loadOperateList(this.operateParams)
+                    .then(rs => {
+                      this.loading = false
+                    })
+        },
+        dateFormat (row, column) {
+          return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm')
+        },
+        pickerOptions () {
+
+        },
+        handleCurrentChange (val) {
+          this.operateParams.page = val
+          this.loading = true
+          this.loadOperateList(this.operateParams)
+                    .then(() => {
+                      this.loading = false
+                    })
+        }
+      },
+      mounted: function () {
+        this.loadOperateList(this.operateParams)
+                .then(rs => {
+                  this.loading = false
+                })
+      }
     }
 </script>
 

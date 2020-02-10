@@ -1,15 +1,14 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var path = require('path');
-var merge = require('webpack-merge');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var merge = require('webpack-merge')
+var config = {}
 
-var cssLoaders = function(options) {
+var cssLoaders = function (options) {
   options = options || {}
     // generate loader string to be used with extract text plugin
-  function generateLoaders(loaders) {
-    var sourceLoader = loaders.map(function(loader) {
+  function generateLoaders (loaders) {
+    var sourceLoader = loaders.map(function (loader) {
       var extraParamChar
       if (/\?/.test(loader)) {
         loader = loader.replace(/\?/, '-loader?')
@@ -38,7 +37,7 @@ var cssLoaders = function(options) {
 }
 
 // Generate loaders for standalone style files (outside of .vue)
-var styleLoaders = function(options) {
+var styleLoaders = function (options) {
   var output = []
   var loaders = cssLoaders(options)
   for (var extension in loaders) {
@@ -48,8 +47,8 @@ var styleLoaders = function(options) {
       loader: loader
     })
   }
-  output.push(//添加jquery全局loader
-    { test: require.resolve("jquery"), loader: "expose-loader?$!expose-loader?jQuery" }
+  output.push(// 添加jquery全局loader
+    { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' }
   )
   return output
 }
@@ -110,10 +109,6 @@ var common = {
   }
 }
 
-function randomNum() {
-  return Math.floor(Math.random() * 10) % 3 + 1;
-}
-
 if (process.env.NODE_ENV !== 'production') {
   /**
    * Apply ESLint
@@ -168,7 +163,7 @@ switch (process.env.npm_lifecycle_event) {
         new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor_[hash:8].js')
       ]
     })
-    break;
+    break
 
   case 'test':
     config = merge(common, {
@@ -208,7 +203,7 @@ switch (process.env.npm_lifecycle_event) {
         new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor_[hash:8].js')
       ]
     })
-    break;
+    break
 
   default:
     config = merge(common, {
@@ -227,12 +222,12 @@ switch (process.env.npm_lifecycle_event) {
         stats: 'errors-only',
         port: '8080',
         historyApiFallback: true,
-        proxy: {  
-          '/zues/api': {  
-              target: 'http://127.0.0.1:7001',  
-              secure: false
-          }  
-        } 
+        proxy: {
+          '/zues/api': {
+            target: 'http://127.0.0.1:7001',
+            secure: false
+          }
+        }
       },
       plugins: [
         new HtmlWebpackPlugin({
@@ -250,8 +245,8 @@ switch (process.env.npm_lifecycle_event) {
         new ExtractTextPlugin('[name].css'),
         new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js')
       ]
-    });
-    break;
+    })
+    break
 }
 
-module.exports = config;
+module.exports = config

@@ -55,7 +55,7 @@
 
 <script>
 
-import{
+import {
     loadVerifylist,
     reviewVerify,
     loadOrderDetail,
@@ -63,103 +63,97 @@ import{
 } from '../../vuex/action'
 
 export default {
-  vuex:{
-     actions:{
-       loadVerifylist,
-       reviewVerify,
-       loadOrderDetail,
-       loadOrderList
-     },
-     getters:{
-        userInfo:({
-        	common
-        })=>common.userInfo,
-        verify:({
-        	manager
-        })=>manager.verify,
-        orderDetail: ({
-          order
-        }) => order.orderDetail
-     }
+  vuex: {
+    actions: {
+      loadVerifylist,
+      reviewVerify,
+      loadOrderDetail,
+      loadOrderList
+    },
+    getters: {
+      userInfo: ({ common }) => common.userInfo,
+      verify: ({ manager }) => manager.verify,
+      orderDetail: ({ order }) => order.orderDetail
+    }
   },
-  data(){
-      return{
-          verifyParams: {
-            page: 1,
-            shenhe: "未审核"
-          },
-          reviewParams: {
-            orderNo: '',
-            operator: '',
-            comId: ''
-          },
-          orderParams: {
-            orderNo:'',
-            comId: this.userInfo.comId,
-            page:1
-          },
-          loading: true,
-          detailDialogShow: false,
-          detailLoading: true
-      }
+  data () {
+    return {
+      verifyParams: {
+        page: 1,
+        shenhe: '未审核'
+      },
+      reviewParams: {
+        orderNo: '',
+        operator: '',
+        comId: ''
+      },
+      orderParams: {
+        orderNo: '',
+        comId: this.userInfo.comId,
+        page: 1
+      },
+      loading: true,
+      detailDialogShow: false,
+      detailLoading: true
+    }
   },
-  methods:{
-    handleCurrentChange(val){
-      this.orderParams.page = val;
-      this.loading = true;
+  methods: {
+    handleCurrentChange (val) {
+      this.orderParams.page = val
+      this.loading = true
       this.searchOrder()
       .then(rs => {
-        this.loading = false;
-      });
+        this.loading = false
+      })
     },
-    review(index,row){
-      this.reviewParams.orderNo = row.orderNo;
-      this.reviewParams.operator = row.userId;
-      this.reviewParams.comId = this.userInfo.comId;
+    review (index, row) {
+      this.reviewParams.orderNo = row.orderNo
+      this.reviewParams.operator = row.userId
+      this.reviewParams.comId = this.userInfo.comId
       this.$confirm('是否确认审核？')
       .then(() => {
         this.reviewVerify(this.reviewParams)
         .then(() => {
-            this.$message({
-              message: `审核成功`,
-              type: 'success'
-            });
-            this.loading = true;
-            this.loadVerifylist(this.verifyParams)
+          this.$message({
+            message: `审核成功`,
+            type: 'success'
+          })
+          this.loading = true
+          this.loadVerifylist(this.verifyParams)
             .then(() => {
-              this.loading = false;
-            });
-        }).catch(()=>{
-        });
+              this.loading = false
+            })
+        }).catch(() => {
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
-        });          
-      });
+        })
+      })
     },
-    viewDetail(index,row) {
-      this.detailDialogShow = true;
-      this.detailLoading = true;
-      this.loadOrderDetail({orderNo:row.orderNo}).then(()=>{
-          this.detailLoading = false;
-      });
+    viewDetail (index, row) {
+      this.detailDialogShow = true
+      this.detailLoading = true
+      this.loadOrderDetail({orderNo: row.orderNo}).then(() => {
+        this.detailLoading = false
+      })
     },
-    dateFormat(row, column) {
+    dateFormat (row, column) {
       return new Date(parseInt(row.createTime)).formatDate('yyyy-MM-dd hh:mm:ss')
     },
-    searchOrder() {
-      this.loading = true;
-      this.loadVerifylist(this.orderParams).then(()=>{
-          this.loading = false;
-      });
+    searchOrder () {
+      this.loading = true
+      this.loadVerifylist(this.orderParams).then(() => {
+        this.loading = false
+      })
     }
   },
-  mounted: function() {
+  mounted: function () {
     this.loadVerifylist(this.verifyParams)
     .then(rs => {
-      this.loading = false;
-    });
+      this.loading = false
+    })
   }
 }
 </script>

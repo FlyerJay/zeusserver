@@ -219,7 +219,7 @@
                         </template>
                     </el-input>
                 </div>
-                <div class="customer-item" v-for="(item,index) in customerList.row" @click="selectCustomer(item)">
+                <div class="customer-item" v-for="(item, index) in customerList.row" :key="index" @click="selectCustomer(item)">
                     <div class="customer-name">{{item.customerName}}</div>
                     <div class="destination">{{item.destination}}<span class="customer-phone">{{item.customerPhone}}</span></div>
                     <aside>
@@ -472,104 +472,96 @@ import {
     getMessageList,
     checkRepeateDemand
 } from '../../vuex/action'
-import Slide from '../plugin/slide';
+import Slide from '../plugin/slide'
 
 export default {
-    vuex: {
-        actions: {
-            loadDemandList,
-            addToDemandList,
-            upDateDemandList,
-            changeDemandList,
-            demandDetailList,
-            removeDemandList,
-            getCustomerList,
-            newCustomer,
-            removeCustomer,
-            loadDemandPriceList,
-            getMessageList,
-            checkRepeateDemand
-        },
-        getters: {
-            userInfo: ({
-                    common
-                }) => common.userInfo,
-            demandInfo: ({
-                    order
-                }) => order.demandInfo,
-            demandDetail: ({
-                    order
-                }) => order.demandDetail,
-            demand: ({
-                    common
-                }) => common.demand
-        }
+  vuex: {
+    actions: {
+      loadDemandList,
+      addToDemandList,
+      upDateDemandList,
+      changeDemandList,
+      demandDetailList,
+      removeDemandList,
+      getCustomerList,
+      newCustomer,
+      removeCustomer,
+      loadDemandPriceList,
+      getMessageList,
+      checkRepeateDemand
     },
-    data() {
-        return {
-            activeName: '0',
-            specParams: {
-                spec: '',
-                type: '',
-                unit: '',
-                demandAmount: '',
-                demandWeight: ''
-            },
-            FeedbackParams: {
-                demandNo: '',
-                state: '',
-                dealReason: '',
-            },
-            feedbackPriceParam: {
-                demandDetails: [],
-                demandNo: '',
-            },
-            demandParams: {
-                destination: '',
-                customerName: '',
-                customerPhone: '',
-                type: '',
-                comment: '',
-                demandDetails: []
-            },
-            searchDeParam: {
-                demandUser: '',
-                createTime: '',
-                endTime: '',
-                customName: '',
-                spec: '',
-                state: 0,
-                page: 1,
-            },
-            comment: '',
-            customerName: '',
-            customerPhone: '',
-            priceComment: '',
-            destination: '',
-            allweight: 0,
-            dealStatusArray: [{ value: 4, key: '交易成功' }, { value: 3, key: '交易失败' }],
-            dlgDemandVisible: false,
-            dlDemandView: false,
-            dlDemandView2: false,
-            dlFeedback: false,
-            loading: true,
-            currentDemand: '',
-            unit: 1,
-            customerListDlShow: false,//客户列表弹出框
-            customerQuery: {
-                customerName: '',
-            },
-            submitstate: 0,
-            customerList: [],
-            customerAddDlShow: false,//客户电话框
-            customerParams: {
-                customerName: '',
-                customerPhone: '',
-                destination: '',
-            },
-            cancelAddSave: false,
-            messageList: [],
-            feedbackReseaon: [
+    getters: {
+      userInfo: ({ common }) => common.userInfo,
+      demandInfo: ({ order }) => order.demandInfo,
+      demandDetail: ({ order }) => order.demandDetail,
+      demand: ({ common }) => common.demand
+    }
+  },
+  data () {
+    return {
+      activeName: '0',
+      specParams: {
+        spec: '',
+        type: '',
+        unit: '',
+        demandAmount: '',
+        demandWeight: ''
+      },
+      FeedbackParams: {
+        demandNo: '',
+        state: '',
+        dealReason: ''
+      },
+      feedbackPriceParam: {
+        demandDetails: [],
+        demandNo: ''
+      },
+      demandParams: {
+        destination: '',
+        customerName: '',
+        customerPhone: '',
+        type: '',
+        comment: '',
+        demandDetails: []
+      },
+      searchDeParam: {
+        demandUser: '',
+        createTime: '',
+        endTime: '',
+        customName: '',
+        spec: '',
+        state: 0,
+        page: 1
+      },
+      comment: '',
+      customerName: '',
+      customerPhone: '',
+      priceComment: '',
+      destination: '',
+      allweight: 0,
+      dealStatusArray: [{ value: 4, key: '交易成功' }, { value: 3, key: '交易失败' }],
+      dlgDemandVisible: false,
+      dlDemandView: false,
+      dlDemandView2: false,
+      dlFeedback: false,
+      loading: true,
+      currentDemand: '',
+      unit: 1,
+      customerListDlShow: false, // 客户列表弹出框
+      customerQuery: {
+        customerName: ''
+      },
+      submitstate: 0,
+      customerList: [],
+      customerAddDlShow: false, // 客户电话框
+      customerParams: {
+        customerName: '',
+        customerPhone: '',
+        destination: ''
+      },
+      cancelAddSave: false,
+      messageList: [],
+      feedbackReseaon: [
                 { value: '已成交', key: '已成交' },
                 { value: '询价订单', key: '询价订单' },
                 { value: '价格偏高', key: '价格偏高' },
@@ -577,468 +569,465 @@ export default {
                 { value: '工期、材质不符合要求', key: '工期、材质不符合要求' },
                 { value: '再次报价', key: '再次报价' },
                 { value: '无货', key: '无货' },
-                { value: '其他', key: '其他' },
-            ]
+                { value: '其他', key: '其他' }
+      ]
+    }
+  },
+  components: {
+    Slide
+  },
+  methods: {
+    handleCurrentChange (val) {
+      this.searchDeParam.page = val
+      this.loading = true
+      this.loadDemandList(this.searchDeParam)
+                .then(() => {
+                  this.loading = false
+                })
+    },
+    deleteSpec (index) {
+      this.demandParams.demandDetails.splice(index, 1)
+    },
+    statusFormatter (row, column) {
+      const status = {
+        '0': '未报价需求',
+        '1': '待反馈',
+        '2': '已反馈',
+        '3': '未成交',
+        '4': '已成交'
+      }
+      return status[row.state]
+    },
+    closeAdddlg () {
+      if (!this.cancelAddSave) {
+        var addSave = {
+          demandParams: this.demandParams,
+          specParams: this.specParams
         }
+        localStorage.setItem('addSave', JSON.stringify(addSave))
+      }
+      this.specParams.spec = ''
+      this.specParams.type = ''
+      this.specParams.demandAmount = ''
+      this.specParams.demandWeight = ''
     },
-    components:{
-      Slide
+    addCancel () {
+      this.dlgDemandVisible = false
+      localStorage.removeItem('addSave')
+      this.cancelAddSave = true
     },
-    methods: {
-        handleCurrentChange(val) {
-            this.searchDeParam.page = val;
-            this.loading = true;
-            this.loadDemandList(this.searchDeParam)
+    viewDetail (row) {
+      this.dlDemandView = true
+      this.currentDemand = row.demandNo
+      const param = {demandNo: row.demandNo}
+      this.demandDetailList(param)
                 .then(() => {
-                    this.loading = false;
-                });
-        },
-        deleteSpec(index) {
-            this.demandParams.demandDetails.splice(index, 1);
-        },
-        statusFormatter(row, column) {
-            const status = {
-                '0': '未报价需求',
-                '1': '待反馈',
-                '2': '已反馈',
-                '3': '未成交',
-                '4': '已成交'
-            }
-            return status[row.state];
-        },
-        closeAdddlg() {
-            if(!this.cancelAddSave) {
-                var addSave = {
-                    demandParams: this.demandParams,
-                    specParams: this.specParams,
-                }
-                localStorage.setItem("addSave",JSON.stringify(addSave));
-            }
-            this.specParams.spec = '';
-            this.specParams.type = '';
-            this.specParams.demandAmount = '';
-            this.specParams.demandWeight = '';
-        },
-        addCancel() {
-            this.dlgDemandVisible = false;
-            localStorage.removeItem("addSave");
-            this.cancelAddSave = true;
-        },
-        viewDetail(row) {
-            this.dlDemandView = true;
-            this.currentDemand = row.demandNo;
-            const param = {demandNo: row.demandNo};
-            this.demandDetailList(param)
-                .then(() => {
-                    this.destination = row.destination;
-                    this.comment = row.comment;
-                    this.priceComment = row.priceComment;
-                    this.destination = row.destination;
-                    this.customerName = row.customerName;
-                    this.customerPhone = row.customerPhone;
-                    var w = 0;
-                    this.demandDetail.map((v) => {
-                        w =  w + Number(Number(v.demandWeight).toFixed(2));
-                        if (v.factoryPrice == 0) {
-                            v.factoryPrice = ''
-                        }
-                        if (v.freight == 0) {
-                            v.freight = ''
-                        }
-                    })
-                    this.allweight = w.toFixed(2)
+                  this.destination = row.destination
+                  this.comment = row.comment
+                  this.priceComment = row.priceComment
+                  this.destination = row.destination
+                  this.customerName = row.customerName
+                  this.customerPhone = row.customerPhone
+                  var w = 0
+                  this.demandDetail.map((v) => {
+                    w = w + Number(Number(v.demandWeight).toFixed(2))
+                    if (v.factoryPrice === 0) {
+                      v.factoryPrice = ''
+                    }
+                    if (v.freight === 0) {
+                      v.freight = ''
+                    }
+                  })
+                  this.allweight = w.toFixed(2)
                 })
-        },
-        demandUpload() {
-            this.dlgDemandVisible = true;
-            this.submitstate = 0;
-            this.demandParams.demandDetails = [];
-            this.demandParams.destination = '';
-            this.demandParams.customerName = '';
-            this.demandParams.comment = '';
-            this.demandParams.customerPhone = '';
-            var local = localStorage.getItem("addSave");
-            this.cancelAddSave = false;
-            if(local){
-                var addSave = JSON.parse(localStorage.getItem("addSave"));
-                this.demandParams = addSave.demandParams;
-                this.specParams = addSave.specParams;
-            }
-            
-        },
-        changeDemand(row) {
-            const param = {demandNo: row.demandNo};
-            this.dlgDemandVisible = true;
-            this.submitstate = 1;
-            this.demandDetailList(param)
+    },
+    demandUpload () {
+      this.dlgDemandVisible = true
+      this.submitstate = 0
+      this.demandParams.demandDetails = []
+      this.demandParams.destination = ''
+      this.demandParams.customerName = ''
+      this.demandParams.comment = ''
+      this.demandParams.customerPhone = ''
+      var local = localStorage.getItem('addSave')
+      this.cancelAddSave = false
+      if (local) {
+        var addSave = JSON.parse(localStorage.getItem('addSave'))
+        this.demandParams = addSave.demandParams
+        this.specParams = addSave.specParams
+      }
+    },
+    changeDemand (row) {
+      const param = {demandNo: row.demandNo}
+      this.dlgDemandVisible = true
+      this.submitstate = 1
+      this.demandDetailList(param)
                 .then(() => {
-                    this.demandParams.demandDetails = this.demandDetail;
-                    this.demandParams.demandNo = row.demandNo;
-                    this.demandParams.destination = row.destination;
-                    this.demandParams.customerName = row.customerName;
-                    this.demandParams.customerPhone = row.customerPhone;
-                    this.demandParams.comment = row.comment;
+                  this.demandParams.demandDetails = this.demandDetail
+                  this.demandParams.demandNo = row.demandNo
+                  this.demandParams.destination = row.destination
+                  this.demandParams.customerName = row.customerName
+                  this.demandParams.customerPhone = row.customerPhone
+                  this.demandParams.comment = row.comment
                 })
-        },
-        dealFeedback(row) {
-            this.dlFeedback = true;
-            this.FeedbackParams.demandNo = row.demandNo;
-        },
-        feedBackPrice(row) {
-            const param = {demandNo: row.demandNo};
-            this.dlDemandView2 = true;
-            this.submitstate = 1;
+    },
+    dealFeedback (row) {
+      this.dlFeedback = true
+      this.FeedbackParams.demandNo = row.demandNo
+    },
+    feedBackPrice (row) {
+      const param = {demandNo: row.demandNo}
+      this.dlDemandView2 = true
+      this.submitstate = 1
 
-            //获取基本信息
-            this.destination = row.destination;
-            this.comment = row.comment;
-            this.priceComment = row.priceComment;
-            this.destination = row.destination;
-            this.customerName = row.customerName;
-            this.customerPhone = row.customerPhone;
+            // 获取基本信息
+      this.destination = row.destination
+      this.comment = row.comment
+      this.priceComment = row.priceComment
+      this.destination = row.destination
+      this.customerName = row.customerName
+      this.customerPhone = row.customerPhone
 
-            this.demandDetailList(param)
+      this.demandDetailList(param)
                 .then(() => {
-                    this.feedbackPriceParam.demandNo = row.demandNo;
+                  this.feedbackPriceParam.demandNo = row.demandNo
                 })
-        },
-        submitFeedPrice() {
-            this.$confirm('确认提交?', '确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then((v) => {
-                var params = {
-                    demandNo: this.feedbackPriceParam.demandNo,
-                    demandPrices: this.demandDetail,
-                    imp: 2,
-                }
-                this.loadDemandPriceList(params)
-                    .then(data=>{
-                        this.$message({
-                            message: `报价成功`,
-                            type: 'success'
-                        });
-                        this.timeConsume = '';
-                        this.demandDetail.map(v => {
-                            v.freight = '';
-                            v.factoryPrice = '';
-                            v.feedbackPrice = '';
-                        });
-                        this.loadDemandList(this.searchDeParam);
-                        this.dlDemandView2 = false;
+    },
+    submitFeedPrice () {
+      this.$confirm('确认提交?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((v) => {
+        var params = {
+          demandNo: this.feedbackPriceParam.demandNo,
+          demandPrices: this.demandDetail,
+          imp: 2
+        }
+        this.loadDemandPriceList(params)
+                    .then(data => {
+                      this.$message({
+                        message: `报价成功`,
+                        type: 'success'
+                      })
+                      this.timeConsume = ''
+                      this.demandDetail.map(v => {
+                        v.freight = ''
+                        v.factoryPrice = ''
+                        v.feedbackPrice = ''
+                      })
+                      this.loadDemandList(this.searchDeParam)
+                      this.dlDemandView2 = false
                     })
-            });
-        },
-        submitFeedback() {
-            if(!this.FeedbackParams.dealReason){
-                this.$message({
-                    message: `请填写反馈原因`,
-                    type: 'warning'
-                })
-                return false;
-            }
-            this.$confirm('确认提交?','确认',{
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.FeedbackParams.state ? '' : this.FeedbackParams.state = 0;
-                this.upDateDemandList(this.FeedbackParams)
+      })
+    },
+    submitFeedback () {
+      if (!this.FeedbackParams.dealReason) {
+        this.$message({
+          message: `请填写反馈原因`,
+          type: 'warning'
+        })
+        return false
+      }
+      this.$confirm('确认提交?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.FeedbackParams.state ? '' : this.FeedbackParams.state = 0
+        this.upDateDemandList(this.FeedbackParams)
                     .then(() => {
-                        this.dlFeedback = false;
-                        this.FeedbackParams.demandNo = '';
-                        this.FeedbackParams.state = '';
-                        this.FeedbackParams.dealReason = '';
-                        this.$message({
-                            message: `反馈已提交`,
-                            type: 'success'
-                        })
-                        this.loading = true;
-                        this.searchDemand();
-                    })
-            })    
-        },
-        dateFormat(row, column) {
-            if(!row[column.property]) {
-                return '';
-            } else {
-                return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
-            }
-        },
-        pruceFormat(row, column) {
-            if(row.priceTime)
-                return Math.ceil((row.priceTime - row.createTime) / 1000 / 60 ) + "分钟";
-            return "未报价"
-        },
-        addSpec() {
-            if(!this.specParams.spec || (!this.specParams.demandAmount && !this.specParams.demandWeight) || !this.specParams.type ) {
-                this.$message({
-                    message: `请填写规格明细`,
-                    type: 'warning'
-                });
-                return;
-            }
-            var specObj = {
-                spec: this.specParams.spec,
-                demandAmount: this.specParams.demandAmount + this.specParams.unit,
-                type: this.specParams.type,
-                demandWeight: this.specParams.demandWeight
-            }
-            this.demandParams.demandDetails.push(specObj);
-            this.specParams.spec = '';
-            this.specParams.type = '';
-            this.specParams.demandAmount = '';
-            this.specParams.demandWeight = '';
-        },
-        switchTab() {
-            this.searchDemand();
-        },
-        submitDdemand() { //提交需求
-            if(!this.demandParams.demandDetails.length) {
-                this.$message({
-                    message: `请添加规格`,
-                    type: 'warning'
-                });
-                return;
-            }
-            this.$confirm('确认提交?','确认',{
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => { //再提交之前先检查一下是否有重复需求
-                this.checkRepeateDemand(this.demandParams).then(rs => {
-                    this.$confirm('有重复需求，是否继续提交?','确认',{
-                        confirmButtonText: '继续',
-                        cancelButtonText: '查看详情',
-                        type: 'warning'
-                    }).then(() => {
-                        this.confirmSubmit();
-                    }, ()=> {
-                        window.open("/#/demand/manage?demandNo=" + rs.data.demandNo, "_blank")
-                    })
-                }, (rs) => {
-                    this.confirmSubmit();
-                })
-            })
-        },
-        confirmSubmit() { //确认提交需求
-            if(!this.submitstate) {
-                this.addToDemandList(this.demandParams).then(rs => {
-                    this.demandParams.demandDetails = [];
-                    this.demandParams.destination = '';
-                    this.demandParams.customerName = '';
-                    this.demandParams.comment = '';
-                    this.demandParams.customerPhone = '';
-                    this.$message({
-                        message: `信息录入成功`,
+                      this.dlFeedback = false
+                      this.FeedbackParams.demandNo = ''
+                      this.FeedbackParams.state = ''
+                      this.FeedbackParams.dealReason = ''
+                      this.$message({
+                        message: `反馈已提交`,
                         type: 'success'
+                      })
+                      this.loading = true
+                      this.searchDemand()
                     })
-                    setTimeout(()=>{
-                        this.loadDemandList(this.searchDeParam)
-                            .then(() => {
-                                this.loading = false;
-                            });
-                        this.dlgDemandVisible = false;
-                    },100)
-                })
-            } else {
-                this.changeDemandList(this.demandParams).then(rs => {
-                    this.demandParams.demandDetails = [];
-                    this.demandParams.destination = '';
-                    this.demandParams.customerName = '';
-                    this.demandParams.comment = '';
-                    this.demandParams.customerPhone = '';
-                    this.$message({
-                        message: `修改成功`,
-                        type: 'success'
-                    })
-                    setTimeout(()=>{
-                        this.loadDemandList(this.searchDeParam)
-                            .then(() => {
-                                this.loading = false;
-                            });
-                        this.dlgDemandVisible = false;
-                    },100)
-                })
-            }
-        },
-        searchDemand() {
-            this.loading = true;
-            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.state = this.activeName;
+      })
+    },
+    dateFormat (row, column) {
+      if (!row[column.property]) {
+        return ''
+      } else {
+        return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
+      }
+    },
+    pruceFormat (row, column) {
+      if (row.priceTime) { return Math.ceil((row.priceTime - row.createTime) / 1000 / 60) + '分钟' }
+      return '未报价'
+    },
+    addSpec () {
+      if (!this.specParams.spec || (!this.specParams.demandAmount && !this.specParams.demandWeight) || !this.specParams.type) {
+        this.$message({
+          message: `请填写规格明细`,
+          type: 'warning'
+        })
+        return
+      }
+      var specObj = {
+        spec: this.specParams.spec,
+        demandAmount: this.specParams.demandAmount + this.specParams.unit,
+        type: this.specParams.type,
+        demandWeight: this.specParams.demandWeight
+      }
+      this.demandParams.demandDetails.push(specObj)
+      this.specParams.spec = ''
+      this.specParams.type = ''
+      this.specParams.demandAmount = ''
+      this.specParams.demandWeight = ''
+    },
+    switchTab () {
+      this.searchDemand()
+    },
+    submitDdemand () { // 提交需求
+      if (!this.demandParams.demandDetails.length) {
+        this.$message({
+          message: `请添加规格`,
+          type: 'warning'
+        })
+        return
+      }
+      this.$confirm('确认提交?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => { // 再提交之前先检查一下是否有重复需求
+        this.checkRepeateDemand(this.demandParams).then(rs => {
+          this.$confirm('有重复需求，是否继续提交?', '确认', {
+            confirmButtonText: '继续',
+            cancelButtonText: '查看详情',
+            type: 'warning'
+          }).then(() => {
+            this.confirmSubmit()
+          }, () => {
+            window.open('/#/demand/manage?demandNo=' + rs.data.demandNo, '_blank')
+          })
+        }, (rs) => {
+          this.confirmSubmit()
+        })
+      })
+    },
+    confirmSubmit () { // 确认提交需求
+      if (!this.submitstate) {
+        this.addToDemandList(this.demandParams).then(rs => {
+          this.demandParams.demandDetails = []
+          this.demandParams.destination = ''
+          this.demandParams.customerName = ''
+          this.demandParams.comment = ''
+          this.demandParams.customerPhone = ''
+          this.$message({
+            message: `信息录入成功`,
+            type: 'success'
+          })
+          setTimeout(() => {
             this.loadDemandList(this.searchDeParam)
+                            .then(() => {
+                              this.loading = false
+                            })
+            this.dlgDemandVisible = false
+          }, 100)
+        })
+      } else {
+        this.changeDemandList(this.demandParams).then(rs => {
+          this.demandParams.demandDetails = []
+          this.demandParams.destination = ''
+          this.demandParams.customerName = ''
+          this.demandParams.comment = ''
+          this.demandParams.customerPhone = ''
+          this.$message({
+            message: `修改成功`,
+            type: 'success'
+          })
+          setTimeout(() => {
+            this.loadDemandList(this.searchDeParam)
+                            .then(() => {
+                              this.loading = false
+                            })
+            this.dlgDemandVisible = false
+          }, 100)
+        })
+      }
+    },
+    searchDemand () {
+      this.loading = true
+      this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.state = this.activeName
+      this.loadDemandList(this.searchDeParam)
                 .then(() => {
-                    this.loading = false;
-                });
-        },
-        removeDemand(row) {
-            this.$confirm('确认删除?','确认',{
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                const params = {
-                  demandNo: row.demandNo
-                };
-                this.removeDemandList(params).then(rs => {
-                    this.searchDemand();
-                    this.$message({
-                        message: `删除成功`,
-                        type: 'success'
-                    });
-                });
-            });
-        },
-        weightSquareFormatter(spec, demandcount) {
-            if (!spec) {
-                return 0
-            }
-            const specArr = spec.split('*');
-            const height = Number(specArr[0]);
-            const width = Number(specArr[1]);
-            const land = Number(specArr[2]);
-            const long = Number(specArr[3]) ? Number(specArr[3]) : 6;
-            const perimeter = 2 * height + 2 * width;
-            this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * long * 0.02466 * demandcount / 1000).toFixed(2);
-        },
-        weightRoundFormatter(spec, demandcount) {
-            if (!spec) {
-                return 0
-            }
-            const specArr = spec.split('*');
-            const perimeter = Number(specArr[0]);
-            const land = Number(specArr[1]);
-            const long = Number(specArr[2]) ? Number(specArr[2]) : 6;
-            this.specParams.demandWeight = (perimeter * land * long * 0.02466 * demandcount / 1000).toFixed(2);
-        },
-        weightAngleFormatter(spec, demandcount) {
-            if (!spec) {
-                return 0
-            }
-            const specArr = spec.split('#');
-            const weight = specArr[1].replace(/kg/, '');
-            this.specParams.demandWeight = (Number(weight) * demandcount / 1000).toFixed(2);
-        },
-        exportDemand(){
-            window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`);
-        },
-        exportDemandList(){
-            var date = new Date().formatDate('yyyyMMdd');
-            window.open(`/zues/api/export/demandlist/需求列表.xls?demandUser=${this.searchDeParam.demandUser}&createTime=${this.searchDeParam.createTime}&customerName=${this.searchDeParam.customerName}`);
-        },
-        exportDemandDetailList() {
-            var date = new Date().formatDate('yyyyMMdd');
-            window.open(`/zues/api/export/demanddetaillist/需求列表详情${date}.xls?demandUser=${this.searchDeParam.demandUser}&createTime=${this.searchDeParam.createTime}&customerName=${this.searchDeParam.customerName}`);
-        },
-        editCostomer(){
-            this.customerListDlShow = true;
-            this.flushCustomerList();
-        },
-        flushCustomerList(data={}){
-            this.getCustomerList(data)
-                .then(data=>{
-                    this.customerList = data;
+                  this.loading = false
                 })
-        },
-        onCustomerClose(){
-            this.customerQuery.page = 1;
-            this.customerQuery.customerName = "";
-        },
-        searchCustomer(){
-            this.flushCustomerList(this.customerQuery);
-        },
-        handlCustonerPage(val){
-            this.customerQuery.page = val;
-            this.flushCustomerList(this.customerQuery);
-        },
-        selectCustomer(options){
-            this.demandParams.customerName = options.customerName;
-            this.demandParams.customerPhone = options.customerPhone;
-            this.demandParams.destination = options.destination;
-            this.customerListDlShow = false;
-        },
-        showNewCustomer(){
-            this.customerAddDlShow = true;
-        },
-        submitCustomer(){
-            this.newCustomer(this.customerParams)
-                .then(data=>{
-                    this.$message({
-                        message: `新增成功`,
-                        type: 'success'
-                    });
-                    this.customerAddDlShow = false;
-                    this.flushCustomerList();
+    },
+    removeDemand (row) {
+      this.$confirm('确认删除?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const params = {
+          demandNo: row.demandNo
+        }
+        this.removeDemandList(params).then(rs => {
+          this.searchDemand()
+          this.$message({
+            message: `删除成功`,
+            type: 'success'
+          })
+        })
+      })
+    },
+    weightSquareFormatter (spec, demandcount) {
+      if (!spec) {
+        return 0
+      }
+      const specArr = spec.split('*')
+      const height = Number(specArr[0])
+      const width = Number(specArr[1])
+      const land = Number(specArr[2])
+      const long = Number(specArr[3]) ? Number(specArr[3]) : 6
+      const perimeter = 2 * height + 2 * width
+      this.specParams.demandWeight = ((perimeter / 3.14 - land) * land * long * 0.02466 * demandcount / 1000).toFixed(2)
+    },
+    weightRoundFormatter (spec, demandcount) {
+      if (!spec) {
+        return 0
+      }
+      const specArr = spec.split('*')
+      const perimeter = Number(specArr[0])
+      const land = Number(specArr[1])
+      const long = Number(specArr[2]) ? Number(specArr[2]) : 6
+      this.specParams.demandWeight = (perimeter * land * long * 0.02466 * demandcount / 1000).toFixed(2)
+    },
+    weightAngleFormatter (spec, demandcount) {
+      if (!spec) {
+        return 0
+      }
+      const specArr = spec.split('#')
+      const weight = specArr[1].replace(/kg/, '')
+      this.specParams.demandWeight = (Number(weight) * demandcount / 1000).toFixed(2)
+    },
+    exportDemand () {
+      window.open(`/zues/api/export/demandexport/${this.currentDemand}需求详情.xls?demandNo=${this.currentDemand}`)
+    },
+    exportDemandList () {
+      window.open(`/zues/api/export/demandlist/需求列表.xls?demandUser=${this.searchDeParam.demandUser}&createTime=${this.searchDeParam.createTime}&customerName=${this.searchDeParam.customerName}`)
+    },
+    exportDemandDetailList () {
+      var date = new Date().formatDate('yyyyMMdd')
+      window.open(`/zues/api/export/demanddetaillist/需求列表详情${date}.xls?demandUser=${this.searchDeParam.demandUser}&createTime=${this.searchDeParam.createTime}&customerName=${this.searchDeParam.customerName}`)
+    },
+    editCostomer () {
+      this.customerListDlShow = true
+      this.flushCustomerList()
+    },
+    flushCustomerList (data = {}) {
+      this.getCustomerList(data)
+                .then(data => {
+                  this.customerList = data
                 })
-        },
-        deleteCustomer(customerId){
-            this.removeCustomer({customerId});
-        },
-        inputDemanAmount() {
-            if(this.specParams.type.indexOf('圆管') > -1) {
-                this.weightRoundFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
-            } else if (this.specParams.type.indexOf('方矩管') > -1){
-                this.weightSquareFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
-            } else if (this.specParams.type.indexOf('角') > -1 || this.specParams.type.indexOf('槽') > -1) {
-                this.weightAngleFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
-            }
-        }
     },
-    watch: {
-        'specParams.unit': function(val){
-            if(val === '支' && this.specParams.demandAmount && this.specParams.spec) {
-                this.inputDemanAmount();
-            } else {
-                this.specParams.demandWeight = '';
-            }
-        },
-        'specParams.spec': function(val) {
-            if(this.specParams.unit === '支' && this.specParams.demandAmount && val) {
-                this.inputDemanAmount()
-            }
-        },
-        'specParams.type': function(val, oldval) {
-            this.specParams.spec = '';
-            this.specParams.demandAmount = '';
-            this.specParams.demandWeight = '';
-            this.specParams.unit === '支';
-        },
-        'specParams.demandAmount': function(val) {
-            if(this.specParams.unit === '支' && this.specParams.demandAmount && this.specParams.spec) {
-                this.inputDemanAmount()
-            }
-        }
+    onCustomerClose () {
+      this.customerQuery.page = 1
+      this.customerQuery.customerName = ''
     },
-    mounted: function () {
-        this.loading = true;
-        var demandNo = this.$route.query.demandNo;
-        if(demandNo) {
-            this.loadDemandList(Object.assign(this.searchDeParam, {demandNo: demandNo})).then(() => {
-                this.loading = false;
-            });
-        }else{
-            this.loadDemandList(this.searchDeParam).then(() => {
-                this.loading = false;
-            });
-        }
-        var self = this;
-        document.onkeyup = function(event) {
-            event = event || window.event;
-            if(event.keyCode === 13) {
-                if(!self.dlgDemandVisible && !self.dlDemandView && !self.dlFeedback && !self.customerListDlShow && !self.customerAddDlShow) {
-                    self.searchDemand()
-                }
-            };
-        };
+    searchCustomer () {
+      this.flushCustomerList(this.customerQuery)
     },
-    created() {
-        this.getMessageList({messageType:2})
-            .then( data =>{
-                this.messageList = data.row;
+    handlCustonerPage (val) {
+      this.customerQuery.page = val
+      this.flushCustomerList(this.customerQuery)
+    },
+    selectCustomer (options) {
+      this.demandParams.customerName = options.customerName
+      this.demandParams.customerPhone = options.customerPhone
+      this.demandParams.destination = options.destination
+      this.customerListDlShow = false
+    },
+    showNewCustomer () {
+      this.customerAddDlShow = true
+    },
+    submitCustomer () {
+      this.newCustomer(this.customerParams)
+                .then(data => {
+                  this.$message({
+                    message: `新增成功`,
+                    type: 'success'
+                  })
+                  this.customerAddDlShow = false
+                  this.flushCustomerList()
+                })
+    },
+    deleteCustomer (customerId) {
+      this.removeCustomer({customerId})
+    },
+    inputDemanAmount () {
+      if (this.specParams.type.indexOf('圆管') > -1) {
+        this.weightRoundFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+      } else if (this.specParams.type.indexOf('方矩管') > -1) {
+        this.weightSquareFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+      } else if (this.specParams.type.indexOf('角') > -1 || this.specParams.type.indexOf('槽') > -1) {
+        this.weightAngleFormatter(this.specParams.spec, Number(this.specParams.demandAmount))
+      }
+    }
+  },
+  watch: {
+    'specParams.unit': function (val) {
+      if (val === '支' && this.specParams.demandAmount && this.specParams.spec) {
+        this.inputDemanAmount()
+      } else {
+        this.specParams.demandWeight = ''
+      }
+    },
+    'specParams.spec': function (val) {
+      if (this.specParams.unit === '支' && this.specParams.demandAmount && val) {
+        this.inputDemanAmount()
+      }
+    },
+    'specParams.type': function (val, oldval) {
+      this.specParams.spec = ''
+      this.specParams.demandAmount = ''
+      this.specParams.demandWeight = ''
+      this.specParams.unit === '支'
+    },
+    'specParams.demandAmount': function (val) {
+      if (this.specParams.unit === '支' && this.specParams.demandAmount && this.specParams.spec) {
+        this.inputDemanAmount()
+      }
+    }
+  },
+  mounted: function () {
+    this.loading = true
+    var demandNo = this.$route.query.demandNo
+    if (demandNo) {
+      this.loadDemandList(Object.assign(this.searchDeParam, {demandNo: demandNo})).then(() => {
+        this.loading = false
+      })
+    } else {
+      this.loadDemandList(this.searchDeParam).then(() => {
+        this.loading = false
+      })
+    }
+    var self = this
+    document.onkeyup = function (event) {
+      event = event || window.event
+      if (event.keyCode === 13) {
+        if (!self.dlgDemandVisible && !self.dlDemandView && !self.dlFeedback && !self.customerListDlShow && !self.customerAddDlShow) {
+          self.searchDemand()
+        }
+      };
+    }
+  },
+  created () {
+    this.getMessageList({messageType: 2})
+            .then(data => {
+              this.messageList = data.row
             })
-    },
+  }
 }
 </script>
 <style lang="less">

@@ -38,7 +38,7 @@ module.exports = (app) => {
           }
         }
         var _role = user.data.userRole.dataValues;
-        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}`;
+        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}${_role['financeAuth']}`;
         ctx.cookies.set('userRole', role, {
           maxAge: maxAge, // cookie有效期为1个月
           httpOnly: false
@@ -123,7 +123,7 @@ module.exports = (app) => {
           }
         }
         var _role = user.data.userRole.dataValues;
-        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}`;
+        var role = `${_role['adminAuth']}${_role['valueAuth']}${_role['inventoryAuth']}${_role['supplierAuth']}${_role['demandAuth']}${_role['orderAuth']}${_role['queryAuth']}${_role['crossAuth']}${_role['financeAuth']}`;
         ctx.cookies.set('userRole', role, {
           maxAge: maxAge, // cookie有效期为1个月
           httpOnly: false

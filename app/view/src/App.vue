@@ -10,58 +10,51 @@
 </template>
 
 <script>
-    import topNav from './components/common/topnav';
+    import topNav from './components/common/topnav'
     import {
-        updateForm,
+        updateForm
     } from './vuex/action'
     export default {
-        vuex: {
-            getters: {
-                menuArr: ({
+      vuex: {
+        getters: {
+          menuArr: ({
                     common
                 }) => common.menuArr,
-                userInfo: ({
+          userInfo: ({
                     common
                 }) => common.userInfo
-            },
-            actions: {
-                updateForm
-            }
         },
-        data() {
-            return {};
-        },
-        components: {
-            topNav
-        },
-        methods: {
-            getCookie(name) {
-                var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-                if (arr = document.cookie.match(reg))
-                    return decodeURI(arr[2]);
-                else
-                    return null;
-            },
-            isLogin() {
-                var userId = this.getCookie('userId');
-                var comId = this.getCookie('comId');
-                var userRole = this.getCookie('userRole');
-                var info = {
-                    userId: userId,
-                    comId: comId,
-                    userRole: userRole
-                }
-                this.socket.emit('info',info);
-                if (userId) {
-                    this.updateForm('userInfo', info);
-                } else {
-                    document.location.href = 'login.html'
-                }
-            }
-        },
-        mounted: function() {
-            this.isLogin()
+        actions: {
+          updateForm
         }
+      },
+      data () {
+        return {}
+      },
+      components: {
+        topNav
+      },
+      methods: {
+        isLogin () {
+          var userId = this.getCookie('userId')
+          var comId = this.getCookie('comId')
+          var userRole = this.getCookie('userRole')
+          var info = {
+            userId: userId,
+            comId: comId,
+            userRole: userRole
+          }
+          this.socket.emit('info', info)
+          if (userId) {
+            this.updateForm('userInfo', info)
+          } else {
+            document.location.href = 'login.html'
+          }
+        }
+      },
+      mounted: function () {
+        this.isLogin()
+      }
     }
 </script>
 

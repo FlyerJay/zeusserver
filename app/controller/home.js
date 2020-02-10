@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = app => {
+module.exports = (app) => {
   class HomeController extends app.Controller {
-    * index() {
+    index () {
       const ctx = this.ctx;
       ctx.body = 'zues API';
     }

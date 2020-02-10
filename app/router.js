@@ -96,6 +96,8 @@ module.exports = (app) => {
   app.post('/zues/api/demand/remove', 'demand.remove');
   app.get('/zues/api/demand/pricehistory', 'demand.priceHistory');
   app.post('/zues/api/demand/check', 'demand.checkRepeate');
+  // 财务相关
+  app.get('/zues/api/invoice/list', 'invoice.listForZeus');
   // 导出报表
   app.get('/zues/api/export/order/*', 'export.order');
   app.get('/zues/api/export/orderdetail/*', 'export.orderDetail');

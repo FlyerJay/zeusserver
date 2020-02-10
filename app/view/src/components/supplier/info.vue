@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="sup-info">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="供应商信息" name="first">
@@ -131,10 +131,10 @@
     openRelate,
     closeRelate,
     getMessageList
-  } from '../../vuex/action';
-  import Slide from '../plugin/slide';
-  
-  export default {
+  } from '../../vuex/action'
+import Slide from '../plugin/slide'
+
+export default {
     vuex: {
       actions: {
         loadSupList,
@@ -164,10 +164,10 @@
         }) => supplier.freightList
       }
     },
-    components:{
+    components: {
       Slide
     },
-    data() {
+    data () {
       return {
         searchSupParam: {
           supplierName: '',
@@ -202,164 +202,162 @@
         deleteFreParams: {
           freightId: ''
         },
-        activeName: "first",
+        activeName: 'first',
         dlgSupVisible: false,
         dlgChangeSupVisible: false,
         fredlgAddshow: false,
         fredlgChangeshow: false,
         infoloading: true,
         freightloading: true,
-        messageList: [],
+        messageList: []
       }
     },
     methods: {
-      searchSup() {
-        this.infoloading = true;
+      searchSup () {
+        this.infoloading = true
         this.loadSupList(this.searchSupParam)
           .then(rs => {
-            this.infoloading = false;
+            this.infoloading = false
           })
       },
-      handleInfoCurrentChange(val) {
-        this.searchSupParam.page = val;
-        this.infoloading = true;
+      handleInfoCurrentChange (val) {
+        this.searchSupParam.page = val
+        this.infoloading = true
         this.loadSupList(this.searchSupParam)
           .then(() => {
-            this.infoloading = false;
-          });
+            this.infoloading = false
+          })
       },
-      handleFreightCurrentChange(val) {
-        this.searchSupParam.page = val;
-        this.freightloading = true;
+      handleFreightCurrentChange (val) {
+        this.searchSupParam.page = val
+        this.freightloading = true
         this.loadfreightList(this.searchSupParam)
           .then(() => {
-            this.freightloading = false;
-          });
+            this.freightloading = false
+          })
       },
-      addSup() { //录入供应商信息
+      addSup () { // 录入供应商信息
         this.addNewSup(this.newSupParam)
           .then(rs => {
             this.$message({
               message: `信息录入成功`,
               type: 'success'
             })
-            this.dlgSupVisible = false;
-            this.dlgFreightVisible = false;
-            this.loadSupList(this.searchSupParam);
+            this.dlgSupVisible = false
+            this.dlgFreightVisible = false
+            this.loadSupList(this.searchSupParam)
           })
       },
-      addFre() { //录入运费信息
+      addFre () { // 录入运费信息
         this.addNewFre(this.freParam)
           .then(rs => {
             this.$message({
               message: `信息录入成功`,
               type: 'success'
             })
-            this.fredlgAddshow = false;
-            this.loadfreightList(this.searchSupParam);
+            this.fredlgAddshow = false
+            this.loadfreightList(this.searchSupParam)
           })
       },
-      deleteFre(index, row) {
+      deleteFre (index, row) {
         this.$confirm('确认删除?', '提示', {
           cancelButtonText: '取消',
           confirmButtonText: '确定',
           type: 'warning'
         }).then(() => {
-          this.deleteFreParams.freightId = row.freightId.toString();
+          this.deleteFreParams.freightId = row.freightId.toString()
           this.deleteFreight(this.deleteFreParams)
             .then(rs => {
               this.$message({
                 message: `删除成功`,
                 type: 'success'
               })
-              this.loadfreightList(this.searchSupParam);
-          });
+              this.loadfreightList(this.searchSupParam)
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
-        });  
+          })
+        })
       },
-      changeSupDlg(index, row) { //修改供应商dlg
-        this.dlgChangeSupVisible = true;
-        this.changeSupParam.supplierName = row.supplierName;
-        this.changeSupParam.address = row.address;
-        this.changeSupParam.benifit = row.benifit;
-        this.changeSupParam.supplierId = row.supplierId;
+      changeSupDlg (index, row) { // 修改供应商dlg
+        this.dlgChangeSupVisible = true
+        this.changeSupParam.supplierName = row.supplierName
+        this.changeSupParam.address = row.address
+        this.changeSupParam.benifit = row.benifit
+        this.changeSupParam.supplierId = row.supplierId
         this.changeSupParam.row = row
       },
-      changeSup(row) { //确认修改供应商信息
+      changeSup (row) { // 确认修改供应商信息
         this.updataSup(this.changeSupParam, this.changeSupParam.supplierId)
           .then(rs => {
             this.$message({
               message: `信息修改成功`,
               type: 'success'
-            });
-            this.dlgChangeSupVisible = false;
-            this.loadSupList(this.searchSupParam);
+            })
+            this.dlgChangeSupVisible = false
+            this.loadSupList(this.searchSupParam)
           })
       },
-      changeFreDlg(index, row) { // 修改运费dlg
-        this.fredlgChangeshow = true;
-        this.changeFreParam.freight = row.freight;
-        this.changeFreParam.freightId = row.freightId;
-        this.changeFreParam.address = row.address;
+      changeFreDlg (index, row) { // 修改运费dlg
+        this.fredlgChangeshow = true
+        this.changeFreParam.freight = row.freight
+        this.changeFreParam.freightId = row.freightId
+        this.changeFreParam.address = row.address
         this.changeFreParam.row = row
       },
-      changeFre(row) { //确认修改运费
+      changeFre (row) { // 确认修改运费
         this.updateFre(this.changeFreParam)
           .then(rs => {
             this.$message({
               message: `信息修改成功`,
               type: 'success'
             })
-            this.fredlgChangeshow = false;
-            this.loadfreightList();
+            this.fredlgChangeshow = false
+            this.loadfreightList()
           })
       },
-      changeState(value,{supplierId}){
-        if(value == 1) {
+      changeState (value, {supplierId}) {
+        if (value === 1) {
           this.openRelate({supplierId})
-        }else{
+        } else {
           this.closeRelate({supplierId})
         }
       },
-      valueDateFormat(row, colum) {
-        if(row.valueTime)
-          return new Date(parseInt(row.valueTime)).formatDate('yyyy-MM-dd hh:mm:ss')
-        return "";
+      valueDateFormat (row, colum) {
+        if (row.valueTime) { return new Date(parseInt(row.valueTime)).formatDate('yyyy-MM-dd hh:mm:ss') }
+        return ''
       },
-      inventoryDateFormat(row, colum) {
-        if(row.inventoryTime)
-          return new Date(parseInt(row.inventoryTime)).formatDate('yyyy-MM-dd hh:mm:ss')
-        return "";
+      inventoryDateFormat (row, colum) {
+        if (row.inventoryTime) { return new Date(parseInt(row.inventoryTime)).formatDate('yyyy-MM-dd hh:mm:ss') }
+        return ''
       }
     },
-    mounted: function() {
+    mounted: function () {
       this.loadSupAddress({
         comId: this.userInfo.comId
-      });
+      })
       this.loadSupList({
         comId: this.userInfo.comId
       }).then(rs => {
-        this.infoloading = false;
-      });
+        this.infoloading = false
+      })
       this.loadfreightList({
         comId: this.userInfo.comId
       }).then(rs => {
-        this.freightloading = false;
+        this.freightloading = false
       })
     },
-    created() {
-      this.getMessageList({messageType:1})
-        .then( data =>{
-          this.messageList = data.row;
+    created () {
+      this.getMessageList({messageType: 1})
+        .then(data => {
+          this.messageList = data.row
         })
     },
     computed: {
-      supplierAuth() {
-        return Boolean(parseInt(this.userInfo.userRole.charAt(3)));
+      supplierAuth () {
+        return Boolean(parseInt(this.userInfo.userRole.charAt(3)))
       }
     }
   }

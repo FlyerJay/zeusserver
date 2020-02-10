@@ -18,7 +18,7 @@ export default {
       updateForm
     }
   },
-  data() {
+  data () {
     return {
       topMenuData: [{
         url: '/demand/manage',
@@ -30,7 +30,7 @@ export default {
   mounted: function () {
     this.updateForm('topMenuData', this.topMenuData)
   },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     next(vm => {
       vm.updateForm('mainRoute', to.path.split('/')[1])
     })

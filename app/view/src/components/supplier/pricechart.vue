@@ -78,101 +78,101 @@
     }
 </style>
 <script>
-    import linechart from '../common/linechart';
-    import {
+    import linechart from '../common/linechart'
+import {
         getPriceChart
-    } from '../../vuex/action';
-    export default {
-        vuex: {
-            actions: {
-                getPriceChart
+    } from '../../vuex/action'
+export default {
+      vuex: {
+        actions: {
+          getPriceChart
+        },
+        getters: {
+        }
+      },
+      components: {
+        linechart
+      },
+      data () {
+        return {
+          searchParam: {
+            spec: '',
+            supplierId: '',
+            type: ''
+          },
+          loading: false,
+          price: {
+            row: []
+          },
+          suppliers: [
+            {
+              supplierName: '源泰黑管',
+              supplierId: 1
+            }
+          ],
+          types: ['黑管', '热镀锌', '镀锌带'],
+          chartOption: {
+            xAxis: {
+              data: []
             },
-            getters: {
-            }
-        },
-        components:{
-            linechart,
-        },
-        data() {
-            return {
-                searchParam:{
-                    spec: '',
-                    supplierId: '',
-                    type:'',
-                },
-                loading:false,
-                price:{
-                    row:[],
-                },
-                suppliers:[
-                    {
-                        supplierName: '源泰黑管',
-                        supplierId: 1,
-                    }
-                ],
-                types:['黑管','热镀锌','镀锌带'],
-                chartOption:{
-                    xAxis:{
-                        data:[],
-                    },
-                    tooltip: {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:[]
-                    },
-                    series:[]
-                },
-            }
-        },
-        methods: {
-            addToCharts(){
-                this.getPriceChart(this.searchParam)
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: []
+            },
+            series: []
+          }
+        }
+      },
+      methods: {
+        addToCharts () {
+          this.getPriceChart(this.searchParam)
                 .then(data => {
-                    var date = [];
-                    var value = [];
-                    data.map(v => {
-                        date.push(v.time);
-                        value.push(v.value);
-                    })
-                    this.chartOption.xAxis.data = date;
-                    this.chartOption.legend.data.push(`${data[0].supplierName}${data[0].spec}`);
-                    this.chartOption.series.push({
-                        name:`${data[0].supplierName}${data[0].spec}`,
-                        type:'line',
-                        data:value,
-                        markLine: {
-                            data: [
+                  var date = []
+                  var value = []
+                  data.map(v => {
+                    date.push(v.time)
+                    value.push(v.value)
+                  })
+                  this.chartOption.xAxis.data = date
+                  this.chartOption.legend.data.push(`${data[0].supplierName}${data[0].spec}`)
+                  this.chartOption.series.push({
+                    name: `${data[0].supplierName}${data[0].spec}`,
+                    type: 'line',
+                    data: value,
+                    markLine: {
+                      data: [
                                 {type: 'average', name: '平均值'},
-                                [{
-                                    symbol: 'none',
-                                    x: '90%',
-                                    yAxis: 'max'
-                                }, {
-                                    symbol: 'circle',
-                                    label: {
-                                        normal: {
-                                            position: 'start',
-                                            formatter: '最大值'
-                                        }
-                                    },
-                                    type: 'max',
-                                    name: '最高点'
-                                }]
-                            ]
-                        }
-                    });
-                    this.$refs.lineChart.setOption(this.chartOption);
+                        [{
+                          symbol: 'none',
+                          x: '90%',
+                          yAxis: 'max'
+                        }, {
+                          symbol: 'circle',
+                          label: {
+                            normal: {
+                              position: 'start',
+                              formatter: '最大值'
+                            }
+                          },
+                          type: 'max',
+                          name: '最高点'
+                        }]
+                      ]
+                    }
+                  })
+                  this.$refs.lineChart.setOption(this.chartOption)
                 })
-            }
-        },
-        mounted: function() {
-            var windowHeight = document.documentElement.clientHeight;
-            var otherHeight = 44 + 50 + 20 + 25;
-            var finalHeight = windowHeight - otherHeight;
-            $(this.$refs.pagecontainer).css('height',`${finalHeight}px`);
-        },
-        computed: {
-        },
+        }
+      },
+      mounted: function () {
+        var windowHeight = document.documentElement.clientHeight
+        var otherHeight = 44 + 50 + 20 + 25
+        var finalHeight = windowHeight - otherHeight
+        $(this.$refs.pagecontainer).css('height', `${finalHeight}px`)
+      },
+      computed: {
+      }
     }
 </script>

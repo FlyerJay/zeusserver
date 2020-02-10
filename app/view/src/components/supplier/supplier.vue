@@ -22,13 +22,13 @@
         }) => common.userInfo
       }
     },
-    data() {
+    data () {
       return {
         topMenuData: [{
           url: '/supplier/info',
           icon: 'icon-supplier',
           name: '供应商'
-        }, 
+        },
         {
           url: '/supplier/price',
           icon: 'icon-price',
@@ -41,30 +41,30 @@
         }, {
           url: '/supplier/pricechart',
           icon: 'icon-trend',
-          name: '价格走势',
+          name: '价格走势'
         }]
       }
     },
-    mounted: function() {
-      this.userInfo.userRole = this.getCookie("userRole");
+    mounted: function () {
+      this.userInfo.userRole = this.getCookie('userRole')
       if (this.userInfo.userRole) {
-        this.topMenuData = [];
-        if(parseInt(this.userInfo.userRole.charAt(7))) {
+        this.topMenuData = []
+        if (parseInt(this.userInfo.userRole.charAt(7))) {
           const item = {
             url: '/supplier/setting',
             icon: 'icon-supplier',
             name: '供应商'
           }
           this.topMenuData.push(item)
-        }else if(parseInt(this.userInfo.userRole.charAt(3))){
+        } else if (parseInt(this.userInfo.userRole.charAt(3))) {
           const item = {
-              url: '/supplier/info',
-              icon: 'icon-supplier',
-              name: '供应商'
-          };
+            url: '/supplier/info',
+            icon: 'icon-supplier',
+            name: '供应商'
+          }
           this.topMenuData.push(item)
         }
-        if(parseInt(this.userInfo.userRole.charAt(6))) {
+        if (parseInt(this.userInfo.userRole.charAt(6))) {
           const itemArr = [
             {
               url: '/supplier/price',
@@ -76,19 +76,13 @@
               icon: 'icon-inventory',
               name: '库存表'
             }
-          ];
+          ]
           this.topMenuData = this.topMenuData.concat(itemArr)
         }
-        const priceItem = {
-            url: '/supplier/pricechart',
-            icon: 'icon-trend',
-            name: '价格走势',
-        };
-        //this.topMenuData.push(priceItem);
       }
       this.updateForm('topMenuData', this.topMenuData)
     },
-    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter (to, from, next) {
       next(vm => {
         vm.updateForm('mainRoute', to.path.split('/')[1])
       })

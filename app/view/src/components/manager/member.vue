@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
     <div class="order-wrap">
         <el-form :inline="true" :model="memberParams" class="demo-form-inline">
             <el-form-item label="用户ID:">
@@ -62,6 +62,12 @@
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
+                <el-table-column prop="financeAuth" align="center" label="财务">
+                      <template scope="scope" >
+                        <i v-if ="Boolean(scope.row.financeAuth)"  class="el-icon-check"></i>
+                        <i v-else class="el-icon-close"></i>
+                     </template>
+                </el-table-column>
                 <el-table-column prop=" adminAuth" align="center" label="管理员">
                      <template scope="scope" >
                         <i v-if ="Boolean(scope.row.adminAuth)"  class="el-icon-check"></i>
@@ -69,16 +75,16 @@
                      </template>
                 </el-table-column>
                 <el-table-column label="操作" width='360px' align="center" property="id" v-if="adminAuthority">
-                    <template scope="scope">
-                        <el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
-                        <el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>
-                        <el-button size="small" @click="resetPassword(scope.index, scope.row)" type="success">重置</el-button>
-                        <el-button size="small" @click="removeUser(scope.index, scope.row)" type="danger">删除</el-button>
-                    </template>
+									<template scope="scope">
+										<el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
+										<el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>
+										<el-button size="small" @click="resetPassword(scope.index, scope.row)" type="success">重置</el-button>
+										<el-button size="small" @click="removeUser(scope.index, scope.row)" type="danger">删除</el-button>
+									</template>
                </el-table-column>
             </el-table>
-       </div>
-       <div class="page-wrap">
+       	</div>
+       	<div class="page-wrap">
           <el-pagination
             @current-change="handleCurrentChange"
             :current-page.sync="memberParams.page"
@@ -88,8 +94,7 @@
           </el-pagination>
         </div>
 
-
-        <!--修改权限弹框-->
+				<!--修改权限弹框-->
         <el-dialog title="修改权限" v-model="dlgChangeAuthVisible" size="tiny">
               <el-form v-model="authParams">
                   <el-form-item label="查询:">
@@ -109,6 +114,9 @@
                   </el-form-item>
                   <el-form-item label="定制需求：">
                       <el-checkbox  v-model="authParams.demandAuth" auto-complete="off"></el-checkbox>
+                  </el-form-item>
+                  <el-form-item label="财务：">
+                      <el-checkbox  v-model="authParams.financeAuth" auto-complete="off"></el-checkbox>
                   </el-form-item>
                   <el-form-item label="管理员：">
                       <el-checkbox  v-model="authParams.adminAuth" auto-complete="off"></el-checkbox>
@@ -178,250 +186,257 @@
 
 <script>
 
-import{
+import {
     loadmemberList,
     updateuserRole,
     addNewUser,
     deleteUser,
     resetPasswordAxios
-}from '../../vuex/action'
+} from '../../vuex/action'
 
 export default {
-    vuex:{
-        actions:{
-            loadmemberList,
-            updateuserRole,
-            addNewUser,
-            deleteUser,
-            resetPasswordAxios
-        },
-        getters:{
-            userInfo:({
+  vuex: {
+    actions: {
+      loadmemberList,
+      updateuserRole,
+      addNewUser,
+      deleteUser,
+      resetPasswordAxios
+    },
+    getters: {
+      userInfo: ({
                 common
-            })=>common.userInfo,
-            userRoleInfo:({
+            }) => common.userInfo,
+      userRoleInfo: ({
                 manager
-            })=>manager.userRoleInfo
-        }
-    },
-    data(){
-        return{
-            memberParams: {
-                userId: '',
-                page:1,
-                comId: ''
-            },
-            authParams: {
-                orderAuth:'',
-                valueAuth:'',
-                inventoryAuth:'',
-                demandAuth:'',
-                adminAuth:'',
-                userId:'',
-                comId: this.userInfo.comId,
-                operator:'',
-                supplierAuth:'',
-                queryAuth:'',
-            },
-            newUserParams: {
-                registerId: '',
-                comId: '',
-                password: ''
-            },
-            loading: true,
-            updateload: false,  
-            dlgChangeAuthVisible: false,
-            dlgAddUserVisible: false,
-            dlgAllocationRole: false,
-            dlgResetPasswordVisible: false,
-            roleValue: 0,
-            roleArray:[{ value: 0, key: '自定义角色' },{ value: 1, key: '销售' },{ value: 2, key: '采购' },{ value: 3, key: '管理员' }],
-            roleStrArray:{
-                '00001000':1,
-                '11110010':2,
-                '11111110':3
-            },
-            allocParams: {
-                orderAuth:'',
-                valueAuth:'',
-                inventoryAuth:'',
-                demandAuth:'',
-                adminAuth:'',
-                userId:'',
-                comId: this.userInfo.comId,
-                operator:'',
-                supplierAuth:'',
-                queryAuth:'',
-            },
-            resetParams: {
-                password: '',
-                resetUser: ''
-            }
-        }
-    },
-    methods:{
-        changeAuthority(index, row){//修改权限弹窗
-            this.dlgChangeAuthVisible = true;
-            this.authParams.userId = row.userId;
-            this.authParams.orderAuth = Boolean(row.orderAuth);
-            this.authParams.valueAuth = Boolean(row.valueAuth);
-            this.authParams.inventoryAuth = Boolean(row.inventoryAuth);
-            this.authParams.demandAuth = Boolean(row.demandAuth);
-            this.authParams.adminAuth = Boolean(row.adminAuth);
-            this.authParams.supplierAuth = Boolean(row.supplierAuth);
-            this.authParams.queryAuth = Boolean(row.queryAuth);
-        },
-        allocRole(index,row){
-            this.dlgAllocationRole = true;
-            const auth = `${row.orderAuth}${row.supplierAuth}${row.valueAuth}${row.inventoryAuth}${row.demandAuth}${row.adminAuth}${row.queryAuth}${row.crossAuth}`;
-            this.roleStrArray[auth] ? this.roleValue = this.roleStrArray[auth] : this.roleValue = 0;
-            this.allocParams.operator = row.userId;
-        },
-        resetPassword(index,row){
-            this.dlgResetPasswordVisible = true;
-            this.resetParams.resetUser = row.userId;
-        },
-        submitReset(){
-            this.resetPasswordAxios(this.resetParams)
-                .then(rs=> {
-                    this.$message({
-                        message: "修改密码成功",
-                        type: 'success'
-                    })
-                    this.dlgResetPasswordVisible = false;
-                })
-        },
-        configAllocRole(){
-            switch(this.roleValue){
-                case 1:
-                    this.allocParams.orderAuth = 0;
-                    this.allocParams.supplierAuth = 0;
-                    this.allocParams.valueAuth = 0;
-                    this.allocParams.inventoryAuth = 0;
-                    this.allocParams.demandAuth = 1;
-                    this.allocParams.adminAuth = 0;
-                    this.allocParams.queryAuth = 0;
-                    break;
-                case 2:
-                    this.allocParams.orderAuth = 1;
-                    this.allocParams.supplierAuth = 1;
-                    this.allocParams.valueAuth = 1;
-                    this.allocParams.inventoryAuth = 1;
-                    this.allocParams.demandAuth = 0;
-                    this.allocParams.adminAuth = 0;
-                    this.allocParams.queryAuth = 1;
-                    break;
-                case 3:
-                    this.allocParams.orderAuth = 1;
-                    this.allocParams.supplierAuth = 1;
-                    this.allocParams.valueAuth = 1;
-                    this.allocParams.inventoryAuth = 1;
-                    this.allocParams.demandAuth = 1;
-                    this.allocParams.adminAuth = 1;
-                    this.allocParams.queryAuth = 1;
-                    break;
-            }
-            this.updateload = true;
-            this.updateuserRole(this.allocParams)
-            .then(rs => {
-                this.$message({
-                    message: `角色分配成功`,
-                    type: 'success'
-                });
-                this.updateload = false;
-                this.dlgAllocationRole = false;
-                this.loading = true;
-                this.loadmemberList(this.memberParams)
-                .then(rs => {
-                    this.loading = false;
-                });
-            });
-        },
-        handleCurrentChange(val){
-            this.memberParams.page = val;
-            this.loading = true;
-            this.loadmemberList(this.memberParams)
-            .then(rs => {
-                this.loading = false;
-            })
-        },
-        searchUser() {//查找成员
-            this.loading = true;
-            this.memberParams.page = 1;
-            this.loadmemberList(this.memberParams)
-            .then(() => {
-                this.loading = false;
-            });
-        },
-        addUser() {
-            this.addNewUser(this.newUserParams)
-            .then(rs=>{
-                this.dlgAddUserVisible = false;  
-                this.loading = true;  
-                this.loadmemberList(this.memberParams)
-                .then(rs => {
-                    this.loading = false;
-                }).catch(rs=> {})
-            }).catch(rs=> {})
-        },
-        removeUser(index,row) {
-            this.$confirm('确认删除该用户?','警告',{
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.deleteUser({operator:row.userId})
-                .then(rs => {
-                    this.$message({
-                        message: `删除用户成功`,
-                        type: 'success'
-                    });
-                    this.loading = true;  
-                    this.loadmemberList(this.memberParams)
-                    .then(rs => {
-                        this.loading = false;
-                    }).catch(rs=> {})
-                }).catch(rs=> {})
-            }).catch(rs=> {})
-        },
-        confireChangeAuth(){
-            let upateParam = {};
-            upateParam.operator = this.authParams.userId;
-            upateParam.orderAuth = Number(this.authParams.orderAuth);
-            upateParam.valueAuth = Number(this.authParams.valueAuth);
-            upateParam.inventoryAuth = Number(this.authParams.inventoryAuth);
-            upateParam.demandAuth = Number(this.authParams.demandAuth);
-            upateParam.adminAuth = Number(this.authParams.adminAuth);
-            upateParam.supplierAuth = Number(this.authParams.supplierAuth);
-            upateParam.queryAuth = Number(this.authParams.queryAuth);
-            this.updateload = true;
-            this.updateuserRole(upateParam)
-            .then(rs => {
-                this.$message({
-                    message: `权限修改成功`,
-                    type: 'success'
-                });
-                this.updateload = false;
-                this.dlgChangeAuthVisible = false;
-                this.loading = true;
-                this.loadmemberList(this.memberParams)
-                .then(rs => {
-                    this.loading = false;
-                });
-            });
-        },
-    },
-    mounted: function() {
-        this.loadmemberList(this.memberParams)
-        .then(rs => {
-            this.loading = false;
-        })
-    },
-    computed: {
-        adminAuthority() {
-            return Boolean(parseInt(this.userInfo.userRole.charAt(0)));
-        }
+            }) => manager.userRoleInfo
     }
+  },
+  data () {
+    return {
+      memberParams: {
+        userId: '',
+        page: 1,
+        comId: ''
+      },
+      authParams: {
+        orderAuth: '',
+        valueAuth: '',
+        inventoryAuth: '',
+        demandAuth: '',
+        adminAuth: '',
+        userId: '',
+        comId: this.userInfo.comId,
+        operator: '',
+        supplierAuth: '',
+        queryAuth: '',
+        financeAuth: ''
+      },
+      newUserParams: {
+        registerId: '',
+        comId: '',
+        password: ''
+      },
+      loading: true,
+      updateload: false,
+      dlgChangeAuthVisible: false,
+      dlgAddUserVisible: false,
+      dlgAllocationRole: false,
+      dlgResetPasswordVisible: false,
+      roleValue: 0,
+      roleArray: [{ value: 0, key: '自定义角色' }, { value: 1, key: '销售' }, { value: 2, key: '采购' }, { value: 3, key: '管理员' }],
+      roleStrArray: {
+        '000010000': 1,
+        '111100100': 2,
+        '111111100': 3
+      },
+      allocParams: {
+        orderAuth: '',
+        valueAuth: '',
+        inventoryAuth: '',
+        demandAuth: '',
+        adminAuth: '',
+        userId: '',
+        comId: this.userInfo.comId,
+        operator: '',
+        supplierAuth: '',
+        queryAuth: '',
+        financeAuth: ''
+      },
+      resetParams: {
+        password: '',
+        resetUser: ''
+      }
+    }
+  },
+  methods: {
+    changeAuthority (index, row) { // 修改权限弹窗
+      this.dlgChangeAuthVisible = true
+      this.authParams.userId = row.userId
+      this.authParams.orderAuth = Boolean(row.orderAuth)
+      this.authParams.valueAuth = Boolean(row.valueAuth)
+      this.authParams.inventoryAuth = Boolean(row.inventoryAuth)
+      this.authParams.demandAuth = Boolean(row.demandAuth)
+      this.authParams.adminAuth = Boolean(row.adminAuth)
+      this.authParams.supplierAuth = Boolean(row.supplierAuth)
+      this.authParams.queryAuth = Boolean(row.queryAuth)
+      this.authParams.financeAuth = Boolean(row.financeAuth)
+    },
+    allocRole (index, row) {
+      this.dlgAllocationRole = true
+      const auth = `${row.orderAuth}${row.supplierAuth}${row.valueAuth}${row.inventoryAuth}${row.demandAuth}${row.adminAuth}${row.queryAuth}${row.crossAuth}${row.financeAuth}`
+      this.roleStrArray[auth] ? this.roleValue = this.roleStrArray[auth] : this.roleValue = 0
+      this.allocParams.operator = row.userId
+    },
+    resetPassword (index, row) {
+      this.dlgResetPasswordVisible = true
+      this.resetParams.resetUser = row.userId
+    },
+    submitReset () {
+      this.resetPasswordAxios(this.resetParams)
+                .then(rs => {
+                  this.$message({
+                    message: '修改密码成功',
+                    type: 'success'
+                  })
+                  this.dlgResetPasswordVisible = false
+                })
+    },
+    configAllocRole () {
+      switch (this.roleValue) {
+        case 1:
+          this.allocParams.orderAuth = 0
+          this.allocParams.supplierAuth = 0
+          this.allocParams.valueAuth = 0
+          this.allocParams.inventoryAuth = 0
+          this.allocParams.demandAuth = 1
+          this.allocParams.adminAuth = 0
+          this.allocParams.queryAuth = 0
+          this.allocParams.financeAuth = 0
+          break
+        case 2:
+          this.allocParams.orderAuth = 1
+          this.allocParams.supplierAuth = 1
+          this.allocParams.valueAuth = 1
+          this.allocParams.inventoryAuth = 1
+          this.allocParams.demandAuth = 0
+          this.allocParams.adminAuth = 0
+          this.allocParams.queryAuth = 1
+          this.allocParams.financeAuth = 0
+          break
+        case 3:
+          this.allocParams.orderAuth = 1
+          this.allocParams.supplierAuth = 1
+          this.allocParams.valueAuth = 1
+          this.allocParams.inventoryAuth = 1
+          this.allocParams.demandAuth = 1
+          this.allocParams.adminAuth = 1
+          this.allocParams.queryAuth = 1
+          this.allocParams.financeAuth = 0
+          break
+      }
+      this.updateload = true
+      this.updateuserRole(this.allocParams)
+            .then(rs => {
+              this.$message({
+                message: `角色分配成功`,
+                type: 'success'
+              })
+              this.updateload = false
+              this.dlgAllocationRole = false
+              this.loading = true
+              this.loadmemberList(this.memberParams)
+                .then(rs => {
+                  this.loading = false
+                })
+            })
+    },
+    handleCurrentChange (val) {
+      this.memberParams.page = val
+      this.loading = true
+      this.loadmemberList(this.memberParams)
+            .then(rs => {
+              this.loading = false
+            })
+    },
+    searchUser () { // 查找成员
+      this.loading = true
+      this.memberParams.page = 1
+      this.loadmemberList(this.memberParams)
+            .then(() => {
+              this.loading = false
+            })
+    },
+    addUser () {
+      this.addNewUser(this.newUserParams)
+            .then(rs => {
+              this.dlgAddUserVisible = false
+              this.loading = true
+              this.loadmemberList(this.memberParams)
+                .then(rs => {
+                  this.loading = false
+                }).catch(rs => {})
+            }).catch(rs => {})
+    },
+    removeUser (index, row) {
+      this.$confirm('确认删除该用户?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteUser({operator: row.userId})
+                .then(rs => {
+                  this.$message({
+                    message: `删除用户成功`,
+                    type: 'success'
+                  })
+                  this.loading = true
+                  this.loadmemberList(this.memberParams)
+                    .then(rs => {
+                      this.loading = false
+                    }).catch(rs => {})
+                }).catch(rs => {})
+      }).catch(rs => {})
+    },
+    confireChangeAuth () {
+      let upateParam = {}
+      upateParam.operator = this.authParams.userId
+      upateParam.orderAuth = Number(this.authParams.orderAuth)
+      upateParam.valueAuth = Number(this.authParams.valueAuth)
+      upateParam.inventoryAuth = Number(this.authParams.inventoryAuth)
+      upateParam.demandAuth = Number(this.authParams.demandAuth)
+      upateParam.adminAuth = Number(this.authParams.adminAuth)
+      upateParam.supplierAuth = Number(this.authParams.supplierAuth)
+      upateParam.queryAuth = Number(this.authParams.queryAuth)
+      upateParam.financeAuth = Number(this.authParams.financeAuth)
+      this.updateload = true
+      this.updateuserRole(upateParam)
+            .then(rs => {
+              this.$message({
+                message: `权限修改成功`,
+                type: 'success'
+              })
+              this.updateload = false
+              this.dlgChangeAuthVisible = false
+              this.loading = true
+              this.loadmemberList(this.memberParams)
+                .then(rs => {
+                  this.loading = false
+                })
+            })
+    }
+  },
+  mounted: function () {
+    this.loadmemberList(this.memberParams)
+        .then(rs => {
+          this.loading = false
+        })
+  },
+  computed: {
+    adminAuthority () {
+      return Boolean(parseInt(this.userInfo.userRole.charAt(0)))
+    }
+  }
 }
 </script>
 

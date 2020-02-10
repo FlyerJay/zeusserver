@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = app => {
+module.exports = (app) => {
   class DemandController extends app.Controller {
     * list() {
       const ctx = this.ctx;
@@ -17,46 +17,46 @@ module.exports = app => {
     * add() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(4) === '0'){
+      if (userRole.charAt(4) === '0') {
         ctx.body = {
-          code:-1,
-          msg:"抱歉，没有权限进行该操作"
-        }
-      }else{
+          code: -1,
+          msg: '抱歉，没有权限进行该操作'
+        };
+      } else {
         ctx.body = yield ctx.model.Demand.add(ctx.request.body);
       }
     }
     * submitUdapte() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(4) === '0'){
+      if (userRole.charAt(4) === '0') {
         ctx.body = {
-          code:-1,
-          msg:"抱歉，没有权限进行该操作"
-        }
-      }else{
+          code: -1,
+          msg: '抱歉，没有权限进行该操作'
+        };
+      } else {
         ctx.body = yield ctx.model.Demand.submitUpdate(ctx.request.body);
       }
     }
     * price() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(ctx.request.body.imp == 2) {
-        if(userRole.charAt(4) === '0'){
+      if (ctx.request.body.imp === 2) {
+        if (userRole.charAt(4) === '0') {
           ctx.body = {
-            code:-1,
-            msg:"抱歉，没有权限进行该操作"
-          }
-        }else{
+            code: -1,
+            msg: '抱歉，没有权限进行该操作'
+          };
+        } else {
           ctx.body = yield ctx.model.Demand.price(ctx.request.body);
         }
-      }else{
-        if(userRole.charAt(5) === '0'){
+      } else {
+        if (userRole.charAt(5) === '0') {
           ctx.body = {
-            code:-1,
-            msg:"抱歉，没有权限进行该操作"
-          }
-        }else{
+            code: -1,
+            msg: '抱歉，没有权限进行该操作'
+          };
+        } else {
           ctx.body = yield ctx.model.Demand.price(ctx.request.body);
         }
       }
@@ -64,47 +64,47 @@ module.exports = app => {
     * save() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(5) === '0'){
+      if (userRole.charAt(5) === '0') {
         ctx.body = {
-          code:-1,
-          msg:"抱歉，没有权限进行该操作"
-        }
-      }else{
+          code: -1,
+          msg: '抱歉，没有权限进行该操作'
+        };
+      } else {
         ctx.body = yield ctx.model.Demand.save(ctx.request.body);
       }
     }
     * update() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(ctx.request.body.dealStatus){
-        if(userRole.charAt(4) === '0'){
+      if (ctx.request.body.dealStatus) {
+        if (userRole.charAt(4) === '0') {
           ctx.body = {
-            code:-1,
-            msg:"抱歉，没有权限进行该操作"
-          }
-        }else{
+            code: -1,
+            msg: '抱歉，没有权限进行该操作'
+          };
+        } else {
           ctx.body = yield ctx.model.Demand.update(ctx.request.body);
         }
-      }else{
-        if(userRole.charAt(4) === '0'){
+      } else {
+        if (userRole.charAt(4) === '0') {
           ctx.body = {
-            code:-1,
-            msg:"抱歉，没有权限进行该操作"
-          }
-        }else{
+            code: -1,
+            msg: '抱歉，没有权限进行该操作'
+          };
+        } else {
           ctx.body = yield ctx.model.Demand.update(ctx.request.body);
         }
       }
     }
-    * remove(){
+    * remove() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
-      if(userRole.charAt(4) === '0'){
+      if (userRole.charAt(4) === '0') {
         ctx.body = {
-          code:-1,
-          msg:"抱歉，没有权限进行该操作"
-        }
-      }else{
+          code: -1,
+          msg: '抱歉，没有权限进行该操作'
+        };
+      } else {
         ctx.body = yield ctx.model.Demand.remove(ctx.request.body);
       }
     }

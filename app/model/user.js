@@ -116,6 +116,7 @@ module.exports = app => {
                             supplierAuth:0,
                             crossAuth:0,
                             queryAuth:0,
+                            financeAuth: 0,
                             lastUpdateTime:new Date().getTime()
                         },{transaction:t})
                         var userData = {

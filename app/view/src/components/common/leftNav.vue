@@ -31,11 +31,11 @@
       },
       actions: {
         updateForm
-      },
+      }
     },
-    computed:{
-      badge(val){
-        return this.demand.submit + this.demand.price + this.demand.deal + this.demand.unDeal;
+    computed: {
+      badge (val) {
+        return this.demand.submit + this.demand.price + this.demand.deal + this.demand.unDeal
       }
     }
   }

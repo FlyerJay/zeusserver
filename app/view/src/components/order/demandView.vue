@@ -125,119 +125,118 @@ import {
 } from '../../vuex/action'
 
 export default {
-    vuex: {
-        actions: {
-            loadDemandList,
-            demandDetailList,
-            loadDemandPriceList,
-            upDateDemandList,
-            priceHistoryGet
-        },
-        getters: {
-            userInfo: ({
+  vuex: {
+    actions: {
+      loadDemandList,
+      demandDetailList,
+      loadDemandPriceList,
+      upDateDemandList,
+      priceHistoryGet
+    },
+    getters: {
+      userInfo: ({
                     common
                 }) => common.userInfo,
-            demandInfo: ({
+      demandInfo: ({
                     order
                 }) => order.demandInfo,
-            demandDetail: ({
+      demandDetail: ({
                     order
                 }) => order.demandDetail,
-            demand: ({
+      demand: ({
                     common
                 }) => common.demand
-        }
-    },
-    data() {
-        return {
-            activeName: '0',
-            timeConsume: '',
-            searchDeParam: {
-                demandUser: '',
-                createTime: '',
-                endTime: '',
-                customName: '',
-                state: 0,
-                page: 1,
-            },
-            dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
-            dlgDemandVisible: false,
-            dlDemandView: false,
-            comment: '',
-            priceComment: '',
-            destination: '',
-            allweight: 0,
-            loading: true,
-            updreason: '',
-            demandcount: 0
-        }
-    },
-    methods: {
-        handleCurrentChange(val) {
-            this.searchDeParam.page = val;
-            this.loading = true;
-            this.loadDemandList(this.searchDeParam)
-                .then(() => {
-                    this.loading = false;
-                });
-        },
-        statusFormatter(row, column) {
-            const status = {
-                '0': '未报价需求',
-                '1': '待反馈',
-                '2': '已反馈',
-                '3': '未成交',
-                '4': '已成交'
-            }
-            return status[row.state];
-        },
-        viewDetail(row) {
-            this.dlDemandView = true;
-            const param = {demandNo: row.demandNo};
-            this.demandDetailList(param)
-                .then(() => {
-                    this.updreason = row.dealReason;
-                    this.destination = row.destination;
-                    this.comment = row.comment;
-                    this.priceComment = row.priceComment;
-                    var w = 0;
-                    this.demandDetail.map((v) => {
-                        w =  w + Number(Number(v.demandWeight).toFixed(2));
-                        if (v.factoryPrice == 0) {
-                            v.factoryPrice = ''
-                        }
-                        if (v.freight == 0) {
-                            v.freight = ''
-                        }
-                    })
-                    this.allweight = w.toFixed(2)
-                })
-           
-        },
-        dateFormat(row, column) {
-            if(!row[column.property]) {
-                return '';
-            } else {
-                return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
-            }
-        },
-        searchDemand() {
-            this.loading = true;
-            this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : '';
-            this.searchDeParam.state = this.activeName;
-            this.loadDemandList(this.searchDeParam)
-                .then(() => {
-                    this.loading = false;
-                });
-        }
-    },
-    mounted: function () {
-        this.loading = true;
-        this.loadDemandList(this.searchDeParam).then(() => {
-            this.loading = false;
-        })
     }
+  },
+  data () {
+    return {
+      activeName: '0',
+      timeConsume: '',
+      searchDeParam: {
+        demandUser: '',
+        createTime: '',
+        endTime: '',
+        customName: '',
+        state: 0,
+        page: 1
+      },
+      dealStatusArray: [{ value: 1, key: '交易成功' }, { value: 2, key: '交易失败' }, { value: 0, key: '未成交' }],
+      dlgDemandVisible: false,
+      dlDemandView: false,
+      comment: '',
+      priceComment: '',
+      destination: '',
+      allweight: 0,
+      loading: true,
+      updreason: '',
+      demandcount: 0
+    }
+  },
+  methods: {
+    handleCurrentChange (val) {
+      this.searchDeParam.page = val
+      this.loading = true
+      this.loadDemandList(this.searchDeParam)
+                .then(() => {
+                  this.loading = false
+                })
+    },
+    statusFormatter (row, column) {
+      const status = {
+        '0': '未报价需求',
+        '1': '待反馈',
+        '2': '已反馈',
+        '3': '未成交',
+        '4': '已成交'
+      }
+      return status[row.state]
+    },
+    viewDetail (row) {
+      this.dlDemandView = true
+      const param = {demandNo: row.demandNo}
+      this.demandDetailList(param)
+                .then(() => {
+                  this.updreason = row.dealReason
+                  this.destination = row.destination
+                  this.comment = row.comment
+                  this.priceComment = row.priceComment
+                  var w = 0
+                  this.demandDetail.map((v) => {
+                    w = w + Number(Number(v.demandWeight).toFixed(2))
+                    if (v.factoryPrice === 0) {
+                      v.factoryPrice = ''
+                    }
+                    if (v.freight === 0) {
+                      v.freight = ''
+                    }
+                  })
+                  this.allweight = w.toFixed(2)
+                })
+    },
+    dateFormat (row, column) {
+      if (!row[column.property]) {
+        return ''
+      } else {
+        return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
+      }
+    },
+    searchDemand () {
+      this.loading = true
+      this.searchDeParam.createTime = this.searchDeParam.createTime ? new Date(this.searchDeParam.createTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.endTime = this.searchDeParam.endTime ? new Date(this.searchDeParam.endTime).formatDate('yyyy-MM-dd') : ''
+      this.searchDeParam.state = this.activeName
+      this.loadDemandList(this.searchDeParam)
+                .then(() => {
+                  this.loading = false
+                })
+    }
+  },
+  mounted: function () {
+    this.loading = true
+    this.loadDemandList(this.searchDeParam).then(() => {
+      this.loading = false
+    })
+  }
 }
 </script>
 <style lang="less">
