@@ -27,6 +27,11 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.updateEnt(ctx.request.body);
     }
+
+    * list () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.entList(ctx.query);
+    }
   }
 
   return enterpriseController;

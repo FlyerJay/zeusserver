@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = (app) => {
-  const { STRING, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   return app.model.define('Enterprise', {
     enterpriseId: {
@@ -70,6 +70,11 @@ module.exports = (app) => {
       type: STRING(40),
       allowNull: true,
       comment: '对公账户'
+    },
+    createTime: {
+      type: BIGINT(15),
+      comment: '创建时间',
+      allowNull: false
     }
   }, {
     freezeTabName: true,
@@ -80,6 +85,7 @@ module.exports = (app) => {
       // 添加一个企业
       * createOneEnt (options) {
         if (!options.enterpriseName) options.enterpriseName = '未命名';
+        options.createTime = Date.now();
         const createResult = yield this.create(options);
         if (createResult) {
           try {
@@ -180,6 +186,57 @@ module.exports = (app) => {
           limit: 5
         });
         return result.rows;
+      },
+
+      * entList (options) {
+        const [$1, $2] = yield [app.model.query(
+          `SELECT e.* FROM enterprise e
+            WHERE (e.clientId = :clientId OR :clientId = '')
+              AND enterpriseName LIKE :enterpriseName
+              AND (auditStatus = :auditStatus OR :auditStatus = '')
+              ORDER BY e.createTime DESC
+              LIMIT :start,:offset`,
+          {
+            replacements: {
+              clientId: options.clientId || '',
+              enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+              auditStatus: options.auditStatus || '',
+              start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
+              offset: options.pageSize ? options.pageSize : 15
+            }
+          }
+        ), app.model.query(
+          `SELECT count(1) FROM enterprise e
+            WHERE (e.clientId = :clientId OR :clientId = '')
+              AND enterpriseName LIKE :enterpriseName
+              AND (auditStatus = :auditStatus OR :auditStatus = '')`,
+          {
+            replacements: {
+              clientId: options.clientId || '',
+              enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+              auditStatus: options.auditStatus || ''
+            }
+          }
+        )];
+
+        if (!$1[0] || $1[0].length === 0) return {
+          code: 200,
+          msg: '企业列表为空',
+          data: {
+            count: 0,
+            row: []
+          }
+        };
+        let result = {};
+        result.row = $1[0];
+        result.totalCount = $2[0][0].count;
+        result.page = options.page ? options.page : 0;
+        result.pageSize = options.pageSize ? options.pageSize : 15;
+        return {
+          code: 200,
+          msg: '查找企业列表成功',
+          data: result
+        };
       }
     }
   });

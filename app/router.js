@@ -120,6 +120,7 @@ module.exports = (app) => {
   app.post('/zues/api/invoiceminiapp/user/wechat', 'client.updateWechat');
   app.get('/zues/api/invoiceminiapp/user/info', 'client.userInfo');
   app.get('/zues/api/invoiceminiapp/enterprise/search', 'enterprise.search');
+  app.get('/zues/api/invoiceminiapp/enterprise/list', 'enterprise.list');
   app.post('/zues/api/invoiceminiapp/enterprise/create', 'enterprise.create');
   app.post('/zeus/api/invoiceminiapp/enterprise/update', 'enterprise.update');
   app.post('/zues/api/invoiceminiapp/enterprise/bind', 'enterprise.bind');
