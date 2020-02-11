@@ -198,17 +198,17 @@ export default {
               'APPLY': '',
               'WAIT': '',
               'PASSED': 'success',
-              'REFUSED': 'info',
+              'REFUSE': 'danger',
               'SEND': 'warning',
               'COMPLETE': 'success'
             }
             const statusMapping = {
               'APPLY': '申请中',
               'WAIT': '已查看',
-              'PASSED': '通过',
-              'REFUSED': '拒绝',
+              'PASSED': '已通过',
+              'REFUSE': '已拒绝',
               'SEND': '已邮寄',
-              'COMPLETE': '完成'
+              'COMPLETE': '已完成'
             }
             return h('el-tag', {
               props: {
@@ -291,7 +291,7 @@ export default {
                 {
                   props: {
                     size: 'small',
-                    type: 'success'
+                    type: 'warning'
                   },
                   on: {
                     click: () => {
@@ -386,32 +386,36 @@ export default {
 
     sendInvoice (row) {
       this.sendDialogVisible = true
-      this.sendParam.invoiceInfo = row.invoiceId
+      this.sendParam.invoiceId = row.invoiceId
     },
 
-    async confirmRefuse () {
-      const valid = await this.$refs.refuseForm.validate()
-      if (!valid) return
-      this.loading = true
-      await this.invoiceUpdate(this.refuseParam)
-      this.loading = false
-      this.queryInvoiceList()
-      return this.$message({
-        message: '拒绝发票请求成功',
-        type: 'success'
+    confirmRefuse () {
+      this.$refs.refuseForm.validate(async valid => {
+        if (!valid) return
+        this.loading = true
+        await this.invoiceUpdate(this.refuseParam)
+        this.loading = false
+        this.refuseDialogVisible = false
+        this.queryInvoiceList()
+        return this.$message({
+          message: '拒绝发票请求成功',
+          type: 'success'
+        })
       })
     },
 
-    async confirmSend () {
-      const valid = await this.$refs.sendForm.validate()
-      if (!valid) return
-      this.loading = true
-      await this.invoiceUpdate(this.refuseParam)
-      this.loading = false
-      this.queryInvoiceList()
-      return this.$message({
-        message: '补充邮寄信息成功',
-        type: 'success'
+    confirmSend () {
+      this.$refs.sendForm.validate(async (valid) => {
+        if (!valid) return
+        this.loading = true
+        await this.invoiceUpdate(this.sendParam)
+        this.loading = false
+        this.sendDialogVisible = false
+        this.queryInvoiceList()
+        return this.$message({
+          message: '补充邮寄信息成功',
+          type: 'success'
+        })
       })
     },
 
