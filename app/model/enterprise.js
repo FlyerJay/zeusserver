@@ -84,6 +84,7 @@ module.exports = (app) => {
     classMethods: {
       // 添加一个企业
       * createOneEnt (options) {
+        options.auditStatus = 'U';
         if (!options.enterpriseName) options.enterpriseName = '未命名';
         options.createTime = Date.now();
         const createResult = yield this.create(options);
@@ -151,7 +152,7 @@ module.exports = (app) => {
       },
 
       * authEnt (options) {
-        options.auditStatus = 'Y';
+        options.auditStatus = 'P';
         try {
           const result = yield this.update(options, {
             where: {

@@ -1,69 +1,87 @@
 <template>
     <div class="enterprise-list">
-        <custom-table
-					v-loading="loading"
-					:setting="false"
-					border
-					pagination
-					:data="enterpriseList"
-					:columns="columns"
-					@current-change="onPageChange"
-					:pageSize="pagination.pageSize"
-					:total="pagination.total">
-				</custom-table>
+			<el-form ref="queryForm" :model="query" inline size="mini">
+				<el-form-item label="公司名称" prop="enterpriseName">
+					<el-input v-model="query.enterpriseName" auto-complete="off"></el-input>
+				</el-form-item>
 
-				<preview-image :visible.sync="previewWrapperShow" :img-src="previewImageUrl"></preview-image>
+				<el-form-item label="认证状态" prop="auditStatus">
+					<el-select v-model="query.auditStatus">
+						<el-option label="全部" value=""></el-option>
+						<el-option label="未认证" value="U"></el-option>
+						<el-option label="已认证" value="P"></el-option>
+					</el-select>
+				</el-form-item>
 
-				<el-dialog
-					v-model="authDialogVisible"
-					:close-on-click-modal="false">
-					<el-form ref="authForm" class="auth-form">
-						<el-row :gutter="6">
-							<el-col :span="12">
-								<el-form-item prop="address">
-									<el-input v-model="authParam.address" auto-complete="off">
-										<template slot="prepend">地址</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
+				<el-form-item>
+					<el-button type="warning" @click="search">查询</el-button>
+				</el-form-item>
+			</el-form>
 
-							<el-col :span="12">
-								<el-form-item prop="telephone">
-									<el-input v-model="authParam.telephone" auto-complete="off">
-										<template slot="prepend">电话</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
+			<custom-table
+				v-loading="loading"
+				:setting="false"
+				border
+				pagination
+				:data="enterpriseList"
+				:columns="columns"
+				@current-change="onPageChange"
+				:pageSize="pagination.pageSize"
+				:total="pagination.total">
+			</custom-table>
 
-							<el-col :span="12">
-								<el-form-item prop="taxNumber">
-									<el-input v-model="authParam.taxNumber" auto-complete="off">
-										<template slot="prepend">税号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
+			<preview-image :visible.sync="previewWrapperShow" :img-src="previewImageUrl"></preview-image>
 
-							<el-col :span="12">
-								<el-form-item prop="bankName">
-									<el-input v-model="authParam.bankName" auto-complete="off">
-										<template slot="prepend">开户行</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
+			<el-dialog
+				v-model="authDialogVisible"
+				:close-on-click-modal="false">
+				<el-form ref="authForm" class="auth-form" :model="authParam">
+					<el-row :gutter="6">
+						<el-col :span="12">
+							<el-form-item prop="address">
+								<el-input v-model="authParam.address" auto-complete="off">
+									<template slot="prepend">地址</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
 
-							<el-col :span="12">
-								<el-form-item prop="bankcardNo">
-									<el-input v-model="authParam.bankcardNo" auto-complete="off">
-										<template slot="prepend">对公账号</template>
-									</el-input>
-								</el-form-item>
-							</el-col>
-						</el-row>
-					</el-form>
+						<el-col :span="12">
+							<el-form-item prop="telephone">
+								<el-input v-model="authParam.telephone" auto-complete="off">
+									<template slot="prepend">电话</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
 
-					<el-button :loading="loading" type="info" @keyup.enter.native="submitAuth" @click="submitAuth" class="dialog-item float-right">提 交</el-button>
-					<el-button type="warning" @click="authCancel" class="dialog-item float-right">取 消</el-button>
-				</el-dialog>
+						<el-col :span="12">
+							<el-form-item prop="taxNumber">
+								<el-input v-model="authParam.taxNumber" auto-complete="off">
+									<template slot="prepend">税号</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
+
+						<el-col :span="12">
+							<el-form-item prop="bankName">
+								<el-input v-model="authParam.bankName" auto-complete="off">
+									<template slot="prepend">开户行</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
+
+						<el-col :span="12">
+							<el-form-item prop="bankcardNo">
+								<el-input v-model="authParam.bankcardNo" auto-complete="off">
+									<template slot="prepend">对公账号</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
+					</el-row>
+				</el-form>
+
+				<el-button :loading="loading" type="info" @keyup.enter.native="submitAuth" @click="submitAuth" class="dialog-item float-right">提 交</el-button>
+				<el-button type="warning" @click="authCancel" class="dialog-item float-right">取 消</el-button>
+			</el-dialog>
     </div>
 </template>
 <script>
@@ -238,7 +256,7 @@
 	    },
 	
 	    search () {
-	      this.query.page = 1
+	      this.pagination.page = 1
 	      this.queryEnterprise()
 	    },
 	
