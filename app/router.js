@@ -98,6 +98,7 @@ module.exports = (app) => {
   app.post('/zues/api/demand/check', 'demand.checkRepeate');
   // 财务相关
   app.get('/zues/api/invoice/list', 'invoice.listForZeus');
+  app.post('/zues/api/invoice/update', 'invoice.updateForZeus');
   app.get('/zues/api/enterprise/list', 'enterprise.listForZeus');
   app.post('/zues/api/enterprise/auth', 'enterprise.authForZeus');
   // 导出报表

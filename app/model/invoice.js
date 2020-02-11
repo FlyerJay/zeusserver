@@ -95,23 +95,51 @@ module.exports = (app) => {
         }
       },
 
+      * updateInvoiceForZues (options) {
+        try {
+          const result = yield this.update(options, {
+            where: {
+              invoiceId: {
+                $eq: options.invoiceId
+              }
+            }
+          });
+          if (result) {
+            return {
+              code: 200,
+              data: result,
+              msg: '修改发票信息成功'
+            };
+          }
+          throw new Error('修改企业信息失败');
+        } catch (exp) {
+          return {
+            code: -1,
+            msg: '更新企业信息失败',
+            data: exp
+          };
+        }
+      },
+
       // 查找发票列表
       * invoiceList (options) {
         const [$1, $2] = yield [
           app.model.query(`
-            SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone
+            SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus
               FROM invoice i
               INNER JOIN enterprise e
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
               WHERE (i.clientId = :clientId OR :clientId = '')
               AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
-              ORDER BY FIELD(i.status, 'WAIT', 'SEND', 'APPLY', 'PASSED', 'REFUSED', 'COMPLETE'), i.createTime DESC
+              AND i.status IN (:status)
+              ORDER BY FIELD(i.status, 'APPLY', 'SEND', 'WAIT', 'PASSED', 'REFUSED', 'COMPLETE'), i.createTime DESC
               LIMIT :start,:offset`, {
                 replacements: {
                   clientId: options.clientId || '',
                   enterpriseId: options.enterpriseId || '',
                   enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+                  status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE'],
                   start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
                   offset: options.pageSize ? options.pageSize : 15
                 }
@@ -123,11 +151,13 @@ module.exports = (app) => {
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
               WHERE (i.clientId = :clientId OR :clientId = '')
-              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')`, {
+              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
+              AND i.status IN (:status)`, {
                 replacements: {
                   clientId: options.clientId || '',
                   enterpriseId: options.enterpriseId || '',
-                  enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%'
+                  enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+                  status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE']
                 }
               })];
         if (!$1[0] || $1[0].length === 0) return {

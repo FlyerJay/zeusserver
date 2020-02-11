@@ -1094,3 +1094,33 @@ export const enterpriseAuth = ({ dispatch }, params) => {
     return Promise.reject()
   })
 }
+
+// 发票列表
+export const invoiceQuery = ({ dispatch }, params) => {
+  return axios.get('/zues/api/invoice/list', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}
+
+// 修改发票
+export const invoiceUpdate = ({ dispatch }, params) => {
+  return axios.post('/zues/api/invoice/update', params)
+  .then(function (response) {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}

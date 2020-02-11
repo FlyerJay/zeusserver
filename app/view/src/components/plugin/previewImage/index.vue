@@ -1,9 +1,9 @@
 <template>
     <div class="modal" @click.self="close" v-show="visible">
         <div class="control-bar">
-            <a @click="rightRotation"><i class="iconfont icon-rotate-right"></i></a>
-            <a @click="leftRotation"><i class="iconfont icon-rotate-left"></i></a>
-            <a @click="handleClose"><i class="iconfont icon-error"></i></a>
+            <a @click="rightRotation"><i class="iconfont icon-right"></i></a>
+            <a @click="leftRotation"><i class="iconfont icon-left"></i></a>
+            <a @click="handleClose"><i class="iconfont icon-close"></i></a>
         </div>
         
         <div class="large-picture">
@@ -82,7 +82,7 @@
 
 <style lang="less" scoped>
 	.modal {
-		z-index: 999;
+		z-index: 3000;
 		position: fixed;
 		top: 0;
 		bottom: 0;

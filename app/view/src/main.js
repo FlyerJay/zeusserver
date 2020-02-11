@@ -5,7 +5,6 @@ import ElementUI from 'element-ui'
 import Vue from 'vue'
 import '../static/js/utils'
 import 'element-ui/lib/theme-default/index.css'
-import '../static/font/iconfont.css'
 import '../static/font/base.less'
 import { socket } from './socket'
 function getCookie (name) {

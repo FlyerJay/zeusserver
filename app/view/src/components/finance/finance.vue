@@ -31,7 +31,7 @@
           name: '发票审核'
         }, {
           url: '/finance/enterprise',
-          icon: 'icon-supplier',
+          icon: 'icon-enterprise',
           name: '企业信息'
         }]
       }
