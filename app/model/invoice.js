@@ -95,6 +95,35 @@ module.exports = (app) => {
         }
       },
 
+      * updateInvoice (options) {
+        try {
+          const result = yield this.update(options, {
+            where: {
+              invoiceId: {
+                $eq: options.invoiceId
+              },
+              clientId: {
+                $eq: options.clientId
+              }
+            }
+          });
+          if (result) {
+            return {
+              code: 200,
+              data: result,
+              msg: '修改发票信息成功'
+            };
+          }
+          throw new Error('修改发票信息失败');
+        } catch (exp) {
+          return {
+            code: -1,
+            msg: '修改发票信息失败',
+            data: exp
+          };
+        }
+      },
+
       * updateInvoiceForZues (options) {
         try {
           const result = yield this.update(options, {
@@ -111,11 +140,11 @@ module.exports = (app) => {
               msg: '修改发票信息成功'
             };
           }
-          throw new Error('修改企业信息失败');
+          throw new Error('修改发票信息失败');
         } catch (exp) {
           return {
             code: -1,
-            msg: '更新企业信息失败',
+            msg: '修改发票信息失败',
             data: exp
           };
         }
@@ -178,6 +207,39 @@ module.exports = (app) => {
           msg: '查找发票列表成功',
           data: result
         };
+      },
+
+      * invoiceInfo (options) {
+        if (!options.invoiceId) return {
+          code: -1,
+          msg: '请完善查询条件'
+        };
+        const result = yield app.model.query(`
+        SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus
+          FROM invoice i
+          INNER JOIN enterprise e
+            ON e.enterpriseId = i.enterpriseId
+          WHERE i.invoiceId = :invoiceId
+            AND i.clientId = :clientId
+        `, {
+          replacements: {
+            invoiceId: options.invoiceId,
+            clientId: options.clientId
+          }
+        });
+        if (result && result[0] && result[0][0]) {
+          return {
+            code: 200,
+            data: result[0][0],
+            msg: '查询成功'
+          };
+        } else {
+          return {
+            code: -1,
+            data: result,
+            msg: '没有找到该发票'
+          };
+        }
       }
     }
   });

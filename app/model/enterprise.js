@@ -29,7 +29,7 @@ module.exports = (app) => {
     auditStatus: {
       type: STRING(2),
       allowNull: true,
-      comment: '企业审核状态, U - 未审核 P - 已审核'
+      comment: '企业审核状态, U - 未审核 P - 已审核 D - 已删除'
     },
     address: {
       type: STRING(50),
@@ -153,16 +153,20 @@ module.exports = (app) => {
 
       * removeEnt (options) {
         try {
-          const result = yield this.destroy({
-            where: {
-              enterpriseId: {
-                $eq: options.enterpriseId
-              },
-              clientId: {
-                $eq: options.clientId
+          const result = yield this.update(
+            {
+              auditStatus: 'D'
+            },
+            {
+              where: {
+                enterpriseId: {
+                  $eq: options.enterpriseId
+                },
+                clientId: {
+                  $eq: options.clientId
+                }
               }
-            }
-          });
+            });
           if (result) {
             return {
               code: 200,
@@ -255,6 +259,7 @@ module.exports = (app) => {
             WHERE (e.clientId = :clientId OR :clientId = '')
               AND enterpriseName LIKE :enterpriseName
               AND (auditStatus = :auditStatus OR :auditStatus = '')
+              AND auditStatus <> 'D'
               ORDER BY e.createTime DESC
               LIMIT :start,:offset`,
           {
@@ -270,7 +275,8 @@ module.exports = (app) => {
           `SELECT count(1) as count FROM enterprise e
             WHERE (e.clientId = :clientId OR :clientId = '')
               AND enterpriseName LIKE :enterpriseName
-              AND (auditStatus = :auditStatus OR :auditStatus = '')`,
+              AND (auditStatus = :auditStatus OR :auditStatus = '')
+              AND auditStatus <> 'D'`,
           {
             replacements: {
               clientId: options.clientId || '',

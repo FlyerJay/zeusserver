@@ -18,6 +18,16 @@ module.exports = (app) => {
       ctx.body = yield app.model.Invoice.invoiceList(ctx.query);
     }
 
+    * detail () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Invoice.invoiceInfo(ctx.query);
+    }
+
+    * update () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Invoice.updateInvoice(ctx.request.body);
+    }
+
     * listForZeus () {
       const { ctx } = this;
       const userRole = ctx.cookies.get('userRole');
