@@ -184,11 +184,11 @@ export default {
           field: 'enterpriseName',
           name: '企业名称'
         }, {
-          field: 'totalAmount',
+          field: 'invoiceAmount',
           name: '开票金额'
         }, {
           field: 'invoiceTime',
-          name: '开票日期',
+          name: '开票时间段',
           formatter: this.dateFormat
         }, {
           field: 'status',
@@ -243,7 +243,7 @@ export default {
           }
         }, {
           field: 'createTime',
-          name: '创建时间',
+          name: '申请时间',
           formatter: this.dateFormat
         }, {
           field: 'operate',
