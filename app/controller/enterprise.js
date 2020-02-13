@@ -33,6 +33,11 @@ module.exports = (app) => {
       ctx.body = yield app.model.Enterprise.entList(ctx.query);
     }
 
+    * remove () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.removeEnt(ctx.request.body);
+    }
+
     * listForZeus () {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.entList(ctx.query);

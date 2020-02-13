@@ -151,6 +151,34 @@ module.exports = (app) => {
         }
       },
 
+      * removeEnt (options) {
+        try {
+          const result = yield this.destroy({
+            where: {
+              enterpriseId: {
+                $eq: options.enterpriseId
+              },
+              clientId: {
+                $eq: options.clientId
+              }
+            }
+          });
+          if (result) {
+            return {
+              code: 200,
+              data: result,
+              msg: '删除抬头成功'
+            };
+          }
+          throw new Error('删除抬头失败');
+        } catch (exp) {
+          return {
+            code: -1,
+            msg: exp
+          };
+        }
+      },
+
       * authEnt (options) {
         options.auditStatus = 'P';
         try {

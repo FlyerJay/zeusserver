@@ -126,6 +126,7 @@ module.exports = (app) => {
   app.get('/zues/api/invoiceminiapp/enterprise/list', 'enterprise.list');
   app.post('/zues/api/invoiceminiapp/enterprise/create', 'enterprise.create');
   app.post('/zeus/api/invoiceminiapp/enterprise/update', 'enterprise.update');
+  app.post('/zeus/api/invoiceminiapp/enterprise/remove', 'enterprise.remove');
   app.post('/zues/api/invoiceminiapp/enterprise/bind', 'enterprise.bind');
   app.post('/zues/api/invoiceminiapp/invoice/create', 'invoice.create');
   app.get('/zues/api/invoiceminiapp/invoice/list', 'invoice.list');
