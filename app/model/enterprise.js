@@ -151,6 +151,28 @@ module.exports = (app) => {
         }
       },
 
+      * queryEnt (options) {
+        const result = yield this.findOne({
+          where: {
+            enterpriseId: {
+              $eq: options.enterpriseId
+            }
+          }
+        });
+        if (result) {
+          return {
+            code: 200,
+            data: result,
+            msg: '查询企业信息成功'
+          };
+        } else {
+          return {
+            code: -1,
+            msg: '查询企业信息失败'
+          };
+        }
+      },
+
       * removeEnt (options) {
         try {
           const result = yield this.update(

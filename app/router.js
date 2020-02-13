@@ -124,6 +124,7 @@ module.exports = (app) => {
   app.get('/zues/api/invoiceminiapp/user/info', 'client.userInfo');
   app.get('/zues/api/invoiceminiapp/enterprise/search', 'enterprise.search');
   app.get('/zues/api/invoiceminiapp/enterprise/list', 'enterprise.list');
+  app.get('/zues/api/invoiceminiapp/enterprise/detail', 'enterprise.detail');
   app.post('/zues/api/invoiceminiapp/enterprise/create', 'enterprise.create');
   app.post('/zues/api/invoiceminiapp/enterprise/update', 'enterprise.update');
   app.post('/zues/api/invoiceminiapp/enterprise/remove', 'enterprise.remove');
