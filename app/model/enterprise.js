@@ -169,12 +169,17 @@ module.exports = (app) => {
               data: result,
               msg: '删除抬头成功'
             };
+          } else {
+            return {
+              code: -1,
+              data: result,
+              msg: '删除抬头成功'
+            };
           }
-          throw new Error('删除抬头失败');
         } catch (exp) {
           return {
             code: -1,
-            msg: exp
+            msg: '删除抬头成功'
           };
         }
       },
