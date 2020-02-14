@@ -43,6 +43,11 @@ module.exports = (app) => {
       ctx.body = yield app.model.Enterprise.queryEnt(ctx.query);
     }
 
+    * companyList () {
+      const { ctx } = this;
+      ctx.body = yield app.model.Enterprise.companyList(ctx.query);
+    }
+
     * listForZeus () {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.entList(ctx.query);

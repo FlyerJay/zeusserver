@@ -36,47 +36,23 @@
 			v-model="authDialogVisible"
 			:close-on-click-modal="false">
 			<el-form ref="authForm" class="auth-form" :model="authParam">
-				<el-row :gutter="6">
-					<el-col :span="12">
-						<el-form-item prop="address">
-							<el-input v-model="authParam.address" auto-complete="off">
-								<template slot="prepend">地址</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
+				<el-form-item prop="enterpriseName">
+					<el-input v-model="authParam.enterpriseName" auto-complete="off">
+						<template slot="enterpriseName">公司名称</template>
+					</el-input>
+				</el-form-item>
 
-					<el-col :span="12">
-						<el-form-item prop="telephone">
-							<el-input v-model="authParam.telephone" auto-complete="off">
-								<template slot="prepend">电话</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
+				<el-form-item prop="address">
+					<el-input v-model="authParam.address" auto-complete="off">
+						<template slot="prepend">邮寄地址</template>
+					</el-input>
+				</el-form-item>
 
-					<el-col :span="12">
-						<el-form-item prop="taxNumber">
-							<el-input v-model="authParam.taxNumber" auto-complete="off">
-								<template slot="prepend">税号</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-
-					<el-col :span="12">
-						<el-form-item prop="bankName">
-							<el-input v-model="authParam.bankName" auto-complete="off">
-								<template slot="prepend">开户行</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-
-					<el-col :span="12">
-						<el-form-item prop="bankcardNo">
-							<el-input v-model="authParam.bankcardNo" auto-complete="off">
-								<template slot="prepend">对公账号</template>
-							</el-input>
-						</el-form-item>
-					</el-col>
-				</el-row>
+				<el-form-item prop="telephone">
+					<el-input v-model="authParam.telephone" auto-complete="off">
+						<template slot="prepend">收件人电话</template>
+					</el-input>
+				</el-form-item>
 			</el-form>
 
 			<el-button :loading="loading" type="info" @keyup.enter.native="submitAuth" @click="submitAuth" class="dialog-item float-right">提 交</el-button>
@@ -123,17 +99,18 @@
 	        enterpriseId: '',
 	        address: '',
 	        telephone: '',
-	        taxNumber: '',
-	        bankName: '',
-	        bankcardNo: ''
+	        enterpriseName: ''
+	        // taxNumber: '',
+	        // bankName: '',
+	        // bankcardNo: ''
 	      },
 	      authDialogVisible: false,
 	      columns: [{
 	        field: 'enterpriseName',
-	        name: '公司名字'
+	        name: '企业名字'
 	      }, {
 	        field: 'address',
-	        name: '公司地址'
+	        name: '邮寄地址'
 	      }, {
 	        field: 'businessLicense',
 	        name: '营业执照',
@@ -202,17 +179,9 @@
 	        }
 	      }, {
 	        field: 'telephone',
-	        name: '企业电话'
-	      }, {
-	        field: 'taxNumber',
-	        name: '企业税号'
-	      }, {
-	        field: 'bankName',
-	        name: '开户行'
-	      }, {
-	        field: 'bankcardNo',
-	        name: '对公账号'
-	      }, {
+	        name: '收件人电话'
+	      },
+	      {
 	        field: 'createTime',
 	        name: '创建时间',
 	        width: 140,
@@ -299,9 +268,10 @@
 	      this.authParam.enterpriseId = row.enterpriseId
 	      this.authParam.address = row.address
 	      this.authParam.telephone = row.telephone
-	      this.authParam.taxNumber = row.taxNumber
-	      this.authParam.bankName = row.bankName
-	      this.authParam.bankcardNo = row.bankcardNo
+	      this.authParam.enterpriseName = row.enterpriseName
+	    //   this.authParam.taxNumber = row.taxNumber
+	    //   this.authParam.bankName = row.bankName
+	    //   this.authParam.bankcardNo = row.bankcardNo
 	    },
 	
 	    auth () {

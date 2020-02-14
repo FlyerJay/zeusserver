@@ -21,6 +21,11 @@ module.exports = (app) => {
       allowNull: false,
       comment: '创建者，只有这个人可以修改公司信息'
     },
+    comId: {
+      type: STRING(2),
+      allowNull: false,
+      comment: '绑定的开票主体'
+    },
     enterpriseName: {
       type: STRING(30),
       allowNull: true,
@@ -272,16 +277,19 @@ module.exports = (app) => {
           },
           limit: 5
         });
-        return result.rows;
+        return result;
       },
 
       * entList (options) {
         const [$1, $2] = yield [app.model.query(
-          `SELECT e.* FROM enterprise e
+          `SELECT e.*, c.comName FROM enterprise e
+              INNER JOIN company c
+              ON c.comId = e.comId
             WHERE (e.clientId = :clientId OR :clientId = '')
               AND enterpriseName LIKE :enterpriseName
               AND (auditStatus = :auditStatus OR :auditStatus = '')
               AND auditStatus <> 'D'
+              AND (c.comId = :comId OR :comId = '')
               ORDER BY e.createTime DESC
               LIMIT :start,:offset`,
           {
@@ -290,20 +298,25 @@ module.exports = (app) => {
               enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
               auditStatus: options.auditStatus || '',
               start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
-              offset: options.pageSize ? options.pageSize : 15
+              offset: options.pageSize ? options.pageSize : 15,
+              comId: options.comId || ''
             }
           }
         ), app.model.query(
           `SELECT count(1) as count FROM enterprise e
+            INNER JOIN company c
+              ON c.comId = e.comId
             WHERE (e.clientId = :clientId OR :clientId = '')
               AND enterpriseName LIKE :enterpriseName
               AND (auditStatus = :auditStatus OR :auditStatus = '')
-              AND auditStatus <> 'D'`,
+              AND auditStatus <> 'D'
+              AND (c.comId = :comId OR :comId = '')`,
           {
             replacements: {
               clientId: options.clientId || '',
               enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
-              auditStatus: options.auditStatus || ''
+              auditStatus: options.auditStatus || '',
+              comId: options.comId || ''
             }
           }
         )];
@@ -326,6 +339,30 @@ module.exports = (app) => {
           msg: '查找企业列表成功',
           data: result
         };
+      },
+
+      * companyList () {
+        const result = yield app.model.Company.findAll({
+          where: {
+            comId: {
+              $ne: '00'
+            }
+          },
+          limit: 100
+        });
+        if (result) {
+          return {
+            code: 200,
+            data: result,
+            msg: '获取开票主体列表成功'
+          };
+        } else {
+          return {
+            code: -1,
+            data: result,
+            msg: '获取开票主体失败'
+          };
+        }
       }
     }
   });

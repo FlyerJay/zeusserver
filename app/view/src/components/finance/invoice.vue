@@ -32,28 +32,30 @@
 
       <!-- 企业信息 -->
       <el-dialog
+        title="企业信息"
+        size="tiny"
         v-model="enterpriseInfoDialogVisible"
         :close-on-click-modal="false">
-        <el-row :gutter="8">
-          <el-col :span="12">
+        <el-row :gutter="8" style="line-height: 40px">
+          <el-col :span="24">
             企业名称：{{ enterpriseInfo.enterpriseName }}
           </el-col>
-          <el-col :span="12">
-            地址：{{ enterpriseInfo.address }}
+          <el-col :span="24">
+            邮寄地址：{{ enterpriseInfo.address }}
           </el-col>
-          <el-col :span="12">
-            营业执照：<el-button type="text" size="mini" @click="previewImage(enterpriseInfo.businessLicense)">查看</el-button>
+          <el-col :span="24">
+            营业执照：<el-button type="text" @click="previewImage(enterpriseInfo.businessLicense)">查看</el-button>
           </el-col>
-          <el-col :span="12">
-            开票信息：<el-button type="text" size="mini" @click="previewImage(enterpriseInfo.invoiceInfo)">查看</el-button>
+          <el-col :span="24">
+            开票信息：<el-button type="text" @click="previewImage(enterpriseInfo.invoiceInfo)">查看</el-button>
           </el-col>
-          <el-col :span="12">
-            合同信息：<el-button type="text" size="mini" @click="previewImage(enterpriseInfo.contract)">查看</el-button>
+          <el-col :span="24">
+            合同信息：<el-button type="text" @click="previewImage(enterpriseInfo.contract)">查看</el-button>
           </el-col>
-          <el-col :span="12">
-            公司电话：{{ enterpriseInfo.telephone }}
+          <el-col :span="24">
+            收件人电话：{{ enterpriseInfo.telephone }}
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             公司税号：{{ enterpriseInfo.taxNumber }}
           </el-col>
           <el-col :span="12">
@@ -61,8 +63,8 @@
           </el-col>
           <el-col :span="12">
             对公账户：{{ enterpriseInfo.bankcardNo }}
-          </el-col>
-          <el-col :span="12">
+          </el-col> -->
+          <el-col :span="24">
             认证状态：<el-tag :type="enterpriseInfo.auditStatus === 'P' ? 'success' : 'info'">{{ enterpriseInfo.auditStatus === 'P' ? '已认证' : '未认证' }}</el-tag>
           </el-col>
         </el-row>
@@ -94,7 +96,7 @@
         <el-form ref="sendForm" :model="sendParam" :rules="sendRules">
           <el-form-item prop="trackNumber">
             <el-input v-model="sendParam.trackNumber" auto-complete="off">
-              <template slot="prepend">运单号</template>
+              <template slot="prepend">快递单号</template>
             </el-input>
           </el-form-item>
 
@@ -231,8 +233,7 @@ export default {
           render: (h, params) => {
             return h('el-button', {
               props: {
-                type: 'text',
-                size: 'mini'
+                type: 'text'
               },
               on: {
                 click: () => {

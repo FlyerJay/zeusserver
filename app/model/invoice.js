@@ -150,18 +150,21 @@ module.exports = (app) => {
         }
       },
 
-      // 查找发票列表
+      // 查询发票列表
       * invoiceList (options) {
         const [$1, $2] = yield [
           app.model.query(`
-            SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus
+            SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus, e.comId
               FROM invoice i
               INNER JOIN enterprise e
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
+              INNER JOIN company c
+                ON c.comId = e.comId
               WHERE (i.clientId = :clientId OR :clientId = '')
-              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
-              AND i.status IN (:status)
+                AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
+                AND i.status IN (:status)
+                AND (c.comId = :comId OR :comId = '' OR :comId = '00')
               ORDER BY FIELD(i.status, 'APPLY', 'SEND', 'WAIT', 'PASSED', 'REFUSED', 'COMPLETE'), i.createTime DESC
               LIMIT :start,:offset`, {
                 replacements: {
@@ -169,6 +172,7 @@ module.exports = (app) => {
                   enterpriseId: options.enterpriseId || '',
                   enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
                   status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE'],
+                  comId: options.comId || '',
                   start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
                   offset: options.pageSize ? options.pageSize : 15
                 }
@@ -179,16 +183,21 @@ module.exports = (app) => {
               INNER JOIN enterprise e
                 ON e.enterpriseId = i.enterpriseId
                 AND e.enterpriseName LIKE :enterpriseName
+              INNER JOIN company c
+                ON c.comId = e.comId
               WHERE (i.clientId = :clientId OR :clientId = '')
-              AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
-              AND i.status IN (:status)`, {
-                replacements: {
-                  clientId: options.clientId || '',
-                  enterpriseId: options.enterpriseId || '',
-                  enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
-                  status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE']
-                }
-              })];
+                AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
+                AND i.status IN (:status)
+                AND (c.comId = :comId OR :comId = '' OR :comId = '00')`,
+            {
+              replacements: {
+                clientId: options.clientId || '',
+                enterpriseId: options.enterpriseId || '',
+                enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+                status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE'],
+                comId: options.comId || ''
+              }
+            })];
         if (!$1[0] || $1[0].length === 0) return {
           code: 200,
           msg: '发票列表为空',

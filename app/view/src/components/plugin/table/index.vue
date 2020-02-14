@@ -407,7 +407,7 @@
 <style lang="less">
 .filter-table{
   .el-table{
-    font-size: 12px;
+    font-size: 14px;
   }
   .field-filter {
     display: flex;

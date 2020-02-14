@@ -133,4 +133,5 @@ module.exports = (app) => {
   app.post('/zues/api/invoiceminiapp/invoice/update', 'invoice.update');
   app.get('/zues/api/invoiceminiapp/invoice/list', 'invoice.list');
   app.get('/zues/api/invoiceminiapp/invoice/detail', 'invoice.detail');
+  app.get('/zues/api/invoiceminiapp/company/list', 'enterprise.companyList');
 };

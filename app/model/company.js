@@ -26,7 +26,7 @@ module.exports = (app) => {
     tableName: 'company',
     timestamps: false,
     classMethods: {
-      * getList() {
+      * getList () {
         return yield this.findAll();
       }
     }
