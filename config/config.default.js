@@ -21,7 +21,7 @@ module.exports = (appInfo) => ({
   },
   io: {// socket.io配置
     namespace: {
-      '/': {
+      '/socket/': {
         connectionMiddleware: [],
         packetMiddleware: []
       }
