@@ -106,29 +106,7 @@ module.exports = (app) => {
               attributes: ['clientId', 'nickName', 'realName', 'mobileNumber', 'avatarUrl', 'gender', 'language', 'address', 'enterpriseId']
             });
           }
-          let enterpriseInfo = {
-            enterpriseId: '',
-            enterpriseName: '',
-            address: '',
-            businessLicense: '',
-            invoiceInfo: '',
-            contract: '',
-            telephone: '',
-            taxNumber: '',
-            bankName: '',
-            bankcardNo: ''
-          };
-          if (result.enterpriseId) {
-            const _enterpriseInfo = yield app.model.Enterprise.findOne({
-              where: {
-                enterpriseId: {
-                  $eq: result.enterpriseId
-                }
-              }
-            });
-            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo ? _enterpriseInfo.dataValues : {});
-          }
-          const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
+          const data = Object.assign({}, result.dataValues);
           return {
             code: 200,
             data: data,
