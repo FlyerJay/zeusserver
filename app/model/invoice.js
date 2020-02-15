@@ -224,10 +224,12 @@ module.exports = (app) => {
           msg: '请完善查询条件'
         };
         const result = yield app.model.query(`
-        SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus
+        SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus, e.comId, c.comName
           FROM invoice i
           INNER JOIN enterprise e
             ON e.enterpriseId = i.enterpriseId
+          INNER JOIN company c
+            ON c.comId = e.comId
           WHERE i.invoiceId = :invoiceId
             AND i.clientId = :clientId
         `, {
