@@ -34,19 +34,19 @@ Notification.requestPermission(function (permission) {
 })
 
 // 展示通知
-// function showNotice (title, message) {
-//   if (Notification.permission === 'granted') {
-//     var notification = new Notification(title, {
-//       body: message,
-//       icon: 'http://www.kxzeus.com/favicon.ico'
-//     })
-//   } else {
-//     Vue.prototype.$notify.info({
-//       title: title,
-//       message: message
-//     })
-//   }
-// }
+function showNotice (title, message) {
+  if (Notification.permission === 'granted') {
+    var notification = new Notification(title, {
+      body: message,
+      icon: 'https://www.kxzeus.com/favicon.ico'
+    })
+  } else {
+    Vue.prototype.$notify.info({
+      title: title,
+      message: message
+    })
+  }
+}
 
 socket.on('update', ({demand}) => { // 接收需求变更通知
   console.log(`有新消息送达${JSON.stringify(demand)}`)
@@ -64,7 +64,7 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
         if (item === 'submit' && isOrderAuth) {
           !(function (newDemand, item) {
             setTimeout(() => {
-              // showNotice('新需求', `有${newDemand[item]}条新提交的需求`)
+              showNotice('新需求', `有${newDemand[item]}条新提交的需求`)
               Vue.prototype.$notify.info({
                 title: '新需求',
                 message: `有${newDemand[item]}条新提交的需求`
@@ -75,7 +75,7 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
         if (item === 'price' && isDemandAuth) {
           !(function (newDemand, item) {
             setTimeout(() => {
-              // showNotice('需求报价', `有${newDemand[item]}待反馈需求`)
+              showNotice('需求报价', `有${newDemand[item]}待反馈需求`)
               Vue.prototype.$notify.info({
                 title: '需求报价',
                 message: `有${newDemand[item]}待反馈需求`
@@ -86,7 +86,7 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
         if (item === 'priced' && isDemandAuth) {
           !(function (newDemand, item) {
             setTimeout(() => {
-              // showNotice('需求报价', `有${newDemand[item]}已报价需求`)
+              showNotice('需求报价', `有${newDemand[item]}已报价需求`)
               Vue.prototype.$notify.info({
                 title: '需求报价',
                 message: `有${newDemand[item]}已报价需求`
@@ -97,7 +97,7 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
         if (item === 'unDeal' && isOrderAuth) {
           !(function (newDemand, item) {
             setTimeout(() => {
-              // showNotice('需求交易结果', `有${newDemand[item]}条需求交易失败`)
+              showNotice('需求交易结果', `有${newDemand[item]}条需求交易失败`)
               Vue.prototype.$notify.info({
                 title: '需求交易结果',
                 message: `有${newDemand[item]}条需求交易失败`
@@ -108,7 +108,7 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
         if (item === 'deal' && isOrderAuth) {
           !(function (newDemand, item) {
             setTimeout(() => {
-              // showNotice('需求交易结果', `有${newDemand[item]}条需求交易成功`)
+              showNotice('需求交易结果', `有${newDemand[item]}条需求交易成功`)
               Vue.prototype.$notify.info({
                 title: '需求交易结果',
                 message: `有${newDemand[item]}条需求交易成功`
