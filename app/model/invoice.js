@@ -31,6 +31,16 @@ module.exports = (app) => {
       allowNull: false,
       comment: '发票日期'
     },
+    startTime: {
+      type: BIGINT(15),
+      allowNull: false,
+      comment: '发票时间段-开始'
+    },
+    endTime: {
+      type: BIGINT(15),
+      allowNull: false,
+      comment: '发票时间段-结束'
+    },
     createTime: {
       type: BIGINT(15),
       allowNull: false,
