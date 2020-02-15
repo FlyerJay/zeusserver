@@ -175,7 +175,7 @@ module.exports = (app) => {
                 AND (i.enterpriseId = :enterpriseId OR :enterpriseId = '')
                 AND i.status IN (:status)
                 AND (c.comId = :comId OR :comId = '' OR :comId = '00')
-              ORDER BY FIELD(i.status, 'APPLY', 'SEND', 'WAIT', 'PASSED', 'REFUSED', 'COMPLETE'), i.createTime DESC
+              ORDER BY FIELD(i.status, 'APPLY', 'SEND', 'WAIT', 'PASSED', 'REFUSE', 'COMPLETE'), i.createTime DESC
               LIMIT :start,:offset`, {
                 replacements: {
                   clientId: options.clientId || '',
