@@ -35,8 +35,8 @@ Notification.requestPermission(function (permission) {
 
 // 展示通知
 function showNotice (title, message) {
-  if (Notification.permission === 'granted') {
-    var notification = new Notification(title, {
+  if (Notification && Notification.permission === 'granted') {
+    Notification(title, {
       body: message,
       icon: 'https://www.kxzeus.com/favicon.ico'
     })
@@ -65,10 +65,6 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
           !(function (newDemand, item) {
             setTimeout(() => {
               showNotice('新需求', `有${newDemand[item]}条新提交的需求`)
-              Vue.prototype.$notify.info({
-                title: '新需求',
-                message: `有${newDemand[item]}条新提交的需求`
-              })
             }, 0)
           }(newDemand, item))
         }
@@ -76,10 +72,6 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
           !(function (newDemand, item) {
             setTimeout(() => {
               showNotice('需求报价', `有${newDemand[item]}待反馈需求`)
-              Vue.prototype.$notify.info({
-                title: '需求报价',
-                message: `有${newDemand[item]}待反馈需求`
-              })
             }, 0)
           }(newDemand, item))
         }
@@ -98,10 +90,6 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
           !(function (newDemand, item) {
             setTimeout(() => {
               showNotice('需求交易结果', `有${newDemand[item]}条需求交易失败`)
-              Vue.prototype.$notify.info({
-                title: '需求交易结果',
-                message: `有${newDemand[item]}条需求交易失败`
-              })
             }, 0)
           }(newDemand, item))
         }
@@ -109,10 +97,6 @@ socket.on('update', ({demand}) => { // 接收需求变更通知
           !(function (newDemand, item) {
             setTimeout(() => {
               showNotice('需求交易结果', `有${newDemand[item]}条需求交易成功`)
-              Vue.prototype.$notify.info({
-                title: '需求交易结果',
-                message: `有${newDemand[item]}条需求交易成功`
-              })
             }, 0)
           }(newDemand, item))
         }
