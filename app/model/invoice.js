@@ -174,7 +174,7 @@ module.exports = (app) => {
                   status: options.status ? options.status === 'U' ? ['APPLY', 'WAIT'] : ['SEND', 'PASSED', 'REFUSE', 'COMPLETE'] : ['APPLY', 'WAIT', 'SEND', 'PASSED', 'REFUSE', 'COMPLETE'],
                   comId: options.comId || '',
                   start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
-                  offset: options.pageSize ? options.pageSize : 15
+                  offset: options.pageSize ? Number(options.pageSize) : 15
                 }
               }),
           app.model.query(`
