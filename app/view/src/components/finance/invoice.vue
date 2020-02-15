@@ -191,7 +191,10 @@ export default {
         }, {
           field: 'invoiceTime',
           name: '开票时间段',
-          formatter: this.dateFormat
+          width: 230,
+          formatter: (row) => {
+            return `${this.formatDate(row.startTime)} 至 ${this.formatDate(row.endTime)}`
+          }
         }, {
           field: 'status',
           name: '订单状态',
@@ -245,7 +248,8 @@ export default {
         }, {
           field: 'createTime',
           name: '申请时间',
-          formatter: this.dateFormat
+          formatter: this.dateFormat,
+          width: 160
         }, {
           field: 'operate',
           name: '操作',
@@ -332,6 +336,10 @@ export default {
       } else {
         return new Date(parseInt(row[column.property])).formatDate('yyyy-MM-dd hh:mm')
       }
+    },
+
+    formatDate (value) {
+      return new Date(parseInt(value)).formatDate('yyyy-MM-dd')
     },
 
     search () {
