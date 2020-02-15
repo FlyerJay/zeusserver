@@ -157,17 +157,20 @@ module.exports = (app) => {
       },
 
       * queryEnt (options) {
-        const result = yield this.findOne({
-          where: {
-            enterpriseId: {
-              $eq: options.enterpriseId
-            }
+        const result = yield app.model.query(`
+          SELECT e.*, c.comId, c.comName, c.externalName FROM enterprise e
+            INNER JOIN company c
+              ON c.comId = e.comId
+            WHERE e.enterpriseId = :enterpriseId
+        `, {
+          replacements: {
+            enterpriseId: options.enterpriseId || ''
           }
         });
-        if (result) {
+        if (result && result[0] && result[0][0]) {
           return {
             code: 200,
-            data: result,
+            data: result[0][0],
             msg: '查询企业信息成功'
           };
         } else {
