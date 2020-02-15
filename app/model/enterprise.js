@@ -282,7 +282,7 @@ module.exports = (app) => {
 
       * entList (options) {
         const [$1, $2] = yield [app.model.query(
-          `SELECT e.*, c.comName FROM enterprise e
+          `SELECT e.*, c.comName, c.enternalName FROM enterprise e
               INNER JOIN company c
               ON c.comId = e.comId
             WHERE (e.clientId = :clientId OR :clientId = '')
