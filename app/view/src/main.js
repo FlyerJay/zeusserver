@@ -36,7 +36,7 @@ Notification.requestPermission(function (permission) {
 // 展示通知
 function showNotice (title, message) {
   if (Notification && Notification.permission === 'granted') {
-    Notification(title, {
+    new Notification(title, {
       body: message,
       icon: 'https://www.kxzeus.com/favicon.ico'
     })
