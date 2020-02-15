@@ -301,7 +301,7 @@ module.exports = (app) => {
               enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
               auditStatus: options.auditStatus || '',
               start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
-              offset: options.pageSize ? options.pageSize : 15,
+              offset: options.pageSize ? Number(options.pageSize) : 15,
               comId: options.comId || ''
             }
           }
