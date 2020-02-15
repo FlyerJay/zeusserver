@@ -1,1 +1,3 @@
-export var socket = require('socket.io-client')('https://www.kxzeus.com:9001/');
+
+
+export var socket = require('socket.io-client')(`${window.location.origin}:9001/`);
