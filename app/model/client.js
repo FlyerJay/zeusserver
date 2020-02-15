@@ -80,6 +80,8 @@ module.exports = (app) => {
 
       // 微信授权登录
       * authLogin (options) {
+        console.log('参数看看是什么？');
+        console.log(options);
         const response = yield this.code2Session(options.code);
         if (response.statusCode === 200) {
           const info = JSON.parse(response.text);
