@@ -256,7 +256,7 @@ export default {
           width: 140,
           render: (h, params) => {
             let row = params.row
-            if (row.auditStatus === 'D') {
+            if (row.auditStatus === 'D' && row.status !== 'REFUSE') {
               return h(
                 'el-button',
                 {
