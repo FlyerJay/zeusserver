@@ -193,11 +193,13 @@
 	        render: (h, params) => {
 	          const typeMapping = {
 	            'P': 'success',
-	            'U': 'info'
+	            'U': 'info',
+	            'D': 'info'
 	          }
 	          const textMapping = {
 	            'P': '已认证',
-	            'U': '未认证'
+	            'U': '未认证',
+	            'D': '已删除'
 	          }
 	          return h('el-tag', {
 	            props: {

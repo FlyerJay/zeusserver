@@ -65,7 +65,7 @@
             对公账户：{{ enterpriseInfo.bankcardNo }}
           </el-col> -->
           <el-col :span="24">
-            认证状态：<el-tag :type="enterpriseInfo.auditStatus === 'P' ? 'success' : 'info'">{{ enterpriseInfo.auditStatus === 'P' ? '已认证' : '未认证' }}</el-tag>
+            认证状态：<el-tag :type="enterpriseInfo.auditStatus === 'P' ? 'success' : 'info'">{{ enterpriseInfo.auditStatus === 'P' ? '已认证' : enterpriseInfo.auditStatus === 'D' ? '已删除' : '未认证' }}</el-tag>
           </el-col>
         </el-row>
       </el-dialog>
@@ -256,6 +256,23 @@ export default {
           width: 140,
           render: (h, params) => {
             let row = params.row
+            if (row.auditStatus === 'D') {
+              return h(
+                'el-button',
+                {
+                  props: {
+                    size: 'small',
+                    type: 'danger'
+                  },
+                  on: {
+                    click: () => {
+                      this.refuseInvoice(row)
+                    }
+                  }
+                },
+                '拒绝'
+              )
+            }
             if (row.status === 'APPLY' || row.status === 'WAIT') {
               return h('div', [
                 h(
@@ -381,6 +398,12 @@ export default {
     },
 
     passInvoice (row) {
+      if (row.auditStatus !== 'P') {
+        return this.$message({
+          message: '请先确认企业信息',
+          type: 'warning'
+        })
+      }
       this.passParam.invoiceId = row.invoiceId
       this.$confirm('确认通过开票请求?', '提示', {
         confirmButtonText: '确定',
