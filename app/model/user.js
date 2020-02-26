@@ -275,8 +275,8 @@ module.exports = app => {
             },
             // 获取openId
             * getWxOpenId (options) {
-                const appId = 'wxc86dc970d5b4aa32';
-                const appKey = '1b4bdda8982d2836c10b979985730824';
+                const appId = 'wxafd228a814c32317';
+                const appKey = 'ead3d64c4b07b5ce4cde10b5dfe1b823';
                 if (!options.code) return {
                     code: -1,
                     msg: '缺少必要参数'

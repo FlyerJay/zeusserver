@@ -83,6 +83,12 @@ module.exports = (app) => {
         const response = yield this.code2Session(options.code);
         if (response.statusCode === 200) {
           const info = JSON.parse(response.text);
+          if (!info.openid) {
+            return {
+              code: -1,
+              msg: response.text
+            };
+          }
           let result = yield this.findOne({
             where: {
               openID: {
@@ -106,29 +112,7 @@ module.exports = (app) => {
               attributes: ['clientId', 'nickName', 'realName', 'mobileNumber', 'avatarUrl', 'gender', 'language', 'address', 'enterpriseId']
             });
           }
-          let enterpriseInfo = {
-            enterpriseId: '',
-            enterpriseName: '',
-            address: '',
-            businessLicense: '',
-            invoiceInfo: '',
-            contract: '',
-            telephone: '',
-            taxNumber: '',
-            bankName: '',
-            bankcardNo: ''
-          };
-          if (result.enterpriseId) {
-            const _enterpriseInfo = yield app.model.Enterprise.findOne({
-              where: {
-                enterpriseId: {
-                  $eq: result.enterpriseId
-                }
-              }
-            });
-            enterpriseInfo = Object.assign({}, enterpriseInfo, _enterpriseInfo ? _enterpriseInfo.dataValues : {});
-          }
-          const data = Object.assign({}, result.dataValues, { enterpriseInfo: enterpriseInfo });
+          const data = Object.assign({}, result.dataValues);
           return {
             code: 200,
             data: data,
@@ -213,8 +197,8 @@ module.exports = (app) => {
       },
 
       * code2Session (code) {
-        const appId = 'wxc86dc970d5b4aa32';
-        const appKey = '1b4bdda8982d2836c10b979985730824';
+        const appId = 'wxafd228a814c32317';
+        const appKey = 'ead3d64c4b07b5ce4cde10b5dfe1b823';
         if (!code) return {
           code: -1,
           msg: '缺少必要参数'
