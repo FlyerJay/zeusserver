@@ -309,7 +309,7 @@
 	
 	    onPageChange (page) {
 	      this.pagination.page = page
-	      this.search()
+	      this.queryEnterprise()
 	    },
 
 	    openAuthDialog (row) {

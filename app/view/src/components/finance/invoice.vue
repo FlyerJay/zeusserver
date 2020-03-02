@@ -374,7 +374,7 @@ export default {
 
     onPageChange (page) {
       this.pagination.page = page
-      this.search()
+      this.queryInvoiceList()
     },
 
     viewEnterpriseInfo (row) {
