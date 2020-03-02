@@ -112,9 +112,21 @@
 	        field: 'address',
 	        name: '邮寄地址'
 	      }, {
+	        field: 'telephone',
+	        name: '收件人电话'
+	      }, {
 	        field: 'businessLicense',
 	        name: '营业执照',
 	        render: (h, params) => {
+            if (!params.row.businessLicense) {
+              return h('el-button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  disabled: true
+                },
+              }, '无图片')
+            }
 	          return h('el-button', {
 	            props: {
 	              type: 'text',
@@ -137,6 +149,15 @@
 	        field: 'invoiceInfo',
 	        name: '开票信息',
 	        render: (h, params) => {
+            if (!params.row.invoiceInfo) {
+              return h('el-button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  disabled: true
+                },
+              }, '无图片')
+            }
 	          return h('el-button', {
 	            props: {
 	              type: 'text',
@@ -159,6 +180,15 @@
 	        field: 'contract',
 	        name: '合同信息',
 	        render: (h, params) => {
+            if (!params.row.contract) {
+              return h('el-button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  disabled: true
+                },
+              }, '无图片')
+            }
 	          return h('el-button', {
 	            props: {
 	              type: 'text',
@@ -177,10 +207,27 @@
 	            }
 	          }, '查看图片')
 	        }
-	      }, {
-	        field: 'telephone',
-	        name: '收件人电话'
-	      },
+        },
+        {
+          field: 'taxNumber',
+	        name: '企业税号',
+        },
+        {
+          field: 'bankName',
+	        name: '开户行',
+        },
+        {
+          field: 'bankcardNo',
+	        name: '对公账号',
+        },
+        {
+          field: 'addr',
+	        name: '企业地址',
+        },
+        {
+          field: 'tel',
+	        name: '企业电话',
+        },
 	      {
 	        field: 'createTime',
 	        name: '创建时间',
