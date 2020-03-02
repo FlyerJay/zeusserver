@@ -41,6 +41,11 @@ module.exports = (app) => {
       allowNull: true,
       comment: '企业所在地(邮寄地址)'
     },
+    addr: {
+      type: STRING(50),
+      allowNull: true,
+      comment:  '企业注册地址'
+    },
     businessLicense: {
       type: STRING(30),
       allowNull: true,
@@ -59,10 +64,15 @@ module.exports = (app) => {
     telephone: {
       type: STRING(15),
       allowNull: true,
+      comment: '联系人电话'
+    },
+    tel: {
+      type: STRING(25),
+      allowNull: true,
       comment: '企业电话'
     },
     taxNumber: {
-      type: STRING(15),
+      type: STRING(20),
       allowNull: true,
       comment: '企业税号'
     },

@@ -71,6 +71,7 @@ module.exports = app => {
                 });
                 res(result);
             });
+            // return yield this.enterpriseParse(result, fileInfo)
             if(fileInfo.temp && query && query.type == 'inventory' && fileInfo.temp == '库存表') {
                 fileInfo.delete == "覆盖" ? fileInfo.delete = true : fileInfo.delete = false;
                 return yield this.tempInventory(result,fileInfo);
@@ -147,6 +148,17 @@ module.exports = app => {
             const result = yield this.ctx.service.transaction.valueImport($5,query);//把最终数据交给数据库事务处理
 
             return data
+        }
+        * enterpriseParse(options, query) {
+            // const buffer = iconv.encode(options[0].content, 'utf8')
+            // const str = iconv.decode(buffer, 'iso')
+            const parseValue = this.ctx.service.parseValue;
+            const parseEnterprise =  this.ctx.service.parseEnterprise;
+            var $1 = parseValue.parseToLine(options)
+            var $2 = parseEnterprise.parseLine($1)
+            // var $3 = parseEnterprise.invalidFilter($2[0].lines)
+            const result = yield this.ctx.service.transaction.enterpriseImport($2[0].lines.slice(12000, 14000), '01')
+            return $2
         }
     }
     return Excel;

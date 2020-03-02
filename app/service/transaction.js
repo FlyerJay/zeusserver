@@ -295,6 +295,36 @@ module.exports = app => {
                 }
             })
         }
+
+        * enterpriseImport (list, comId) {
+            return app.model.transaction((t)=>{
+                return Promise.all(list.map(item => {
+                    return app.model.Enterprise.create({
+                        enterpriseName: item[0],
+                        auditStatus: 'P',
+                        addr: item[2],
+                        tel: item[3],
+                        taxNumber: item[1],
+                        bankName: item[4],
+                        bankcardNo: item[5],
+                        createTime: Date.now(),
+                        comId: comId,
+                        clientId: 0
+                    }, { transaction: t })
+                }))
+            }).then((res)=>{
+                return {
+                    code:200,
+                    msg:"补充临时表成功"
+                }
+            }).catch((err)=>{
+                console.log(err)
+                return {
+                    code:-1,
+                    msg:"解析失败"
+                }
+            })
+        }
     }
     return TransAction;
 }

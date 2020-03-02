@@ -164,7 +164,7 @@ module.exports = (app) => {
       * invoiceList (options) {
         const [$1, $2] = yield [
           app.model.query(`
-            SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus, e.comId
+            SELECT i.*, e.address, e.addr, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.tel, e.auditStatus, e.comId
               FROM invoice i
               INNER JOIN enterprise e
                 ON e.enterpriseId = i.enterpriseId
@@ -234,7 +234,7 @@ module.exports = (app) => {
           msg: '请完善查询条件'
         };
         const result = yield app.model.query(`
-        SELECT i.*, e.address, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.auditStatus, e.comId, c.comName, c.externalName
+        SELECT i.*, e.address, e.addr, e.bankName, e.bankcardNo, e.businessLicense, e.contract, e.enterpriseName, e.invoiceInfo, e.taxNumber, e.telephone, e.tel, e.auditStatus, e.comId, c.comName, c.externalName
           FROM invoice i
           INNER JOIN enterprise e
             ON e.enterpriseId = i.enterpriseId
