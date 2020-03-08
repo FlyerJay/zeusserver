@@ -33,28 +33,51 @@
       <!-- 企业信息 -->
       <el-dialog
         title="企业信息"
-        size="tiny"
+        size="small"
         v-model="enterpriseInfoDialogVisible"
         :close-on-click-modal="false">
         <el-row :gutter="8" style="line-height: 40px">
           <el-col :span="24">
             企业名称：{{ enterpriseInfo.enterpriseName }}
+            <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.enterpriseName)">复制</el-button>
           </el-col>
           <el-col :span="24">
             邮寄地址：{{ enterpriseInfo.address }}
           </el-col>
-          <el-col :span="24">
+          <el-col :span="24" v-if="enterpriseInfo.businessLicense">
             营业执照：<el-button type="text" @click="previewImage(enterpriseInfo.businessLicense)">查看</el-button>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="24" v-if="enterpriseInfo.invoiceInfo">
             开票信息：<el-button type="text" @click="previewImage(enterpriseInfo.invoiceInfo)">查看</el-button>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="24" v-if="enterpriseInfo.contract">
             合同信息：<el-button type="text" @click="previewImage(enterpriseInfo.contract)">查看</el-button>
           </el-col>
           <el-col :span="24">
             收件人电话：{{ enterpriseInfo.telephone }}
           </el-col>
+          <template v-if="enterpriseInfo.taxNumber">
+            <el-col :span="24">
+              企业税号：{{ enterpriseInfo.taxNumber }}
+              <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.taxNumber)">复制</el-button>
+            </el-col>
+            <el-col :span="24">
+              企业地址：{{ enterpriseInfo.addr }}
+              <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.addr)">复制</el-button>
+            </el-col>
+            <el-col :span="24">
+              企业电话：{{ enterpriseInfo.tel }}
+              <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.tel)">复制</el-button>
+            </el-col>
+            <el-col :span="24">
+              开户银行：{{ enterpriseInfo.bankName }}
+              <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.bankName)">复制</el-button>
+            </el-col>
+            <el-col :span="24">
+              对公账户：{{ enterpriseInfo.bankcardNo }}
+              <el-button type="primary" plain size="small" class="clipboard-btn" @click="copy(enterpriseInfo.bankcardNo)">复制</el-button>
+            </el-col>
+          </template>
           <!-- <el-col :span="12">
             公司税号：{{ enterpriseInfo.taxNumber }}
           </el-col>
@@ -71,6 +94,23 @@
       </el-dialog>
 
       <preview-image :visible.sync="previewWrapperShow" :img-src="previewImageUrl"></preview-image>
+
+      <el-dialog
+        v-model="passDialogVisible"
+        size="tiny"
+        :close-on-click-modal="false">
+        <el-form ref="passForm" :model="passParam">
+          <el-form-item prop="invoiceAmount">
+            <el-input v-model="passParam.invoiceAmount" auto-complete="off" type="textarea" :rows="2" placeholder="请填写开票金额">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="info" @click="comfirmPass">提 交</el-button>
+			      <el-button type="warning" @click="cancelPass">取 消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
 
       <el-dialog
         v-model="refuseDialogVisible"
@@ -151,10 +191,18 @@ export default {
         taxNumber: '',
         bankName: '',
         bankcardNo: '',
-        auditStatus: ''
+        auditStatus: '',
+        addr: '',
+        tel: ''
       },
       refuseDialogVisible: false,
+      passDialogVisible: false,
       sendDialogVisible: false,
+      passParam: {
+        invoiceAmount: '',
+        invoiceId: '',
+        status: 'PASSED'
+      },
       refuseParam: {
         feedback: '',
         invoiceId: '',
@@ -174,10 +222,6 @@ export default {
         trackNumber: [
           { required: true, message: '运单号不可为空', trigger: 'input' }
         ]
-      },
-      passParam: {
-        invoiceId: '',
-        status: 'PASSED'
       },
       previewImageUrl: '',
       previewWrapperShow: false,
@@ -388,8 +432,24 @@ export default {
       this.enterpriseInfo.bankName = row.bankName
       this.enterpriseInfo.bankcardNo = row.bankcardNo
       this.enterpriseInfo.auditStatus = row.auditStatus
+      this.enterpriseInfo.addr = row.addr
+      this.enterpriseInfo.tel = row.tel
 
       this.enterpriseInfoDialogVisible = true
+    },
+
+    copy (message) {
+      var input = document.createElement('input')
+      input.value = message
+      document.body.appendChild(input)
+      input.select()
+      input.setSelectionRange(0, input.value.length)
+      document.execCommand('Copy')
+      document.body.removeChild(input)
+      this.$message({
+        type: 'success',
+        message: '复制成功'
+      })
     },
 
     refuseInvoice (row) {
@@ -404,15 +464,20 @@ export default {
           type: 'warning'
         })
       }
+      this.passDialogVisible = true
       this.passParam.invoiceId = row.invoiceId
-      this.$confirm('确认通过开票请求?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        class: 'LDW'
-      }).then(async () => {
-        await this.invoiceUpdate(this.passParam)
-        this.queryInvoiceList()
+      this.passParam.invoiceAmount = row.invoiceAmount
+    },
+
+    async comfirmPass () {
+      this.loading = true
+      await this.invoiceUpdate(this.passParam)
+      this.loading = false
+      this.passDialogVisible = false
+      this.queryInvoiceList()
+      return this.$message({
+        message: '发票审核通过',
+        type: 'success'
       })
     },
 
@@ -448,6 +513,13 @@ export default {
           message: '补充邮寄信息成功',
           type: 'success'
         })
+      })
+    },
+
+    cancelPass () {
+      this.$refs.passForm.resetFields()
+      this.$nextTick(() => {
+        this.passDialogVisible = false
       })
     },
 
