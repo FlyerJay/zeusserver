@@ -58,9 +58,9 @@ module.exports = (app) => {
       ctx.body = yield app.model.Enterprise.authEnt(ctx.request.body);
     }
 
-    * qichachaSearch () {
+    * appendTax () {
       const { ctx } = this;
-      ctx.body = yield ctx.service.qichacha.search(ctx.query.name);
+      ctx.body = yield ctx.service.qichacha.appendTax(ctx.query);
     }
   }
 

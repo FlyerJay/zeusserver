@@ -101,7 +101,7 @@ module.exports = (app) => {
   app.post('/zues/api/invoice/update', 'invoice.updateForZeus');
   app.get('/zues/api/enterprise/list', 'enterprise.listForZeus');
   app.post('/zues/api/enterprise/auth', 'enterprise.authForZeus');
-  app.get('/zues/api/invoiceminiapp/search', 'enterprise.qichachaSearch');
+  app.get('/zues/api/enterprise/appendtax', 'enterprise.appendTax');
   // 导出报表
   app.get('/zues/api/export/order/*', 'export.order');
   app.get('/zues/api/export/orderdetail/*', 'export.orderDetail');

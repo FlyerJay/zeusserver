@@ -8,6 +8,7 @@
     "debug": "^2.6.8",
     "echarts": "^3.6.2",
     "egg": "^1.0.0",
+    "egg-axios": "^1.1.5",
     "egg-development-proxyworker": "^1.0.1",
     "egg-sequelize": "^2.0.1",
     "egg-socket.io": "^2.0.2",

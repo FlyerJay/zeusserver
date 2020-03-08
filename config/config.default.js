@@ -42,6 +42,14 @@ module.exports = (appInfo) => ({
     dynamic: true,
     preload: false,
     buffer: false
+  },
+  http: {
+    headers: {
+      common: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    },
+    timeout: 10000
   }
 });
 
