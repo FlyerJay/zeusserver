@@ -28,13 +28,49 @@ module.exports = app => {
                         if(append.length === 1) {
                             if(/\d{3,}/.test(append[0])) {
                                 var matchs = append[0].match(/(0\d{2,}-)?\d{7,}/)
-                                if (matchs[0]) {
+                                if (matchs && matchs[0]) {
                                     append[0] = append[0].replace(matchs[0], '')
                                     append[1] = matchs[0]
                                 }
                             }
                         }
                         append.length = 2
+                        itemArr.splice(4, 1, ...append)
+                    }
+                    itemArr.length = 6
+                    return option.lines[index] = itemArr
+                })
+                options[i] = option
+            }
+            return options
+        }
+
+        // 单独处理山东数据
+        parseLineSd (options) {
+            for(let i = 0; i < options.length; i++) {
+                var option = options[i]
+                option.lines.map((item, index) => {
+                    var itemArr =  item.trim().split(/\s+/).slice(1, 7)
+                    if ( itemArr[2]) {
+                        let append = [itemArr[2]]
+                        if(/(0\d{2,}-)?\d{7,}/.test(append[0])) {
+                            var matchs = append[0].match(/(0\d{2,}-)?\d{7,}/)
+                            if (matchs && matchs[0]) {
+                                append[0] = append[0].replace(matchs[0], '')
+                                append[1] = matchs[0]
+                            }
+                        }
+                        itemArr.splice(2, 1, ...append)
+                    }
+                    if (itemArr[4]) {
+                        let append = [itemArr[4]]
+                        if(/(0\d{2,}-)?\d{7,}/.test(append[0])) {
+                            var matchs = append[0].match(/(0\d{2,}-)?\d{7,}/)
+                            if (matchs && matchs[0]) {
+                                append[0] = append[0].replace(matchs[0], '')
+                                append[1] = matchs[0]
+                            }
+                        }
                         itemArr.splice(4, 1, ...append)
                     }
                     itemArr.length = 6
@@ -90,7 +126,7 @@ module.exports = app => {
         invalidFilter (options) {
             return options.filter(item => {
                 for(let i = 0; i < item.length; i++) {
-                    if (!item[i]) {
+                    if (!item[i] || item[i].indexOf('False') > -1) {
                         return true
                     }
                 }
