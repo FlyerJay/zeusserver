@@ -1,10 +1,10 @@
 'use strict';
 
-module.exports = app => {
-    class Product extends app.Service {
-        * list() {
-            return result;
-        }
+module.exports = (app) => {
+  class Product extends app.Service {
+    * list() {
+      return result;
     }
-    return Product;
-}
+    }
+  return Product;
+};

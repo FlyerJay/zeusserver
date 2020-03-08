@@ -57,6 +57,11 @@ module.exports = (app) => {
       const { ctx } = this;
       ctx.body = yield app.model.Enterprise.authEnt(ctx.request.body);
     }
+
+    * qichachaSearch () {
+      const { ctx } = this;
+      ctx.body = yield ctx.service.qichacha.search(ctx.query.name);
+    }
   }
 
   return enterpriseController;
