@@ -44,7 +44,7 @@ module.exports = (app) => {
     addr: {
       type: STRING(50),
       allowNull: true,
-      comment:  '企业注册地址'
+      comment: '企业注册地址'
     },
     businessLicense: {
       type: STRING(30),
@@ -99,7 +99,7 @@ module.exports = (app) => {
     classMethods: {
       // 添加一个企业
       * createOneEnt (options) {
-        options.auditStatus = 'U';
+        options.auditStatus = options.auditStatus || 'U';
         if (!options.enterpriseName) options.enterpriseName = '未命名';
         options.createTime = Date.now();
         const createResult = yield this.create(options);
@@ -282,15 +282,22 @@ module.exports = (app) => {
       },
 
       * matchList (options) {
-        const result = yield this.findAll({
-          where: {
-            enterpriseName: {
-              $like: `%${options.enterpriseName}%`
-            }
-          },
-          limit: 5
+        const result = yield app.model.query(`
+          SELECT DISTINCT(e.enterpriseName), e.* FROM enterprise e
+            WHERE e.enterpriseName LIKE :enterpriseName
+              AND (e.comId = :comId OR :comId = '')
+              AND e.auditStatus = 'P'
+            LIMIT 5
+        `, {
+          replacements: {
+            enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+            comId: options.comId || ''
+          }
         });
-        return result;
+        return {
+          code: 200,
+          data: result[0] ? result[0] : []
+        };
       },
 
       * entList (options) {
