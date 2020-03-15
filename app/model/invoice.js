@@ -75,6 +75,27 @@ module.exports = (app) => {
       type: STRING(100),
       allowNull: true,
       comment: '反馈'
+    },
+    takeType: {
+      type: STRING(5),
+      allowNull: true,
+      defaultValue: 'MAIL',
+      comment: '获取方式'
+    },
+    takeTypeAppend: {
+      type: STRING(100),
+      allowNull: true,
+      comment: '获取方式辅助描述'
+    },
+    invoiceDemand: {
+      type: STRING(5),
+      allowNull: true,
+      comment: '开票要求'
+    },
+    invoiceDemandAppend: {
+      type: STRING(100),
+      allowNull: true,
+      comment: '开票要求补充'
     }
   }, {
     freezeTabName: true,

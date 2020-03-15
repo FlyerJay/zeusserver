@@ -201,6 +201,7 @@ export default {
       passParam: {
         invoiceAmount: '',
         invoiceId: '',
+        takeType: '',
         status: 'PASSED'
       },
       refuseParam: {
@@ -241,7 +242,8 @@ export default {
           }
         }, {
           field: 'status',
-          name: '订单状态',
+          name: '状态',
+          width: 100,
           render: (h, params) => {
             const classMapping = {
               'APPLY': '',
@@ -251,12 +253,13 @@ export default {
               'SEND': 'warning',
               'COMPLETE': 'success'
             }
+            const SEND = params.row.takeType === 'SEND' ? '已邮寄' : '用户确认'
             const statusMapping = {
               'APPLY': '申请中',
               'WAIT': '已查看',
               'PASSED': '已通过',
               'REFUSE': '已拒绝',
-              'SEND': '已邮寄',
+              'SEND': SEND,
               'COMPLETE': '已完成'
             }
             return h('el-tag', {
@@ -268,9 +271,28 @@ export default {
         }, {
           field: 'trackNumber',
           name: '运单号'
-        }, {
-          field: 'description',
-          name: '描述'
+        },
+        {
+          field: 'takeType',
+          name: '取回方式',
+          formatter: (row, cell, value) => {
+            if (value === 'SEND') return '邮寄'
+            if (value === 'SELF') return '自取'
+            if (value === 'BRING') return '司机带回'
+          }
+        },
+        {
+          field: 'invoiceDemand',
+          name: '发票需求',
+          formatter: (row, cell, value) => {
+            if (value === 'SPEC') return '开规格明细'
+            if (value === 'CATE') return '开品类范围'
+            return '其他'
+          }
+        },
+        {
+          field: 'descrption',
+          name: '备注'
         }, {
           field: 'feedback',
           name: '反馈'
@@ -465,12 +487,16 @@ export default {
         })
       }
       this.passDialogVisible = true
+      this.passParam.takeType = row.takeType
       this.passParam.invoiceId = row.invoiceId
       this.passParam.invoiceAmount = row.invoiceAmount
     },
 
     async comfirmPass () {
       this.loading = true
+      if (this.passParam.takeType !== 'MAIL') {
+        this.passParam.status = 'SEND'
+      }
       await this.invoiceUpdate(this.passParam)
       this.loading = false
       this.passDialogVisible = false

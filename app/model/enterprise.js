@@ -284,13 +284,13 @@ module.exports = (app) => {
       * matchList (options) {
         const result = yield app.model.query(`
           SELECT DISTINCT(e.enterpriseName), e.* FROM enterprise e
-            WHERE e.enterpriseName LIKE :enterpriseName
+            WHERE e.enterpriseName = :enterpriseName
               AND (e.comId = :comId OR :comId = '')
               AND e.auditStatus = 'P'
             LIMIT 5
         `, {
           replacements: {
-            enterpriseName: options.enterpriseName ? `%${options.enterpriseName}%` : '%%',
+            enterpriseName: options.enterpriseName || '',
             comId: options.comId || ''
           }
         });
