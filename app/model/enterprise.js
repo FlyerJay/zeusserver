@@ -301,6 +301,7 @@ module.exports = (app) => {
       },
 
       * entList (options) {
+        const orderRule = options.clientId;
         const [$1, $2] = yield [app.model.query(
           `SELECT e.*, c.comName, c.externalName FROM enterprise e
               INNER JOIN company c
@@ -310,7 +311,7 @@ module.exports = (app) => {
               AND (auditStatus = :auditStatus OR :auditStatus = '')
               AND auditStatus <> 'D'
               AND (c.comId = :comId OR :comId = '')
-              ORDER BY e.createTime DESC
+              ORDER BY FIELD(e.auditStatus, :orderBy), e.createTime DESC
               LIMIT :start,:offset`,
           {
             replacements: {
@@ -319,7 +320,8 @@ module.exports = (app) => {
               auditStatus: options.auditStatus || '',
               start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
               offset: options.pageSize ? Number(options.pageSize) : 15,
-              comId: options.comId || ''
+              comId: options.comId || '',
+              orderBy: orderRule ? 'P, U' : 'U, P'
             }
           }
         ), app.model.query(

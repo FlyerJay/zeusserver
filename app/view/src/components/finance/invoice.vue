@@ -276,7 +276,7 @@ export default {
           field: 'takeType',
           name: '取回方式',
           formatter: (row, cell, value) => {
-            if (value === 'SEND') return '邮寄'
+            if (value === 'MAIL') return '邮寄'
             if (value === 'SELF') return '自取'
             if (value === 'BRING') return '司机带回'
           }
