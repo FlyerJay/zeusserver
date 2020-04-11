@@ -106,6 +106,20 @@ module.exports = (app) => {
       // 创建发票
       * createOneInvoice (options) {
         try {
+          const response = yield this.findOne({
+            where: {
+              clientId: {
+                $eq: options.clientId
+              },
+              status: {
+                $eq: 'APPLY'
+              }
+            }
+          })
+          if (response) return {
+            code: -1,
+            msg: '您有正在申请中的发票'
+          };
           options.createTime = +new Date();
           options.status = 'APPLY';
           const result = yield this.create(options);

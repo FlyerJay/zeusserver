@@ -99,6 +99,20 @@ module.exports = (app) => {
     classMethods: {
       // 添加一个企业
       * createOneEnt (options) {
+        const response = yield this.findOne({
+          where: {
+            clientId: {
+              $eq: options.clientId
+            },
+            auditStatus: {
+              $eq: 'U'
+            }
+          }
+        })
+        if (response) return {
+          code: -1,
+          msg: '您有正在审核中的抬头信息'
+        };
         options.auditStatus = options.auditStatus || 'U';
         if (!options.enterpriseName) options.enterpriseName = '未命名';
         options.createTime = Date.now();
