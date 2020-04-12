@@ -229,18 +229,13 @@ export default {
       columns: [
         {
           field: 'enterpriseName',
+          width: 250,
           name: '企业名称'
         }, {
           field: 'invoiceAmount',
           name: '开票金额'
-        }, {
-          field: 'invoiceTime',
-          name: '开票时间段',
-          width: 230,
-          formatter: (row) => {
-            return `${this.formatDate(row.startTime)} 至 ${this.formatDate(row.endTime)}`
-          }
-        }, {
+        },
+        {
           field: 'status',
           name: '状态',
           width: 100,

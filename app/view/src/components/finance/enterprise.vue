@@ -359,19 +359,20 @@
 	      {
 	        field: 'operate',
 	        name: '操作',
-	        width: 105,
+	        width: 150,
 	        render: (h, params) => {
-	          return h('el-button', {
-	            props: {
-	              type: 'warning',
-	              size: 'small'
-	            },
-	            on: {
-	              click: () => {
-	                this.openAuthDialog(params.row)
-	              }
-	            }
-	          }, params.row.auditStatus === 'U' ? '认证' : '修改信息')
+	          return h('div', [h('el-button', {
+            props: {
+              type: 'warning',
+              size: 'small'
+            },
+            on: {
+              click: () => {
+                this.openAuthDialog(params.row)
+              }
+            }
+          }, params.row.auditStatus === 'U' ? '认证' : '修改信息')
+          ])
 	        }
 	      }]
 	    }
@@ -461,8 +462,13 @@
       this.authParam.bankcardNo = row.bankcardNo
       this.authParam.addr = row.addr
       this.authParam.tel = row.tel
-	    },
-	
+    },
+
+    openRefuseDialog (row) {
+      this.authDialogVisible = true
+      this.authParam.enterpriseId = row.enterpriseId
+    },
+
 	    auth () {
 	      this.enterpriseAuth()
 	    },

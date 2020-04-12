@@ -81,6 +81,11 @@ module.exports = (app) => {
       allowNull: true,
       comment: '开户银行'
     },
+    refuseReason: {
+      type: STRING(100),
+      allowNull: true,
+      comment: '拒绝原因'
+    },
     bankcardNo: {
       type: STRING(40),
       allowNull: true,
@@ -108,7 +113,7 @@ module.exports = (app) => {
               $eq: 'U'
             }
           }
-        })
+        });
         if (response) return {
           code: -1,
           msg: '您有正在审核中的抬头信息'
