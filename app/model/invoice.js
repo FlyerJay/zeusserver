@@ -29,17 +29,20 @@ module.exports = (app) => {
     invoiceTime: {
       type: BIGINT(15),
       allowNull: true,
-      comment: '发票日期'
+      comment: '发票日期',
+      defaultValue: 0
     },
     startTime: {
       type: BIGINT(15),
       allowNull: true,
-      comment: '发票时间段-开始'
+      comment: '发票时间段-开始',
+      defaultValue: 0
     },
     endTime: {
       type: BIGINT(15),
       allowNull: true,
-      comment: '发票时间段-结束'
+      comment: '发票时间段-结束',
+      defaultValue: 0
     },
     createTime: {
       type: BIGINT(15),
