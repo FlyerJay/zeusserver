@@ -28,17 +28,17 @@ module.exports = (app) => {
     },
     invoiceTime: {
       type: BIGINT(15),
-      allowNull: false,
+      allowNull: true,
       comment: '发票日期'
     },
     startTime: {
       type: BIGINT(15),
-      allowNull: false,
+      allowNull: true,
       comment: '发票时间段-开始'
     },
     endTime: {
       type: BIGINT(15),
-      allowNull: false,
+      allowNull: true,
       comment: '发票时间段-结束'
     },
     createTime: {
@@ -115,7 +115,7 @@ module.exports = (app) => {
                 $eq: 'APPLY'
               }
             }
-          })
+          });
           if (response) return {
             code: -1,
             msg: '您有正在申请中的发票'
