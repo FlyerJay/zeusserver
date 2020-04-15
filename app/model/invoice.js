@@ -114,6 +114,9 @@ module.exports = (app) => {
               clientId: {
                 $eq: options.clientId
               },
+              enterpriseId: {
+                $eq: options.enterpriseId
+              },
               status: {
                 $eq: 'APPLY'
               }
@@ -121,7 +124,7 @@ module.exports = (app) => {
           });
           if (response) return {
             code: -1,
-            msg: '您有正在申请中的发票'
+            msg: '该抬头有正在申请中的发票'
           };
           options.createTime = +new Date();
           options.status = 'APPLY';
