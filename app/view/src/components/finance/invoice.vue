@@ -368,7 +368,7 @@ export default {
                 )
               ])
             }
-            if (row.status === 'PASSED') {
+            if (row.takeType === 'MAIL' && !row.trackNumber.trim() && row.status !== 'APPLY' && row.status !== 'REFUSE') {
               return h(
                 'el-button',
                 {
@@ -491,6 +491,8 @@ export default {
       this.loading = true
       if (this.passParam.takeType !== 'MAIL') {
         this.passParam.status = 'SEND'
+      } else {
+        this.passParam.status = 'PASSED'
       }
       await this.invoiceUpdate(this.passParam)
       this.loading = false
