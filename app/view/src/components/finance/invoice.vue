@@ -368,7 +368,7 @@ export default {
                 )
               ])
             }
-            if (row.takeType === 'MAIL' && !row.trackNumber.trim() && row.status !== 'APPLY' && row.status !== 'REFUSE') {
+            if (row.takeType === 'MAIL' && row.status !== 'APPLY' && row.status !== 'REFUSE') {
               return h(
                 'el-button',
                 {
