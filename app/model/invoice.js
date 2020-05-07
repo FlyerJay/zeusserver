@@ -99,6 +99,11 @@ module.exports = (app) => {
       type: STRING(100),
       allowNull: true,
       comment: '开票要求补充'
+    },
+    contactUrl: {
+      type: STRING(100),
+      allowNull: false,
+      comment: '明细合同'
     }
   }, {
     freezeTabName: true,

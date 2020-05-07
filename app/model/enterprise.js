@@ -47,17 +47,17 @@ module.exports = (app) => {
       comment: '企业注册地址'
     },
     businessLicense: {
-      type: STRING(30),
+      type: STRING(100),
       allowNull: true,
       comment: '营业执照'
     },
     invoiceInfo: {
-      type: STRING(30),
+      type: STRING(100),
       allowNull: true,
       comment: '开票资料'
     },
     contract: {
-      type: STRING(30),
+      type: STRING(100),
       allowNull: true,
       comment: '购销合同'
     },
