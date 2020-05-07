@@ -54,31 +54,31 @@
 					</el-input>
 				</el-form-item>
 
-        <el-form-item prop="telephone">
+        		<el-form-item prop="telephone">
 					<el-input v-model="authParam.taxNumber" auto-complete="off">
 						<template slot="prepend">企业税号</template>
 					</el-input>
 				</el-form-item>
 
-        <el-form-item prop="telephone">
+        		<el-form-item prop="telephone">
 					<el-input v-model="authParam.addr" auto-complete="off">
 						<template slot="prepend">企业地址</template>
 					</el-input>
 				</el-form-item>
 
-        <el-form-item prop="telephone">
+        		<el-form-item prop="telephone">
 					<el-input v-model="authParam.tel" auto-complete="off">
 						<template slot="prepend">企业电话</template>
 					</el-input>
 				</el-form-item>
 
-        <el-form-item prop="telephone">
+        		<el-form-item prop="telephone">
 					<el-input v-model="authParam.bankName" auto-complete="off">
 						<template slot="prepend">开户银行</template>
 					</el-input>
 				</el-form-item>
 
-        <el-form-item prop="telephone">
+				<el-form-item prop="telephone">
 					<el-input v-model="authParam.bankcardNo" auto-complete="off">
 						<template slot="prepend">对公账号</template>
 					</el-input>
@@ -222,77 +222,112 @@
 	        field: 'businessLicense',
 	        name: '营业执照',
 	        render: (h, params) => {
-          if (!params.row.businessLicense) {
-            return h('el-button', {
-              props: {
-                type: 'text',
-                size: 'small',
-                disabled: true
-              }
-            }, '无图片')
-          }
-	          return h('el-button', {
-	            props: {
-	              type: 'text',
-	              size: 'small'
-	            },
-	            on: {
-	              click: () => {
-	                if (!params.row.businessLicense) {
-	                  return this.$message({
-	                    message: '无图片',
-	                    type: 'warning'
-	                  })
-	                }
-	                this.previewImage(`http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.businessLicense}`)
+	          if (!params.row.businessLicense) {
+	            return h('el-button', {
+	              props: {
+	                type: 'text',
+	                size: 'small',
+	                disabled: true
 	              }
+	            }, '无图片')
+	          }
+	          const url = `http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.businessLicense}`
+	          return h('viewer', {
+	            props: {
+	              images: [url]
+	            },
+	            style: {
+	              textAlign: 'center',
+	              height: '30px',
+	              lineHeight: '30px'
 	            }
-	          }, '查看图片')
+	          }, [
+	            h('img', {
+	              attrs: {
+	                src: url
+	              },
+	              style: {
+	                height: '30px',
+	                width: '30px'
+	              }
+	            })
+	          ])
 	        }
 	      }, {
 	        field: 'invoiceInfo',
 	        name: '开票信息',
 	        render: (h, params) => {
-          if (!params.row.invoiceInfo) {
-            return h('el-button', {
-              props: {
-                type: 'text',
-                size: 'small',
-                disabled: true
-              }
-            }, '无图片')
-          }
-	          return h('el-button', {
-	            props: {
-	              type: 'text',
-	              size: 'small'
-	            },
-	            on: {
-	              click: () => {
-	                if (!params.row.invoiceInfo) {
-	                  return this.$message({
-	                    message: '无图片',
-	                    type: 'warning'
-	                  })
-	                }
-	                this.previewImage(`http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.invoiceInfo}`)
+	          if (!params.row.invoiceInfo) {
+	            return h('el-button', {
+	              props: {
+	                type: 'text',
+	                size: 'small',
+	                disabled: true
 	              }
+	            }, '无图片')
+	          }
+	          const url = `http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.invoiceInfo}`
+	          return h('viewer', {
+	            props: {
+	              images: [url]
+	            },
+	            style: {
+	              textAlign: 'center',
+	              height: '30px',
+	              lineHeight: '30px'
 	            }
-	          }, '查看图片')
+	          }, [
+	            h('img', {
+	              attrs: {
+	                src: url
+	              },
+	              style: {
+	                height: '30px',
+	                width: '30px'
+	              }
+	            })
+	          ])
 	        }
 	      }, {
 	        field: 'contract',
 	        name: '合同信息',
 	        render: (h, params) => {
-          if (!params.row.contract) {
-            return h('el-button', {
-              props: {
-                type: 'text',
-                size: 'small',
-                disabled: true
-              }
-            }, '无图片')
-          }
+	          if (!params.row.contract) {
+	            return h('el-button', {
+	              props: {
+	                type: 'text',
+	                size: 'small',
+	                disabled: true
+	              }
+	            }, '无图片')
+	          }
+	          const url = `http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.contract}`
+	          return h('viewer', {
+	            props: {
+	              images: [url]
+	            },
+	            style: {
+	              textAlign: 'center',
+	              height: '30px',
+				  lineHeight: '30px'
+	            }
+	          }, [
+	            h('img', {
+	              attrs: {
+	                src: url
+	              },
+	              style: {
+	                height: '30px',
+	                width: '30px'
+	              }
+	            })
+	          ])
+	        }
+	      },
+	      {
+	        field: 'detail',
+	        name: '查看详情',
+	        render: (h, params) => {
 	          return h('el-button', {
 	            props: {
 	              type: 'text',
@@ -300,35 +335,12 @@
 	            },
 	            on: {
 	              click: () => {
-	                if (!params.row.contract) {
-	                  return this.$message({
-	                    message: '无图片',
-	                    type: 'warning'
-	                  })
-	                }
-	                this.previewImage(`http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.contract}`)
+	                this.viewEnterpriseInfo(params.row)
 	              }
 	            }
-	          }, '查看图片')
+	          }, '查看')
 	        }
-      },
-      {
-        field: 'detail',
-        name: '查看详情',
-        render: (h, params) => {
-          return h('el-button', {
-            props: {
-              type: 'text',
-              size: 'small'
-            },
-            on: {
-              click: () => {
-                this.viewEnterpriseInfo(params.row)
-              }
-            }
-          }, '查看')
-        }
-      },
+	      },
 	      {
 	        field: 'createTime',
 	        name: '创建时间',

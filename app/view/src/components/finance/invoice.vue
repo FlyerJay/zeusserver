@@ -45,13 +45,13 @@
             邮寄地址：{{ enterpriseInfo.address }}
           </el-col>
           <el-col :span="24" v-if="enterpriseInfo.businessLicense">
-            营业执照：<el-button type="text" @click="previewImage(enterpriseInfo.businessLicense)">查看</el-button>
+            <viewer class="image-priview" :images="[domain + enterpriseInfo.businessLicense]"><span>营业执照：</span><img :src="domain + enterpriseInfo.businessLicense"></viewer>
           </el-col>
           <el-col :span="24" v-if="enterpriseInfo.invoiceInfo">
-            开票信息：<el-button type="text" @click="previewImage(enterpriseInfo.invoiceInfo)">查看</el-button>
+            <viewer class="image-priview" :images="[domain + enterpriseInfo.invoiceInfo]"><span>开票信息：</span><img :src="domain + enterpriseInfo.invoiceInfo"></viewer>
           </el-col>
           <el-col :span="24" v-if="enterpriseInfo.contract">
-            合同信息：<el-button type="text" @click="previewImage(enterpriseInfo.contract)">查看</el-button>
+            <viewer class="image-priview" :images="[domain + enterpriseInfo.contract]"><span>合同信息：</span><img :src="domain + enterpriseInfo.contract"></viewer>
           </el-col>
           <el-col :span="24">
             收件人电话：{{ enterpriseInfo.telephone }}
@@ -168,6 +168,7 @@ export default {
 
   data () {
     return {
+      domain: 'http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/',
       activeName: 'first',
       loading: false,
       invoiceList: [],
@@ -284,6 +285,43 @@ export default {
             if (value === 'CATE') return '开品类范围'
             return '其他'
           }
+        },
+        {
+	        field: 'contactUrl',
+          name: '合同明细',
+          width: 98,
+	        render: (h, params) => {
+          if (!params.row.contactUrl) {
+            return h('el-button', {
+              props: {
+                type: 'text',
+                size: 'small',
+                disabled: true
+              }
+            }, '无图片')
+          }
+          const url = `http://zeuskx-mina-prod.oss-cn-beijing.aliyuncs.com/${params.row.contactUrl}`
+          return h('viewer', {
+            props: {
+              images: [url]
+            },
+            style: {
+              textAlign: 'center',
+              height: '30px',
+              lineHeight: '30px'
+            }
+          }, [
+            h('img', {
+              attrs: {
+                src: url
+              },
+              style: {
+                height: '30px',
+                width: '30px'
+              }
+            })
+          ])
+	        }
         },
         {
           field: 'descrption',
@@ -562,3 +600,22 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .image-priview {
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    margin-top: 10px;
+
+    span {
+      float: left;
+    }
+
+    img {
+      height: 40px;
+      width: 40px;
+      float: left;
+      border: 1px solid #DDDDDD;
+    }
+  }
+</style>

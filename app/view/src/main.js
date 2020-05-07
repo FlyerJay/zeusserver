@@ -6,7 +6,15 @@ import Vue from 'vue'
 import '../static/js/utils'
 import 'element-ui/lib/theme-default/index.css'
 import '../static/font/base.less'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 import { socket } from './socket'
+
+Vue.use(Viewer, {
+  defaultOptions: {
+    zIndex: 9999
+  }
+})
 function getCookie (name) {
   var reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
   var arr = document.cookie.match(reg)
