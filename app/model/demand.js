@@ -657,6 +657,28 @@ module.exports = app => {
                         msg: "可以添加的需求"
                     }
                 }
+            },
+            
+            // 按日期获取销售数据
+            * getSellerDataByDate (date) {
+                const data = yield app.model.query(`SELECT u.userId, u.comId, d.state, SUM(d.demandWeight) as weight, count(d.state) as count FROM user_info u
+                    INNER JOIN user_role ur
+                            ON ur.crossAuth = 0
+                           AND ur.demandAuth = 1
+                           AND ur.userId = u.userId
+                           AND ur.comId = u.comId
+                    LEFT JOIN demand d
+                           ON d.userId = u.userId
+                          AND d.comId = u.comId
+                          AND d.createTime > :dateStart
+                          AND d.createTime < :dateEnd
+                    GROUP BY u.comId, u.userId, d.state`, {
+                        replacements: {
+                            dateStart: new Date(`${date} 00:00:00`).getTime(),
+                            dateEnd: new Date(`${date} 23:59:59`).getTime()
+                        }
+                    })
+                return data[0]
             }
         }
     })
