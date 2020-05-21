@@ -96,9 +96,9 @@ module.exports = (app) => {
       comment: '成交需求顿数'
     },
     date: {
-      type: STRING,
+      type: INTEGER,
       allowNull: false,
-      comment: '统计日期 YYYY-MM-DD'
+      comment: '统计日期 YYYYMMDD'
     },
     createTime: {
       type: DATE,

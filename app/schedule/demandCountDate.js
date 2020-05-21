@@ -4,6 +4,7 @@ class demandCountDate extends Subscription {
   static get schedule() {
     return {
       type: 'worker',
+      // interval: '20s'
       cron: '0 0 1 */1 * ?'
     };
   }

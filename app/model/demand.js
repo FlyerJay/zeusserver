@@ -661,6 +661,8 @@ module.exports = app => {
             
             // 按日期获取销售数据
             * getSellerDataByDate (date) {
+                var date = String(date)
+                date = date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')
                 const data = yield app.model.query(`SELECT u.userId, u.comId, d.state, SUM(d.demandWeight) as weight, count(d.state) as count FROM user_info u
                     INNER JOIN user_role ur
                             ON ur.crossAuth = 0

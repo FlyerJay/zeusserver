@@ -7,7 +7,8 @@ const moment = require('moment');
 module.exports = (app) => {
   class Statistics extends app.Service {
     * demandCountDate () {
-      const date = moment(new Date().getTime() - 24 * 1000 * 60 * 60).format('YYYY-MM-DD');
+      var date = moment(new Date().getTime() - 24 * 1000 * 60 * 60).format('YYYYMMDD');
+      date = Number(date);
       const data = yield app.model.Demand.getSellerDataByDate(date);
       var statis = {};
       data.forEach((item) => {
