@@ -669,6 +669,10 @@ module.exports = app => {
                            AND ur.demandAuth = 1
                            AND ur.userId = u.userId
                            AND ur.comId = u.comId
+                           AND ur.userId <> 'admin'
+                           AND ur.userId <> 'LUCKIELIU'
+                           AND ur.userId <> 'lee'
+                           AND ur.userId <> 'kppwin'
                     LEFT JOIN demand d
                            ON d.userId = u.userId
                           AND d.comId = u.comId
