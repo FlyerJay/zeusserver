@@ -111,6 +111,8 @@ module.exports = (app) => {
   app.get('/zues/api/export/demanddetaillist/*', 'export.demandDetailList');
   // 数据分析
   app.get('/zues/api/cdata/value', 'cdata.value');
+  // 数据统计
+  app.get('/zues/api/statistics/date/demandcount', 'statistics.demandCountDate');
   // 消息
   app.get('/zues/api/message/list', 'message.list');
   app.post('/zues/api/message/add', 'message.add');

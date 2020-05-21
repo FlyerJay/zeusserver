@@ -383,6 +383,31 @@ module.exports = app => {
                     code:200,
                     msg:'账号可用'
                 }
+            },
+            * getAllSeller(options) {
+                const data = yield app.model.query(`
+                    SELECT ui.userId FROM user_info ui
+                     WHERE (ui.comId = :comId OR :comId = '')
+                       AND ur.userId <> 'admin'
+                       AND ur.userId <> 'LUCKIELIU'
+                       AND ur.userId <> 'lee'
+                       AND ur.userId <> 'kppwin'
+                `, {
+                    replacements: {
+                        comId: options.comId || ''
+                    }
+                })
+                if (data) {
+                    return {
+                        code: 200,
+                        data: data[0]
+                    }
+                } else {
+                    return {
+                        code: -1,
+                        msg: '查询销售失败'
+                    }
+                }
             }
         }
     })

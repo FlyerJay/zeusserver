@@ -123,6 +123,25 @@ module.exports = (app) => {
           date,
           createTime: new Date()
         }), {transaction: t })))));
+      },
+
+      * getDemandCountStat (options) {
+        const data = yield app.model.query(`
+          SELECT * FROM demand_count_date_stat dcdt
+            WHERE (dcdt.userId IN :userIds OR :userIds = '') 
+              AND (dcdt.comId = :comId OR :comId = '')
+              AND dcdt.date >= :startDate
+              AND dcdt.date <= :endDate
+        `, {
+          userId: options.userIds.length === 0 ? '' : options.userIds,
+          comId: options.comId,
+          startDate: options.startDate,
+          endDate: options.endDate || options.startDate
+        });
+        return {
+          code: 200,
+          data: data[0]
+        };
       }
     }
   });
