@@ -388,10 +388,10 @@ module.exports = app => {
                 const data = yield app.model.query(`
                     SELECT ui.userId FROM user_info ui
                      WHERE (ui.comId = :comId OR :comId = '')
-                       AND ur.userId <> 'admin'
-                       AND ur.userId <> 'LUCKIELIU'
-                       AND ur.userId <> 'lee'
-                       AND ur.userId <> 'kppwin'
+                       AND ui.userId <> 'admin'
+                       AND ui.userId <> 'LUCKIELIU'
+                       AND ui.userId <> 'lee'
+                       AND ui.userId <> 'kppwin'
                 `, {
                     replacements: {
                         comId: options.comId || ''

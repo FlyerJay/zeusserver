@@ -131,6 +131,10 @@ module.exports = (app) => {
       }
       ctx.body = user;
     }
+    * sellerList () {
+      const { ctx } = this;
+      ctx.body = yield ctx.model.User.getAllSeller(ctx.query);
+    }
   }
   return UserController;
 };

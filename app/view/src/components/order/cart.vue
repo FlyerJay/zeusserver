@@ -56,7 +56,7 @@
                 <el-table-column prop="comment" label="备注" v-if="checkedTBhead.indexOf('备注') > -1">
                 </el-table-column>
                 <el-table-column label="操作" align="center" property="id" width="150px" v-if="checkedTBhead.indexOf('操作') > -1">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="updateChart(scope.index,scope.row)" type="warning">修改</el-button>
                         <el-button size="small" @click="deleteChart(scope.index,scope.row)" type="danger">删除</el-button>
                     </template>

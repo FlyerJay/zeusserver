@@ -48,7 +48,7 @@
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe style="width: 100%" v-loading.body="loading" border>
                 <el-table-column width='60px' label="#">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{scope.$index + (searchDeParam.page - 1) * 15 + 1}}
                     </template>
                 </el-table-column>
@@ -69,7 +69,7 @@
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
@@ -94,7 +94,7 @@
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
                         <el-table-column label="报价" width="330px;">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-row>
                                     <el-col :span='12'>
                                         <el-autocomplete class="inline-input" @select="handleSelect" :fetch-suggestions="queryFactoryPrice.bind(this,scope.row)" v-model="scope.row.factoryPrice" :readonly="activeName > 1">
@@ -111,7 +111,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" width="230px">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 </el-input>
                             </template>

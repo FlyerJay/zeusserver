@@ -23,7 +23,7 @@
             <el-table-column property="supplierName" label="供应商名称"></el-table-column>
             <el-table-column property="address" label="供应商所在地"></el-table-column>
             <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
-                <template scope="scope" >
+                <template slot-scope="scope" >
                     <el-button size="small" @click="changeSupDlg(scope.index, scope.row)" type="warning">修改</el-button>
                     <el-button size="small" @click="deleteSup(scope.index, scope.row)" type="danger">删除</el-button>
                 </template>

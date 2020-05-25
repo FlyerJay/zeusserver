@@ -146,6 +146,44 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
+      <el-dialog
+        v-model="modifyDialogVisible"
+        size="tiny"
+        :close-on-click-modal="false">
+        <el-form ref="modifyForm" :model="modifyParam">
+          <el-form-item prop="takeType" label="取回方式">
+            <el-select v-model="modifyParam.takeType" style="width: 100%">
+              <el-option
+                v-for="item in takeTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item prop="invoiceDemand" label="发票要求">
+            <el-select v-model="modifyParam.invoiceDemand" style="width: 100%">
+              <el-option
+                v-for="item in invoiceDemands"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item prop="descrption" label="备注">
+            <el-input v-model="modifyParam.descrption" placeholder="备注"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="info" @click="confirmModify">提 交</el-button>
+			      <el-button type="warning" @click="cancelModify">取 消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
 </template>
 <script>
@@ -199,6 +237,7 @@ export default {
       refuseDialogVisible: false,
       passDialogVisible: false,
       sendDialogVisible: false,
+      modifyDialogVisible: false,
       passParam: {
         invoiceAmount: '',
         invoiceId: '',
@@ -225,6 +264,36 @@ export default {
           { required: true, message: '运单号不可为空', trigger: 'input' }
         ]
       },
+      modifyParam: {
+        takeType: '',
+        invoiceId: '',
+        descrption: '',
+        invoiceDemand: ''
+      },
+      takeTypes: [
+        {
+          label: '邮寄',
+          value: 'MAIL'
+        }, {
+          label: '自取',
+          value: 'SELF'
+        }, {
+          label: '司机带回',
+          value: 'BRING'
+        }
+      ],
+      invoiceDemands: [
+        {
+          label: '开规格明细',
+          value: 'SPEC'
+        }, {
+          label: '开品类范围',
+          value: 'CATE'
+        }, {
+          label: '其他',
+          value: 'OTHER'
+        }
+      ],
       previewImageUrl: '',
       previewWrapperShow: false,
       columns: [
@@ -352,7 +421,7 @@ export default {
         }, {
           field: 'operate',
           name: '操作',
-          width: 140,
+          width: 190,
           render: (h, params) => {
             let row = params.row
             if (row.auditStatus === 'D' && row.status !== 'REFUSE') {
@@ -403,6 +472,21 @@ export default {
                     }
                   },
                   '通过'
+                ),
+                h(
+                  'el-button',
+                  {
+                    props: {
+                      size: 'small',
+                      type: 'warning'
+                    },
+                    on: {
+                      click: () => {
+                        this.modifyInvoice(row)
+                      }
+                    }
+                  },
+                  '修改'
                 )
               ])
             }
@@ -595,6 +679,34 @@ export default {
       this.$refs.sendForm.resetFields()
       this.$nextTick(() => {
         this.sendDialogVisible = false
+      })
+    },
+
+    // 修改发票信息
+    modifyInvoice (row) {
+      this.modifyDialogVisible = true
+      this.modifyParam.takeType = row.takeType
+      this.modifyParam.invoiceId = row.invoiceId
+      this.modifyParam.invoiceDemand = row.invoiceDemand
+      this.modifyParam.descrption = row.descrption
+    },
+
+    async confirmModify () {
+      this.loading = true
+      await this.invoiceUpdate(this.modifyParam)
+      this.loading = false
+      this.modifyDialogVisible = false
+      this.queryInvoiceList()
+      return this.$message({
+        message: '修改发票信息成功',
+        type: 'success'
+      })
+    },
+
+    cancelModify () {
+      this.$refs.modifyForm.resetFields()
+      this.$nextTick(() => {
+        this.modifyDialogVisible = false
       })
     }
   }

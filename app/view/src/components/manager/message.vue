@@ -24,7 +24,7 @@
     	     	<el-table-column prop="message" label="消息内容"></el-table-column>
     	     	<el-table-column prop="createTime" :formatter="dateFormat" label="创建时间"></el-table-column>
     	     	<el-table-column label="操作" width="160px">
-    	     		<template scope="scope">
+    	     		<template slot-scope="scope">
                 <el-button size="small" @click="updateMessage(scope.index, scope.row)" type="warning">修改</el-button>
     	     			<el-button size="small" @click="deleteMessage(scope.index, scope.row)" type="danger">删除</el-button>
     	     		</template>

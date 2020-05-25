@@ -25,7 +25,7 @@
                 <el-table-column prop="userId" label="下单人"></el-table-column>
                 <el-table-column prop="validate" :formatter="statusFormatter" width="80" label="状态"></el-table-column>
                 <el-table-column label="操作" align="left" width="200px" property="id">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="viewDetail(scope.index, scope.row)" type="info">查看</el-button>
                         <el-button size="small" @click="confirmPrintInfo(scope.index, scope.row)" type="success">打印</el-button>
                         <el-button :disabled="scope.row.validate == 1" size="small" @click="enterNum(scope.index, scope.row)" type="danger">删除</el-button>
@@ -59,7 +59,7 @@
                 <el-table-column prop="dcreaseUnit" :formatter="unitFormatter" label="单位下浮"></el-table-column>
                 <el-table-column prop="comment" label="备注"></el-table-column>
                 <el-table-column label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="updateDatail(scope.index, scope.row)" type="success">修改</el-button>
                     </template>
                 </el-table-column>

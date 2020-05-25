@@ -27,55 +27,55 @@
                 <el-table-column prop="userId" label="用户ID" width="160px">
                 </el-table-column>
                 <el-table-column label="查询" align="center" prop="queryAuth">
-                    <template scope="scope" align="center">
+                    <template slot-scope="scope" align="center">
                         <i v-if ="Boolean(scope.row.queryAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
                 <el-table-column label="采购" align="center" prop="orderAuth">
-                    <template scope="scope" align="center">
+                    <template slot-scope="scope" align="center">
                         <i v-if ="Boolean(scope.row.orderAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
                 <el-table-column prop="demandAuth" align="center" label="供应商设置">
-                    <template scope="scope" align="center" >
+                    <template slot-scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.supplierAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
                  <el-table-column prop="valueAuth" align="center" label="价格表">
-                     <template scope="scope" >
+                     <template slot-scope="scope" >
                         <i v-if ="Boolean(scope.row.valueAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
                 <el-table-column prop="inventoryAuth" align="center" label="库存表">
-                      <template scope="scope" >
+                      <template slot-scope="scope" >
                         <i v-if ="Boolean(scope.row.inventoryAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
                  <el-table-column prop="demandAuth" align="center" label="定制需求">
-                    <template scope="scope" align="center" >
+                    <template slot-scope="scope" align="center" >
                         <i v-if ="Boolean(scope.row.demandAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                     </template>
                 </el-table-column>
                 <el-table-column prop="financeAuth" align="center" label="财务">
-                      <template scope="scope" >
+                      <template slot-scope="scope" >
                         <i v-if ="Boolean(scope.row.financeAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
                 <el-table-column prop=" adminAuth" align="center" label="管理员">
-                     <template scope="scope" >
+                     <template slot-scope="scope" >
                         <i v-if ="Boolean(scope.row.adminAuth)"  class="el-icon-check"></i>
                         <i v-else class="el-icon-close"></i>
                      </template>
                 </el-table-column>
                 <el-table-column label="操作" width='360px' align="center" property="id" v-if="adminAuthority">
-									<template scope="scope">
+									<template slot-scope="scope">
 										<el-button size="small" @click="changeAuthority(scope.index, scope.row)" type="info">修改权限</el-button>
 										<el-button size="small" @click="allocRole(scope.index, scope.row)" type="success">快速设置</el-button>
 										<el-button size="small" @click="resetPassword(scope.index, scope.row)" type="success">重置</el-button>

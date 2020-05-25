@@ -4,6 +4,7 @@ import Vue from 'vue'
 // 需求管理
 import DemandIndex from '../components/demand/index'
 import DemandManage from '../components/demand/manage'
+import DemandStatics from '../components/demand/statics'
 
 // 供应商
 import Supplier from '../components/supplier/supplier'
@@ -60,6 +61,9 @@ export default new Router({
     children: [{
       path: 'manage',
       component: DemandManage
+    }, {
+      path: 'statics',
+      component: DemandStatics
     }
     ]
   },

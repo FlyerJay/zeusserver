@@ -1139,3 +1139,31 @@ export const appendTaxNumber = ({ dispatch }, params) => {
     return Promise.reject()
   })
 }
+
+export const getSellerListX = ({ dispatch }, params) => {
+  return axios.get('/zues/api/user/seller', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}
+
+export const getDemandCountDateX = ({ dispatch }, params) => {
+  return axios.get('/zues/api/statistics/date/demandcount', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}

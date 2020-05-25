@@ -48,7 +48,7 @@
             <el-table-column property="perWeight" label="单支重量(kg)" :formatter="perWeightFormatter"></el-table-column>
             <el-table-column property="inventoryWeight" label="库存重量(吨)" :formatter="weightFormatter"></el-table-column>
             <el-table-column label="操作" align="center">
-                <template scope="scope">
+                <template slot-scope="scope">
                         <el-button size="small" @click="changeStock(scope.index, scope.row)" type="warning"  >修改</el-button>
                 </template>
             </el-table-column>

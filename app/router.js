@@ -21,6 +21,7 @@ module.exports = (app) => {
   app.get('/zues/api/user/openid', 'user.openid');
   app.post('/zues/api/user/bind', 'user.bind');
   app.post('/zues/api/user/loginbyopenid', 'user.loginByOpenid');
+  app.get('/zues/api/user/seller', 'user.sellerList');
   // 公司
   app.get('/zues/api/company', 'company.list');
   app.post('/zues/api/company/setting', 'company.defaultdata');

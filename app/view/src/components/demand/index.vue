@@ -24,6 +24,10 @@ export default {
         url: '/demand/manage',
         icon: 'icon-review',
         name: '带货/直发'
+      }, {
+        url: '/demand/statics',
+        icon: 'icon-trend',
+        name: '需求统计'
       }]
     }
   },

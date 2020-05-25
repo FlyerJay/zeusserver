@@ -51,7 +51,7 @@
         <div class="tb-wrap">
             <el-table :data="demandInfo.row" stripe v-loading.body="loading" border :fit="true">
                 <el-table-column width='60px' label="#">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{scope.$index + (searchDeParam.page - 1) * 15 + 1}}
                     </template>
                 </el-table-column>
@@ -72,7 +72,7 @@
                 <el-table-column prop="customerPhone" label="电话">
                 </el-table-column>
                 <el-table-column label="需求明细" align="center" property="destination" width="100px">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="viewDetail(scope.row)" type="warning">点击查看</el-button>
                     </template>
                 </el-table-column>
@@ -83,18 +83,18 @@
                 <el-table-column prop="dealReason" label="原因">
                 </el-table-column>
                 <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 1"  width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">销售报价</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="交易反馈" align="center" property="id" v-if="activeName == 2" width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="feedBackPrice(scope.row)" type="warning">重新报价</el-button>
                         <el-button size="small" @click="dealFeedback(scope.row)" type="warning">填写</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作类型" align="center" v-if="activeName == 0" class-name="op-col"  width="180">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button size="small" @click="changeDemand(scope.row)" type="warning" v-if="userInfo.userId == scope.row.userId" style="float:left">修改</el-button>
                         <el-button size="small" @click="removeDemand(scope.row)" type="danger" v-if="userInfo.userId == scope.row.userId" style="float:left">删除</el-button>
                     </template>
@@ -115,7 +115,7 @@
                         <el-table-column label="数量" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量" prop='demandWeight'></el-table-column>
                         <el-table-column label="操作" align="center">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button size="small" @click="deleteSpec(scope.$index)" type="warning">删除</el-button>
                             </template>
                         </el-table-column>
@@ -344,17 +344,17 @@
                         <el-table-column label="数量(支)" prop='demandAmount'></el-table-column>
                         <el-table-column label="重量(吨)" prop='demandWeight'></el-table-column>
                         <el-table-column label="业务报价" width="200px">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-input v-model="scope.row.feedbackPrice"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="成本报价" width="100px">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-input :value="(scope.row.factoryPrice-0) + scope.row.freight" :readonly="true"></el-input>
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" width="200px">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-input auto-complete="off" type="text" v-model="scope.row.comment" :readonly="activeName > 1" style="width: 100%;float:left;margin: 5px 0px 5px">
                                 </el-input>
                             </template>

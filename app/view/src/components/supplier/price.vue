@@ -51,7 +51,7 @@
             <el-table-column property="value" label="出厂价(元/吨)"></el-table-column>
     
             <el-table-column label="操作" align="center" v-if="valueAuth">
-                <template scope="scope">
+                <template slot-scope="scope">
                             <el-button size="small" @click="changePrice(scope.index, scope.row)" type="warning">修改</el-button>
                         </template>
             </el-table-column>

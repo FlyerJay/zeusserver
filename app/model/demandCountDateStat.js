@@ -128,15 +128,18 @@ module.exports = (app) => {
       * getDemandCountStat (options) {
         const data = yield app.model.query(`
           SELECT * FROM demand_count_date_stat dcdt
-            WHERE (dcdt.userId IN :userIds OR :userIds = '') 
+            WHERE (dcdt.userId IN (:userIdArr) OR :userIds = '') 
               AND (dcdt.comId = :comId OR :comId = '')
               AND dcdt.date >= :startDate
               AND dcdt.date <= :endDate
         `, {
-          userId: options.userIds.length === 0 ? '' : options.userIds,
-          comId: options.comId,
-          startDate: options.startDate,
-          endDate: options.endDate || options.startDate
+          replacements: {
+            userIdArr: options.userIds.split(','),
+            userIds: options.userIds,
+            comId: options.comId,
+            startDate: Number(options.startDate),
+            endDate: Number(options.endDate || options.startDate)
+          }
         });
         return {
           code: 200,

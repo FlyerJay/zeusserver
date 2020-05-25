@@ -25,7 +25,7 @@
           <el-table-column property="valueTime" :formatter="valueDateFormat" label="价格更新"></el-table-column>
           <el-table-column property="inventoryTime" :formatter="inventoryDateFormat" label="库存更新"></el-table-column>
           <el-table-column label="启用状态" align="center" property="id" v-if="supplierAuth">
-            <template scope="scope" >
+            <template slot-scope="scope" >
               <el-select size="small" :class="{'open': scope.row.isValide==1 }" v-model="scope.row.isValide" placeholder="请选择" @change="changeState.call(this,$event,scope.row)">
                 <el-option
                   label="开启"
@@ -39,7 +39,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" property="id" v-if="supplierAuth">
-            <template scope="scope" >
+            <template slot-scope="scope" >
               <el-button size="small" @click="changeSupDlg(scope.index, scope.row)" type="warning">修改</el-button>
             </template>
           </el-table-column>
@@ -61,7 +61,7 @@
             <el-table-column property="address" label="所在地"></el-table-column>
             <el-table-column property="freight" label="运费（元/吨）"></el-table-column>
             <el-table-column  label="操作" align="center" property="id" v-if="Boolean(supplierAuth)">
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-button size="small" @click="changeFreDlg(scope.index, scope.row)" type="warning">
                 修改</el-button>
               <el-button size="small" @click="deleteFre(scope.index, scope.row)" type="danger">删除</el-button>
