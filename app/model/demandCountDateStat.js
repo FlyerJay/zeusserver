@@ -127,11 +127,16 @@ module.exports = (app) => {
 
       * getDemandCountStat (options) {
         const data = yield app.model.query(`
-          SELECT * FROM demand_count_date_stat dcdt
+          SELECT dcdt.comId, dcdt.userId, SUM(dcdt.count) as count, SUM(dcdt.weight) as weight, SUM(dcdt.noOffer) as noOffer,
+            SUM(dcdt.noOfferWeight) as noOfferWeight, SUM(dcdt.pendingFeedback) as pendingFeedback,
+            SUM(dcdt.feedback) as feedback, SUM(dcdt.feedbackWeight) as feedbackWeight, SUM(dcdt.noDeal) as noDeal,
+            SUM(dcdt.noDealWeight) as noDealWeight, SUM(dcdt.deal) as deal, SUM(dcdt.dealWeight) as dealWeight, dcdt.date, dcdt.createTime
+            FROM demand_count_date_stat dcdt
             WHERE (dcdt.userId IN (:userIdArr) OR :userIds = '') 
               AND (dcdt.comId = :comId OR :comId = '')
               AND dcdt.date >= :startDate
               AND dcdt.date <= :endDate
+              GROUP BY dcdt.comId, dcdt.userId
         `, {
           replacements: {
             userIdArr: options.userIds.split(','),

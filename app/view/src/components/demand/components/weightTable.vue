@@ -12,16 +12,16 @@
     <el-col :span="12">
       <el-table
         :data="dataList"
-        height="460"
+        height="700"
         style="width: 100%" fit border align="center"
         :default-sort="{ prop: 'weight', order: 'descending' }"
         v-loading.body="isLoading"
         @selection-change="changeHandler"
         ref="table">
-        <el-table-column type="selection" width="55"/>
+        <!-- <el-table-column type="selection" width="55"/> -->
         <el-table-column prop="userId" label="销售"/>
         <el-table-column prop="weight" sortable label="合计"/>
-        <el-table-column prop="deal" sortable label="成交数据" width="300">
+        <el-table-column prop="deal" sortable label="成交数据" width="350">
           <template slot-scope="scope">
             <div class="progress-wrapper">
               <span>已成交{{ scope.row.dealWeight }}</span>
@@ -159,7 +159,7 @@ export default {
       var feedback = 0
       var pendingFeedback = 0
       var noOffer = 0
-      this.selectedRows.forEach(item => {
+      this.dataList.forEach(item => {
         weight += (item.weight || 0)
         deal += (item.dealWeight || 0)
         noDeal += (item.noDealWeight || 0)
@@ -200,14 +200,14 @@ export default {
     },
 
     dataChangeHandler (rows) {
-      this.$nextTick(() => {
-        if (this.dataList.length > 0) {
-          const rows = this.dataList.slice()
-          rows.sort((a, b) => b.weight - a.weight)
-          this.selectedRows = [rows[0]]
-          this.toggleSelectionRows(this.selectedRows)
-        }
-      })
+      // this.$nextTick(() => {
+      //   if (this.dataList.length > 0) {
+      //     const rows = this.dataList.slice()
+      //     rows.sort((a, b) => b.weight - a.weight)
+      //     this.selectedRows = [rows[0]]
+      //     this.toggleSelectionRows(this.selectedRows)
+      //   }
+      // })
     },
 
     createEchart () {
@@ -266,13 +266,13 @@ export default {
     },
 
     flush () {
-      this.toggleSelectionRows()
-      this.$nextTick(() => {
-        const rows = this.dataList.slice()
-        rows.sort((a, b) => b.weight - a.weight)
-        this.selectedRows = [rows[0]]
-        this.toggleSelectionRows(this.selectedRows)
-      })
+      // this.toggleSelectionRows()
+      // this.$nextTick(() => {
+      //   const rows = this.dataList.slice()
+      //   rows.sort((a, b) => b.weight - a.weight)
+      //   this.selectedRows = [rows[0]]
+      //   this.toggleSelectionRows(this.selectedRows)
+      // })
     }
   }
 }
@@ -287,7 +287,7 @@ export default {
       align-items: center;
 
       span {
-        width: 80px;
+        width: 100px;
       }
 
       .el-progress {
