@@ -12,7 +12,7 @@
     <el-col :span="12">
       <el-table
         :data="dataList"
-        height="700"
+        height="600"
         style="width: 100%" fit border align="center"
         :default-sort="{ prop: 'count', order: 'descending' }"
         v-loading.body="isLoading"
@@ -215,7 +215,7 @@ export default {
       this.chart = new G2.Chart({
         container: this.$refs['count'],
         autoFit: true,
-        height: 460
+        height: 550
       })
 
       this.chart.coordinate('theta', {
@@ -270,13 +270,13 @@ export default {
   .count-table {
 
     .canvas-wrapper {
-      height: 460px;
+      height: 550px;
       position: relative;
     }
     .canvas {
-      height: 460px;
+      height: 550px;
       width: 100%;
-      line-height: 460px;
+      line-height: 550px;
       text-align: center;
       position: absolute;
       top: 0;

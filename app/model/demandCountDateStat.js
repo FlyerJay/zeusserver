@@ -150,6 +150,75 @@ module.exports = (app) => {
           code: 200,
           data: data[0]
         };
+      },
+
+      * getSpecCount (options) {
+        const stateMapping = {
+          'COUNT': '',
+          'COUNT_UNDEAL': '3',
+          'COUNT_DEAL': '4'
+        };
+        console.log(options.type);
+        console.log(stateMapping[options.type]);
+        const data = yield app.model.query(`
+          SELECT dd.spec, dd.type, count(dd.spec) as count, SUM(dd.demandWeight) as weight, d.comId FROM demand d
+          INNER JOIN demand_detail dd
+            ON dd.demandNo = d.demandNo
+          WHERE d.createTime >= :startDate
+            AND d.createTime <= :endDate
+            AND (d.comId = :comId OR :comId = '')
+            AND (d.state = :state OR :state = '')
+            GROUP BY dd.spec, dd.type
+            ORDER BY count(dd.spec) DESC
+            LIMIT 20;
+        `, {
+          replacements: {
+            comId: options.comId,
+            startDate: new Date(options.startDate).getTime(),
+            endDate: new Date(options.endDate).getTime(),
+            state: stateMapping[options.type]
+          }
+        });
+
+        return {
+          code: 200,
+          data: data[0]
+        };
+      },
+
+      * getSpecWeight (options) {
+        const stateMapping = {
+          'WEIGHT': '',
+          'COUNT_UNDEAL': '3',
+          'WEIGHT_UNDEAL': '3',
+          'WEIGHT_DEAL': '4'
+        };
+        console.log(options.type);
+        console.log(stateMapping[options.type]);
+        const data = yield app.model.query(`
+          SELECT dd.spec, dd.type, count(dd.spec) as count, SUM(dd.demandWeight) as weight, d.comId FROM demand d
+          INNER JOIN demand_detail dd
+            ON dd.demandNo = d.demandNo
+          WHERE d.createTime >= :startDate
+            AND d.createTime <= :endDate
+            AND (d.comId = :comId OR :comId = '')
+            AND (d.state = :state OR :state = '')
+            GROUP BY dd.spec, dd.type
+            ORDER BY SUM(dd.demandWeight) DESC
+            LIMIT 20;
+        `, {
+          replacements: {
+            comId: options.comId,
+            startDate: new Date(options.startDate + ' 00:00:00').getTime(),
+            endDate: new Date(options.endDate + ' 23:59:59').getTime(),
+            state: stateMapping[options.type]
+          }
+        });
+
+        return {
+          code: 200,
+          data: data[0]
+        };
       }
     }
   });

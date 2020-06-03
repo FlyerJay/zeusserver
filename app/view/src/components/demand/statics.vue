@@ -1,7 +1,7 @@
 <template>
   <div class="statics">
     <el-form inline :model="form" class="demo-form-inline">
-      <el-form-item prop="userIds" label="销售">
+      <el-form-item prop="userIds" label="销售" v-if="activeName !== '2'">
         <el-select multiple :disabled="isLoading" v-model="form.userIds" placeholder="你可以选择多个销售员" @change="search">
           <el-option
             v-for="(item, index) in sellerList"
@@ -24,16 +24,15 @@
         </el-date-picker>
       </el-form-item>
 
-      <el-form-item prop="date" label="查看日期">
-        <el-date-picker
-          :disabled="isLoading"
-          v-model="form.date"
-          type="daterange"
-          align="right"
-          :picker-options="options"
-          @change="search"
-          placeholder="选择日期范围">
-        </el-date-picker>
+      <el-form-item prop="type" label="查看维度" v-if="activeName === '2'">
+        <el-select v-model="form.type" :disabled="isLoading" @change="search">
+          <el-option
+            v-for="item in types"
+            :key="item.value"
+            :value="item.value"
+            :label="item.label">
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
 
@@ -50,14 +49,14 @@
         </el-tab-pane>
 
         <el-tab-pane label="规格明细统计">
-          <spec-table :isLoading="isLoading"></spec-table>
+          <spec-table :isLoading="isLoading" :dataList="specRountList" :type="form.type"></spec-table>
         </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
-import { getSellerListX, getDemandCountDateX } from '../../vuex/action'
+import { getSellerListX, getDemandCountDateX, getSpecRoundMonthX } from '../../vuex/action'
 import countTable from './components/countTable'
 import weightTable from './components/weightTable'
 import specTable from './components/specTable'
@@ -67,7 +66,8 @@ export default {
   vuex: {
     actions: {
       getSellerListX,
-      getDemandCountDateX
+      getDemandCountDateX,
+      getSpecRoundMonthX
     },
     getters: {
       userInfo: state => state.userInfo
@@ -84,10 +84,12 @@ export default {
     return {
       sellerList: [],
       demandCountList: [],
+      specRountList: [],
       activeName: '0',
       form: {
         userIds: [],
-        date: Date.now() - 8.64e7
+        date: Date.now() - 8.64e7,
+        type: 'COUNT'
       },
       options: {
         disabledDate (time) {
@@ -120,7 +122,28 @@ export default {
           }
         }]
       },
-      isLoading: false
+      isLoading: false,
+      types: [
+        {
+          value: 'COUNT',
+          label: '询价频次最多的20个品类及规格'
+        }, {
+          value: 'WEIGHT',
+          label: '询价重量最多的20个品类及规格'
+        }, {
+          value: 'COUNT_UNDEAL',
+          label: '未成交频次最高的20个品类及规格'
+        }, {
+          value: 'WEIGHT_UNDEAL',
+          label: '未成交重量最多的20个品类及规格'
+        }, {
+          value: 'COUNT_DEAL',
+          label: '成交频次最高的20个品类及规格'
+        }, {
+          value: 'WEIGHT_DEAL',
+          label: '成交重量最多的20个品类及规格'
+        }
+      ]
     }
   },
 
@@ -130,7 +153,11 @@ export default {
     },
 
     search () {
-      this.getDemandCountDate()
+      if (this.activeName === '2') {
+        this.getSpecRoundMonth()
+      } else {
+        this.getDemandCountDate()
+      }
     },
 
     async getDemandCountDate () {
@@ -143,10 +170,20 @@ export default {
       this.isLoading = false
     },
 
+    async getSpecRoundMonth () {
+      this.isLoading = true
+      this.specRountList = await this.getSpecRoundMonthX({
+        type: this.form.type,
+        startDate: this.form.date[0] ? new Date(this.form.date[0]).formatDate('YYYY-MM-DD') : new Date().formatDate('YYYY-MM-DD'),
+        endDate: this.form.date[1] ? new Date(this.form.date[1]).formatDate('YYYY-MM-DD') : new Date().formatDate('YYYY-MM-DD')
+      })
+      this.isLoading = false
+    },
+
     switchTab (vm, name) {
       vm.$children[0].flush && vm.$children[0].flush()
-      this.search()
       this.activeName = this.$refs['tab'].currentName
+      this.search()
     }
   },
 

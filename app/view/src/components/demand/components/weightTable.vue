@@ -12,7 +12,7 @@
     <el-col :span="12">
       <el-table
         :data="dataList"
-        height="700"
+        height="600"
         style="width: 100%" fit border align="center"
         :default-sort="{ prop: 'weight', order: 'descending' }"
         v-loading.body="isLoading"
@@ -216,7 +216,7 @@ export default {
       this.chart = new G2.Chart({
         container: this.$refs['weight'],
         autoFit: true,
-        height: 460
+        height: 550
       })
 
       this.chart.coordinate('theta', {
@@ -251,7 +251,7 @@ export default {
         })
         .label('percent', {
           content: (data) => {
-            return `${data.item}: ${data.weight}吨`
+            return `${data.item}: ${data.weight.toFixed(2)}吨`
           }
         })
         .adjust('stack')
@@ -296,12 +296,12 @@ export default {
     }
 
     .canvas-wrapper {
-      height: 460px;
+      height: 550px;
       position: relative;
     }
     .canvas {
-      height: 460px;
-      line-height: 460px;
+      height: 550px;
+      line-height: 550px;
       text-align: center;
       position: absolute;
       width: 100%;

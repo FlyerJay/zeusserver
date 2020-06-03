@@ -1154,8 +1154,24 @@ export const getSellerListX = ({ dispatch }, params) => {
   })
 }
 
+// 需求数统计
 export const getDemandCountDateX = ({ dispatch }, params) => {
   return axios.get('/zues/api/statistics/date/demandcount', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}
+
+// 规格统计
+export const getSpecRoundMonthX = ({ dispatch }, params) => {
+  return axios.get('/zues/api/statistics/month/spec', { params })
   .then(response => {
     if (response.data.code === 200) {
       return Promise.resolve(response.data.data)
