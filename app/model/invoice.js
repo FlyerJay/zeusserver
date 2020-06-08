@@ -4,7 +4,6 @@
  * 发票信息
  */
 
-
 module.exports = (app) => {
   const { STRING, INTEGER, BIGINT, DOUBLE } = app.Sequelize;
 
@@ -104,6 +103,11 @@ module.exports = (app) => {
       type: STRING(100),
       allowNull: false,
       comment: '明细合同'
+    },
+    invoiceNo: {
+      type: STRING(20),
+      allowNull: true,
+      comment: '发票编号'
     }
   }, {
     freezeTabName: true,
@@ -113,6 +117,7 @@ module.exports = (app) => {
     classMethods: {
       // 创建发票
       * createOneInvoice (options) {
+        const invoiceNo = `O${options.comId}${new Date().getTime()}`;
         try {
           const response = yield this.findOne({
             where: {
@@ -133,6 +138,7 @@ module.exports = (app) => {
           };
           options.createTime = +new Date();
           options.status = 'APPLY';
+          options.invoiceNo = invoiceNo;
           const result = yield this.create(options);
           if (result) {
             return {
