@@ -3,6 +3,7 @@
  * 2020-02-02
  * 发票信息
  */
+const moment = require('moment');
 
 module.exports = (app) => {
   const { STRING, INTEGER, BIGINT, DOUBLE } = app.Sequelize;
@@ -117,7 +118,26 @@ module.exports = (app) => {
     classMethods: {
       // 创建发票
       * createOneInvoice (options) {
-        // const invoiceNo = `O${options.comId}${new Date().getTime()}`;
+        var randomNumber = Math.floor(Math.random() * 100000) + '';
+        const len = randomNumber.length;
+        // eslint-disable-next-line default-case
+        switch (len) {
+          case 4:
+            randomNumber = '0' + randomNumber;
+            break;
+          case 3:
+            randomNumber = '00' + randomNumber;
+            break;
+          case 2:
+            randomNumber = '000' + randomNumber;
+            break;
+          case 1:
+            randomNumber = '0000' + randomNumber;
+            break;
+          case 0:
+            randomNumber = '00000';
+        }
+        const invoiceNo = `O${moment().format('YYYYMMDDhhmmss')}${randomNumber}`;
         try {
           const response = yield this.findOne({
             where: {
@@ -138,7 +158,7 @@ module.exports = (app) => {
           };
           options.createTime = +new Date();
           options.status = 'APPLY';
-          // options.invoiceNo = invoiceNo;
+          options.invoiceNo = invoiceNo;
           const result = yield this.create(options);
           if (result) {
             return {
