@@ -117,7 +117,7 @@ module.exports = (app) => {
     classMethods: {
       // 创建发票
       * createOneInvoice (options) {
-        const invoiceNo = `O${options.comId}${new Date().getTime()}`;
+        // const invoiceNo = `O${options.comId}${new Date().getTime()}`;
         try {
           const response = yield this.findOne({
             where: {
@@ -138,7 +138,7 @@ module.exports = (app) => {
           };
           options.createTime = +new Date();
           options.status = 'APPLY';
-          options.invoiceNo = invoiceNo;
+          // options.invoiceNo = invoiceNo;
           const result = yield this.create(options);
           if (result) {
             return {
