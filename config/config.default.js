@@ -11,6 +11,14 @@ module.exports = (appInfo) => ({
   multipart: {
     fileExtensions: ['.xlsx', '.xls']
   },
+  redis: {
+    client: {
+      host: '121.196.16.111',
+      port: 6379,
+      password: '',
+      db: 0
+    }
+  },
   sequelize: {
     dialect: 'mysql',
     database: 'zues',

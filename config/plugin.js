@@ -16,4 +16,8 @@ exports.http = {
   enable: true,
   package: 'egg-axios'
 };
+exports.redis = {
+  enable: true,
+  package: 'egg-redis'
+};
 exports.static = true;
