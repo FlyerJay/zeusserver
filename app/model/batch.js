@@ -226,7 +226,7 @@ module.exports = (app) => {
               });
             });
             otherResolve.name = '单一供应商方案';
-            otherResolve.supplierName = otherResolveList[0].supplierName;
+            otherResolve.supplierName = otherResolveList[0] ? otherResolveList[0].supplierName : '--';
             otherResolve.list = otherResolveList;
             var price = 0;
             otherResolveList.map((v) => {
