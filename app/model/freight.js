@@ -106,7 +106,7 @@ module.exports = (app) => {
                   replacements: {
                     comId: options.comId,
                     start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
-                    offset: options.pageSize ? options.pageSize : 15
+                    offset: options.pageSize ? options.pageSize : 100
                   }
                 }),
           app.model.query(`SELECT count(1) as count FROM freight 
