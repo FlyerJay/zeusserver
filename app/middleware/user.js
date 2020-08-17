@@ -22,7 +22,8 @@ const filters = [
   '/user/logout',
   '/user/openid',
   '/product/kx',
-  '/invoiceminiapp'
+  '/invoiceminiapp',
+  '/company'
 ];
 
 module.exports = (options) => function* user(next) {
