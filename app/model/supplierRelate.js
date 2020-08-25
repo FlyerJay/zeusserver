@@ -29,12 +29,14 @@
      benifitAdjust: {
        type: INTEGER,
        allowNull: true,
-       comment: '政策浮动影响'
+       comment: '政策浮动影响',
+       defaultValue: 0
      },
      benifit: {
        type: INTEGER,
        allowNull: true,
-       comment: '厂家优惠'
+       comment: '厂家优惠',
+       defaultValue: 0
      },
      valueTime: {
        type: STRING(20),

@@ -29,7 +29,8 @@ module.exports = (app) => {
     freight: {
       type: INTEGER,
       allowNull: false,
-      comment: '运输费用'
+      comment: '运输费用',
+      defaultValue: 0
     },
     lastUpdateTime: {
       type: BIGINT(20),
