@@ -13,7 +13,7 @@ module.exports = (appInfo) => ({
   },
   redis: {
     client: {
-      host: '121.196.16.111',
+      host: '116.62.226.140',
       port: 6379,
       password: '',
       db: 0
@@ -22,10 +22,10 @@ module.exports = (appInfo) => ({
   sequelize: {
     dialect: 'mysql',
     database: 'zues',
-    host: '121.196.16.111',
+    host: '116.62.226.140',
     port: '3306',
-    username: 'zues',
-    password: 'zues@Kx002'
+    username: 'zeus',
+    password: 'zeus@Kx001'
   },
   io: {// socket.io配置
     namespace: {
@@ -35,7 +35,7 @@ module.exports = (appInfo) => ({
       }
     },
     redis: {
-      host: '121.196.16.111',
+      host: '116.62.226.140',
       port: 6379,
       db: 0
     }
