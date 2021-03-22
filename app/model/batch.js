@@ -220,7 +220,7 @@ module.exports = (app) => {
             let otherResolveList = [];
             formatResult.forEach((v) => {
               v.forEach((vv) => {
-                if (vv.supplierId === key) {
+                if (Number(vv.supplierId) === Number(key)) {
                   otherResolveList.push(vv);
                 }
               });
