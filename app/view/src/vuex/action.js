@@ -1183,3 +1183,17 @@ export const getSpecRoundMonthX = ({ dispatch }, params) => {
     return Promise.reject()
   })
 }
+
+export const getDailyPriceListX = ({ dispatch }, params) => {
+  return axios.get('/zues/api/price/daily', { params })
+  .then(response => {
+    if (response.data.code === 200) {
+      return Promise.resolve(response.data.data)
+    } else if (response.data.code === -1) {
+      showErrorMessage({ dispatch }, response.data.msg)
+      return Promise.reject(response.data.msg)
+    }
+  }).catch(function () {
+    return Promise.reject()
+  })
+}

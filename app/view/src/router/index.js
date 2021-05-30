@@ -8,6 +8,7 @@ import DemandStatics from '../components/demand/statics'
 
 // 供应商
 import Supplier from '../components/supplier/supplier'
+import Daily from '../components/supplier/daily'
 import Info from '../components/supplier/info'
 import Price from '../components/supplier/price'
 import Stock from '../components/supplier/stock'
@@ -106,6 +107,10 @@ export default new Router({
     children: [{
       path: 'info',
       component: Info
+    },
+    {
+      path: 'daily',
+      component: Daily
     },
     {
       path: 'price',

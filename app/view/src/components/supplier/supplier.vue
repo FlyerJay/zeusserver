@@ -30,6 +30,11 @@
           name: '供应商'
         },
         {
+          url: '/supplier/daily',
+          icon: 'icon-supplier',
+          name: '当日落地价对比'
+        },
+        {
           url: '/supplier/price',
           icon: 'icon-price',
           name: '价格表'
@@ -63,6 +68,11 @@
             name: '供应商'
           }
           this.topMenuData.push(item)
+          this.topMenuData.push({
+            url: '/supplier/daily',
+            icon: 'icon-supplier',
+            name: '落地价对比'
+          })
         }
         if (parseInt(this.userInfo.userRole.charAt(6))) {
           const itemArr = [

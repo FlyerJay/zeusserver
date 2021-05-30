@@ -324,6 +324,52 @@ module.exports = (app) => {
           code: 200,
           data: res[0]
         };
+      },
+      * dailyPrice(options) {
+        const res1 = yield app.model.query(`
+          select s.supplierName,s.supplierId,sv.spec,sv.type,(sv.value - ifnull(sr.benifit, 0) + ifnull(f.freight, 0)) as value from supplier_value sv
+          INNER JOIN supplier s
+              on s.isDelete = 'N'
+              and s.supplierId = sv.supplierId
+          LEFT JOIN supplier_relate sr
+              on s.supplierId = sr.supplierId
+              and sr.supplierId = sv.supplierId
+              and sr.comId = :comId
+              and sr.isValide = 1
+          LEFT JOIN freight f
+              on sr.comId = f.comId
+              and f.address = s.address
+          where sv.spec in ('30*30*2.40', '40*40*2.50', '80*80*3.00', '100*100*3.00', '120*120*3.50', '150*150*4.50', '200*200*5.50', '200*300*5.50')
+              and sv.type = '黑管'
+        `, {
+          replacements: {
+            comId: options.comId,
+          }
+        });
+        const res2 = yield app.model.query(`
+          select s.supplierName,s.supplierId,sv.spec,sv.type,(sv.value - ifnull(sr.benifit, 0) + ifnull(f.freight, 0)) as value from supplier_value sv
+          INNER JOIN supplier s
+              on s.isDelete = 'N'
+              and s.supplierId = sv.supplierId
+          LEFT JOIN supplier_relate sr
+              on s.supplierId = sr.supplierId
+              and sr.supplierId = sv.supplierId
+              and sr.comId = :comId
+              and sr.isValide = 1
+          LEFT JOIN freight f
+              on sr.comId = f.comId
+              and f.address = s.address
+          where sv.spec in ('20*40*2.50', '40*40*3.50', '60*60*3.75', '40*80*3.50', '50*100*3.75', '100*100*3.75')
+              and sv.type = '热镀锌'
+        `, {
+          replacements: {
+            comId: options.comId,
+          }
+        });
+        return {
+          code: 200,
+          data: [res1[0], res2[0]]
+        };
       }
     }
   });

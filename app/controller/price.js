@@ -14,6 +14,10 @@ module.exports = (app) => {
         ctx.body = yield ctx.model.SupplierValue.getList(ctx.query);
       }
     }
+    * daily() {
+      const ctx = this.ctx;
+      ctx.body = yield ctx.model.SupplierValue.dailyPrice(ctx.query);
+    }
     * update() {
       const ctx = this.ctx;
       const userRole = ctx.cookies.get('userRole');
