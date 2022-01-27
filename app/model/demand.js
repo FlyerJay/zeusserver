@@ -234,11 +234,56 @@ module.exports = app => {
                     }
                 }
             },
+            /** 检查该用户是否有资格添加 */
+            * canAddCheck(options) {
+                //  待反馈
+                const { count } = yield this.findAndCountAll({
+                    where: {
+                        userId:{
+                            $eq: options.userId,
+                        },
+                        comId: {
+                            $eq: options.comId
+                        },
+                        state: 1
+                    }
+                })
+                if (count >= 3) return -1
+                // 已反馈
+                const { count } = yield this.findAndCountAll({
+                    where: {
+                        userId:{
+                            $eq: options.userId,
+                        },
+                        comId: {
+                            $eq: options.comId
+                        },
+                        state: 2
+                    }
+                })
+
+                if (count >= 15) return -2
+                return 200
+            },
             * add(options){
                 if(!options.demandDetails) return {
                     code: -1,
                     msg: "请补充需求明细"
                 }
+
+                const checkoutResult = yield this.canAddCheck()
+                if (checkoutResult < 0) {
+                    const msgMapping = {
+                        '-1': '待反馈需求数量超过3条上限，请处理后再添加新需求',
+                        '-2': '已反馈需求数量超过15条上限，请处理后再添加新需求'
+                    }
+
+                    return {
+                        code: -1,
+                        msg: msgMapping[checkoutResult]
+                    }
+                }
+
                 var demandWeight = 0;
                 options.demandDetails.forEach( v => {
                     demandWeight += (v.demandWeight - 0);
