@@ -26,6 +26,10 @@ module.exports = (app) => {
       const ctx = this.ctx;
       ctx.body = yield this.ctx.service.export.demandDetailExport(ctx.query);
     }
+    * inventory() {
+      const ctx = this.ctx;
+      ctx.body = yield this.ctx.service.export.inventory(ctx.query);
+    }
   }
   return ExportController;
 };

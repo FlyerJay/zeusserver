@@ -237,7 +237,7 @@ module.exports = app => {
             /** 检查该用户是否有资格添加 */
             * canAddCheck(options) {
                 //  待反馈
-                const { count } = yield this.findAndCountAll({
+                const response1 = yield this.findAndCountAll({
                     where: {
                         userId:{
                             $eq: options.userId,
@@ -248,9 +248,9 @@ module.exports = app => {
                         state: 1
                     }
                 })
-                if (count >= 3) return -1
+                if (response1.count >= 3) return -1
                 // 已反馈
-                const { count } = yield this.findAndCountAll({
+                const response2 = yield this.findAndCountAll({
                     where: {
                         userId:{
                             $eq: options.userId,
@@ -262,7 +262,7 @@ module.exports = app => {
                     }
                 })
 
-                if (count >= 15) return -2
+                if (response2.count >= 15) return -2
                 return 200
             },
             * add(options){

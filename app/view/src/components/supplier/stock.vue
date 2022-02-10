@@ -4,7 +4,7 @@
             <el-form-item label="规格">
                 <el-input v-model='searchInvenParam.spec' placeholder="支持关键词/模糊查询"></el-input>
             </el-form-item>
-    
+
             <el-form-item label="类别">
                 <el-select v-model="searchInvenParam.type">
                     <el-option value="">全部</el-option>
@@ -13,30 +13,31 @@
                     <el-option value="镀锌带">镀锌带</el-option>
                 </el-select>
             </el-form-item>
-    
+
             <el-form-item label="供应商名称">
                 <el-input v-model="searchInvenParam.supplierName" placeholder="支持关键词/模糊搜索"></el-input>
             </el-form-item>
-    
+
             <el-form-item label="所在地">
                 <el-select v-model="searchInvenParam.address" placeholder="全部">
                     <el-option value="">全部</el-option>
                     <el-option :label="item.address" :value="item.address" v-for="(item, index) in supAddress" :key="index"></el-option>
                 </el-select>
             </el-form-item>
-    
+
             <el-form-item>
                 <el-button type="warning" @click="searchStock" :loading="loading">查询</el-button>
             </el-form-item>
-    
+
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
-                    <el-button type="info" v-if="inventoryAuth">上传库存表</el-button><span class="warn-txt">(命名格式：供应商名称_类型_日期[_库存表])</span>
+                  <el-button type="info" v-if="inventoryAuth">上传库存表</el-button><span class="warn-txt">(命名格式：供应商名称_类型_日期[_库存表])</span>
                 </el-upload>
+                <el-button type="warning" style="margin-left: 10px" @click="inventoryExport">导出库存表</el-button>
             </el-form-item>
-    
+
         </el-form>
-    
+
         <el-table :data="inventory.row" style="width: 100%" v-loading.body="loading" element-loading-text="拼命加载中" border>
             <el-table-column property="spec" label="规格"></el-table-column>
             <el-table-column property="long" label="长度"></el-table-column>
@@ -57,7 +58,7 @@
             <el-pagination @current-change="handleCurrentChange" :current-page.sync="searchInvenParam.page" layout=" prev, pager, next" :page-size="15" :total="inventory.totalCount">
             </el-pagination>
         </div>
-        <el-dialog title="" v-model="dlgStockVisible" class="custom-dialog">  
+        <el-dialog title="" v-model="dlgStockVisible" class="custom-dialog">
             <div class="dialog-content">
                 <el-input v-model="newStockParam.inventoryAmount" auto-complete="off" type="number">
                     <template slot="prepend">库存数量</template>
@@ -169,7 +170,10 @@ export default {
                   this.dlgStockVisible = false
                   this.row.inventoryAmount = this.newStockParam.inventoryAmount
                 })
-    }
+    },
+    inventoryExport () {
+      window.open(`/zues/api/export/inventory/库存列表.xls?spec=${this.searchInvenParam.spec}&type=${this.searchInvenParam.type}&material=${this.searchInvenParam.material}&supplierName=${this.searchInvenParam.supplierName}&address=${this.searchInvenParam.address}`)
+    },
   },
   mounted: function () {
     this.loadSupInventoryList()

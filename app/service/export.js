@@ -2,6 +2,16 @@
 const xlsx = require('node-xlsx');
 const Util = require('../utils');
 
+const weightCompute = (spec, _long, amount) => {
+    const specArr = spec.split('*')
+    const height = Number(specArr[0])
+    const width = Number(specArr[1])
+    const land = Number(specArr[2])
+    const long = Number(_long) ? Number(_long) : 6
+    const perimeter = 2 * height + 2 * width
+    return ((perimeter / 3.14 - land) * land * long * 0.02466 * amount / 1000).toFixed(2)
+}
+
 module.exports = app => {
     class Export extends app.Service {
         * order(options) {
@@ -245,6 +255,65 @@ module.exports = app => {
                 },
                 msg:"查询成功"
             }
+        }
+        * inventory(options) {
+            if (!options.comId) return {
+                code: -1,
+                msg: '缺少公司信息'
+            };
+            if (options.comId === '00') {
+                options.comId = options.tempComId || '01';
+            }
+            var addressCondition = '';
+            if (options.address) {
+                addressCondition = 'AND s.address = :address';
+            }
+            var typeCondition = '';
+            if (options.type) {
+                typeCondition = 'AND si.type = :type';
+            }
+            const list = yield app.model.query(`SELECT si.supplierInventoryId,si.supplierId,si.spec,si.lastUpdateTime,
+                si.type,si.material,si.long,si.inventoryAmount,si.perAmount,si.inventoryWeight,si.mark,s.supplierName,s.address,sr.benifit,f.freight FROM supplier_inventory si
+                INNER JOIN supplier s ON
+                s.supplierName LIKE :supplierName
+                AND s.isDelete = 'N'
+                ${addressCondition}
+                INNER JOIN supplier_relate sr ON
+                sr.supplierId = s.supplierId
+                AND sr.supplierId = si.supplierId
+                AND sr.comId = :comId
+                AND sr.isValide = 1
+                LEFT JOIN freight f ON
+                f.address = s.address
+                and f.comId = :comId
+                WHERE si.spec LIKE :spec
+                ${typeCondition}
+                ORDER BY si.lastUpdateTime DESC,si.supplierId,si.type,si.spec`, {
+                    replacements: {
+                        address: options.address ? options.address : '',
+                        comId: options.comId,
+                        supplierName: options.supplierName ? `%${options.supplierName}%` : '%%',
+                        spec: options.spec ? `%${options.spec}%` : '%%',
+                        type: options.type ? options.type : '',
+                        start: !options.page ? 0 : (options.page - 1) * (options.pageSize ? options.pageSize : 15),
+                        offset: options.pageSize ? options.pageSize : 15
+                    }
+                })
+            var tmpData = [];
+            tmpData.push(['规格','长度','最新更新时间','类别','供应商','库存数量(件)','包装','单支重量(kg)','库存数量(吨)']);
+            list[0].map((v) => {
+                const spec = v['spec']
+                const long = v['long'] || 6;
+                const lastUpdateTime = v['lastUpdateTime'] || '';
+                const type = v['type'] || '';
+                const supplierName = v['supplierName'] || '';
+                const inventoryAmount = v['inventoryAmount'] || '';
+                const perAmount = v['perAmount'] || '';
+                const inventoryWeight = weightCompute(spec, long, perAmount * inventoryAmount)
+                tmpData.push([spec, long, lastUpdateTime, type, supplierName, inventoryAmount, perAmount, inventoryWeight]);
+            })
+            var buffer = xlsx.build([{name: '库存列表',data: tmpData}]);
+            return buffer;
         }
     }
     return Export;
