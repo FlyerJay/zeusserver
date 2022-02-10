@@ -27,13 +27,13 @@
 
             <el-form-item>
                 <el-button type="warning" @click="searchStock" :loading="loading">查询</el-button>
+                <el-button type="info" style="margin-left: 10px" @click="inventoryExport">导出</el-button>
             </el-form-item>
 
             <el-form-item>
                 <el-upload class="upload-demo" action="/zues/api/upload/excel?type=inventory">
                   <el-button type="info" v-if="inventoryAuth">上传库存表</el-button><span class="warn-txt">(命名格式：供应商名称_类型_日期[_库存表])</span>
                 </el-upload>
-                <el-button type="warning" style="margin-left: 10px" @click="inventoryExport">导出库存表</el-button>
             </el-form-item>
 
         </el-form>

@@ -271,7 +271,7 @@ module.exports = app => {
                     msg: "请补充需求明细"
                 }
 
-                const checkoutResult = yield this.canAddCheck()
+                const checkoutResult = yield this.canAddCheck(options)
                 if (checkoutResult < 0) {
                     const msgMapping = {
                         '-1': '待反馈需求数量超过3条上限，请处理后再添加新需求',
